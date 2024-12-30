@@ -60,11 +60,15 @@ docker-compose run build
 docker-compose build web
 ```
 
-#### テスト方法
+### テスト方法
 
 ```bash
 npm run test
 ```
+
+### GitHub Actions
+
+このプロジェクトには、プルリクエストがマージされた際にテストを実行するための GitHub Actions ワークフローが含まれています。ワークフローは `.github/workflows/test-on-pr-merge.yml` に定義されています。
 
 ### ファイル構成
 
