@@ -1,4 +1,3 @@
-
 # digital-omikuji
 
 ### 概要
@@ -77,14 +76,13 @@ digital-omikuji/
 │   │   └── index.test.tsx  // おみくじアプリのテストコード
 │   └── entry.client.tsx   // クライアントサイドのエントリーポイント
 ├── public/
-│   └── build/              // ビルドされたファイル
 ├── Dockerfile              // Dockerfile
 ├── docker-compose.yml      // docker-compose 設定ファイル
 ├── remix.config.js         // Remixの設定ファイル
+├── LICENSE                 // ライセンスファイル
 ├── package.json            // 依存関係など
 └── ...
 ```
-
 
 ### ライセンス
 
@@ -93,4 +91,3 @@ MIT License
 ### 作者情報
 
 s977043
-```
