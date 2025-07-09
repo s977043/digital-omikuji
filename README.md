@@ -7,10 +7,12 @@ Remix で作成したデジタルおみくじアプリです。
 
 ### 使用技術
 
-* Remix
-* TypeScript
-* Tailwind CSS
-* Docker
+- **Remix** - React ベースの Web フレームワーク
+- **TypeScript** - 型安全な JavaScript
+- **Tailwind CSS** - ユーティリティファーストの CSS フレームワーク
+- **Docker** - コンテナ化技術
+- **VibeCoding** - AI 支援開発環境
+- **Gemini CLI** - Google AI を活用したコード生成・レビューツール
 
 ### 機能
 
@@ -36,21 +38,29 @@ Remix で作成したデジタルおみくじアプリです。
 
 #### 開発環境の構築
 
-1. Docker をインストールします。
-2. `docker-compose.yml` を使用して、Docker コンテナを起動します。
-    ```bash
-    docker-compose up -d
-    ```
+VibeCoding と Gemini CLI を使用した効率的な開発環境の構築については、以下のドキュメントを参照してください：
 
-#### 実行方法
+- [開発環境構築ガイド](documents/開発環境構築ガイド.md)
+- [VibeCoding設定ガイド](documents/VibeCoding設定ガイド.md)
+- [Gemini CLI使用方法](documents/Gemini_CLI使用方法.md)
+
+#### 基本的な実行方法
 
 ```bash
+# 開発サーバーの起動
+npm run dev
+
+# Docker を使用した実行
 docker-compose up -d
 ```
 
 #### ビルド方法
 
 ```bash
+# 本番用ビルド
+npm run build
+
+# Docker を使用したビルド
 docker-compose run build
 ```
 
@@ -79,6 +89,14 @@ digital-omikuji/
 │   │   ├── index.tsx       // おみくじアプリのメインコンポーネント
 │   │   └── index.test.tsx  // おみくじアプリのテストコード
 │   └── entry.client.tsx   // クライアントサイドのエントリーポイント
+├── documents/             // プロジェクトドキュメント
+│   ├── プロジェクト構成.md
+│   ├── VibeCoding設定ガイド.md
+│   ├── Gemini_CLI使用方法.md
+│   ├── 開発環境構築ガイド.md
+│   ├── API仕様書.md
+│   ├── トラブルシューティングガイド.md
+│   └── デプロイメントマニュアル.md
 ├── public/
 ├── Dockerfile              // Dockerfile
 ├── docker-compose.yml      // docker-compose 設定ファイル
@@ -87,6 +105,18 @@ digital-omikuji/
 ├── package.json            // 依存関係など
 └── ...
 ```
+
+### ドキュメント
+
+プロジェクトに関する詳細なドキュメントは、`documents/` フォルダ内に整理されています：
+
+- **[プロジェクト構成](documents/プロジェクト構成.md)** - プロジェクトの全体構成と技術スタック
+- **[開発環境構築ガイド](documents/開発環境構築ガイド.md)** - 開発環境のセットアップ手順
+- **[VibeCoding設定ガイド](documents/VibeCoding設定ガイド.md)** - VibeCoding の設定と使用方法
+- **[Gemini CLI使用方法](documents/Gemini_CLI使用方法.md)** - Gemini CLI を使用したAI支援開発
+- **[API仕様書](documents/API仕様書.md)** - APIエンドポイントの仕様
+- **[トラブルシューティングガイド](documents/トラブルシューティングガイド.md)** - よくある問題と解決方法
+- **[デプロイメントマニュアル](documents/デプロイメントマニュアル.md)** - 本番環境へのデプロイ手順
 
 ### ライセンス
 
