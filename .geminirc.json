@@ -1,0 +1,34 @@
+{
+  "project": {
+    "name": "digital-omikuji",
+    "description": "Remix を使用したデジタルおみくじアプリケーション",
+    "language": "typescript",
+    "framework": "remix",
+    "testFramework": "jest"
+  },
+  "generation": {
+    "codeStyle": "functional",
+    "naming": "camelCase",
+    "imports": "es6",
+    "typescript": {
+      "strict": true,
+      "declarations": true
+    }
+  },
+  "review": {
+    "enabled": true,
+    "rules": [
+      "typescript-strict",
+      "react-best-practices",
+      "performance-optimization",
+      "accessibility",
+      "security"
+    ],
+    "autofix": true
+  },
+  "documentation": {
+    "language": "japanese",
+    "format": "markdown",
+    "includeExamples": true
+  }
+}

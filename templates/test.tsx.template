@@ -1,0 +1,14 @@
+import { render, screen } from '@testing-library/react';
+import { {{componentName}} } from './{{componentName}}';
+
+describe('{{componentName}}', () => {
+  it('renders correctly', () => {
+    render(<{{componentName}} />);
+    // テストケースをここに記述
+  });
+
+  it('handles user interactions', () => {
+    render(<{{componentName}} />);
+    // インタラクションテストをここに記述
+  });
+});

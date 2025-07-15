@@ -1,0 +1,51 @@
+{
+  "project": {
+    "name": "digital-omikuji",
+    "type": "remix",
+    "language": "typescript",
+    "framework": "react"
+  },
+  "development": {
+    "server": {
+      "port": 3000,
+      "host": "0.0.0.0"
+    },
+    "hotReload": true,
+    "sourceMap": true,
+    "watch": {
+      "extensions": ["ts", "tsx", "js", "jsx", "css", "md"],
+      "exclude": ["node_modules", "build", ".git"]
+    }
+  },
+  "ai": {
+    "provider": "gemini",
+    "model": "gemini-pro",
+    "temperature": 0.7,
+    "maxTokens": 4096
+  },
+  "codeGeneration": {
+    "templates": {
+      "component": "templates/component.tsx.template",
+      "test": "templates/test.tsx.template",
+      "page": "templates/page.tsx.template"
+    },
+    "outputPaths": {
+      "components": "app/components",
+      "tests": "app/tests",
+      "pages": "app/routes"
+    }
+  },
+  "linting": {
+    "enabled": true,
+    "rules": "@remix-run/eslint-config",
+    "autofix": true
+  },
+  "testing": {
+    "framework": "jest",
+    "testMatch": ["**/__tests__/**/*.test.{ts,tsx}"],
+    "coverage": {
+      "enabled": true,
+      "threshold": 80
+    }
+  }
+}
