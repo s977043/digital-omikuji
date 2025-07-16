@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "name": "コンポーネント生成指示",
+    "description": "新しいReactコンポーネントを生成するための指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team"
+  },
+  "commands": [
+    {
+      "type": "generate-component",
+      "command": "generate component --name \"{{componentName}}\" --type \"react-tsx\" --template \"templates/component.tsx.template\"",
+      "variables": {
+        "componentName": "FortuneResult"
+      },
+      "options": {
+        "cwd": "."
+      },
+      "required": true,
+      "description": "React TSXコンポーネントを生成"
+    },
+    {
+      "type": "generate-test",
+      "command": "generate test --file \"app/components/{{componentName}}.tsx\" --framework \"jest\" --template \"templates/test.tsx.template\"",
+      "variables": {
+        "componentName": "FortuneResult"
+      },
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "コンポーネントのテストファイルを生成"
+    },
+    {
+      "type": "review-code",
+      "command": "review --file \"app/components/{{componentName}}.tsx\" --language \"typescript\" --rules \"react-best-practices,typescript-strict\"",
+      "variables": {
+        "componentName": "FortuneResult"
+      },
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "生成されたコンポーネントをレビュー",
+      "delay": 1000
+    }
+  ]
+}

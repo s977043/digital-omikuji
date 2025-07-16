@@ -13,6 +13,7 @@ Remix で作成したデジタルおみくじアプリです。
 - **Docker** - コンテナ化技術
 - **VibeCoding** - AI 支援開発環境
 - **Gemini CLI** - Google AI を活用したコード生成・レビューツール
+- **Gemini CLI ファイル指示システム** - ファイルベースの自動実行機能
 
 ### 機能
 
@@ -49,6 +50,11 @@ VibeCoding と Gemini CLI を使用した効率的な開発環境の構築につ
 ```bash
 # 開発サーバーの起動
 npm run dev
+
+# Gemini CLI ファイル指示システムの使用
+npm run gemini:component  # コンポーネント生成
+npm run gemini:review     # プロジェクトレビュー  
+npm run gemini:enhance    # おみくじ機能拡張
 
 # Docker を使用した実行
 docker-compose up -d
@@ -114,6 +120,7 @@ digital-omikuji/
 - **[開発環境構築ガイド](documents/開発環境構築ガイド.md)** - 開発環境のセットアップ手順
 - **[VibeCoding設定ガイド](documents/VibeCoding設定ガイド.md)** - VibeCoding の設定と使用方法
 - **[Gemini CLI使用方法](documents/Gemini_CLI使用方法.md)** - Gemini CLI を使用したAI支援開発
+- **[Gemini CLI ファイル指示システム](documents/Gemini_CLI_ファイル指示システム.md)** - ファイルベースの自動実行システム
 - **[API仕様書](documents/API仕様書.md)** - APIエンドポイントの仕様
 - **[トラブルシューティングガイド](documents/トラブルシューティングガイド.md)** - よくある問題と解決方法
 - **[デプロイメントマニュアル](documents/デプロイメントマニュアル.md)** - 本番環境へのデプロイ手順
