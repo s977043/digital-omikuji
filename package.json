@@ -6,10 +6,14 @@
     "dev": "remix dev",
     "start": "remix-serve build",
     "test": "jest",
+    "check-docs": "node scripts/check-documentation.js",
     "gemini:run": "node scripts/gemini-cli.js",
     "gemini:component": "node scripts/gemini-cli.js instructions/generate-component.json",
     "gemini:review": "node scripts/gemini-cli.js instructions/project-review.json",
-    "gemini:enhance": "node scripts/gemini-cli.js instructions/enhance-omikuji.json"
+    "gemini:enhance": "node scripts/gemini-cli.js instructions/enhance-omikuji.json",
+    "gemini:check-docs": "node scripts/gemini-cli.js instructions/check-docs-update.json",
+    "gemini:check-readme": "node scripts/gemini-cli.js instructions/check-readme-update.json",
+    "gemini:pr-docs-review": "node scripts/gemini-cli.js instructions/pr-docs-review.json"
   },
   "dependencies": {
     "@remix-run/node": "^1.16.1",

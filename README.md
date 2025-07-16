@@ -51,10 +51,17 @@ VibeCoding と Gemini CLI を使用した効率的な開発環境の構築につ
 # 開発サーバーの起動
 npm run dev
 
+# ドキュメント状態のチェック
+npm run check-docs
+
 # Gemini CLI ファイル指示システムの使用
-npm run gemini:component  # コンポーネント生成
-npm run gemini:review     # プロジェクトレビュー  
-npm run gemini:enhance    # おみくじ機能拡張
+npm run gemini:run <指示ファイル> # カスタム指示ファイルの実行
+npm run gemini:component     # コンポーネント生成
+npm run gemini:review        # プロジェクトレビュー  
+npm run gemini:enhance       # おみくじ機能拡張
+npm run gemini:check-docs    # ドキュメント更新チェック
+npm run gemini:check-readme  # README更新確認
+npm run gemini:pr-docs-review # PRドキュメントレビュー
 
 # Docker を使用した実行
 docker-compose up -d
@@ -84,7 +91,30 @@ npm run test
 
 ### GitHub Actions
 
-このプロジェクトには、プルリクエストがマージされた際にテストを実行するための GitHub Actions ワークフローが含まれています。ワークフローは `.github/workflows/test-on-pr-merge.yml` に定義されています。
+このプロジェクトには、以下のGitHub Actionsワークフローが含まれています：
+
+- **test-on-pr-merge.yml** - プルリクエストがマージされた際にテストを実行
+- **documentation-check.yml** - プルリクエスト作成時にドキュメントの更新状況をチェック
+
+### ドキュメント更新システム
+
+プロジェクトには、ドキュメントを最新に保つための自動化システムが組み込まれています：
+
+#### 機能
+- **自動ドキュメントチェック** - コード変更時にドキュメント更新の必要性を自動判定
+- **README同期確認** - README.mdとコードの同期状態をチェック
+- **PRレビュー時のドキュメント確認** - プルリクエスト作成時に自動でドキュメント状況をレビュー
+
+#### 使用方法
+```bash
+# ドキュメント状態の手動チェック
+npm run check-docs
+
+# Gemini CLIを使用したドキュメント確認
+npm run gemini:check-docs    # コード変更に基づくドキュメント更新チェック
+npm run gemini:check-readme  # README更新確認
+npm run gemini:pr-docs-review # PRレビュー用ドキュメントチェック
+```
 
 ### ファイル構成
 
@@ -121,6 +151,7 @@ digital-omikuji/
 - **[VibeCoding設定ガイド](documents/VibeCoding設定ガイド.md)** - VibeCoding の設定と使用方法
 - **[Gemini CLI使用方法](documents/Gemini_CLI使用方法.md)** - Gemini CLI を使用したAI支援開発
 - **[Gemini CLI ファイル指示システム](documents/Gemini_CLI_ファイル指示システム.md)** - ファイルベースの自動実行システム
+- **[ドキュメント更新システム](documents/ドキュメント更新システム.md)** - 自動ドキュメント更新・検証システム
 - **[API仕様書](documents/API仕様書.md)** - APIエンドポイントの仕様
 - **[トラブルシューティングガイド](documents/トラブルシューティングガイド.md)** - よくある問題と解決方法
 - **[デプロイメントマニュアル](documents/デプロイメントマニュアル.md)** - 本番環境へのデプロイ手順

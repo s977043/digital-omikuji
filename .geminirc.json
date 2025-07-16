@@ -22,13 +22,33 @@
       "react-best-practices",
       "performance-optimization",
       "accessibility",
-      "security"
+      "security",
+      "documentation-consistency",
+      "readme-sync-check"
     ],
-    "autofix": true
+    "autofix": true,
+    "documentationChecks": {
+      "enabled": true,
+      "checkReadmeSync": true,
+      "checkApiDocSync": true,
+      "validateDocStructure": true,
+      "requireDocumentationForNewFeatures": true
+    }
   },
   "documentation": {
     "language": "japanese",
     "format": "markdown",
-    "includeExamples": true
+    "includeExamples": true,
+    "autoUpdate": {
+      "enabled": true,
+      "checkOnCodeChange": true,
+      "validateReadme": true,
+      "validateApiDocs": true
+    },
+    "structure": {
+      "requiredSections": ["概要", "使用技術", "機能", "使い方", "開発方法"],
+      "documentsFolder": "documents/",
+      "mainReadme": "README.md"
+    }
   }
 }
