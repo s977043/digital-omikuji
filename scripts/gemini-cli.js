@@ -106,6 +106,9 @@ class GeminiCLIExecutor {
       const processedCommand = this.replaceTemplateVariables(command, variables);
       
       console.log(`\n--- Executing instruction: ${type} ---`);
+      if (instruction.description) {
+        console.log(`Description: ${instruction.description}`);
+      }
       
       const result = await this.executeGeminiCommand(processedCommand, options);
       results.push({
