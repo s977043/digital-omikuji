@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "name": "PRレビュー用ドキュメントチェック指示",
+    "description": "プルリクエストレビュー時にドキュメントの更新状況をチェックする指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team"
+  },
+  "commands": [
+    {
+      "type": "analyze-pr-changes",
+      "command": "analyze --type \"pr-changes\" --compare \"origin/main\" --include \"app,scripts,package.json,README.md,documents\" --language \"japanese\" --output \"pr-analysis.md\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": true,
+      "description": "PRの変更内容を分析してドキュメント更新の必要性を判断",
+      "delay": 3000
+    },
+    {
+      "type": "check-doc-coverage",
+      "command": "docs coverage --changes \"pr-analysis.md\" --documents \"README.md,documents/\" --language \"japanese\" --report \"doc-coverage-report.md\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "変更内容がドキュメントでカバーされているかチェック",
+      "delay": 2000
+    },
+    {
+      "type": "validate-consistency",
+      "command": "docs validate --consistency --between \"app,README.md,documents/\" --language \"japanese\" --report \"consistency-report.md\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "コードとドキュメントの一貫性をチェック",
+      "delay": 2000
+    },
+    {
+      "type": "generate-review-report",
+      "command": "review docs --input \"pr-analysis.md,doc-coverage-report.md,consistency-report.md\" --language \"japanese\" --output \"pr-doc-review.md\" --include-suggestions",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "PRのドキュメント状況に関するレビューレポートを生成",
+      "delay": 3000
+    },
+    {
+      "type": "check-breaking-changes",
+      "command": "analyze --breaking-changes --compare \"origin/main\" --document-impact --language \"japanese\" --output \"breaking-changes-doc-impact.md\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "破壊的変更がドキュメントに与える影響をチェック"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+{
+  "metadata": {
+    "name": "README更新確認指示",
+    "description": "README.mdの更新が必要かどうかを確認し、必要に応じて更新を提案する指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team"
+  },
+  "commands": [
+    {
+      "type": "analyze-project-state",
+      "command": "analyze --type \"project-overview\" --include \"package.json,app,scripts,documents\" --language \"japanese\" --output \"current-state.md\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "プロジェクトの現状を分析",
+      "delay": 3000
+    },
+    {
+      "type": "compare-readme",
+      "command": "docs compare --current \"README.md\" --reference \"current-state.md\" --check-sections \"機能,使い方,開発方法\" --language \"japanese\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "README.mdと現在の状態を比較",
+      "delay": 2000
+    },
+    {
+      "type": "check-script-documentation",
+      "command": "docs validate --scripts \"package.json\" --documented-in \"README.md\" --language \"japanese\" --suggest-missing",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "npm scriptsがREADMEに記載されているかチェック",
+      "delay": 2000
+    },
+    {
+      "type": "generate-readme-update",
+      "command": "docs generate --type \"readme-update\" --based-on \"current-state.md\" --target \"README.md\" --preserve-existing --language \"japanese\" --output \"readme-update-proposal.md\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "README.md更新提案を生成",
+      "delay": 4000
+    },
+    {
+      "type": "validate-links",
+      "command": "docs validate --links --target \"README.md\" --check-internal --language \"japanese\"",
+      "options": {
+        "cwd": "."
+      },
+      "required": false,
+      "description": "README.md内のリンクの有効性をチェック"
+    }
+  ]
+}
