@@ -5,7 +5,11 @@
     "build": "remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
-    "test": "jest"
+    "test": "jest",
+    "gemini:run": "node scripts/gemini-cli.js",
+    "gemini:component": "node scripts/gemini-cli.js instructions/generate-component.json",
+    "gemini:review": "node scripts/gemini-cli.js instructions/project-review.json",
+    "gemini:enhance": "node scripts/gemini-cli.js instructions/enhance-omikuji.json"
   },
   "dependencies": {
     "@remix-run/node": "^1.16.1",
