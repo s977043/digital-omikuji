@@ -195,6 +195,52 @@ gemini ci --check "code-quality,test-coverage,documentation"
    gemini generate --verbose --debug
    ```
 
+## エージェントモード
+
+### エージェントモードとは
+
+エージェントモードは、開発者が Gemini と対話しながら、ファイル操作やコマンド実行などを通じて開発を進めるための機能です。これにより、より柔軟で効率的な開発が可能になります。
+
+### エージェントモードの開始方法
+
+```bash
+gemini agent
+```
+
+### エージェントモードでの対話例
+
+```
+> gemini agent
+
+Welcome to Gemini Agent Mode!
+
+> ファイル一覧を表示して
+
+- app/
+- documents/
+- public/
+- ...
+
+> app/routes/index.tsx の内容を教えて
+
+（ファイルの内容を表示）
+
+> 新しい機能を追加したい
+
+どのような機能ですか？
+
+> おみくじの結果をSNSで共有する機能
+
+承知しました。まず、以下のファイルを修正します。
+- app/routes/index.tsx
+
+次に、SNS共有用のライブラリをインストールします。
+
+npm install react-share
+
+...
+```
+
 ## 参考資料
 
 - [Gemini CLI 公式ドキュメント](https://ai.google.dev/docs/gemini_cli)
