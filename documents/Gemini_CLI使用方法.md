@@ -210,8 +210,6 @@ gemini agent
 ### エージェントモードでの対話例
 
 ```
-> gemini agent
-
 Welcome to Gemini Agent Mode!
 
 > ファイル一覧を表示して
