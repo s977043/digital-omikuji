@@ -14,24 +14,11 @@ const execAsync = promisify(exec);
 class GeminiCLIExecutor {
   constructor() {
     this.projectRoot = process.cwd();
-    this.configPath = path.join(this.projectRoot, '.geminirc.json');
-    this.config = this.loadConfig();
   }
 
   /**
    * 設定ファイルを読み込み
    */
-  loadConfig() {
-    try {
-      if (fs.existsSync(this.configPath)) {
-        return JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
-      }
-    } catch (error) {
-      console.warn('Warning: Could not load .geminirc.json:', error.message);
-    }
-    return {};
-  }
-
   /**
    * 指示ファイルを読み込んで解析
    */
