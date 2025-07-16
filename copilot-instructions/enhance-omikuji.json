@@ -1,0 +1,56 @@
+{
+  "metadata": {
+    "name": "GitHub Copilot おみくじ機能拡張指示",
+    "description": "デジタルおみくじアプリケーションの機能拡張を行うCopilot用指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team",
+    "copilotVersion": "1.0"
+  },
+  "context": {
+    "projectType": "remix-typescript",
+    "framework": "react",
+    "testingFramework": "jest",
+    "language": "japanese",
+    "appType": "omikuji-fortune-telling"
+  },
+  "instructions": [
+    {
+      "type": "enhance-fortune-types",
+      "title": "おみくじの種類を拡張",
+      "prompt": "現在のおみくじアプリケーションに新しい占い種類を追加してください：\n\n**新機能要件:**\n- 恋愛運おみくじ\n- 仕事運おみくじ\n- 健康運おみくじ\n- 学業運おみくじ\n- 金運おみくじ\n\n**実装要件:**\n- TypeScript型定義の追加\n- 各占い種類の結果データ\n- UI/UXの改善\n- レスポンシブデザイン\n\n**コーディング規約:**\n- 関数型コンポーネント使用\n- React Hooks活用\n- Tailwind CSSでスタイリング\n- アクセシビリティ考慮\n- 日本語コメント\n\n**ファイル構成:**\n- app/types/fortune.ts (型定義)\n- app/data/fortunes.ts (データ)\n- app/components/FortuneTypeSelector.tsx (選択UI)\n- app/components/FortuneResult.tsx (結果表示)",
+      "priority": "high"
+    },
+    {
+      "type": "add-animation",
+      "title": "アニメーション効果の追加",
+      "prompt": "おみくじを引く際のアニメーション効果を追加してください：\n\n**アニメーション要件:**\n- おみくじ箱を振るアニメーション\n- 結果表示時のフェードイン効果\n- ローディング中のスピナー\n- 結果のカウントアップ効果\n\n**技術要件:**\n- CSS Transitions/Animations使用\n- React Transition Groupの活用\n- パフォーマンスの最適化\n- モーション軽減設定への対応\n\n**実装ファイル:**\n- app/components/OmikujiBox.tsx\n- app/styles/animations.css\n- app/hooks/useAnimation.ts",
+      "priority": "medium"
+    },
+    {
+      "type": "add-history",
+      "title": "おみくじ履歴機能の追加",
+      "prompt": "ユーザーのおみくじ履歴を保存・表示する機能を追加してください：\n\n**機能要件:**\n- ローカルストレージでの履歴保存\n- 履歴一覧の表示\n- 履歴の検索・フィルタリング\n- 履歴のエクスポート機能\n\n**データ構造:**\n```typescript\ninterface FortuneHistory {\n  id: string;\n  date: Date;\n  type: FortuneType;\n  result: string;\n  score: number;\n}\n```\n\n**実装ファイル:**\n- app/hooks/useFortuneHistory.ts\n- app/components/FortuneHistory.tsx\n- app/utils/storage.ts",
+      "priority": "medium"
+    },
+    {
+      "type": "add-sharing",
+      "title": "SNS共有機能の追加",
+      "prompt": "おみくじ結果をSNSで共有する機能を追加してください：\n\n**共有対象:**\n- Twitter\n- Facebook\n- LINE\n- コピー用URL生成\n\n**機能要件:**\n- 結果の画像生成\n- シェア用テキストの生成\n- プライバシー設定\n- OGP対応\n\n**セキュリティ要件:**\n- 個人情報の除外\n- 適切なエスケープ処理\n- CSP対応\n\n**実装ファイル:**\n- app/components/ShareButtons.tsx\n- app/utils/shareUtils.ts\n- app/routes/share.$id.tsx",
+      "priority": "low"
+    },
+    {
+      "type": "add-tests",
+      "title": "新機能のテスト追加",
+      "prompt": "追加した新機能に対する包括的なテストを作成してください：\n\n**テスト種類:**\n- ユニットテスト\n- インテグレーションテスト\n- E2Eテスト（基本的なもの）\n\n**テスト対象:**\n- 各コンポーネントの動作\n- データの保存・取得\n- エラーハンドリング\n- アクセシビリティ\n\n**テストツール:**\n- Jest\n- @testing-library/react\n- @testing-library/user-event\n\n**カバレッジ目標:**\n- 80%以上のコードカバレッジ\n- 主要機能の網羅\n- エッジケースの考慮",
+      "priority": "high",
+      "dependsOn": ["enhance-fortune-types", "add-animation", "add-history", "add-sharing"]
+    }
+  ],
+  "tips": [
+    "機能追加は段階的に行い、各段階でテストを実行する",
+    "既存機能への影響を最小限に抑える",
+    "ユーザビリティを常に考慮する",
+    "パフォーマンスへの影響を監視する",
+    "アクセシビリティガイドラインに従う"
+  ]
+}

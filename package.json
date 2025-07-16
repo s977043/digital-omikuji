@@ -13,7 +13,14 @@
     "gemini:enhance": "node scripts/gemini-cli.js instructions/enhance-omikuji.json",
     "gemini:check-docs": "node scripts/gemini-cli.js instructions/check-docs-update.json",
     "gemini:check-readme": "node scripts/gemini-cli.js instructions/check-readme-update.json",
-    "gemini:pr-docs-review": "node scripts/gemini-cli.js instructions/pr-docs-review.json"
+    "gemini:pr-docs-review": "node scripts/gemini-cli.js instructions/pr-docs-review.json",
+    "copilot:run": "node scripts/copilot-cli.js",
+    "copilot:component": "node scripts/copilot-cli.js copilot-instructions/generate-component.json",
+    "copilot:review": "node scripts/copilot-cli.js copilot-instructions/project-review.json",
+    "copilot:enhance": "node scripts/copilot-cli.js copilot-instructions/enhance-omikuji.json",
+    "copilot:check-docs": "node scripts/copilot-cli.js copilot-instructions/check-docs-update.json",
+    "copilot:component-chat": "node scripts/copilot-cli.js copilot-instructions/generate-component.json --open-chat",
+    "copilot:review-chat": "node scripts/copilot-cli.js copilot-instructions/project-review.json --open-chat"
   },
   "dependencies": {
     "@remix-run/node": "^1.16.1",

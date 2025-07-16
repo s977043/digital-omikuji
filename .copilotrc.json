@@ -1,0 +1,107 @@
+{
+  "project": {
+    "name": "digital-omikuji",
+    "description": "Remix を使用したデジタルおみくじアプリケーション",
+    "language": "typescript",
+    "framework": "remix",
+    "testFramework": "jest"
+  },
+  "copilot": {
+    "version": "1.0.0",
+    "provider": "github-copilot",
+    "model": "gpt-4",
+    "temperature": 0.7
+  },
+  "generation": {
+    "codeStyle": "functional",
+    "naming": "camelCase",
+    "imports": "es6",
+    "typescript": {
+      "strict": true,
+      "declarations": true
+    },
+    "react": {
+      "hooks": true,
+      "functionalComponents": true,
+      "typescript": true
+    }
+  },
+  "review": {
+    "enabled": true,
+    "rules": [
+      "typescript-strict",
+      "react-best-practices",
+      "performance-optimization",
+      "accessibility",
+      "security",
+      "documentation-consistency",
+      "readme-sync-check"
+    ],
+    "autofix": false,
+    "suggestImprovements": true,
+    "documentationChecks": {
+      "enabled": true,
+      "checkReadmeSync": true,
+      "checkApiDocSync": true,
+      "validateDocStructure": true,
+      "requireDocumentationForNewFeatures": true
+    }
+  },
+  "documentation": {
+    "language": "japanese",
+    "format": "markdown",
+    "includeExamples": true,
+    "autoUpdate": {
+      "enabled": false,
+      "checkOnCodeChange": false,
+      "validateReadme": true,
+      "validateApiDocs": true
+    },
+    "structure": {
+      "requiredSections": ["概要", "使用技術", "機能", "使い方", "開発方法"],
+      "documentsFolder": "documents/",
+      "mainReadme": "README.md"
+    }
+  },
+  "prompts": {
+    "contextFiles": [
+      "README.md",
+      "package.json",
+      "app/routes/index.tsx",
+      "app/root.tsx"
+    ],
+    "excludePatterns": [
+      "node_modules/**",
+      "build/**",
+      "dist/**",
+      ".git/**",
+      "*.log"
+    ],
+    "templates": {
+      "component": "copilot-instructions/templates/component-prompt.md",
+      "test": "copilot-instructions/templates/test-prompt.md",
+      "review": "copilot-instructions/templates/review-prompt.md",
+      "documentation": "copilot-instructions/templates/documentation-prompt.md"
+    }
+  },
+  "workflows": {
+    "componentGeneration": {
+      "enabled": true,
+      "includeTests": true,
+      "includeStorybook": false,
+      "includeDocumentation": true
+    },
+    "codeReview": {
+      "enabled": true,
+      "checkSecurity": true,
+      "checkPerformance": true,
+      "checkAccessibility": true
+    },
+    "refactoring": {
+      "enabled": true,
+      "preserveFunctionality": true,
+      "improveReadability": true,
+      "optimizePerformance": true
+    }
+  }
+}

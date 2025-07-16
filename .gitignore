@@ -134,3 +134,6 @@ dist
 
 # ビルド生成物
 public/build
+
+# 一時ファイル
+tmp/

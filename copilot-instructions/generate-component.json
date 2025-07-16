@@ -1,0 +1,55 @@
+{
+  "metadata": {
+    "name": "GitHub Copilot コンポーネント生成指示",
+    "description": "新しいReactコンポーネントを生成するためのCopilot用指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team",
+    "copilotVersion": "1.0"
+  },
+  "context": {
+    "projectType": "remix-typescript",
+    "framework": "react",
+    "testingFramework": "jest",
+    "language": "japanese"
+  },
+  "instructions": [
+    {
+      "type": "generate-component",
+      "title": "React TSXコンポーネントを生成",
+      "prompt": "以下の要件に基づいて、TypeScriptを使用したReactコンポーネントを生成してください：\n\n**プロジェクト情報:**\n- プロジェクト名: digital-omikuji\n- フレームワーク: Remix with TypeScript\n- スタイル: Tailwind CSS\n- コーディングスタイル: 関数型コンポーネント\n\n**コンポーネント要件:**\n- コンポーネント名: {{componentName}}\n- props: {{componentProps}}\n- 機能: {{componentDescription}}\n\n**コーディング規約:**\n- TypeScript strict モードを使用\n- 関数型コンポーネントを使用\n- React Hooks を適切に使用\n- Tailwind CSS でスタイリング\n- アクセシビリティを考慮\n- 日本語のコメントを追加\n\n**出力形式:**\n- ファイル名: app/components/{{componentName}}.tsx\n- export default で書き出し\n- props の型定義を含める",
+      "variables": {
+        "componentName": "FortuneResult",
+        "componentProps": "result: string, onReset: () => void",
+        "componentDescription": "おみくじの結果を表示し、リセットボタンを提供するコンポーネント"
+      },
+      "priority": "high"
+    },
+    {
+      "type": "generate-test",
+      "title": "コンポーネントのテストファイルを生成",
+      "prompt": "先ほど生成したコンポーネント {{componentName}} に対するJestテストを作成してください：\n\n**テスト要件:**\n- テストフレームワーク: Jest\n- テストライブラリ: @testing-library/react\n- カバレッジ: 主要な機能をテスト\n- エッジケースも含める\n\n**テスト項目:**\n- コンポーネントが正しくレンダリングされること\n- propsが正しく表示されること\n- ユーザーインタラクションが正しく動作すること\n- エラーケースの処理\n\n**出力形式:**\n- ファイル名: app/components/__tests__/{{componentName}}.test.tsx\n- 日本語でのテスト説明\n- describeとitブロックを適切に使用",
+      "variables": {
+        "componentName": "FortuneResult"
+      },
+      "priority": "medium",
+      "dependsOn": ["generate-component"]
+    },
+    {
+      "type": "review-code",
+      "title": "生成されたコンポーネントをレビュー",
+      "prompt": "生成されたコンポーネント {{componentName}} をレビューし、改善提案を行ってください：\n\n**レビュー観点:**\n- TypeScript型安全性\n- React ベストプラクティス\n- パフォーマンス最適化\n- アクセシビリティ\n- セキュリティ\n- コードの可読性\n- 保守性\n\n**改善提案形式:**\n- 問題点の指摘\n- 具体的な改善案\n- 修正コードの提示\n- 理由の説明（日本語）",
+      "variables": {
+        "componentName": "FortuneResult"
+      },
+      "priority": "low",
+      "dependsOn": ["generate-component"]
+    }
+  ],
+  "tips": [
+    "GitHub Copilot Chat で '/ask' コマンドを使用して質問を開始する",
+    "コンテキストを提供するために関連ファイルを開いておく",
+    "生成されたコードは必ずレビューし、テストを実行する",
+    "プロジェクトの既存のコーディング規約に従う",
+    "セキュリティとアクセシビリティを常に考慮する"
+  ]
+}

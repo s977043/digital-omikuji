@@ -1,0 +1,48 @@
+{
+  "metadata": {
+    "name": "GitHub Copilot プロジェクトレビュー指示",
+    "description": "プロジェクト全体のコードレビューとドキュメント生成を行うCopilot用指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team",
+    "copilotVersion": "1.0"
+  },
+  "context": {
+    "projectType": "remix-typescript",
+    "framework": "react",
+    "testingFramework": "jest",
+    "language": "japanese"
+  },
+  "instructions": [
+    {
+      "type": "review-project",
+      "title": "プロジェクト全体のコードレビュー",
+      "prompt": "digital-omikuji プロジェクトの全体的なコードレビューを実行してください：\n\n**レビュー対象:**\n- app/routes/ ディレクトリ内のすべてのファイル\n- app/components/ ディレクトリ内のコンポーネント\n- 設定ファイル（package.json, tsconfig.json等）\n\n**レビュー観点:**\n- TypeScript strict モードの遵守\n- React ベストプラクティス\n- パフォーマンス最適化の機会\n- セキュリティの脆弱性\n- アクセシビリティの問題\n- コードの一貫性\n- 保守性の向上\n\n**除外パターン:**\n- node_modules/\n- build/\n- dist/\n- .git/\n\n**出力形式:**\n- 問題点の分類（重要度別）\n- 具体的な改善提案\n- 修正例の提示\n- 説明は日本語で記述",
+      "priority": "high"
+    },
+    {
+      "type": "generate-api-docs",
+      "title": "APIドキュメントの生成",
+      "prompt": "app/routes ディレクトリ内のルートファイルを解析し、APIドキュメントを生成してください：\n\n**解析対象:**\n- すべてのルートファイル（loader, action関数）\n- データの入出力形式\n- エラーハンドリング\n\n**ドキュメント要件:**\n- Markdown形式で出力\n- 日本語での説明\n- エンドポイント一覧\n- リクエスト/レスポンス例\n- エラーコード説明\n\n**出力ファイル:**\n- documents/generated-api.md\n\n**構造:**\n```markdown\n# API仕様書\n\n## 概要\n\n## エンドポイント一覧\n\n### GET /\n- 説明: メインページ\n- レスポンス: HTML\n\n### POST /api/fortune\n- 説明: おみくじ結果取得\n- リクエスト: \n- レスポンス: \n```",
+      "priority": "medium"
+    },
+    {
+      "type": "update-readme",
+      "title": "README.mdの更新提案",
+      "prompt": "現在のプロジェクト状態に基づいてREADME.mdの更新提案を作成してください：\n\n**分析対象:**\n- package.json の依存関係\n- app/ ディレクトリの構造\n- 既存のドキュメント\n- 設定ファイル\n\n**更新要件:**\n- 最新の機能を反映\n- セットアップ手順の正確性\n- 技術スタックの更新\n- 使用方法の詳細化\n- 開発方法の説明\n\n**必須セクション:**\n- 概要\n- 使用技術\n- 機能\n- セットアップ方法\n- 使い方\n- 開発方法\n- ライセンス\n\n**出力形式:**\n- 更新が必要な箇所の指摘\n- 新しいセクションの提案\n- 修正されたMarkdownテキスト\n- 変更理由の説明（日本語）",
+      "priority": "medium"
+    },
+    {
+      "type": "security-check",
+      "title": "セキュリティチェック",
+      "prompt": "プロジェクトのセキュリティ面を診断し、潜在的な脆弱性を特定してください：\n\n**チェック項目:**\n- 依存関係の脆弱性（package.json）\n- 環境変数の適切な管理\n- ユーザー入力の検証\n- XSS対策\n- CSRF対策\n- セキュアな設定\n\n**分析ファイル:**\n- package.json\n- app/routes/ 内のファイル\n- 設定ファイル\n- .env.example\n\n**出力形式:**\n- 脆弱性の重要度分類（Critical, High, Medium, Low）\n- 具体的な問題点\n- 修正方法の提案\n- 予防策の推奨",
+      "priority": "high"
+    }
+  ],
+  "tips": [
+    "大きなプロジェクトは小さな単位に分けてレビューする",
+    "レビュー結果は段階的に修正していく",
+    "セキュリティ問題は最優先で対応する",
+    "ドキュメントの更新も忘れずに行う",
+    "生成されたドキュメントは人間が最終確認する"
+  ]
+}

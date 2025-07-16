@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "name": "GitHub Copilot ドキュメント更新チェック指示",
+    "description": "ドキュメントの更新状況をチェックし、同期を維持するCopilot用指示セット",
+    "version": "1.0.0",
+    "author": "digital-omikuji-team",
+    "copilotVersion": "1.0"
+  },
+  "context": {
+    "projectType": "remix-typescript",
+    "framework": "react",
+    "language": "japanese",
+    "documentationFolder": "documents/"
+  },
+  "instructions": [
+    {
+      "type": "check-readme-sync",
+      "title": "README.mdとコードの同期チェック",
+      "prompt": "README.mdの内容と実際のコードの整合性をチェックしてください：\n\n**チェック項目:**\n- package.jsonの依存関係とREADMEの技術スタック\n- セットアップ手順の正確性\n- 使用方法の例とコードの一致\n- 機能説明と実装の対応\n- NPMスクリプトの説明\n\n**分析ファイル:**\n- README.md\n- package.json\n- app/routes/index.tsx\n- その他の主要ファイル\n\n**出力形式:**\n- 不整合箇所の一覧\n- 修正が必要な内容\n- 推奨される更新内容\n- 優先度の設定（高/中/低）",
+      "priority": "high"
+    },
+    {
+      "type": "check-api-docs-sync",
+      "title": "APIドキュメントとコードの同期チェック",
+      "prompt": "APIドキュメントと実際のルート実装の整合性をチェックしてください：\n\n**チェック対象:**\n- documents/API仕様書.md\n- app/routes/ 内のすべてのルートファイル\n- loader/action関数の実装\n- 型定義との整合性\n\n**確認項目:**\n- エンドポイントの存在\n- リクエスト/レスポンス形式\n- エラーハンドリング\n- ステータスコード\n- パラメータの型\n\n**出力:**\n- 不一致のエンドポイント\n- 欠落しているドキュメント\n- 古くなった仕様\n- 新規追加が必要な項目",
+      "priority": "high"
+    },
+    {
+      "type": "validate-doc-structure",
+      "title": "ドキュメント構造の検証",
+      "prompt": "プロジェクトのドキュメント構造が適切かチェックしてください：\n\n**必須ドキュメント:**\n- README.md\n- documents/API仕様書.md\n- documents/開発環境構築ガイド.md\n- documents/デプロイメントマニュアル.md\n\n**構造要件:**\n- 各ドキュメントの必須セクション\n- リンクの整合性\n- 画像や図表の存在確認\n- 言語の統一（日本語）\n\n**出力:**\n- 欠落しているドキュメント\n- 構造上の問題\n- 改善提案\n- テンプレート化可能な部分",
+      "priority": "medium"
+    },
+    {
+      "type": "check-code-comments",
+      "title": "コードコメントとドキュメントの整合性",
+      "prompt": "コード内のコメントとドキュメントの説明が一致しているかチェックしてください：\n\n**チェック対象:**\n- 関数のJSDocコメント\n- 型定義のコメント\n- 複雑なロジックの説明\n- TODO/FIXME コメント\n\n**整合性確認:**\n- 関数の説明と実装\n- パラメータの説明と型\n- 戻り値の説明と実装\n- 例外処理の説明\n\n**出力:**\n- 不整合のあるコメント\n- 不足しているドキュメント\n- 更新が必要なコメント\n- 削除すべき古いコメント",
+      "priority": "medium"
+    },
+    {
+      "type": "generate-doc-update-plan",
+      "title": "ドキュメント更新計画の生成",
+      "prompt": "チェック結果に基づいて、ドキュメント更新の計画を作成してください：\n\n**計画内容:**\n- 更新優先度の設定\n- 作業工数の見積もり\n- 更新手順の詳細\n- 責任者の割り当て提案\n\n**出力形式:**\n```markdown\n# ドキュメント更新計画\n\n## 概要\n\n## 高優先度項目\n- [ ] 項目1: 説明\n  - 工数: X時間\n  - 担当者: 提案\n\n## 中優先度項目\n\n## 低優先度項目\n\n## 実施スケジュール\n```\n\n**追加要素:**\n- 自動化可能な部分の特定\n- 定期チェックの仕組み\n- 品質保証の方法",
+      "priority": "low",
+      "dependsOn": ["check-readme-sync", "check-api-docs-sync", "validate-doc-structure", "check-code-comments"]
+    }
+  ],
+  "automation": {
+    "suggestions": [
+      "CI/CDでのドキュメント同期チェック",
+      "プリコミットフックでの基本チェック",
+      "定期的な自動レポート生成",
+      "ドキュメント変更時の通知システム"
+    ]
+  },
+  "tips": [
+    "ドキュメントの更新は小さな変更でも定期的に行う",
+    "コードレビュー時にドキュメントの整合性も確認する",
+    "自動化できる部分は積極的に自動化する",
+    "ドキュメントのバージョン管理も適切に行う",
+    "ユーザーの視点でドキュメントの分かりやすさを評価する"
+  ]
+}
