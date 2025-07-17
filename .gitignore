@@ -102,3 +102,4 @@ dist
 
 # ビルド生成物
 public/build
+build/

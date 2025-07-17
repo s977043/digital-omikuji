@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import Index from './index';
+import Index from '../app/routes/index';
 
 describe('Index', () => {
   it('renders a heading and a button', () => {
