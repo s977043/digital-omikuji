@@ -47,17 +47,17 @@ assignees: copilot
 
 ### Props 設計
 ```typescript
-interface [ComponentName]Props {
-  // 必須Props
-  [propName1]: [type];  // [説明]
-  [propName2]: [type];  // [説明]
+interface ExampleComponentProps {
+  // 必須Props (Replace `ExampleComponent` with your actual component name)
+  requiredProp1: string;  // Description of requiredProp1
+  requiredProp2: number;  // Description of requiredProp2
   
   // オプションProps
-  [propName3]?: [type]; // [説明]
-  [propName4]?: [type]; // [説明]
+  optionalProp1?: boolean; // Description of optionalProp1
+  optionalProp2?: string;  // Description of optionalProp2
   
   // イベントハンドラー
-  [onEvent]?: ([params]) => void; // [説明]
+  onEvent?: (params: any) => void; // Description of onEvent
 }
 ```
 
