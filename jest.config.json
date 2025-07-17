@@ -3,10 +3,19 @@
   "testEnvironment": "jsdom",
   "setupFilesAfterEnv": ["<rootDir>/app/test-setup.ts"],
   "testMatch": ["**/__tests__/**/*.(ts|tsx)", "**/*.(test|spec).(ts|tsx)"],
-  "moduleNameMapping": {
+  "moduleNameMapper": {
     "^~/(.*)$": "<rootDir>/app/$1"
   },
   "transform": {
-    "^.+\\.(ts|tsx)$": "ts-jest"
-  }
+    "^.+\\.(ts|tsx)$": ["ts-jest", {
+      "tsconfig": {
+        "jsx": "react-jsx"
+      }
+    }]
+  },
+  "moduleFileExtensions": ["ts", "tsx", "js", "jsx"],
+  "collectCoverageFrom": [
+    "app/**/*.{ts,tsx}",
+    "!app/**/*.d.ts"
+  ]
 }
