@@ -1,9 +1,22 @@
 # digital-omikuji
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Node.js Version](https://img.shields.io/badge/node-%3E%3D14-brightgreen.svg)
+![GitHub Issues](https://img.shields.io/github/issues/s977043/digital-omikuji)
+![GitHub Stars](https://img.shields.io/github/stars/s977043/digital-omikuji?style=social)
+![GitHub Actions](https://img.shields.io/github/actions/workflow/status/s977043/digital-omikuji/documentation-check.yml)
+
 ### 概要
 
 Remix で作成したデジタルおみくじアプリです。  
 ボタンをクリックするだけで、いつでもどこでもおみくじを引くことができます。
+
+### 🌟 特徴
+
+- **シンプルな操作**: ワンクリックでおみくじを引けます
+- **レスポンシブデザイン**: PC・スマートフォン両対応
+- **軽量**: 高速で動作します
+- **オープンソース**: MIT ライセンスで自由に利用可能
 
 ### 使用技術
 
@@ -159,6 +172,18 @@ digital-omikuji/
 ### ライセンス
 
 MIT License
+
+### 🤝 貢献
+
+プロジェクトへの貢献を歓迎します！詳細は [CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
+
+- バグ報告や機能要求は [Issues](https://github.com/s977043/digital-omikuji/issues) で受け付けています
+- プルリクエストをお待ちしています
+- ドキュメントの改善も大歓迎です
+
+### 🔒 セキュリティ
+
+セキュリティ上の問題を発見した場合は、[SECURITY.md](SECURITY.md) に従って報告してください。
 
 ### 作者情報
 

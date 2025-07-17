@@ -10,6 +10,11 @@ on:
       - 'README.md'
       - 'documents/**'
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   documentation-check:
     runs-on: ubuntu-latest

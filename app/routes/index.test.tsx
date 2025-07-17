@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@remix-run/node/dist/server';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Index from './index';
 
 describe('Index', () => {

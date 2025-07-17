@@ -1,0 +1,12 @@
+{
+  "preset": "ts-jest",
+  "testEnvironment": "jsdom",
+  "setupFilesAfterEnv": ["<rootDir>/app/test-setup.ts"],
+  "testMatch": ["**/__tests__/**/*.(ts|tsx)", "**/*.(test|spec).(ts|tsx)"],
+  "moduleNameMapping": {
+    "^~/(.*)$": "<rootDir>/app/$1"
+  },
+  "transform": {
+    "^.+\\.(ts|tsx)$": "ts-jest"
+  }
+}
