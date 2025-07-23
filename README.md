@@ -173,18 +173,3 @@ digital-omikuji/
 
 MIT License
 
-### 🤝 貢献
-
-プロジェクトへの貢献を歓迎します！詳細は [CONTRIBUTING.md](CONTRIBUTING.md) をご覧ください。
-
-- バグ報告や機能要求は [Issues](https://github.com/s977043/digital-omikuji/issues) で受け付けています
-- プルリクエストをお待ちしています
-- ドキュメントの改善も大歓迎です
-
-### 🔒 セキュリティ
-
-セキュリティ上の問題を発見した場合は、[SECURITY.md](SECURITY.md) に従って報告してください。
-
-### 作者情報
-
-s977043
