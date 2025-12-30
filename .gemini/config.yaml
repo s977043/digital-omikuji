@@ -1,0 +1,31 @@
+# Gemini Code Assist Configuration
+# https://developers.google.com/gemini-code-assist/docs/customize-gemini-behavior-github
+
+# Code review settings
+code_review:
+  # Enable automatic code review on pull requests
+  enabled: true
+
+  # Language for review comments
+  language: ja
+
+  # Review scope
+  scope:
+    - "app/**"
+    - "components/**"
+    - "hooks/**"
+    - "utils/**"
+    - "types/**"
+
+  # Files to ignore
+  ignore:
+    - "node_modules/**"
+    - "*.lock"
+    - ".env*"
+    - "dist/**"
+    - ".expo/**"
+
+# Pull request summary settings
+pull_request_summary:
+  enabled: true
+  language: ja
