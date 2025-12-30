@@ -29,7 +29,7 @@ export async function addHistoryEntry(fortune: OmikujiFortune): Promise<void> {
   try {
     const history = await getHistory();
     const newEntry: HistoryEntry = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       fortune,
       drawnAt: new Date().toISOString(),
     };
