@@ -13,11 +13,18 @@ import "../../global.css";
 type AppState = 'IDLE' | 'SHAKING' | 'REVEALING' | 'RESULT';
 
 const SHAKE_THRESHOLD = 1.8;
+const SHAKING_DURATION_MS = 1500;
+const REVEALING_DURATION_MS = 2000;
+
+interface Subscription {
+  remove: () => void;
+}
 
 export default function OmikujiApp() {
   const [appState, setAppState] = useState<AppState>('IDLE');
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
-  const subscription = useRef<any>(null);
+  const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
+  const subscription = useRef<Subscription | null>(null);
   const { fortune, drawFortune, resetFortune } = useOmikujiLogic();
 
   // デバッグボタン用判定
@@ -29,11 +36,20 @@ export default function OmikujiApp() {
     // サウンドマネージャーの初期化
     soundManager.initialize();
 
-    // センサーの購読
-    Accelerometer.setUpdateInterval(100);
-    subscription.current = Accelerometer.addListener(accelerometerData => {
-      setData(accelerometerData);
-    });
+    // センサーの可用性確認と購読
+    async function setupSensor() {
+      const available = await Accelerometer.isAvailableAsync();
+      setIsSensorAvailable(available);
+
+      if (available) {
+        Accelerometer.setUpdateInterval(100);
+        subscription.current = Accelerometer.addListener((accelerometerData: {x: number; y: number; z: number}) => {
+          setData(accelerometerData);
+        });
+      }
+    }
+
+    setupSensor();
 
     return () => {
       subscription.current && subscription.current.remove();
@@ -69,7 +85,7 @@ export default function OmikujiApp() {
       if (Platform.OS !== 'web') {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       }
-    }, 1500);
+    }, SHAKING_DURATION_MS);
   };
 
   // --- アニメーション状態遷移 ---
@@ -81,7 +97,7 @@ export default function OmikujiApp() {
         if (Platform.OS !== 'web') {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         }
-      }, 2000);
+      }, REVEALING_DURATION_MS);
     }
   }, [appState]);
 
@@ -154,8 +170,8 @@ export default function OmikujiApp() {
                 animate={{ translateY: -100 }}
                 transition={{ type: 'spring', damping: 10, stiffness: 80 }}
               >
-                <Text className="text-red-700 font-black text-sm" style={{ writingMode: 'vertical-rl' }}>
-                  2026 奉納
+                <Text className="text-red-700 font-black text-sm text-center leading-tight">
+                  {'2026\n奉\n納'}
                 </Text>
               </MotiView>
             </View>
@@ -166,13 +182,15 @@ export default function OmikujiApp() {
             <FortuneDisplay fortune={fortune} onReset={handleReset} />
           )}
 
-          {/* デバッグボタン (開発時のみ) */}
-          {showDebug && appState === 'IDLE' && (
+          {/* デバッグボタン (開発時 または センサー無効時) */}
+          {(showDebug || isSensorAvailable === false) && appState === 'IDLE' && (
             <TouchableOpacity
               onPress={handleShakeStart}
               className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
             >
-              <Text className="text-white font-bold">🐞 テストで振る</Text>
+              <Text className="text-white font-bold">
+                {isSensorAvailable === false ? '📱 ボタンでおみくじを引く' : '🐞 テストで振る'}
+              </Text>
             </TouchableOpacity>
           )}
         </View>

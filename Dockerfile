@@ -20,4 +20,4 @@ COPY . .
 EXPOSE 8081
 
 # Default command
-CMD ["npx", "expo", "start", "--host", "lan"]
+CMD ["npx", "expo", "start", "--host", "0.0.0.0"]

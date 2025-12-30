@@ -2,6 +2,7 @@ import { Audio } from 'expo-av';
 
 class SoundManager {
   private sounds: Map<string, Audio.Sound> = new Map();
+  private isReady: boolean = false;
 
   async initialize() {
     try {
@@ -9,12 +10,17 @@ class SoundManager {
         playsInSilentModeIOS: true,
         staysActiveInBackground: false,
       });
+      this.isReady = true;
     } catch (error) {
       console.error('Audio initialization failed:', error);
+      this.isReady = false;
     }
   }
 
   async loadSound(key: string, source: any) {
+    if (!this.isReady) {
+      console.warn('SoundManager is not initialized yet.');
+    }
     try {
       const { sound } = await Audio.Sound.createAsync(source);
       this.sounds.set(key, sound);
@@ -26,6 +32,7 @@ class SoundManager {
   }
 
   async playSound(key: string) {
+    if (!this.isReady) return;
     try {
       const sound = this.sounds.get(key);
       if (sound) {

@@ -4,14 +4,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const appVariant = process.env.APP_VARIANT || 'development';
 
   let name = 'おみくじ (Dev)';
-  let bundleIdentifier = 'com.yourname.omikujidev';
+  let bundleIdentifier = 'jp.co.digitalomikuji.dev';
 
   if (appVariant === 'production') {
     name = '2026 おみくじ';
-    bundleIdentifier = 'com.yourname.omikuji';
+    bundleIdentifier = 'jp.co.digitalomikuji';
   } else if (appVariant === 'preview') {
     name = 'おみくじ (Preview)';
-    bundleIdentifier = 'com.yourname.omikujipreview';
+    bundleIdentifier = 'jp.co.digitalomikuji.preview';
   }
 
   return {
@@ -48,7 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     extra: {
       appVariant,
       eas: {
-        projectId: 'your-project-id',
+        projectId: 'dummy-project-id-2026',
       },
     },
   };
