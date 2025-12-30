@@ -1,0 +1,12 @@
+node_modules
+.expo
+.git
+.github
+.vscode
+.worktrees
+Dockerfile
+compose.yaml
+ios
+android
+web-build
+*.log

@@ -56,6 +56,24 @@ Expo Application Services (EAS) を使用したクラウドビルドフローを
 eas build --profile development --platform android
 ```
 
+## 🌐 Web ビルド & デプロイ (Vercel)
+
+Web 版は Vercel へのデプロイをサポートしています。
+
+### 設定の構成
+
+- **Build Command**: `npm run build` (または `npx expo export -p web`)
+- **Output Directory**: `dist`
+- **Install Command**: `npm install`
+
+### ローカルでのビルド確認
+
+```bash
+npm run build
+```
+
+生成された `dist` ディレクトリの内容を静的ホスティングとしてデプロイ可能です。`vercel.json` により、SPA（Single Page Application）としてのルーティングが適切に処理されます。
+
 ## 🎨 デザイン & スタイリングガイド
 
 **NativeWind (Tailwind CSS)** を全面的に採用しています。
