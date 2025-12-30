@@ -1,27 +1,23 @@
-# builder ステージ: ビルド環境
-FROM node:18-alpine AS builder
+# Dockerfile
+FROM node:20-bullseye
 
+# Install tools
+RUN npm install -g eas-cli
+
+# Workdir
 WORKDIR /app
 
+# Copy package files first for layer caching
 COPY package*.json ./
 
+# Install dependencies
 RUN npm install
 
+# Copy all source files
 COPY . .
 
-RUN npm run build
+# Expose Metro bundler port
+EXPOSE 8081
 
-# production ステージ: 実行環境
-FROM node:18-alpine
-
-WORKDIR /app
-
-COPY --from=builder /app/public /app/public
-COPY --from=builder /app/build /app/build
-COPY package*.json ./
-
-RUN npm install --only=production
-
-EXPOSE 3000
-
-CMD ["npm", "run", "start"]
+# Default command
+CMD ["npx", "expo", "start", "--host", "0.0.0.0"]
