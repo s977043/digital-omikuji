@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, Platform, ImageBackground } from 'react-native';
 import { Accelerometer } from 'expo-sensors';
 import { MotiView } from 'moti';
 import * as Haptics from 'expo-haptics';
 import Constants from 'expo-constants';
 import { useOmikujiLogic } from '../hooks/useOmikujiLogic';
 import FortuneDisplay from '../components/FortuneDisplay';
+import { soundManager } from '../utils/SoundManager';
 import "../../global.css";
 
 // ステートマシン
@@ -23,22 +24,21 @@ export default function OmikujiApp() {
   const appVariant = Constants.expoConfig?.extra?.appVariant || 'development';
   const showDebug = appVariant === 'development';
 
-  // --- シェイク検知ロジック ---
-  const _subscribe = () => {
+  // --- サウンドとセンサーの初期化 ---
+  useEffect(() => {
+    // サウンドマネージャーの初期化
+    soundManager.initialize();
+
+    // センサーの購読
     Accelerometer.setUpdateInterval(100);
     subscription.current = Accelerometer.addListener(accelerometerData => {
       setData(accelerometerData);
     });
-  };
 
-  const _unsubscribe = () => {
-    subscription.current && subscription.current.remove();
-    subscription.current = null;
-  };
-
-  useEffect(() => {
-    _subscribe();
-    return () => _unsubscribe();
+    return () => {
+      subscription.current && subscription.current.remove();
+      soundManager.unloadAll();
+    };
   }, []);
 
   // シェイク監視
@@ -93,75 +93,90 @@ export default function OmikujiApp() {
   // --- 描画 (Render) ---
 
   return (
-    <View className="flex-1 items-center justify-center bg-slate-900 relative overflow-hidden">
+    <View className="flex-1 bg-slate-900">
+      <ImageBackground
+        source={require('../assets/shrine_background.png')}
+        style={{ flex: 1 }}
+        resizeMode="cover"
+      >
+        <View className="flex-1 items-center justify-center bg-black/40 relative overflow-hidden">
 
-      {/* 背景の雰囲気づくり */}
-      <View className="absolute inset-0 bg-slate-800 opacity-50" />
+          {/* 待機状態 (IDLE) */}
+          {appState === 'IDLE' && (
+            <MotiView
+              from={{ opacity: 0, scale: 0.9, translateY: 10 }}
+              animate={{ opacity: 1, scale: 1, translateY: 0 }}
+              className="items-center px-6"
+            >
+              <View className="bg-white/10 p-8 rounded-full border border-white/20 mb-8 backdrop-blur-md">
+                <Text className="text-7xl">🔮</Text>
+              </View>
+              <Text className="text-3xl text-white font-extrabold tracking-tight mb-2 text-center">
+                スマホを振って{"\n"}おみくじを引く
+              </Text>
+              <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
+                <Text className="text-white font-bold text-sm tracking-widest">2026年 謹賀新年</Text>
+              </View>
+            </MotiView>
+          )}
 
-      {/* 待機状態 (IDLE) */}
-      {appState === 'IDLE' && (
-        <MotiView
-          from={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="items-center"
-        >
-          <Text className="text-6xl text-white font-bold mb-6">🔮</Text>
-          <Text className="text-2xl text-white font-bold tracking-wider">スマホを振って</Text>
-          <Text className="text-xl text-white font-bold tracking-wider mb-2">おみくじを引く</Text>
-          <Text className="text-slate-400 mt-2 font-medium">2026年 新春デジタルおみくじ</Text>
-        </MotiView>
-      )}
+          {/* シェイク中 (SHAKING) */}
+          {appState === 'SHAKING' && (
+            <MotiView
+              from={{ translateX: -10, rotateZ: '-5deg' }}
+              animate={{ translateX: 10, rotateZ: '5deg' }}
+              transition={{
+                type: 'timing',
+                duration: 80,
+                loop: true,
+                repeatReverse: true,
+              }}
+              className="items-center"
+            >
+              <Text className="text-9xl mb-6">🫨</Text>
+              <Text className="text-xl text-yellow-400 font-black mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
+                運命を抽選中...
+              </Text>
+            </MotiView>
+          )}
 
-      {/* シェイク中 (SHAKING) */}
-      {appState === 'SHAKING' && (
-        <MotiView
-          from={{ translateX: -10, rotateZ: '-5deg' }}
-          animate={{ translateX: 10, rotateZ: '5deg' }}
-          transition={{
-            type: 'timing',
-            duration: 80,
-            loop: true,
-            repeatReverse: true,
-          }}
-          className="items-center"
-        >
-          <Text className="text-8xl">🫨</Text>
-          <Text className="text-xl text-yellow-400 font-bold mt-8 tracking-widest uppercase">運命を抽選中...</Text>
-        </MotiView>
-      )}
+          {/* 結果表示中 (REVEALING - 棒が出るアニメ) */}
+          {appState === 'REVEALING' && (
+            <View className="items-center relative h-64 w-full justify-end">
+              <View className="w-32 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center">
+                <View className="w-20 h-2 bg-yellow-600/30 rounded-full mb-2" />
+                <View className="w-16 h-2 bg-yellow-600/30 rounded-full" />
+              </View>
 
-      {/* 結果表示中 (REVEALING - 棒が出るアニメ) */}
-      {appState === 'REVEALING' && (
-        <View className="items-center relative h-64 w-full justify-end">
-          {/* おみくじ箱 */}
-          <View className="w-32 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-xl" />
+              <MotiView
+                className="absolute w-8 h-48 bg-amber-50 bottom-12 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
+                from={{ translateY: 100 }}
+                animate={{ translateY: -100 }}
+                transition={{ type: 'spring', damping: 10, stiffness: 80 }}
+              >
+                <Text className="text-red-700 font-black text-sm" style={{ writingMode: 'vertical-rl' }}>
+                  2026 奉納
+                </Text>
+              </MotiView>
+            </View>
+          )}
 
-          {/* 出てくる棒 */}
-          <MotiView
-            className="absolute w-8 h-48 bg-amber-100 bottom-10 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-300 items-center justify-start pt-2"
-            from={{ translateY: 100 }}
-            animate={{ translateY: -80 }}
-            transition={{ type: 'spring', damping: 12 }}
-          >
-            <Text className="text-red-600 font-bold text-xs writing-vertical-rl">第2026番</Text>
-          </MotiView>
+          {/* 結果画面 (コンポーネント) */}
+          {appState === 'RESULT' && fortune && (
+            <FortuneDisplay fortune={fortune} onReset={handleReset} />
+          )}
+
+          {/* デバッグボタン (開発時のみ) */}
+          {showDebug && appState === 'IDLE' && (
+            <TouchableOpacity
+              onPress={handleShakeStart}
+              className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
+            >
+              <Text className="text-white font-bold">🐞 テストで振る</Text>
+            </TouchableOpacity>
+          )}
         </View>
-      )}
-
-      {/* 結果画面 (コンポーネント) */}
-      {appState === 'RESULT' && fortune && (
-        <FortuneDisplay fortune={fortune} onReset={handleReset} />
-      )}
-
-      {/* デバッグボタン (開発時のみ) */}
-      {showDebug && appState === 'IDLE' && (
-        <TouchableOpacity
-          onPress={handleShakeStart}
-          className="absolute bottom-12 right-6 bg-slate-800/80 px-4 py-2 rounded-full border border-slate-600"
-        >
-          <Text className="text-xs text-white font-mono">🐞 Debug Shake</Text>
-        </TouchableOpacity>
-      )}
+      </ImageBackground>
     </View>
   );
 }
