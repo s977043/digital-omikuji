@@ -3,31 +3,43 @@ import { renderHook, act, waitFor } from '@testing-library/react-native';
 import { OMIKUJI_DATA } from '../../constants/OmikujiData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Helper function to wait for initial useEffect to complete
+const renderHookAndWaitForInitialLoad = async () => {
+  const renderResult = renderHook(() => useOmikujiLogic());
+  // Wait for the initial loadHistory() in useEffect to complete
+  await waitFor(() => {
+    // The hook has initialized when history is an array (even if empty)
+    expect(renderResult.result.current.history).toBeDefined();
+  });
+  return renderResult;
+};
+
 describe('useOmikujiLogic', () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
   });
-  it('初期状態では運勢がnullである', () => {
-    const { result } = renderHook(() => useOmikujiLogic());
+
+  it('初期状態では運勢がnullである', async () => {
+    const { result } = await renderHookAndWaitForInitialLoad();
     expect(result.current.fortune).toBeNull();
   });
 
-  it('drawFortune を呼ぶと運勢が抽選される', () => {
-    const { result } = renderHook(() => useOmikujiLogic());
+  it('drawFortune を呼ぶと運勢が抽選される', async () => {
+    const { result } = await renderHookAndWaitForInitialLoad();
 
-    act(() => {
-      result.current.drawFortune();
+    await act(async () => {
+      await result.current.drawFortune();
     });
 
     expect(result.current.fortune).not.toBeNull();
     expect(OMIKUJI_DATA).toContainEqual(result.current.fortune);
   });
 
-  it('resetFortune を呼ぶと運勢がnullにリセットされる', () => {
-    const { result } = renderHook(() => useOmikujiLogic());
+  it('resetFortune を呼ぶと運勢がnullにリセットされる', async () => {
+    const { result } = await renderHookAndWaitForInitialLoad();
 
-    act(() => {
-      result.current.drawFortune();
+    await act(async () => {
+      await result.current.drawFortune();
     });
 
     expect(result.current.fortune).not.toBeNull();
@@ -39,12 +51,12 @@ describe('useOmikujiLogic', () => {
     expect(result.current.fortune).toBeNull();
   });
 
-  it('複数回抽選を行っても正常に動作する', () => {
-    const { result } = renderHook(() => useOmikujiLogic());
+  it('複数回抽選を行っても正常に動作する', async () => {
+    const { result } = await renderHookAndWaitForInitialLoad();
 
     for (let i = 0; i < 10; i++) {
-      act(() => {
-        result.current.drawFortune();
+      await act(async () => {
+        await result.current.drawFortune();
       });
 
       expect(result.current.fortune).not.toBeNull();
@@ -52,13 +64,13 @@ describe('useOmikujiLogic', () => {
     }
   });
 
-  it('重み付けロジックが機能している（統計的検証）', () => {
+  it('重み付けロジックが機能している（統計的検証）', async () => {
     const results = new Map<string, number>();
-    const { result } = renderHook(() => useOmikujiLogic());
+    const { result } = await renderHookAndWaitForInitialLoad();
 
     for (let i = 0; i < 1000; i++) {
-      act(() => {
-        result.current.drawFortune();
+      await act(async () => {
+        await result.current.drawFortune();
       });
 
       const fortuneResult = result.current.fortune?.result || '';
@@ -73,7 +85,7 @@ describe('useOmikujiLogic', () => {
   });
 
   it('drawFortune を呼ぶと履歴にエントリが追加される', async () => {
-    const { result } = renderHook(() => useOmikujiLogic());
+    const { result } = await renderHookAndWaitForInitialLoad();
 
     await act(async () => {
       await result.current.drawFortune();
@@ -86,7 +98,7 @@ describe('useOmikujiLogic', () => {
   });
 
   it('loadHistory を呼ぶと最新の履歴が読み込まれる', async () => {
-    const { result } = renderHook(() => useOmikujiLogic());
+    const { result } = await renderHookAndWaitForInitialLoad();
 
     await act(async () => {
       await result.current.drawFortune();
