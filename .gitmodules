@@ -1,0 +1,4 @@
+[submodule "river-reviewer"]
+	path = river-reviewer
+	url = https://github.com/s977043/river-reviewer.git
+	branch = main

@@ -1,0 +1,27 @@
+{
+  "review": {
+    "language": "ja",
+    "severity": "normal",
+    "skillsPath": "./river-reviewer/skills",
+    "enabledSkills": [
+      "rr-midstream-security-basic-001",
+      "rr-midstream-typescript-strict-001",
+      "rr-midstream-typescript-nullcheck-001"
+    ],
+    "additionalInstructions": [
+      "React Native / Expo プロジェクトとしてレビューする",
+      "NativeWind (TailwindCSS) のクラス名は許容する",
+      "重大度の高い欠陥を優先し、スタイルのみの指摘は抑制する"
+    ]
+  },
+  "exclude": {
+    "paths": [
+      "node_modules/**",
+      "river-reviewer/**",
+      ".expo/**",
+      "android/**",
+      "ios/**"
+    ],
+    "prLabelsToIgnore": ["no-review", "wip", "documentation"]
+  }
+}
