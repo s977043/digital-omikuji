@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { v4 as uuidv4 } from "uuid";
 import { OmikujiFortune } from "../constants/OmikujiData";
 
 const HISTORY_KEY = "omikuji_history";
@@ -30,7 +29,7 @@ export async function addHistoryEntry(fortune: OmikujiFortune): Promise<void> {
   try {
     const history = await getHistory();
     const newEntry: HistoryEntry = {
-      id: uuidv4(),
+      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
       fortune,
       drawnAt: new Date().toISOString(),
     };
