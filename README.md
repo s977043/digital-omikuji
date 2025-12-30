@@ -4,16 +4,15 @@
 
 ## 🚀 概要
 
-**Remix** から **Expo (React Native)** へと完全刷新！
 2026 年の新春を祝う、スマートフォン特化型のデジタルおみくじアプリです。
-Docker を使用した統一開発環境と、Expo エコシステムによる快適な DX（Developer Experience）を実現しています。
+**Expo (React Native)** をベースに、Docker を使用した統一開発環境と快適な DX（Developer Experience）を実現しています。
 
 ## ✨ 特徴 - Premium Experience
 
 - 📱 **シェイク機能**: 加速度センサーを活用し、スマホを振る直感的な操作感を実現
 - 🎨 **リッチなアニメーション**: `Moti` (Powered by Reanimated) による滑らかで美しい演出
 - 📳 **触覚フィードバック**: `expo-haptics` による心地よい振動演出
-- 📤 **SNS シェア**: 引いたおみくじの結果を即座にシェア可能
+- 📤 **SNS シェア**: おみくじ結果を**画像付き**で即座にシェア可能（`react-native-view-shot`使用）
 - 🔊 **サウンド**: 効果音再生機能（※現在準備中・基盤実装済み）
 - 🐞 **デバッグモード**: 実機がなくても検証可能なシミュレーション機能を搭載
 
@@ -61,16 +60,19 @@ Node.js 環境が整っている場合、ローカルで直接実行すること
 
 ### 前提条件
 
-- Node.js (v18 or v20 推奨)
-- npm or yarn
+- **Node.js v20 以上** (必須)
+- npm
 
 ### 手順
 
 1. 依存関係のインストール
+
    ```bash
    npm install
    ```
+
 2. 開発サーバーの起動
+
    ```bash
    npm start
    # または
@@ -112,11 +114,10 @@ npx eas build --profile production --platform ios
 - `/hooks`: 抽選ロジックなどのカスタムフック
 - `/utils`: サウンド管理などのユーティリティ
 - `/assets`: 画像・静的リソース
-- `/_legacy_remix_2025`: 旧バージョンのアーカイブ
 
 ## 📝 ドキュメント
 
-より詳細なアーキテクチャや拡張方法については [DEVELOPER.md](./DEVELOPER.md) を参照してください。
+より詳細なアーキテクチャや拡張方法については [DEVELOPER.md](./docs/DEVELOPER.md) を参照してください。
 
 ## 🤝 コントリビューション
 
