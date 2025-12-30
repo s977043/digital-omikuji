@@ -1,15 +1,3 @@
-<<<<<<< HEAD
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TouchableOpacity, Platform, ImageBackground } from 'react-native';
-import { Accelerometer } from 'expo-sensors';
-import { MotiView } from 'moti';
-import * as Haptics from 'expo-haptics';
-import Constants from 'expo-constants';
-import { router } from 'expo-router';
-import { useOmikujiLogic } from '../hooks/useOmikujiLogic';
-import FortuneDisplay from '../components/FortuneDisplay';
-import { soundManager } from '../utils/SoundManager';
-=======
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
@@ -26,8 +14,6 @@ import { router } from "expo-router";
 import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import FortuneDisplay from "../components/FortuneDisplay";
 import { soundManager } from "../utils/SoundManager";
-import { addHistoryEntry } from "../utils/HistoryStorage";
->>>>>>> origin/develop
 // global.css is imported in _layout.tsx
 
 // ステートマシン
