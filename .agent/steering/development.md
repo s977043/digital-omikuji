@@ -1,88 +1,61 @@
 ---
 title: "開発フロー・AI連携ガイドライン"
 description: "本プロジェクトにおける開発プロセス、コード品質基準、AIエージェントの役割分担を定義します。"
-version: 1.1
-last_updated: "2025-12-10"
+version: 2.0
+last_updated: "2025-12-31"
 target_audience: ["developer", "ai_agent"]
 ---
 
 # 開発フロー・AI 連携ガイドライン
 
-## AI 支援開発フロー
+## 技術スタック
 
-**Digital Omikuji プロジェクト専用の統合開発プロセス**
+- **Framework**: Expo (React Native)
+- **Language**: TypeScript
+- **Styling**: NativeWind (Tailwind CSS)
+- **Routing**: Expo Router
+- **State Management**: React Hooks (useState, useReducer, useContext)
+- **Testing**: Jest, React Native Testing Library
+- **Package Manager**: npm
 
-### AI エージェント ×SDD【仕様書駆動】×AI-TDD
+## 開発フロー
 
-1. **仕様確認**: `steering/`, `specs/`で要件・設計・タスクを確認
-2. **要件定義**: `.kiro/specs/<feature>/requirements.md`で Gherkin 形式のシナリオ作成
-3. **設計**: `.kiro/specs/<feature>/design.md`でアーキテクチャ・UI 設計
-4. **タスク分解**: `.kiro/specs/<feature>/tasks.md`で実装タスクを細分化
-5. **AI-TDD**: テストファースト（テストケース定義 → Unit Test → Component Test）
+### 基本プロセス
+
+1. **Issue 確認**: 実装すべき機能やバグ修正の内容を把握。
+2. **Branch 作成**: `feature/xxx` や `fix/xxx` ブランチを作成。
+3. **実装 & テスト**: コードの実装とテストコードの記述（TDD 推奨）。
+4. **Lint & Type Check**: `npm run lint` および `tsc` で静的解析を通す。
+5. **PR 作成**: GitHub で Pull Request を作成し、レビューを依頼。
 
 ### コード品質基準
 
-#### 必須チェック項目
-
-- TypeScript strict mode（型エラー 0 件）
-- ESLint エラー 0 件
-- Vitest テスト通過率 100%
-- ビルドエラー 0 件
-
-#### 推奨基準
-
-- ファイルサイズ: 200 行以下
-- 関数サイズ: 20 行以下
-- テストカバレッジ: 80%以上
-- コンポーネント単一責任原則
-
-### AI エージェント役割分担
-
-#### Kiro（仕様駆動開発）
-
-- 機能仕様の作成・管理
-- アーキテクチャ設計支援
-- タスク分解・優先順位付け
-- 実装ガイダンス
-
-#### GitHub Copilot（コード補完）
-
-- リアルタイムコード補完
-- 関数・クラス実装支援
-- テストコード生成
-- リファクタリング支援
-
-#### Codex CLI（コードレビュー）
-
-- 静的解析・品質チェック
-- セキュリティ脆弱性検出
-- パフォーマンス最適化提案
-- ベストプラクティス適用
-
-#### Gemini CLI（対話的開発）
-
-- 技術的な質問・相談
-- デバッグ支援
-- アルゴリズム最適化
-- ドキュメント生成
+- **TypeScript**: `strict: true` 準拠。`any` 型は原則禁止。
+- **Lint**: ESLint のルールに従う。
+- **Test**: 主要なロジックと UI コンポーネントにはテストを書く。
+- **Style**: NativeWind クラスを使用し、インラインスタイルは避ける（動的な値を除く）。
 
 ## 実装ガイドライン
 
-### コンポーネント設計
+### コンポーネント設計 (React Native)
 
 ```typescript
-// 良い例: 単一責任・型安全
-interface UserCardProps {
-  user: User;
-  onEdit: (id: string) => void;
+import { View, Text, Pressable } from "react-native";
+import { styled } from "nativewind";
+
+interface ButtonProps {
+  label: string;
+  onPress: () => void;
 }
 
-export const UserCard: React.FC<UserCardProps> = ({ user, onEdit }) => {
+export const PrimaryButton: React.FC<ButtonProps> = ({ label, onPress }) => {
   return (
-    <div className="p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold">{user.name}</h3>
-      <button onClick={() => onEdit(user.id)}>編集</button>
-    </div>
+    <Pressable
+      onPress={onPress}
+      className="bg-blue-500 p-4 rounded-lg active:opacity-80"
+    >
+      <Text className="text-white text-center font-bold">{label}</Text>
+    </Pressable>
   );
 };
 ```
@@ -90,219 +63,58 @@ export const UserCard: React.FC<UserCardProps> = ({ user, onEdit }) => {
 ### カスタムフック設計
 
 ```typescript
-// 良い例: 再利用可能・テスタブル
-export const useUserData = (userId: string) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const useOmikuji = () => {
+  const [result, setResult] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchUser(userId)
-      .then(setUser)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [userId]);
-
-  return { user, loading, error };
-};
-```
-
-### テスト設計
-
-```typescript
-// 良い例: 振る舞いテスト
-describe("UserCard", () => {
-  it("ユーザー名を表示する", () => {
-    const user = { id: "1", name: "テストユーザー" };
-    render(<UserCard user={user} onEdit={vi.fn()} />);
-
-    expect(screen.getByText("テストユーザー")).toBeInTheDocument();
-  });
-
-  it("編集ボタンクリックでonEditが呼ばれる", () => {
-    const onEdit = vi.fn();
-    const user = { id: "1", name: "テストユーザー" };
-    render(<UserCard user={user} onEdit={onEdit} />);
-
-    fireEvent.click(screen.getByText("編集"));
-    expect(onEdit).toHaveBeenCalledWith("1");
-  });
-});
-```
-
-## エラーハンドリング
-
-### フロントエンド
-
-```typescript
-// 良い例: 型安全なエラーハンドリング
-type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
-
-export const fetchUserSafely = async (id: string): Promise<Result<User>> => {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      return { success: false, error };
-    }
-
-    if (!data) {
-      return { success: false, error: new Error("User not found") };
-    }
-
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error as Error };
-  }
-};
-```
-
-### React Error Boundary
-
-```typescript
-// 良い例: グローバルエラーハンドリング
-export class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(): State {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Error caught by boundary:", error, errorInfo);
-    // エラー報告サービスに送信
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <ErrorFallback />;
-    }
-    return this.props.children;
-  }
-}
-```
-
-## パフォーマンス最適化
-
-### React 最適化
-
-```typescript
-// 良い例: メモ化・最適化
-export const ExpensiveComponent = memo(({ data }: Props) => {
-  const processedData = useMemo(
-    () => data.map((item) => expensiveCalculation(item)),
-    [data]
-  );
-
-  const handleClick = useCallback((id: string) => {
-    // クリックハンドラー
+  const draw = useCallback(() => {
+    // ロジック実装
+    const newResult = determineFortune();
+    setResult(newResult);
   }, []);
 
-  return <div>{/* レンダリング */}</div>;
-});
-```
-
-### バンドル最適化
-
-```typescript
-// 良い例: 動的インポート
-const LazyComponent = lazy(() => import("./HeavyComponent"));
-
-export const App = () => (
-  <Suspense fallback={<Loading />}>
-    <LazyComponent />
-  </Suspense>
-);
-```
-
-## セキュリティ
-
-### 入力検証
-
-```typescript
-// 良い例: Zodによる型安全な検証
-import { z } from "zod";
-
-const UserSchema = z.object({
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
-  age: z.number().min(0).max(150),
-});
-
-export const validateUser = (data: unknown) => {
-  return UserSchema.safeParse(data);
+  return { result, draw };
 };
 ```
 
-### 認証・認可
+### テスト設計 (Jest / RNTL)
 
 ```typescript
-// 良い例: Supabase RLS活用
-export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+import { render, fireEvent, screen } from "@testing-library/react-native";
+import { PrimaryButton } from "./PrimaryButton";
 
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-    });
+test("ボタンが表示され、タップできる", () => {
+  const onPressMock = jest.fn();
+  render(<PrimaryButton label="テスト" onPress={onPressMock} />);
 
-    return () => subscription.unsubscribe();
-  }, []);
+  const button = screen.getByText("テスト");
+  expect(button).toBeTruthy();
 
-  return { user, isAuthenticated: !!user };
-};
+  fireEvent.press(button);
+  expect(onPressMock).toHaveBeenCalled();
+});
 ```
 
-## Definition of Done（統合 DoD）
+## AI エージェントの活用
 
-### 機能実装チェックリスト
+### 役割分担
 
-- [ ] 型定義が適切に更新されている
-- [ ] API 契約テスト（contract test）が通る
-- [ ] API エンドポイントテスト（endpoint test）が通る
-- [ ] Clean Architecture の層分離が守られている
-- [ ] `handleApiError`によるエラーハンドリング実装済み
-- [ ] TypeScript strict mode でエラーがない
-- [ ] ESLint・Prettier が通る
-- [ ] Storybook story（UI 変更時）が更新されている
+- **GitHub Copilot**:
 
-### セキュリティ要件
+  - コーディング時のリアルタイム補完
+  - 基本的な関数やコンポーネントの生成
+  - テストコードの自動生成
 
-- [ ] 入力検証が実装されている
-- [ ] 機密情報がログに出力されない
-- [ ] エラーメッセージが適切にサニタイズされている
-- [ ] API 認証・認可が適切に実装されている
+- **Docs Agent / Maintainer Agent**:
+  - `.agent/` 配下の設定に基づくドキュメント管理やリファクタリング提案
 
-### 品質要件
+### プロンプトエンジニアリングのヒント
 
-- [ ] ユニットテスト・統合テストが通る
-- [ ] テストカバレッジが要件を満たす
-- [ ] パフォーマンス要件を満たす
-- [ ] アクセシビリティ要件を満たす（UI 変更時）
+- "Expo Router を使っています" と明示する。
+- "NativeWind でのスタイリングをお願い" と指定する。
+- モバイルアプリ特有の制約（画面サイズ、プラットフォーム差分）を意識した指示を出す。
 
-## 継続的改善
+## トラブルシューティング
 
-### メトリクス収集
-
-- Core Web Vitals 監視
-- エラー率追跡
-- ユーザー行動分析
-- パフォーマンス測定
-
-### 定期レビュー
-
-- 週次: コード品質レビュー
-- 月次: アーキテクチャレビュー
-- 四半期: 技術負債整理
-- 年次: 技術スタック見直し
+- **ビルドエラー**: `npx expo start -c` でキャッシュをパージしてみる。
+- **依存関係エラー**: `node_modules` を削除して `npm install` を再実行。
+- **Web/iOS/Android の差異**: `Platform.OS` を使ってプラットフォームごとの分岐を行うか、ファイル拡張子 (`.ios.tsx`, `.android.tsx`) で分ける。
