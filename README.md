@@ -1,175 +1,115 @@
-# digital-omikuji
+# 2026 年 新春デジタルおみくじ
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Node.js Version](https://img.shields.io/badge/node-%3E%3D14-brightgreen.svg)
-![GitHub Issues](https://img.shields.io/github/issues/s977043/digital-omikuji)
-![GitHub Stars](https://img.shields.io/github/stars/s977043/digital-omikuji?style=social)
-![GitHub Actions](https://img.shields.io/github/actions/workflow/status/s977043/digital-omikuji/documentation-check.yml)
+## 🚀 概要
 
-### 概要
+Remix から **Expo (React Native)** へ移行・刷新されたプロジェクトです。
+Docker を使用して、チーム全員が統一された環境で開発できるように構築されています。
 
-Remix で作成したデジタルおみくじアプリです。  
-ボタンをクリックするだけで、いつでもどこでもおみくじを引くことができます。
+## ✨ 機能
 
-### 🌟 特徴
+- � スマホを振っておみくじを引く（加速度センサー）
+- 🎨 美しいアニメーション（Moti）
+- 📳 触覚フィードバック（Haptics）
+- 🔊 効果音（準備中）
+- 📤 SNS シェア機能
+- 🐞 開発用デバッグモード
 
-- **シンプルな操作**: ワンクリックでおみくじを引けます
-- **レスポンシブデザイン**: PC・スマートフォン両対応
-- **軽量**: 高速で動作します
-- **オープンソース**: MIT ライセンスで自由に利用可能
+## �🛠 技術スタック
 
-### 使用技術
+- **フレームワーク:** Expo SDK 52
+- **言語:** TypeScript
+- **スタイリング:** NativeWind (Tailwind CSS v3)
+- **アニメーション:** Moti / Reanimated
+- **センサー:** Expo Sensors (加速度センサー)
+- **演出:** Expo Haptics (触覚フィードバック)
+- **テスト:** Jest + React Native Testing Library
 
-- **Remix** - React ベースの Web フレームワーク
-- **TypeScript** - 型安全な JavaScript
-- **Tailwind CSS** - ユーティリティファーストの CSS フレームワーク
-- **Docker** - コンテナ化技術
-- **VibeCoding** - AI 支援開発環境
-- **Gemini CLI** - Google AI を活用したコード生成・レビューツール
-- **Gemini CLI ファイル指示システム** - ファイルベースの自動実行機能
+## 🐳 開発環境の起動 (Docker 推奨)
 
-### 機能
+### 1. 環境を立ち上げる
 
-* おみくじを引く機能
-    * 「大吉」「中吉」「小吉」「凶」の結果をランダムに表示します。
-    * 各おみくじの出現割合は、重み付け乱数によって調整されています。
-
-### 使い方
-
-1. リポジトリをクローンします。
-   ```bash
-   git clone https://github.com/s977043/digital-omikuji.git
-   ```
-2. Docker Compose を使用して、アプリケーションを起動します。
-   ```bash
-   cd digital-omikuji
-   docker-compose up -d
-   ```
-3. ブラウザで [http://localhost:3000](http://localhost:3000) にアクセスします。
-4. 「おみくじを引く」ボタンをクリックして、おみくじの結果を表示します。
-
-### 開発方法
-
-#### 開発環境の構築
-
-VibeCoding と Gemini CLI を使用した効率的な開発環境の構築については、以下のドキュメントを参照してください：
-
-- [開発環境構築ガイド](documents/開発環境構築ガイド.md)
-- [VibeCoding設定ガイド](documents/VibeCoding設定ガイド.md)
-- [Gemini CLI使用方法](documents/Gemini_CLI使用方法.md)
-
-#### 基本的な実行方法
+以下のコマンドでビルドと起動を行います。
 
 ```bash
-# 開発サーバーの起動
-npm run dev
-
-# ドキュメント状態のチェック
-npm run check-docs
-
-# Gemini CLI ファイル指示システムの使用
-npm run gemini:run <指示ファイル> # カスタム指示ファイルの実行
-npm run gemini:component     # コンポーネント生成
-npm run gemini:review        # プロジェクトレビュー  
-npm run gemini:enhance       # おみくじ機能拡張
-npm run gemini:check-docs    # ドキュメント更新チェック
-npm run gemini:check-readme  # README更新確認
-npm run gemini:pr-docs-review # PRドキュメントレビュー
-
-# Docker を使用した実行
-docker-compose up -d
+docker compose up --build
 ```
 
-#### ビルド方法
+（ポート 8081 が開放されます）
+
+### 2. アプリを実機で確認する
+
+**方法 A: Expo Go (QR コード)**
+
+- ターミナルに表示される QR コードを、スマートフォンの「Expo Go」アプリで読み取ってください。
+- 注意: PC とスマホは同じ Wi-Fi に接続している必要があります。
+
+**方法 B: トンネリング (WSL2 などで繋がらない場合)**
+同じ Wi-Fi でも接続できない場合（特に Windows/WSL2 環境）は、別のターミナルで以下を実行してトンネル接続を試してください。
 
 ```bash
-# 本番用ビルド
-npm run build
-
-# Docker を使用したビルド
-docker-compose run build
+# 実行中のコンテナ内でコマンドを実行
+docker compose exec app npx expo start --tunnel
 ```
 
-#### 本番環境用イメージのビルド
+### 3. デバッグ機能
+
+- **シェイク・シミュレーション:**
+  開発モード（development）では、画面右下に「🐞 Debug Shake」ボタンが表示されます。実機を振らなくてもクリックでおみくじを引くテストが可能です。
+
+## 🧪 テストの実行
 
 ```bash
-docker-compose build web
+# ローカル環境
+npm test
+
+# Docker環境
+docker compose exec app npm test
 ```
 
-### テスト方法
+## 📦 本番ビルド (EAS Build)
+
+### 初回セットアップ
 
 ```bash
-npm run test
+# EAS CLIでログイン
+npx eas login
+
+# プロジェクトIDを設定
+npx eas build:configure
 ```
 
-### GitHub Actions
+### ビルド実行
 
-このプロジェクトには、以下のGitHub Actionsワークフローが含まれています：
-
-- **test-on-pr-merge.yml** - プルリクエストがマージされた際にテストを実行
-- **documentation-check.yml** - プルリクエスト作成時にドキュメントの更新状況をチェック
-
-### ドキュメント更新システム
-
-プロジェクトには、ドキュメントを最新に保つための自動化システムが組み込まれています：
-
-#### 機能
-- **自動ドキュメントチェック** - コード変更時にドキュメント更新の必要性を自動判定
-- **README同期確認** - README.mdとコードの同期状態をチェック
-- **PRレビュー時のドキュメント確認** - プルリクエスト作成時に自動でドキュメント状況をレビュー
-
-#### 使用方法
 ```bash
-# ドキュメント状態の手動チェック
-npm run check-docs
+# Android開発ビルド
+npx eas build --profile development --platform android
 
-# Gemini CLIを使用したドキュメント確認
-npm run gemini:check-docs    # コード変更に基づくドキュメント更新チェック
-npm run gemini:check-readme  # README更新確認
-npm run gemini:pr-docs-review # PRレビュー用ドキュメントチェック
+# iOS本番ビルド
+npx eas build --profile production --platform ios
 ```
 
-### ファイル構成
+## 📂 プロジェクト構成
 
-```
-digital-omikuji/
-├── app/
-│   ├── routes/
-│   │   ├── index.tsx       // おみくじアプリのメインコンポーネント
-│   │   └── index.test.tsx  // おみくじアプリのテストコード
-│   └── entry.client.tsx   // クライアントサイドのエントリーポイント
-├── documents/             // プロジェクトドキュメント
-│   ├── プロジェクト構成.md
-│   ├── VibeCoding設定ガイド.md
-│   ├── Gemini_CLI使用方法.md
-│   ├── 開発環境構築ガイド.md
-│   ├── API仕様書.md
-│   ├── トラブルシューティングガイド.md
-│   └── デプロイメントマニュアル.md
-├── public/
-├── Dockerfile              // Dockerfile
-├── docker-compose.yml      // docker-compose 設定ファイル
-├── remix.config.js         // Remixの設定ファイル
-├── LICENSE                 // ライセンスファイル
-├── package.json            // 依存関係など
-└── ...
-```
+- `/app`: Expo Router ページ
+- `/components`: UI コンポーネント (結果表示など)
+- `/constants`: 定数・設定 (おみくじデータなど)
+- `/hooks`: ロジック (おみくじ抽選ロジック)
+- `/utils`: ユーティリティ (サウンド管理など)
+- `/assets`: 画像・音声ファイル
+- `/_legacy_remix_2025`: （旧）Remix 版のアーカイブ
 
-### ドキュメント
+## 📝 開発者向けドキュメント
 
-プロジェクトに関する詳細なドキュメントは、`documents/` フォルダ内に整理されています：
+より詳細な情報は [DEVELOPER.md](./DEVELOPER.md) をご覧ください。
 
-- **[プロジェクト構成](documents/プロジェクト構成.md)** - プロジェクトの全体構成と技術スタック
-- **[開発環境構築ガイド](documents/開発環境構築ガイド.md)** - 開発環境のセットアップ手順
-- **[VibeCoding設定ガイド](documents/VibeCoding設定ガイド.md)** - VibeCoding の設定と使用方法
-- **[Gemini CLI使用方法](documents/Gemini_CLI使用方法.md)** - Gemini CLI を使用したAI支援開発
-- **[Gemini CLI ファイル指示システム](documents/Gemini_CLI_ファイル指示システム.md)** - ファイルベースの自動実行システム
-- **[ドキュメント更新システム](documents/ドキュメント更新システム.md)** - 自動ドキュメント更新・検証システム
-- **[API仕様書](documents/API仕様書.md)** - APIエンドポイントの仕様
-- **[トラブルシューティングガイド](documents/トラブルシューティングガイド.md)** - よくある問題と解決方法
-- **[デプロイメントマニュアル](documents/デプロイメントマニュアル.md)** - 本番環境へのデプロイ手順
+## 🤝 コントリビューション
 
-### ライセンス
+プルリクエストやバグ報告を歓迎します！
+
+## 📄 ライセンス
 
 MIT License
 
+---
+
+**🎍 良いお年を！ 2026 年も素晴らしい年になりますように 🎍**
