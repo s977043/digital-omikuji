@@ -12,7 +12,7 @@ digital-omikuji/
 │   ├── _layout.tsx        # アプリ全体のレイアウト・プロバイダー設定
 │   └── index.tsx          # メイン画面 (おみくじ体験のコア)
 ├── components/            # プレゼンテーションコンポーネント
-│   └── FortuneDisplay.tsx # 結果表示 UI (Motiによるアニメーション含む)
+│   └── FortuneDisplay.tsx # 結果表示 UI (Motiによるアニメーション含む・画像シェア機能付き)
 ├── constants/             # アプリ設定・固定データ
 │   └── OmikujiData.ts    # おみくじの運勢データ定義
 ├── hooks/                 # ビジネスロジック (Custom Hooks)
