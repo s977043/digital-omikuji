@@ -1,0 +1,30 @@
+name: River Reviewer
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  review:
+    name: AI Code Review
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Run River Reviewer
+        uses: ./river-reviewer/runners/github-action
+        with:
+          phase: midstream
+          dry_run: 'false'
+          comment: 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
