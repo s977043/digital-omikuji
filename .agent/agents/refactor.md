@@ -1,4 +1,4 @@
-<!-- markdownlint-disable -->
+<!-- markdownlint-disable MD025 MD041 -->
 
 # name: refactor-buddy
 
@@ -34,5 +34,3 @@
   name: org-knowledge
   capabilities: [read]
 -->
-
-<!-- markdownlint-enable -->

@@ -1,4 +1,4 @@
-<!-- markdownlint-disable -->
+<!-- markdownlint-disable MD025 MD041 -->
 
 # name: test-writer
 
@@ -24,5 +24,3 @@
 - test-runner
 - coverage-tool
 - npm
-
-<!-- markdownlint-enable -->

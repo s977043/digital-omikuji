@@ -1,4 +1,4 @@
-<!-- markdownlint-disable -->
+<!-- markdownlint-disable MD025 MD041 -->
 
 # name: ui-component-generator
 
@@ -25,5 +25,3 @@
 - npm
 - node
 - jest
-
-<!-- markdownlint-enable -->
