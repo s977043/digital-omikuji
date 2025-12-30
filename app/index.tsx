@@ -23,6 +23,40 @@ const SHAKE_THRESHOLD = 1.8;
 const SHAKING_DURATION_MS = 1500;
 const REVEALING_DURATION_MS = 2000;
 
+// アニメーション定数
+const SHAKE_ANIMATION = {
+  TRANSLATE_X: 15,
+  ROTATE_Z_DEG: 10,
+  SCALE_FROM: 0.9,
+  SCALE_TO: 1.1,
+  DURATION: 50,
+  TEXT_PULSE_DURATION: 500,
+};
+
+const REVEAL_ANIMATION = {
+  BOX_SPRING_DAMPING: 15,
+  STICK_SPRING_DAMPING: 12,
+  STICK_SPRING_STIFFNESS: 100,
+  STICK_APPEAR_DELAY: 300,
+  SPARKLE_APPEAR_DELAY: 600,
+  SPARKLE_DURATION: 500,
+};
+
+// ハプティックフィードバックヘルパー
+type HapticFeedbackType =
+  | { type: "impact"; style: Haptics.ImpactFeedbackStyle }
+  | { type: "notification"; style: Haptics.NotificationFeedbackType };
+
+const triggerHaptic = (feedback: HapticFeedbackType) => {
+  if (Platform.OS === "web") return;
+
+  if (feedback.type === "impact") {
+    Haptics.impactAsync(feedback.style);
+  } else {
+    Haptics.notificationAsync(feedback.style);
+  }
+};
+
 interface Subscription {
   remove: () => void;
 }
@@ -94,9 +128,7 @@ export default function OmikujiApp() {
     if (appState !== "IDLE") return;
 
     // Haptics: 開始時の軽い振動
-    if (Platform.OS !== "web") {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    }
+    triggerHaptic({ type: "impact", style: Haptics.ImpactFeedbackStyle.Medium });
 
     setAppState("SHAKING");
     soundManager.playSound("shake");
@@ -106,9 +138,10 @@ export default function OmikujiApp() {
       drawFortune();
       setAppState("REVEALING");
       // Haptics: 抽選完了時のフィードバック
-      if (Platform.OS !== "web") {
-        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      }
+      triggerHaptic({
+        type: "notification",
+        style: Haptics.NotificationFeedbackType.Success,
+      });
     }, SHAKING_DURATION_MS);
   };
 
@@ -118,9 +151,10 @@ export default function OmikujiApp() {
       setTimeout(() => {
         setAppState("RESULT");
         // Haptics: 結果が出た時の重い衝撃
-        if (Platform.OS !== "web") {
-          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-        }
+        triggerHaptic({
+          type: "impact",
+          style: Haptics.ImpactFeedbackStyle.Heavy,
+        });
         soundManager.playSound("result");
       }, REVEALING_DURATION_MS);
     }
@@ -165,11 +199,19 @@ export default function OmikujiApp() {
           {/* シェイク中 (SHAKING) */}
           {appState === "SHAKING" && (
             <MotiView
-              from={{ translateX: -15, rotateZ: "-10deg", scale: 0.9 }}
-              animate={{ translateX: 15, rotateZ: "10deg", scale: 1.1 }}
+              from={{
+                translateX: -SHAKE_ANIMATION.TRANSLATE_X,
+                rotateZ: `-${SHAKE_ANIMATION.ROTATE_Z_DEG}deg`,
+                scale: SHAKE_ANIMATION.SCALE_FROM,
+              }}
+              animate={{
+                translateX: SHAKE_ANIMATION.TRANSLATE_X,
+                rotateZ: `${SHAKE_ANIMATION.ROTATE_Z_DEG}deg`,
+                scale: SHAKE_ANIMATION.SCALE_TO,
+              }}
               transition={{
                 type: "timing",
-                duration: 50,
+                duration: SHAKE_ANIMATION.DURATION,
                 loop: true,
                 repeatReverse: true,
               }}
@@ -181,7 +223,7 @@ export default function OmikujiApp() {
                 animate={{ opacity: 1, scale: 1.2 }}
                 transition={{
                   type: "timing",
-                  duration: 500,
+                  duration: SHAKE_ANIMATION.TEXT_PULSE_DURATION,
                   loop: true,
                   repeatReverse: true,
                 }}
@@ -199,7 +241,10 @@ export default function OmikujiApp() {
               <MotiView
                 from={{ translateY: 200, rotate: "180deg" }}
                 animate={{ translateY: 0, rotate: "0deg" }}
-                transition={{ type: "spring", damping: 15 }}
+                transition={{
+                  type: "spring",
+                  damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING,
+                }}
                 className="w-32 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center"
               >
                 <View className="w-20 h-2 bg-yellow-600/30 rounded-full mb-2" />
@@ -212,9 +257,9 @@ export default function OmikujiApp() {
                 animate={{ translateY: -100, opacity: 1 }}
                 transition={{
                   type: "spring",
-                  delay: 300,
-                  damping: 12,
-                  stiffness: 100,
+                  delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                  damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                  stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
                 }}
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
@@ -226,7 +271,11 @@ export default function OmikujiApp() {
               <MotiView
                 from={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1.5 }}
-                transition={{ delay: 600, type: "timing", duration: 500 }}
+                transition={{
+                  delay: REVEAL_ANIMATION.SPARKLE_APPEAR_DELAY,
+                  type: "timing",
+                  duration: REVEAL_ANIMATION.SPARKLE_DURATION,
+                }}
                 className="absolute -top-10 z-0 bg-yellow-400/30 w-40 h-40 rounded-full blur-xl"
               />
             </View>
