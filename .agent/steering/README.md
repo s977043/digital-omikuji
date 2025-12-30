@@ -1,22 +1,22 @@
 # ステアリングルール
 
-このディレクトリには、PocketEitanプロジェクトの開発方針とプロセス定義が含まれています。
+このディレクトリには、Digital Omikuji プロジェクトの開発方針とプロセス定義が含まれています。
 
 ## 📁 ファイル構成
 
 - **[product.md](../.kiro/steering/product.md)** - プロダクト概要、主要機能、ターゲットユーザー
 - **[tech.md](../.kiro/steering/tech.md)** - 技術スタック、ビルドシステム、共通コマンド
-- **[development.md](./development.md)** - 開発フロー、AI連携、コード品質基準
+- **[development.md](./development.md)** - 開発フロー、AI 連携、コード品質基準
 - **[structure.md](./structure.md)** - プロジェクト構造、命名規則、ファイル配置
 
 ## 🎯 目的
 
-ステアリングルールは、全てのAIエージェント（Kiro、Codex、Gemini、GitHub Copilot）と開発者が共通認識を持つための基盤ドキュメントです。
+ステアリングルールは、全ての AI エージェント（Kiro、Codex、Gemini、GitHub Copilot）と開発者が共通認識を持つための基盤ドキュメントです。
 
 ### 対象読者
 
 - 開発者（人間）
-- AIエージェント（Kiro、Codex、Gemini、GitHub Copilot）
+- AI エージェント（Kiro、Codex、Gemini、GitHub Copilot）
 - プロダクトマネージャー
 
 ## 🔄 更新ルール
@@ -30,8 +30,8 @@
 
 ## 📖 関連ドキュメント
 
-- **[AGENTS.md](../AGENTS.md)** - AI統合開発ガイド
-- **[docs/AI_AGENTS_ROLES.md](../docs/AI_AGENTS_ROLES.md)** - AIエージェント役割定義
+- **[AGENTS.md](../AGENTS.md)** - AI 統合開発ガイド
+- **[docs/AI_AGENTS_ROLES.md](../docs/AI_AGENTS_ROLES.md)** - AI エージェント役割定義
 - **[.kiro/specs/](../.kiro/specs/)** - 実案件の機能仕様書
 
 ## 🚀 使い方
@@ -43,9 +43,9 @@
 3. `development.md` で開発フローを把握
 4. `structure.md` でプロジェクト構造を理解
 
-### AIエージェント向け
+### AI エージェント向け
 
-Kiroは自動的に `.kiro/steering/` を読み込みます。他のAIエージェントは `AGENTS.md` を通じてこのディレクトリを参照します。
+Kiro は自動的に `.kiro/steering/` を読み込みます。他の AI エージェントは `AGENTS.md` を通じてこのディレクトリを参照します。
 
 ## 📝 変更履歴
 

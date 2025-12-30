@@ -1,6 +1,6 @@
 # Codex で Agent Skills を使う
 
-Speaker Deck の「Codex でも Agent Skills を使いたい」の資料を踏まえて、PocketEitan でも Codex 向け Agent Skills を整理するためのガイドです。
+Speaker Deck の「Codex でも Agent Skills を使いたい」の資料を踏まえて、Digital Omikuji でも Codex 向け Agent Skills を整理するためのガイドです。
 
 ## 1. 背景
 
@@ -14,7 +14,7 @@ Speaker Deck の「Codex でも Agent Skills を使いたい」の資料を踏�
 - **L2: Instruction (`SKILL.md`)** — 各 Skill フォルダー内の`SKILL.md`を読み込み、目的、期待値、禁止事項、手順を人間 →Codex に伝播させる。
 - **L3: 実行スクリプト** — Node/Python スクリプトを配置し、必要なファイル構造や CLI 呼び出し例を提示した上で具体的な処理をスケジュールする。
 
-## 3. PocketEitan への導入例
+## 3. Digital Omikuji への導入例
 
 - `.agent/skills/`フォルダーを新設し、L1〜L3 を再現するテンプレート構成にしました（`.agent/skills/index.json`で Skill 一覧、`.agent/skills/<skill>/SKILL.md`で L2 指示、`.agent/skills/<skill>/run.js`で実行手順）。
 - 例として`chrome-devtools`と`youtube-video`の 2Skill を追加し、資料の ①UI 調査・②YouTube ダウンロードに対応。
