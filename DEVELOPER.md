@@ -1,112 +1,116 @@
-# 開発者向けドキュメント
+# 🛠 開発者向けドキュメント (DEVELOPER GUIDE)
 
-## 🏗 プロジェクト構造
+## 🏗 アーキテクチャ概要
+
+本プロジェクトは **Expo Router (File-based routing)** を採用し、モダンでスケーラブルな構成になっています。
+
+### ディレクトリ構造詳細
 
 ```
 digital-omikuji/
-├── app/                    # Expo Router ページ
-│   └── index.tsx          # メインアプリ画面
-├── components/            # UIコンポーネント
-│   └── FortuneDisplay.tsx # 結果表示コンポーネント
-├── constants/             # 定数・設定
-│   └── OmikujiData.ts    # おみくじデータと重み付け
-├── hooks/                 # カスタムフック
-│   ├── useOmikujiLogic.ts # 抽選ロジック
-│   └── __tests__/         # テストファイル
-├── utils/                 # ユーティリティ
-│   └── SoundManager.ts   # サウンド管理
-├── assets/               # 画像・音声ファイル
-├── .gitignore
-├── Dockerfile
-├── compose.yaml          # Docker Compose設定
-├── eas.json              # EAS Build設定
-├── package.json
-├── tsconfig.json
-└── README.md
+├── app/                    # アプリケーションのエントリーポイント & ルーティング
+│   ├── _layout.tsx        # アプリ全体のレイアウト・プロバイダー設定
+│   └── index.tsx          # メイン画面 (おみくじ体験のコア)
+├── components/            # プレゼンテーションコンポーネント
+│   └── FortuneDisplay.tsx # 結果表示 UI (Motiによるアニメーション含む)
+├── constants/             # アプリ設定・固定データ
+│   └── OmikujiData.ts    # おみくじの運勢データ定義
+├── hooks/                 # ビジネスロジック (Custom Hooks)
+│   └── useOmikujiLogic.ts # 抽選アルゴリズムの分離
+├── utils/                 # 汎用ユーティリティ
+│   └── SoundManager.ts   # 音声再生管理 (Singleton Pattern)
+├── assets/               # アセット
+│   ├── images/           # 画像リソース
+│   └── sounds/           # 音声ファイル
+├── docker/               # Docker関連設定 (もしあれば)
+└── ...config files       # 各種設定ファイル
 ```
 
-## 🧪 テストの実行
+## 🧪 テスト戦略
+
+**Jest** と **React Native Testing Library** を使用して、ロジックと UI の両面から品質を保証しています。
+
+- **Unit Test**: `useOmikujiLogic` などのフック単体テスト
+- **Component Test**: `FortuneDisplay` などの UI テスト
 
 ```bash
-# ローカル環境でテスト実行
+# 全テスト実行
 npm test
 
-# Docker内でテスト実行
-docker compose exec app npm test
+# ウォッチモード
+npm test -- --watch
 ```
 
-## 📦 EAS Build
+## 📦 ビルドとデプロイ (EAS)
 
-### 開発ビルド
+Expo Application Services (EAS) を使用したクラウドビルドフローを採用しています。
+
+### Build Profiles (`eas.json`)
+
+- **development**: 開発用クライアント（デバッガー接続可）
+- **preview**: 内部テスト用（APK/IPA）
+- **production**: ストア公開用（AAB/IPA）
 
 ```bash
+# ビルドコマンド例
 eas build --profile development --platform android
 ```
 
-### プレビュービルド
+## 🎨 デザイン & スタイリングガイド
 
-```bash
-eas build --profile preview --platform ios
-```
+**NativeWind (Tailwind CSS)** を全面的に採用しています。
 
-### 本番ビルド
+- 原則として `className` プロパティを使用する。
+- 複雑なアニメーションには `Moti` (`<MotiView />`) を使用する。
+- カラーパレットは `tailwind.config.js` で管理する（必要であれば拡張）。
 
-```bash
-eas build --profile production --platform all
-```
+### 色のカスタマイズ
 
-## 🎨 カスタマイズガイド
-
-### おみくじの種類を追加する
-
-`constants/OmikujiData.ts` を編集して、新しい運勢を追加できます。
+おみくじの結果に応じた色は `constants/OmikujiData.ts` で定義されています。
 
 ```typescript
-{
-  result: '末吉',
-  message: 'あなた独自のメッセージ',
-  weight: 15, // 出現確率（合計で自由に調整可能）
-  color: '#YOUR_COLOR',
-}
+export const FORTUNES = [
+  {
+    result: "大吉",
+    color: "#ef4444", // red-500
+    weight: 5,
+  },
+  // ...
+];
 ```
 
-### アニメーションの調整
+## 🔊 サウンド実装ガイド
 
-`app/index.tsx` の各状態（IDLE, SHAKING, REVEALING, RESULT）で MotiView の設定を変更できます。
+`SoundManager` クラス (`utils/SoundManager.ts`) が実装されています。
+現在は基盤のみの実装ですが、以下の手順で効果音を追加可能です。
 
-## 🔊 サウンドファイルの追加
+1. **ファイル追加**: `assets/sounds/` に音声ファイルを配置。
+2. **ロード処理**: `app/_layout.tsx` または `index.tsx` で初期化時にロード。
+3. **再生**: 任意のタイミングで `soundManager.playSound('key')` を呼び出す。
 
-1. `assets/sounds/` ディレクトリに音声ファイルを配置
-2. `utils/SoundManager.ts` でサウンドを登録
-3. アプリ内で `soundManager.playSound('your-sound')` を呼び出す
-
-## 🌐 環境変数
-
-`app.config.ts` で `APP_VARIANT` 環境変数を使用してビルド設定を切り替えています。
-
-- `development`: 開発版
-- `preview`: プレビュー版（内部配布用）
-- `production`: 本番リリース版
-
-## 📱 実機テスト
-
-1. Expo Go アプリをインストール
-2. `npm start` または `docker compose up` でサーバー起動
-3. QR コードをスキャン
-
-### トラブルシューティング
-
-**Q: 接続できない**
-A: トンネルモードを試す
-
-```bash
-npx expo start --tunnel
+```typescript
+// 実装例
+await soundManager.loadSound("shake", require("../assets/sounds/shake.mp3"));
+soundManager.playSound("shake");
 ```
 
-**Q: シェイクが反応しない**
-A: デバッグボタン (🐞) を使用するか、感度 `SHAKE_THRESHOLD` を調整
+## 🔍 トラブルシューティング
 
-## 🤝 コントリビューション
+**Q: "Network response timed out" で接続できない (WSL2)**
 
-プルリクエストを歓迎します！
-バグ報告や機能提案は Issue でお知らせください。
+- **A**: `npx expo start --tunnel` を使用するか、Windows のファイアウォール設定を確認してください。Docker 使用時は `docker compose exec app ...` 経由で行うのが確実です。
+
+**Q: 実機でシェイクが反応しない**
+
+- **A**: `expo-sensors` の権限許可を確認してください。また、開発中は画面右下の「🐞 デバッグモード」ボタンで動作確認が可能です。
+
+## 🤝 開発フロー
+
+1. **Issue 作成**: タスクやバグを定義
+2. **Branch 作成**: `feat/` `fix/` プレフィックスを使用
+3. **Coding**: `Prettier` / `ESLint` に従う
+4. **PR & Review**: コードレビューを経てマージ
+
+---
+
+_Happy Coding!_ 🚀

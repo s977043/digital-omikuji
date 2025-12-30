@@ -12,4 +12,8 @@ module.exports = {
         '!**/babel.config.js',
         '!**/jest.setup.js',
     ],
+    testPathIgnorePatterns: [
+        "/node_modules/",
+        "/.vscode/"
+    ],
 };
