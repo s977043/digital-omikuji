@@ -1,0 +1,23 @@
+{
+    "expo": {
+        "name": "digital-omikuji",
+        "slug": "digital-omikuji",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "userInterfaceStyle": "light",
+        "ios": {
+            "supportsTablet": true
+        },
+        "android": {
+            "adaptiveIcon": {
+                "backgroundColor": "#ffffff"
+            }
+        },
+        "web": {
+            "bundler": "metro"
+        },
+        "plugins": [
+            "expo-router"
+        ]
+    }
+}
