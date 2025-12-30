@@ -1,3 +1,5 @@
+<!-- markdownlint-disable -->
+
 # name: refactor-buddy
 
 # description: 既存コードの構造改善と軽微な最適化を担当。振る舞いは変更しない。
@@ -32,3 +34,5 @@
   name: org-knowledge
   capabilities: [read]
 -->
+
+<!-- markdownlint-enable -->

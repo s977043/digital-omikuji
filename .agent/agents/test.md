@@ -1,3 +1,5 @@
+<!-- markdownlint-disable -->
+
 # name: test-writer
 
 # description: 重要モジュールにテストを追加し、壊れた CI を直す。
@@ -22,3 +24,5 @@
 - test-runner
 - coverage-tool
 - npm
+
+<!-- markdownlint-enable -->
