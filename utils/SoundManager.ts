@@ -22,12 +22,13 @@ class SoundManager {
 
   async loadSound(key: string, source: any) {
     if (!this.isReady) {
-      // console.warn('SoundManager is not initialized yet.');
+      console.warn('SoundManager is not initialized yet. Cannot load sound.');
+      return null;
     }
     try {
       const { sound } = await Audio.Sound.createAsync(
         source,
-        { shouldPlay: false, volume: this.isMuted ? 0 : this.volume }
+        { shouldPlay: false, isMuted: this.isMuted, volume: this.volume }
       );
       this.sounds.set(key, sound);
       return sound;
@@ -42,9 +43,7 @@ class SoundManager {
     try {
       const sound = this.sounds.get(key);
       if (sound) {
-        await sound.setPositionAsync(0);
-        await sound.setVolumeAsync(this.volume);
-        await sound.playAsync();
+        await sound.replayAsync();
       } else {
         console.warn(`Sound ${key} is not loaded.`);
       }
@@ -57,7 +56,7 @@ class SoundManager {
     this.volume = Math.max(0, Math.min(1, vol));
     for (const sound of this.sounds.values()) {
       try {
-        await sound.setVolumeAsync(this.isMuted ? 0 : this.volume);
+        await sound.setVolumeAsync(this.volume);
       } catch (e) {
         console.error('Failed to set volume for a sound:', e);
       }

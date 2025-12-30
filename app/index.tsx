@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -48,22 +48,17 @@ export default function OmikujiApp() {
       await soundManager.initialize();
 
       // 安全なサウンドロード（ファイルがなくてもクラッシュさせない）
-      try {
-        await soundManager.loadSound(
-          "shake",
-          require("../assets/sounds/shake.mp3")
-        );
-      } catch (e) {
-        console.warn("Shake sound not found");
-      }
+      const soundsToLoad = [
+        { key: "shake", loader: () => require("../assets/sounds/shake.mp3") },
+        { key: "result", loader: () => require("../assets/sounds/result.mp3") },
+      ];
 
-      try {
-        await soundManager.loadSound(
-          "result",
-          require("../assets/sounds/result.mp3")
-        );
-      } catch (e) {
-        console.warn("Result sound not found");
+      for (const sound of soundsToLoad) {
+        try {
+          await soundManager.loadSound(sound.key, sound.loader());
+        } catch (e) {
+          console.warn(`${sound.key} sound not found`);
+        }
       }
     }
     initSounds();
@@ -91,11 +86,13 @@ export default function OmikujiApp() {
     };
   }, []);
 
-  const toggleMute = () => {
-    const nextMuted = !isMuted;
-    setIsMuted(nextMuted);
-    soundManager.setMute(nextMuted);
-  };
+  const toggleMute = useCallback(() => {
+    setIsMuted((prevMuted) => {
+      const nextMuted = !prevMuted;
+      soundManager.setMute(nextMuted);
+      return nextMuted;
+    });
+  }, []);
 
   // シェイク監視
   useEffect(() => {
