@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 import { useOmikujiLogic } from '../hooks/useOmikujiLogic';
 import FortuneDisplay from '../components/FortuneDisplay';
 import { soundManager } from '../utils/SoundManager';
-import "../../global.css";
+// global.css is imported in _layout.tsx
 
 // ステートマシン
 type AppState = 'IDLE' | 'SHAKING' | 'REVEALING' | 'RESULT';
@@ -33,8 +33,14 @@ export default function OmikujiApp() {
 
   // --- サウンドとセンサーの初期化 ---
   useEffect(() => {
-    // サウンドマネージャーの初期化
-    soundManager.initialize();
+    async function initSounds() {
+      await soundManager.initialize();
+      // サウンドファイルのロード (ダミーファイルでもエラーにならないか確認が必要)
+      // 注意: ファイルが存在しないと require でエラーになるため、ファイルは assets/sounds/ に配置済みであること
+      await soundManager.loadSound('shake', require('../assets/sounds/shake.mp3'));
+      await soundManager.loadSound('result', require('../assets/sounds/result.mp3'));
+    }
+    initSounds();
 
     // センサーの可用性確認と購読
     async function setupSensor() {
@@ -76,6 +82,7 @@ export default function OmikujiApp() {
     }
 
     setAppState('SHAKING');
+    soundManager.playSound('shake');
 
     // シェイク演出後に抽選へ
     setTimeout(() => {
@@ -97,6 +104,7 @@ export default function OmikujiApp() {
         if (Platform.OS !== 'web') {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
         }
+        soundManager.playSound('result');
       }, REVEALING_DURATION_MS);
     }
   }, [appState]);
@@ -127,7 +135,7 @@ export default function OmikujiApp() {
               <View className="bg-white/10 p-8 rounded-full border border-white/20 mb-8 backdrop-blur-md">
                 <Text className="text-7xl">🔮</Text>
               </View>
-              <Text className="text-3xl text-white font-extrabold tracking-tight mb-2 text-center">
+              <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
                 スマホを振って{"\n"}おみくじを引く
               </Text>
               <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
@@ -150,7 +158,7 @@ export default function OmikujiApp() {
               className="items-center"
             >
               <Text className="text-9xl mb-6">🫨</Text>
-              <Text className="text-xl text-yellow-400 font-black mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
+              <Text className="text-xl text-yellow-400 font-shippori-bold mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
                 運命を抽選中...
               </Text>
             </MotiView>
@@ -170,7 +178,7 @@ export default function OmikujiApp() {
                 animate={{ translateY: -100 }}
                 transition={{ type: 'spring', damping: 10, stiffness: 80 }}
               >
-                <Text className="text-red-700 font-black text-sm text-center leading-tight">
+                <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
                   {'2026\n奉\n納'}
                 </Text>
               </MotiView>

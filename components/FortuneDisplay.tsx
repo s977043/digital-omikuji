@@ -49,14 +49,14 @@ export default function FortuneDisplay({ fortune, onReset }: FortuneDisplayProps
         style={{ borderColor: fortune.color }}
       >
         {/* 結果タイトル */}
-        <Text className="text-5xl font-extrabold mb-4" style={{ color: fortune.color }}>
+        <Text className="text-6xl font-shippori-bold mb-4 tracking-wi" style={{ color: fortune.color }}>
           {fortune.result}
         </Text>
 
         <View className="h-0.5 w-16 bg-slate-200 mb-6" />
 
         {/* メッセージ */}
-        <Text className="text-slate-700 text-center text-lg font-medium leading-relaxed mb-8">
+        <Text className="text-slate-700 text-center text-lg font-shippori leading-relaxed mb-8">
           {fortune.message}
         </Text>
 
