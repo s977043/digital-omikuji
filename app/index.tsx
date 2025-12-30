@@ -41,20 +41,31 @@ export default function OmikujiApp() {
   const appVariant = Constants.expoConfig?.extra?.appVariant || "development";
   const showDebug = appVariant === "development";
 
+  const [isMuted, setIsMuted] = useState(false);
+
   // --- サウンドとセンサーの初期化 ---
   useEffect(() => {
     async function initSounds() {
       await soundManager.initialize();
-      // サウンドファイルのロード (ダミーファイルでもエラーにならないか確認が必要)
-      // 注意: ファイルが存在しないと require でエラーになるため、ファイルは assets/sounds/ に配置済みであること
-      await soundManager.loadSound(
-        "shake",
-        require("../assets/sounds/shake.mp3")
-      );
-      await soundManager.loadSound(
-        "result",
-        require("../assets/sounds/result.mp3")
-      );
+
+      // 安全なサウンドロード（ファイルがなくてもクラッシュさせない）
+      try {
+        await soundManager.loadSound(
+          "shake",
+          require("../assets/sounds/shake.mp3")
+        );
+      } catch (e) {
+        console.warn("Shake sound not found");
+      }
+
+      try {
+        await soundManager.loadSound(
+          "result",
+          require("../assets/sounds/result.mp3")
+        );
+      } catch (e) {
+        console.warn("Result sound not found");
+      }
     }
     initSounds();
 
@@ -80,6 +91,12 @@ export default function OmikujiApp() {
       soundManager.unloadAll();
     };
   }, []);
+
+  const toggleMute = () => {
+    const nextMuted = !isMuted;
+    setIsMuted(nextMuted);
+    soundManager.setMute(nextMuted);
+  };
 
   // シェイク監視
   useEffect(() => {
@@ -262,12 +279,22 @@ export default function OmikujiApp() {
 
           {/* 履歴画面へのナビゲーションボタン */}
           {appState === "IDLE" && (
-            <TouchableOpacity
-              onPress={() => router.push("/history")}
-              className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
-            >
-              <Text className="text-white font-bold">📜 運勢手帳</Text>
-            </TouchableOpacity>
+            <>
+              <TouchableOpacity
+                onPress={() => router.push("/history")}
+                className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+              >
+                <Text className="text-white font-bold">📜 運勢手帳</Text>
+              </TouchableOpacity>
+
+              {/* ミュート切り替えボタン */}
+              <TouchableOpacity
+                onPress={toggleMute}
+                className="absolute top-12 left-6 bg-black/30 p-3 rounded-full border border-white/20 active:bg-black/50"
+              >
+                <Text className="text-2xl">{isMuted ? "🔇" : "🔊"}</Text>
+              </TouchableOpacity>
+            </>
           )}
         </View>
       </ImageBackground>
