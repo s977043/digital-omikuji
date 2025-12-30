@@ -148,8 +148,8 @@ export default function OmikujiApp() {
     soundManager.playSound("shake");
 
     // シェイク演出後に抽選へ
-    setTimeout(() => {
-      drawFortune();
+    setTimeout(async () => {
+      await drawFortune();
       setAppState("REVEALING");
       // Haptics: 抽選完了時のフィードバック
       triggerHaptic({
