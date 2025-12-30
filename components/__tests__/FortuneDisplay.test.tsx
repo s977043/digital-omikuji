@@ -1,5 +1,6 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { Share } from 'react-native';
 import FortuneDisplay from '../FortuneDisplay';
 import { OmikujiFortune } from '../../constants/OmikujiData';
 
@@ -16,6 +17,17 @@ jest.mock('moti', () => {
   };
 });
 
+// Mock expo-haptics
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(),
+  ImpactFeedbackStyle: {
+    Light: 'light',
+  },
+}));
+
+// Mock Share.share
+jest.spyOn(Share, 'share').mockImplementation(() => Promise.resolve({ action: 'sharedAction' }));
+
 describe('FortuneDisplay', () => {
   const mockOnReset = jest.fn();
 
@@ -30,19 +42,12 @@ describe('FortuneDisplay', () => {
     jest.clearAllMocks();
   });
 
-  it('fortune が渡された時に結果が表示される', () => {
+  it('fortune が渡された時に結果とメッセージが表示される', () => {
     const { getByText } = render(
       <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
     );
 
-    expect(getByText('大吉')).toBeTruthy();
-  });
-
-  it('fortune が渡された時にメッセージが表示される', () => {
-    const { getByText } = render(
-      <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
-    );
-
+    expect(getByText(mockFortune.result)).toBeTruthy();
     expect(getByText(mockFortune.message)).toBeTruthy();
   });
 
@@ -56,12 +61,22 @@ describe('FortuneDisplay', () => {
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 
-  it('シェアボタンが表示される', () => {
+  it('シェアボタンを押すと Share.share が呼ばれる', async () => {
     const { getByText } = render(
       <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
     );
 
-    expect(getByText(/シェア/)).toBeTruthy();
+    fireEvent.press(getByText(/シェア/));
+
+    await waitFor(() => {
+      expect(Share.share).toHaveBeenCalledTimes(1);
+      expect(Share.share).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining(mockFortune.result),
+        }),
+        expect.any(Object)
+      );
+    });
   });
 
   it('異なる運勢結果が正しく表示される', () => {
