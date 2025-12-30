@@ -8,7 +8,6 @@ import { router } from 'expo-router';
 import { useOmikujiLogic } from '../hooks/useOmikujiLogic';
 import FortuneDisplay from '../components/FortuneDisplay';
 import { soundManager } from '../utils/SoundManager';
-import { addHistoryEntry } from '../utils/HistoryStorage';
 // global.css is imported in _layout.tsx
 
 // ステートマシン
@@ -110,13 +109,6 @@ export default function OmikujiApp() {
       }, REVEALING_DURATION_MS);
     }
   }, [appState]);
-
-  // --- 履歴保存 ---
-  useEffect(() => {
-    if (appState === 'RESULT' && fortune) {
-      addHistoryEntry(fortune);
-    }
-  }, [appState, fortune]);
 
   const handleReset = () => {
     resetFortune();
