@@ -37,7 +37,7 @@
     "gemini": { "configFile": "GEMINI.md", "enabled": true }
   },
   "sharedRules": ".agent/AGENTS.md",
-  "steering": ".agent/steering/"
+  "steering": ".agent/steering"
 }
 ```
 
