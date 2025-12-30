@@ -12,7 +12,7 @@ digital-omikuji/
 │   ├── _layout.tsx        # アプリ全体のレイアウト・プロバイダー設定
 │   └── index.tsx          # メイン画面 (おみくじ体験のコア)
 ├── components/            # プレゼンテーションコンポーネント
-│   └── FortuneDisplay.tsx # 結果表示 UI (Motiによるアニメーション含む)
+│   └── FortuneDisplay.tsx # 結果表示 UI (Motiによるアニメーション含む・画像シェア機能付き)
 ├── constants/             # アプリ設定・固定データ
 │   └── OmikujiData.ts    # おみくじの運勢データ定義
 ├── hooks/                 # ビジネスロジック (Custom Hooks)
@@ -55,6 +55,24 @@ Expo Application Services (EAS) を使用したクラウドビルドフローを
 # ビルドコマンド例
 eas build --profile development --platform android
 ```
+
+## 🌐 Web ビルド & デプロイ (Vercel)
+
+Web 版は Vercel へのデプロイをサポートしています。
+
+### 設定の構成
+
+- **Build Command**: `npm run build` (または `npx expo export -p web`)
+- **Output Directory**: `dist`
+- **Install Command**: `npm install`
+
+### ローカルでのビルド確認
+
+```bash
+npm run build
+```
+
+生成された `dist` ディレクトリの内容を静的ホスティングとしてデプロイ可能です。`vercel.json` により、SPA（Single Page Application）としてのルーティングが適切に処理されます。
 
 ## 🎨 デザイン & スタイリングガイド
 
