@@ -4,9 +4,11 @@ import { Accelerometer } from 'expo-sensors';
 import { MotiView } from 'moti';
 import * as Haptics from 'expo-haptics';
 import Constants from 'expo-constants';
+import { router } from 'expo-router';
 import { useOmikujiLogic } from '../hooks/useOmikujiLogic';
 import FortuneDisplay from '../components/FortuneDisplay';
 import { soundManager } from '../utils/SoundManager';
+import { addHistoryEntry } from '../utils/HistoryStorage';
 // global.css is imported in _layout.tsx
 
 // ステートマシン
@@ -109,6 +111,13 @@ export default function OmikujiApp() {
     }
   }, [appState]);
 
+  // --- 履歴保存 ---
+  useEffect(() => {
+    if (appState === 'RESULT' && fortune) {
+      addHistoryEntry(fortune);
+    }
+  }, [appState, fortune]);
+
   const handleReset = () => {
     resetFortune();
     setAppState('IDLE');
@@ -199,6 +208,16 @@ export default function OmikujiApp() {
               <Text className="text-white font-bold">
                 {isSensorAvailable === false ? '📱 ボタンでおみくじを引く' : '🐞 テストで振る'}
               </Text>
+            </TouchableOpacity>
+          )}
+
+          {/* 履歴画面へのナビゲーションボタン */}
+          {appState === 'IDLE' && (
+            <TouchableOpacity
+              onPress={() => router.push('/history')}
+              className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+            >
+              <Text className="text-white font-bold">📜 運勢手帳</Text>
             </TouchableOpacity>
           )}
         </View>
