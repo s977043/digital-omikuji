@@ -66,3 +66,23 @@
 - Codex CLI を使うときは、`.agent/docs/CodexAgentSkills.md` で Agent Skills の運用ルールを確認する。
 - 利用可能な Skill は `.agent/skills/index.json` に一覧化されている。
 - 対応する `SKILL.md`（L2）と `run.js`（L3）を参照して実行する。
+
+## 9. Git ワークフロー
+
+### 禁止事項
+
+- **`main` / `develop` ブランチへの直接コミット・プッシュは禁止**
+- 必ず feature ブランチを作成し、PR 経由でマージすること
+
+### ブランチ運用
+
+1. `develop` から feature ブランチを作成: `git checkout -b feature/xxx develop`
+2. 変更をコミット・プッシュ
+3. PR を作成し、CI が Green であることを確認
+4. レビュー後、`develop` へマージ
+5. リリース時は `develop` → `main` への PR を作成
+
+### タグ発行
+
+- `main` ブランチへのマージ時にバージョンタグを発行する
+- タグ形式: `v{major}.{minor}.{patch}` (例: `v0.1.2`)
