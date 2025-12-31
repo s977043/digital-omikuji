@@ -17,3 +17,10 @@ web-build/
 
 # Legacy
 _legacy_remix_2025/node_modules
+
+# Worktrees
+.worktrees/
+worktree-*/
+
+# Coverage
+coverage/

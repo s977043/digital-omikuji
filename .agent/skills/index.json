@@ -1,0 +1,24 @@
+{
+  "skills": [
+    {
+      "id": "chrome-devtools-ui-survey",
+      "name": "Chrome DevTools UI 調査",
+      "description": "Chrome DevTools MCP で対象 UI をスクリーンショットし、レイアウトや要素構成を記録するスキル。Codex エージェントが L1 〜 L3 を順に読み込んで実行できるように整備します。",
+      "skill_path": "skills/chrome-devtools/SKILL.md",
+      "script": "skills/chrome-devtools/run.js",
+      "contexts": ["Codex"],
+      "tags": ["mcp", "ui", "chrome-devtools"],
+      "last_updated": "2025-11-12"
+    },
+    {
+      "id": "youtube-video-download",
+      "name": "YouTube 動画のダウンロード",
+      "description": "YouTube URL を指定し、ダウンロードスクリプト経由で資料や分析用の動画を取得するスキル。Agent Skills の構成に沿って Codex から自律的に呼び出せるようメタデータを揃えます。",
+      "skill_path": "skills/youtube-video/SKILL.md",
+      "script": "skills/youtube-video/run.js",
+      "contexts": ["Codex"],
+      "tags": ["python", "cli", "download"],
+      "last_updated": "2025-11-12"
+    }
+  ]
+}
