@@ -1,10 +1,10 @@
 {
   "version": "1.0",
   "agents": {
-    "claude": { "configFile": "CLAUDE.md", "enabled": true },
+    "claude": { "configFile": ".agent/CLAUDE.md", "enabled": true },
     "copilot": { "configFile": ".github/copilot-instructions.md", "enabled": true },
     "codex": { "configFile": "codex.md", "enabled": true },
-    "gemini": { "configFile": "GEMINI.md", "enabled": true }
+    "gemini": { "configFile": ".gemini/styleguide.md", "enabled": true }
   },
   "sharedRules": ".agent/AGENTS.md",
   "steering": ".agent/steering"
