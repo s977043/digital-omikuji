@@ -70,21 +70,21 @@ Digital Omikuji/
 
 ### 変更禁止・注意ファイル
 
-- `package-lock.json`: 手動編集禁止 (npm 経由で更新)
+- `pnpm-lock.yaml`: 手動編集禁止 (pnpm 経由で更新)
 - `.agent/`: プロジェクトの AI 設定の核心部分のため、意図した変更以外は慎重に
 
 ## パッケージ管理
 
-**npm** を使用します。
+**pnpm** を使用します。
 
 ### 依存関係の追加
 
 ```bash
 # プロジェクト全体への追加
-npm install <package>
+pnpm add <package>
 
 # 開発用依存関係
-npm install -DL <package>
+pnpm add -D <package>
 ```
 
 ### Expo 関連コマンド

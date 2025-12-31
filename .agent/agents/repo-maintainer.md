@@ -16,8 +16,8 @@
 
 ### 1. 依存関係のメンテナンス (maintenance-bot の役割)
 
-- `npm outdated` を利用して更新可能な依存関係（minor/patch）を特定し、安全に更新します。
-- 更新後、`npm test` を実行して既存のテストがすべてパスすることを確認します。テストが失敗した場合は、可能な範囲で最小限の修正を試みます。
+- `pnpm outdated` を利用して更新可能な依存関係（minor/patch）を特定し、安全に更新します。
+- 更新後、`pnpm test` を実行して既存のテストがすべてパスすることを確認します。テストが失敗した場合は、可能な範囲で最小限の修正を試みます。
 
 ### 2. CI/CD の最適化 (ci-optimizer の役割)
 
@@ -30,7 +30,7 @@
 
 - git
 - bash
-- npm
+- pnpm
 - test-runner
 
 <!-- markdownlint-enable -->
