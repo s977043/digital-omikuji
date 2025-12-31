@@ -1,24 +1,43 @@
 {
     "expo": {
-        "name": "digital-omikuji",
+        "name": "デジタルおみくじ",
         "slug": "digital-omikuji",
         "version": "1.0.0",
         "orientation": "portrait",
         "userInterfaceStyle": "light",
+        "icon": "./assets/icon.png",
+        "splash": {
+            "image": "./assets/splash.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#dc2626"
+        },
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "bundleIdentifier": "com.s977043.digitalomikuji",
+            "buildNumber": "1",
+            "icon": "./assets/icon.png",
+            "infoPlist": {
+                "CFBundleDisplayName": "デジタルおみくじ",
+                "NSPhotoLibraryUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへのアクセスが必要です",
+                "NSPhotoLibraryAddUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です"
+            }
         },
         "android": {
+            "package": "com.s977043.digitalomikuji",
+            "versionCode": 1,
             "adaptiveIcon": {
-                "backgroundColor": "#ffffff"
+                "foregroundImage": "./assets/adaptive-icon.png",
+                "backgroundColor": "#dc2626"
             }
         },
         "web": {
             "bundler": "metro",
-            "output": "static"
+            "output": "static",
+            "favicon": "./assets/favicon.png"
         },
         "plugins": [
-            "expo-router"
+            "expo-router",
+            "expo-splash-screen"
         ]
     }
 }
