@@ -1,17 +1,18 @@
 # Dockerfile
 FROM node:20-bullseye
 
-# Install tools
-RUN npm install -g eas-cli
+# Install pnpm and tools
+RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN pnpm add -g eas-cli
 
 # Workdir
 WORKDIR /app
 
 # Copy package files first for layer caching
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
-RUN npm install
+RUN pnpm install --frozen-lockfile
 
 # Copy all source files
 COPY . .

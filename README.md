@@ -61,22 +61,22 @@ Node.js 環境が整っている場合、ローカルで直接実行すること
 ### 前提条件
 
 - **Node.js v20 以上** (必須)
-- npm
+- pnpm
 
 ### 手順
 
 1. 依存関係のインストール
 
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. 開発サーバーの起動
 
    ```bash
-   npm start
+   pnpm start
    # または
-   npx expo start
+   pnpm expo start
    ```
 
 ## 🧪 テスト
@@ -85,10 +85,10 @@ Node.js 環境が整っている場合、ローカルで直接実行すること
 
 ```bash
 # ローカル実行
-npm test
+pnpm test
 
 # Docker実行
-docker compose exec app npm test
+docker compose exec app pnpm test
 ```
 
 ## 📦 ビルド (EAS Build)

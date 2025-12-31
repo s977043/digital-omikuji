@@ -20,13 +20,13 @@
   - `.agent/`: エージェント設定
 - **触ってはダメ**: `node_modules`, `**/*.lock`, `.env*`, `secrets/*`
 
-## 2. セットアップ & 共通コマンド（npm 前提）
+## 2. セットアップ & 共通コマンド（pnpm 前提）
 
-- 依存導入: `npm install`
-- 開発サーバー: `npm start`
-- ビルド(Web): `npm run build`
-- テスト: `npm test`
-- Lint: (設定されていれば) `npm run lint`
+- 依存導入: `pnpm install`
+- 開発サーバー: `pnpm start`
+- ビルド(Web): `pnpm build`
+- テスト: `pnpm test`
+- Lint: (設定されていれば) `pnpm lint`
 
 ## 3. コーディング規約
 
@@ -47,7 +47,7 @@
 - タイトル: `[feat|fix|docs|refactor] summary`
 - 本文: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクショ or 動画
 - PR 本文とコメントは日本語で記載
-- 必須条件: `npm test` が **Green**
+- 必須条件: `pnpm test` が **Green**
 
 ## 6. セキュリティ
 
@@ -63,6 +63,7 @@
 
 ## 8. Codex Agent Skills
 
+- **エントリーポイント**: Codex CLI はルートの `codex.md` を起点としてプロジェクトのコンテキストを認識する。
 - Codex CLI を使うときは、`.agent/docs/CodexAgentSkills.md` で Agent Skills の運用ルールを確認する。
 - 利用可能な Skill は `.agent/skills/index.json` に一覧化されている。
 - 対応する `SKILL.md`（L2）と `run.js`（L3）を参照して実行する。

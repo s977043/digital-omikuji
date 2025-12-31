@@ -16,7 +16,7 @@ target_audience: ["developer", "ai_agent"]
 - **Routing**: Expo Router
 - **State Management**: React Hooks (useState, useReducer, useContext)
 - **Testing**: Jest, React Native Testing Library
-- **Package Manager**: npm
+- **Package Manager**: pnpm
 
 ## 開発フロー
 
@@ -25,7 +25,7 @@ target_audience: ["developer", "ai_agent"]
 1. **Issue 確認**: 実装すべき機能やバグ修正の内容を把握。
 2. **Branch 作成**: `feature/xxx` や `fix/xxx` ブランチを作成。
 3. **実装 & テスト**: コードの実装とテストコードの記述（TDD 推奨）。
-4. **Lint & Type Check**: `npm run lint` および `tsc` で静的解析を通す。
+4. **Lint & Type Check**: `pnpm lint` および `tsc` で静的解析を通す。
 5. **PR 作成**: GitHub で Pull Request を作成し、レビューを依頼。
 
 ### コード品質基準
@@ -116,5 +116,5 @@ test("ボタンが表示され、タップできる", () => {
 ## トラブルシューティング
 
 - **ビルドエラー**: `npx expo start -c` でキャッシュをパージしてみる。
-- **依存関係エラー**: `node_modules` を削除して `npm install` を再実行。
+- **依存関係エラー**: `node_modules` を削除して `pnpm install` を再実行。
 - **Web/iOS/Android の差異**: `Platform.OS` を使ってプラットフォームごとの分岐を行うか、ファイル拡張子 (`.ios.tsx`, `.android.tsx`) で分ける。
