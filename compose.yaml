@@ -1,6 +1,9 @@
 services:
+  # Development environment with hot reload
   app:
-    build: .
+    build:
+      context: .
+      target: development
     ports:
       - "8081:8081"
     volumes:
@@ -10,3 +13,15 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - EXPO_DEV_CLIENT_NETWORK_INSPECTOR=true
       - APP_VARIANT=development
+
+  # Production web server
+  web:
+    build:
+      context: .
+      target: production
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    profiles:
+      - production
