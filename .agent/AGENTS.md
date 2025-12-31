@@ -63,6 +63,7 @@
 
 ## 8. Codex Agent Skills
 
+- **エントリーポイント**: Codex CLI はルートの `codex.md` を起点としてプロジェクトのコンテキストを認識する。
 - Codex CLI を使うときは、`.agent/docs/CodexAgentSkills.md` で Agent Skills の運用ルールを確認する。
 - 利用可能な Skill は `.agent/skills/index.json` に一覧化されている。
 - 対応する `SKILL.md`（L2）と `run.js`（L3）を参照して実行する。
