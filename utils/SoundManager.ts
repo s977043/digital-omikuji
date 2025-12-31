@@ -33,6 +33,8 @@ class SoundManager {
       this.sounds.set(key, sound);
       return sound;
     } catch (error) {
+      // サウンドファイルが見つからない場合もアプリは継続動作させる
+      // エラーはログに記録し、nullを返すことで呼び出し側は音なしで動作可能
       console.error(`Failed to load sound ${key}:`, error);
       return null;
     }

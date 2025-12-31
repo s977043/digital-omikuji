@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD025 MD041 -->
+
 # name: test-writer
 
 # description: 重要モジュールにテストを追加し、壊れた CI を直す。
