@@ -2,25 +2,36 @@
     "git": {
         "deploymentEnabled": false
     },
+    "functions": {
+        "app/**": {
+            "runtime": "nodejs20.x"
+        }
+    },
     "buildCommand": "pnpm build",
     "outputDirectory": "dist",
     "installCommand": "pnpm install",
     "framework": null,
     "cleanUrls": true,
-    "regions": ["hnd1"],
-    "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/index.html"
-        }
+    "regions": [
+        "hnd1"
     ],
+    "trailingSlash": false,
     "headers": [
         {
-            "source": "/((assets|fonts)/.*|.*\\.(js|css))",
+            "source": "/((assets|fonts|_expo)/.*|.*\\.(js|css|woff|woff2|ttf|otf))",
             "headers": [
                 {
                     "key": "Cache-Control",
                     "value": "public, max-age=31536000, immutable"
+                }
+            ]
+        },
+        {
+            "source": "/(.*\\.html)",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=0, must-revalidate"
                 }
             ]
         },
