@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { MotiView } from 'moti';
 import { getHistory, clearHistory, HistoryEntry } from '../utils/HistoryStorage';
+import { VersionDisplay } from '../components/VersionDisplay';
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -110,6 +111,9 @@ export default function HistoryScreen() {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
+
+      {/* デプロイバージョン表示 */}
+      <VersionDisplay />
     </View>
   );
 }

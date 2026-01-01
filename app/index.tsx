@@ -13,6 +13,7 @@ import Constants from "expo-constants";
 import { router } from "expo-router";
 import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import FortuneDisplay from "../components/FortuneDisplay";
+import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
 // global.css is imported in _layout.tsx
 
@@ -332,6 +333,9 @@ export default function OmikujiApp() {
               >
                 <Text className="text-2xl">{isMuted ? "🔇" : "🔊"}</Text>
               </TouchableOpacity>
+
+              {/* デプロイバージョン表示 */}
+              <VersionDisplay />
             </>
           )}
         </View>
