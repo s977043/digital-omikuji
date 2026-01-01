@@ -12,7 +12,7 @@ export interface VersionInfo {
 
 export const getVersionInfo = (): VersionInfo => {
   // package.jsonから取得（本来はスクリプトで埋め込み）
-  const packageVersion = '0.1.1';
+  const packageVersion = Constants.expoConfig?.version ?? 'unknown';
 
   // ビルド時刻（開発環境の場合は現在時刻）
   const buildTime = __DEV__
