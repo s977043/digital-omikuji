@@ -47,10 +47,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     plugins: ["expo-router"],
     extra: {
+      ...config.extra,
       appVariant,
-      eas: {
-        projectId: "dummy-project-id-2026",
-      },
     },
   };
 };
