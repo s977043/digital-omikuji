@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import { SplashScreen, Stack } from 'expo-router';
 import { useFonts, ShipporiMincho_400Regular, ShipporiMincho_700Bold } from '@expo-google-fonts/shippori-mincho';
 import { useEffect } from 'react';
