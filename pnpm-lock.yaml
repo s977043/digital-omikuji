@@ -87,8 +87,8 @@ importers:
         specifier: ^1.6.2
         version: 1.6.2(react-native@0.76.5(@babel/core@7.28.5)(@babel/preset-env@7.28.5(@babel/core@7.28.5))(@types/react@18.3.27)(react@18.3.1))(react@18.3.1)
       uuid:
-        specifier: ^13.0.0
-        version: 13.0.0
+        specifier: ^10.0.0
+        version: 10.0.0
     devDependencies:
       '@testing-library/jest-native':
         specifier: ^5.4.3
@@ -4562,8 +4562,8 @@ packages:
   utrie@1.0.2:
     resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
-  uuid@13.0.0:
-    resolution: {integrity: sha512-XQegIaBTVUjSHliKqcnFqYypAd4S+WCYt5NIeRs6w/UAry7z8Y9j5ZwRRL4kzq9U3sD6v+85er9FvkEaBpji2w==}
+  uuid@10.0.0:
+    resolution: {integrity: sha512-8XkAphELsDnEGrDxUOHB3RGvXz6TeuYSGEZBOjtTtPm2lwhGBjLgOzLHB63IUWfBpNucQjND6d3AOudO+H3RWQ==}
     hasBin: true
 
   uuid@7.0.3:
@@ -10334,7 +10334,7 @@ snapshots:
     dependencies:
       base64-arraybuffer: 1.0.2
 
-  uuid@13.0.0: {}
+  uuid@10.0.0: {}
 
   uuid@7.0.3: {}
 
