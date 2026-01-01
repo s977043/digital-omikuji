@@ -3,8 +3,9 @@
   "version": "0.1.1",
   "main": "expo-router/entry",
   "engines": {
-    "node": ">=20.0.0"
+    "node": "20.x"
   },
+  "packageManager": "pnpm@9.15.2",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
