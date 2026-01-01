@@ -17,7 +17,7 @@ export const getVersionInfo = (): VersionInfo => {
   // ビルド時刻（開発環境の場合は現在時刻）
   const buildTime = __DEV__
     ? new Date().toISOString()
-    : process.env.BUILD_TIME || new Date().toISOString();
+    : process.env.BUILD_TIME || 'BUILD_TIME_NOT_SET';
 
   // コミットハッシュ（環境変数から取得可能）
   const commitHash = process.env.COMMIT_HASH || undefined;
