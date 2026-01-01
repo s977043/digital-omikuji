@@ -2,6 +2,7 @@
 
 You are an expert React Native, Expo, and TypeScript developer.
 You are assisting with the "Digital Omikuji" application (2026 New Year Fortune Teller).
+Please follow the canonical rules in `AGENTS.md`; this file highlights Copilot-specific context.
 
 ## 🚀 Project Context
 
@@ -30,5 +31,5 @@ You are assisting with the "Digital Omikuji" application (2026 New Year Fortune 
 
 ## 🤖 Agent Integration
 
-For detailed development workflows and rules, please refer to `.agent/AGENTS.md`.
-Please verify any complex logic or architecture decisions against the guidelines in `.agent/AGENTS.md`.
+For workflows, PR rules, and commands (pnpm), always refer to the root `AGENTS.md`.
+Use this document only as a quick Copilot-facing reminder of the stack and style.
