@@ -3,6 +3,8 @@
  * デプロイバージョン、ビルド時刻などを提供
  */
 
+import Constants from 'expo-constants';
+
 export interface VersionInfo {
   packageVersion: string;
   buildTime: string;
@@ -11,11 +13,12 @@ export interface VersionInfo {
 }
 
 export const getVersionInfo = (): VersionInfo => {
-  // package.jsonから取得（本来はスクリプトで埋め込み）
+  // expo-constants から app.json のバージョンを動的に取得
   const packageVersion = Constants.expoConfig?.version ?? 'unknown';
 
   // ビルド時刻（開発環境の場合は現在時刻）
-  const buildTime = __DEV__
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const buildTime = isDevelopment
     ? new Date().toISOString()
     : process.env.BUILD_TIME || 'BUILD_TIME_NOT_SET';
 
@@ -23,7 +26,7 @@ export const getVersionInfo = (): VersionInfo => {
   const commitHash = process.env.COMMIT_HASH || undefined;
 
   // 環境判定
-  const environment = __DEV__ ? 'development' : 'production';
+  const environment = isDevelopment ? 'development' : 'production';
 
   return {
     packageVersion,

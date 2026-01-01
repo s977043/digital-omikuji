@@ -3,7 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { MotiView } from 'moti';
 import { getHistory, clearHistory, HistoryEntry } from '../utils/HistoryStorage';
-import { getVersionDisplay } from '../utils/VersionInfo';
+import { VersionDisplay } from '../components/VersionDisplay';
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -111,12 +111,9 @@ export default function HistoryScreen() {
           contentContainerStyle={{ paddingBottom: 20 }}
         />
       )}
-      {/* デプロイバージョン表示（フッター・目立たない場所） */}
-      <View className="absolute bottom-2 right-2 p-1">
-        <Text className="text-xs text-white/40 font-mono">
-          {getVersionDisplay()}
-        </Text>
-      </View>
+
+      {/* デプロイバージョン表示 */}
+      <VersionDisplay />
     </View>
   );
 }
