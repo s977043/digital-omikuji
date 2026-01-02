@@ -85,8 +85,8 @@ export default function OmikujiApp() {
 
       // 安全なサウンドロード（ファイルがなくてもクラッシュさせない）
       const soundsToLoad = [
-        { key: "shake", loader: () => require("../assets/sounds/shake.mp3") },
-        { key: "result", loader: () => require("../assets/sounds/result.mp3") },
+        { key: "shake", loader: () => require("../assets/sounds/shake.wav") },
+        { key: "result", loader: () => require("../assets/sounds/result.wav") },
       ];
 
       for (const sound of soundsToLoad) {
@@ -209,10 +209,10 @@ export default function OmikujiApp() {
               animate={{ opacity: 1, scale: 1, translateY: 0 }}
               className="items-center px-6"
             >
-              <View className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg">
+              <View className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden w-[184px] h-[184px] items-center justify-center">
                 <Image
                   source={require("../assets/omikuji_cylinder.png")}
-                  style={{ width: 180, height: 180, borderRadius: 90 }}
+                  className="w-[180px] h-[180px] rounded-full"
                   resizeMode="cover"
                 />
               </View>

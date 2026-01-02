@@ -1,4 +1,4 @@
-import { Audio } from 'expo-av';
+import { Audio, AVPlaybackSource } from 'expo-av';
 
 class SoundManager {
   private sounds: Map<string, Audio.Sound> = new Map();
@@ -20,25 +20,23 @@ class SoundManager {
     }
   }
 
-  async loadSound(key: string, source: any) {
+  async loadSound(key: string, source: AVPlaybackSource): Promise<Audio.Sound | null> {
     if (!this.isReady) {
-      console.warn(`SoundManager is not initialized yet. Cannot load sound: ${key}`);
       return null;
     }
     try {
-      console.log(`Loading sound: ${key}`);
       const { sound, status } = await Audio.Sound.createAsync(
         source,
         { shouldPlay: false, isMuted: this.isMuted, volume: this.volume }
       );
 
       if (status.isLoaded) {
-        console.log(`Successfully loaded sound: ${key}`);
         this.sounds.set(key, sound);
+        return sound;
       } else {
-        console.warn(`Sound loaded but status.isLoaded is false: ${key}`);
+        // Sound object created but not loaded; do not add to map
+        return null;
       }
-      return sound;
     } catch (error) {
       console.error(`Failed to load sound ${key}:`, error);
       return null;

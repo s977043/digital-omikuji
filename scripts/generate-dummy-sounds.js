@@ -91,10 +91,8 @@ if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
 }
 
+// Generate WAV files only (expo-av supports WAV natively on all platforms)
 generateShakeSound(path.join(dir, 'shake.wav'));
 generateResultSound(path.join(dir, 'result.wav'));
 
-// Copy to .mp3 as well since web uses that fallback in some browsers/code
-// (Disclaimer: These are still valid WAV files with MP3 extension, which modern browsers handle fine)
-fs.copyFileSync(path.join(dir, 'shake.wav'), path.join(dir, 'shake.mp3'));
-fs.copyFileSync(path.join(dir, 'result.wav'), path.join(dir, 'result.mp3'));
+console.log('Note: WAV files generated. expo-av supports WAV format on iOS, Android, and Web.');
