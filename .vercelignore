@@ -50,13 +50,8 @@ error.log
 .npmrc
 
 # Config files not needed at runtime
-tsconfig.json
-tailwind.config.js
-metro.config.js
-babel.config.js
 nativewind-env.d.ts
 eas.json
-app.json
 
 # Misc
 .river-reviewer.json
