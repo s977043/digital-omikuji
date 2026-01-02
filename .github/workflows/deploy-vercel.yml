@@ -2,7 +2,7 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 # Prevent concurrent deployments to avoid rate limiting
 concurrency:
@@ -33,12 +33,27 @@ jobs:
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest
 
-      - name: Pull Vercel Project Information
+      - name: Pull Vercel Project Information (Production)
+        if: github.ref == 'refs/heads/main'
         run: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
 
-      - name: Build Project Artifacts
+      - name: Pull Vercel Project Information (Preview)
+        if: github.ref != 'refs/heads/main'
+        run: vercel pull --yes --environment=preview --token=$VERCEL_TOKEN
+
+      - name: Build Project Artifacts (Production)
+        if: github.ref == 'refs/heads/main'
         run: vercel build --prod --token=$VERCEL_TOKEN
 
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --token=$VERCEL_TOKEN --prod
+      - name: Build Project Artifacts (Preview)
+        if: github.ref != 'refs/heads/main'
+        run: vercel build --token=$VERCEL_TOKEN
+
+      - name: Deploy Project Artifacts to Vercel (Production)
+        if: github.ref == 'refs/heads/main'
+        run: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+
+      - name: Deploy Project Artifacts to Vercel (Preview)
+        if: github.ref != 'refs/heads/main'
+        run: vercel deploy --prebuilt --token=$VERCEL_TOKEN
 
