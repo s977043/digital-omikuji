@@ -22,32 +22,47 @@ class SoundManager {
 
   async loadSound(key: string, source: any) {
     if (!this.isReady) {
-      console.warn('SoundManager is not initialized yet. Cannot load sound.');
+      console.warn(`SoundManager is not initialized yet. Cannot load sound: ${key}`);
       return null;
     }
     try {
-      const { sound } = await Audio.Sound.createAsync(
+      console.log(`Loading sound: ${key}`);
+      const { sound, status } = await Audio.Sound.createAsync(
         source,
         { shouldPlay: false, isMuted: this.isMuted, volume: this.volume }
       );
-      this.sounds.set(key, sound);
+
+      if (status.isLoaded) {
+        console.log(`Successfully loaded sound: ${key}`);
+        this.sounds.set(key, sound);
+      } else {
+        console.warn(`Sound loaded but status.isLoaded is false: ${key}`);
+      }
       return sound;
     } catch (error) {
-      // サウンドファイルが見つからない場合もアプリは継続動作させる
-      // エラーはログに記録し、nullを返すことで呼び出し側は音なしで動作可能
       console.error(`Failed to load sound ${key}:`, error);
       return null;
     }
   }
 
   async playSound(key: string) {
-    if (!this.isReady || this.isMuted) return;
+    if (!this.isReady) {
+      console.warn(`SoundManager not ready for playSound: ${key}`);
+      return;
+    }
+    if (this.isMuted) return;
+
     try {
       const sound = this.sounds.get(key);
       if (sound) {
-        await sound.replayAsync();
+        const status = await sound.getStatusAsync();
+        if (status.isLoaded) {
+          await sound.replayAsync();
+        } else {
+          console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
+        }
       } else {
-        console.warn(`Sound ${key} is not loaded.`);
+        console.warn(`Sound ${key} is not loaded (not in map).`);
       }
     } catch (error) {
       console.error(`Failed to play sound ${key}:`, error);
@@ -69,7 +84,10 @@ class SoundManager {
     this.isMuted = mute;
     for (const sound of this.sounds.values()) {
       try {
-        await sound.setIsMutedAsync(mute);
+        const status = await sound.getStatusAsync();
+        if (status.isLoaded) {
+          await sound.setIsMutedAsync(mute);
+        }
       } catch (e) {
         console.error('Failed to set mute for a sound:', e);
       }

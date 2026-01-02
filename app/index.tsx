@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   Platform,
   ImageBackground,
+  Image,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
@@ -208,8 +209,12 @@ export default function OmikujiApp() {
               animate={{ opacity: 1, scale: 1, translateY: 0 }}
               className="items-center px-6"
             >
-              <View className="bg-white/10 p-8 rounded-full border border-white/20 mb-8 backdrop-blur-md">
-                <Text className="text-7xl">🔮</Text>
+              <View className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg">
+                <Image
+                  source={require("../assets/omikuji_cylinder.png")}
+                  style={{ width: 180, height: 180, borderRadius: 90 }}
+                  resizeMode="cover"
+                />
               </View>
               <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
                 スマホを振って{"\n"}おみくじを引く
@@ -271,14 +276,14 @@ export default function OmikujiApp() {
                   type: "spring",
                   damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING,
                 }}
-                className="w-32 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center"
+                className="w-40 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center"
               >
                 <View className="w-20 h-2 bg-yellow-600/30 rounded-full mb-2" />
                 <View className="w-16 h-2 bg-yellow-600/30 rounded-full" />
               </MotiView>
 
               <MotiView
-                className="absolute w-8 h-48 bg-amber-50 bottom-12 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
+                className="absolute w-16 h-48 bg-amber-50 bottom-12 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
                 from={{ translateY: 100, opacity: 0 }}
                 animate={{ translateY: -100, opacity: 1 }}
                 transition={{
