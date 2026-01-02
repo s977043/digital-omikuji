@@ -113,11 +113,7 @@ export default function OmikujiApp() {
 
         if (available) {
           Accelerometer.setUpdateInterval(100);
-          subscription.current = Accelerometer.addListener(
-            (accelerometerData: { x: number; y: number; z: number }) => {
-              setData(accelerometerData);
-            }
-          );
+          subscription.current = Accelerometer.addListener(setData);
         }
       } catch (error) {
         console.warn("Accelerometer initialization failed:", error);
