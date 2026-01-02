@@ -2,11 +2,6 @@
     "git": {
         "deploymentEnabled": false
     },
-    "functions": {
-        "app/**": {
-            "runtime": "nodejs20.x"
-        }
-    },
     "buildCommand": "pnpm build",
     "outputDirectory": "dist",
     "installCommand": "pnpm install",
@@ -16,9 +11,33 @@
         "hnd1"
     ],
     "trailingSlash": false,
+    "rewrites": [
+        {
+            "source": "/((?!_expo|assets|fonts|favicon\\.ico|.*\\..*).*)",
+            "destination": "/index.html"
+        }
+    ],
     "headers": [
         {
-            "source": "/((assets|fonts|_expo)/.*|.*\\.(js|css|woff|woff2|ttf|otf))",
+            "source": "/((assets|fonts|_expo)/.*|.*\\.(js|css|woff|woff2|ttf|otf|eot))",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                }
+            ]
+        },
+        {
+            "source": "/(.*\\.(png|jpg|jpeg|gif|webp|avif|svg|ico))",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=31536000, immutable"
+                }
+            ]
+        },
+        {
+            "source": "/(.*\\.(mp3|wav|ogg|m4a))",
             "headers": [
                 {
                     "key": "Cache-Control",
@@ -47,8 +66,20 @@
                     "value": "DENY"
                 },
                 {
+                    "key": "X-XSS-Protection",
+                    "value": "1; mode=block"
+                },
+                {
                     "key": "Referrer-Policy",
                     "value": "strict-origin-when-cross-origin"
+                },
+                {
+                    "key": "Permissions-Policy",
+                    "value": "accelerometer=(self), gyroscope=(self), magnetometer=(self)"
+                },
+                {
+                    "key": "Strict-Transport-Security",
+                    "value": "max-age=31536000; includeSubDomains; preload"
                 }
             ]
         }

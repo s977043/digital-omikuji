@@ -1,25 +1,62 @@
+# Dependencies and build artifacts
 node_modules
 .expo
+dist
+
+# Version control
 .git
 .github
+.gitignore
+.gitmodules
+
+# IDE/Editor
 .vscode
+
+# Development tools
 .worktrees
 .agent
 .antigravity
+.gemini
+river-reviewer
+
+# Container files
 Dockerfile
 compose.yaml
+
+# Documentation (not needed for deployment)
 docs
+README.md
+LICENSE
+AGENTS.md
+GEMINI.md
+codex.md
+CONTINUITY.md
+
+# Native platform folders (web only deployment)
 ios
 android
 web-build
-*.log
+
+# Test files
 *.test.ts
 *.test.tsx
 __tests__
 jest.config.js
 jest.setup.js
-.gitignore
+
+# Logs and temp files
+*.log
+error.log
 .npmrc
-README.md
-LICENSE
+
+# Config files not needed at runtime
 tsconfig.json
+tailwind.config.js
+metro.config.js
+babel.config.js
+nativewind-env.d.ts
+eas.json
+app.json
+
+# Misc
+.river-reviewer.json
