@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import { Share } from 'react-native';
 import FortuneDisplay from '../FortuneDisplay';
-import { OmikujiFortune } from '../../constants/OmikujiData';
+import { OmikujiResult } from '../../types/omikuji';
 
 // Mock react-native-view-shot
 jest.mock('react-native-view-shot', () => ({
@@ -31,11 +31,16 @@ jest.spyOn(Share, 'share').mockImplementation(() => Promise.resolve({ action: 's
 describe('FortuneDisplay', () => {
   const mockOnReset = jest.fn();
 
-  const mockFortune: OmikujiFortune = {
-    result: '大吉',
-    message: '2026年はあなたの黄金イヤー！夢が叶う最高の年になるでしょう。',
-    weight: 10,
+  const mockFortune: OmikujiResult = {
+    id: 'test-id',
+    level: 'daikichi',
+    fortuneParams: {
+      title: '大吉',
+      description: '2026年はあなたの黄金イヤー！夢が叶う最高の年になるでしょう。',
+    },
+    image: { uri: 'test.png' },
     color: '#FFD700',
+    createdAt: 1234567890,
   };
 
   beforeEach(() => {
@@ -47,8 +52,8 @@ describe('FortuneDisplay', () => {
       <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
     );
 
-    expect(getByText(mockFortune.result)).toBeTruthy();
-    expect(getByText(mockFortune.message)).toBeTruthy();
+    expect(getByText(mockFortune.fortuneParams.title)).toBeTruthy();
+    expect(getByText(mockFortune.fortuneParams.description)).toBeTruthy();
   });
 
   it('閉じるボタンを押すと onReset が呼ばれる', () => {
@@ -72,7 +77,7 @@ describe('FortuneDisplay', () => {
       expect(Share.share).toHaveBeenCalledTimes(1);
       expect(Share.share).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: expect.stringContaining(mockFortune.result),
+          message: expect.stringContaining(mockFortune.fortuneParams.title),
         }),
         expect.any(Object)
       );
@@ -80,11 +85,16 @@ describe('FortuneDisplay', () => {
   });
 
   it('異なる運勢結果が正しく表示される', () => {
-    const kyoFortune: OmikujiFortune = {
-      result: '凶',
-      message: '今は耐える時。慎重に行動すれば、災いは転じて福となります。',
-      weight: 5,
+    const kyoFortune: OmikujiResult = {
+      id: 'kyo-id',
+      level: 'kyo',
+      fortuneParams: {
+        title: '凶',
+        description: '今は耐える時。慎重に行動すれば、災いは転じて福となります。',
+      },
+      image: { uri: 'test.png' },
       color: '#808080',
+      createdAt: 1234567890,
     };
 
     const { getByText } = render(
@@ -92,6 +102,6 @@ describe('FortuneDisplay', () => {
     );
 
     expect(getByText('凶')).toBeTruthy();
-    expect(getByText(kyoFortune.message)).toBeTruthy();
+    expect(getByText(kyoFortune.fortuneParams.description)).toBeTruthy();
   });
 });

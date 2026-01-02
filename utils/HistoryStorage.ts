@@ -1,14 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { v4 as uuidv4 } from "uuid";
-import { OmikujiFortune } from "../constants/OmikujiData";
+import { OmikujiResult } from "../types/omikuji";
 
-const HISTORY_KEY = "omikuji_history";
+const HISTORY_KEY = "omikuji_history_v2"; // Changed key to avoid conflict with old schema
 
-export interface HistoryEntry {
-  id: string;
-  fortune: OmikujiFortune;
-  drawnAt: string; // ISO 8601 形式
-}
+// Alias for clarity, but it is just OmikujiResult now
+export type HistoryEntry = OmikujiResult;
 
 /**
  * 履歴を取得する
@@ -26,16 +22,11 @@ export async function getHistory(): Promise<HistoryEntry[]> {
 /**
  * 履歴に新しいエントリを追加する
  */
-export async function addHistoryEntry(fortune: OmikujiFortune): Promise<void> {
+export async function addHistoryEntry(result: OmikujiResult): Promise<void> {
   try {
     const history = await getHistory();
-    const newEntry: HistoryEntry = {
-      id: uuidv4(),
-      fortune,
-      drawnAt: new Date().toISOString(),
-    };
     // 最新のものが先頭に来るように追加
-    const updatedHistory = [newEntry, ...history];
+    const updatedHistory = [result, ...history];
     await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
   } catch (error) {
     console.error("Failed to save history:", error);

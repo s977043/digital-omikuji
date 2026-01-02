@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { OMIKUJI_DATA, OmikujiFortune } from "../constants/OmikujiData";
+import { OmikujiResult } from "../types/omikuji";
+import { drawOmikuji } from "../utils/omikujiLogic";
 import {
   addHistoryEntry,
   getHistory,
@@ -7,7 +8,7 @@ import {
 } from "../utils/HistoryStorage";
 
 export const useOmikujiLogic = () => {
-  const [fortune, setFortune] = useState<OmikujiFortune | null>(null);
+  const [fortune, setFortune] = useState<OmikujiResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
   // 履歴の初期読み込み
@@ -21,36 +22,16 @@ export const useOmikujiLogic = () => {
   }, []);
 
   const drawFortune = useCallback(async () => {
-    // Calculate total weight
-    const totalWeight = OMIKUJI_DATA.reduce(
-      (sum, item) => sum + item.weight,
-      0
-    );
+    // New logic: Use utility
+    const result = drawOmikuji();
 
-    // Generate random number between 0 and totalWeight
-    let randomNum = Math.random() * totalWeight;
-
-    // Find the selected item
-    let selected: OmikujiFortune | null = null;
-    for (const item of OMIKUJI_DATA) {
-      if (randomNum < item.weight) {
-        selected = item;
-        break;
-      }
-      randomNum -= item.weight;
-    }
-
-    if (!selected) {
-      selected = OMIKUJI_DATA[OMIKUJI_DATA.length - 1];
-    }
-
-    setFortune(selected);
+    setFortune(result);
 
     // 履歴に追加して再読み込み
-    await addHistoryEntry(selected);
+    await addHistoryEntry(result);
     await loadHistory();
 
-    return selected;
+    return result;
   }, [loadHistory]);
 
   const resetFortune = useCallback(() => {
