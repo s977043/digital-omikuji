@@ -43,7 +43,75 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 - テスト必須: `pnpm test` を Green にする。
 - レビュー: 少なくとも Gemini と Codex にレビューを依頼する。
 
-## 7. エージェント別エントリーポイント
+## 7. 並行タスクは Git Worktree で分離する
+
+### 目的
+
+- 複数タスクを同時進行しても、作業ディレクトリとブランチを完全に分離し、コンテキスト混線と手戻りを減らす
+- 1 つのリポジトリに複数の作業ツリーを持てる Git worktree を標準手段とする
+
+### 基本ルール
+
+- 並行実行できるタスクが 2 つ以上ある場合、まず「並行計画」を提示し、並行で進めてよいか確認する
+- ユーザーが「並行で OK」と回答したら、以降は確認を挟まずに worktree を作って自律的に進める（ユーザーが停止や順次実行を指示したら従う）
+- worktree では同一ブランチを複数 worktree で同時チェックアウトできない制約があるため、タスクごとに専用ブランチを切る
+<<<<<<< HEAD
+- プライマリワークツリーは統合作業（テスト、マージ、最終調整）に寄せ、各タスクは linked worktree で行う
+=======
+- メインワークツリー（main worktree）は統合作業（テスト、マージ、最終調整）に寄せ、各タスクは linked worktree で行う
+>>>>>>> 4f41a95 (docs: clarify main worktree terminology)
+
+### 並行実行の判断基準
+
+#### 並行に向く
+
+- 変更範囲が分離している（例: 機能実装 と ドキュメント、UI と バックエンドなど）
+- 探索的作業や長時間タスクをサンドボックス化したい
+
+#### 並行を避ける
+
+- 同じファイル群を大きく触る見込み（マージ衝突が高確率）
+- 1 つの PR として一体でレビューされるべき変更
+
+### 確認メッセージのテンプレ
+
+> 並行で進められるタスクが見えました。次の分割で worktree を作って並行実行してよいですか。
+>
+> - Task A: <要約> → worktree: `.worktrees/<slug-a>` / branch: `agent/<slug-a>`
+> - Task B: <要約> → worktree: `.worktrees/<slug-b>` / branch: `agent/<slug-b>`
+>
+> 返答は「並行で OK」か「順番に」でお願いします
+
+### Worktree 運用規約
+
+| 項目             | 規約                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| 置き場           | リポジトリ直下に `.worktrees/` を作り、タスクごとにサブディレクトリを切る（命名は短く一意） |
+| ブランチ命名     | `agent/<task-slug>`（タスク単位で必ず分ける）                                               |
+| 作成コマンド     | `git worktree add -b agent/<task-slug> .worktrees/<task-slug> <base-branch>`                |
+| 既存ブランチ割当 | `git worktree add .worktrees/<task-slug> <branch>`                                               |
+| 使い捨て検証     | ブランチ無しの detached worktree も可                                                       |
+
+### クリーンアップ
+
+- タスク完了後は worktree を削除する
+
+  ```bash
+  git worktree remove .worktrees/<task-slug>
+  ```
+
+- ディレクトリだけ消してしまった等でメタデータが残ったら prune する
+
+  ```bash
+  git worktree prune
+  ```
+
+### 進め方の標準
+
+- 各 worktree は「そのタスクの完了に必要な最小変更」に集中する
+- こまめにコミットし、main worktree 側で差分確認と統合を行う
+
+## 8. エージェント別エントリーポイント
 
 - **Copilot**: `.github/copilot-instructions.md`（本ファイルを前提に、Copilot 向け要点のみ記載）。
 - **Claude Code**: `.agent/CLAUDE.md`（共通ルール参照を前提にした薄いラッパー）。
@@ -51,7 +119,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 - **Codex CLI**: `codex.md`（共通ルール参照。Skill は `.agent/skills/` を参照）。
 - `.agent/` 配下はエージェント設定と Skill 用の補助ファイルを格納する。
 
-## 8. 参考
+## 9. 参考
 
 - プロジェクト構成: `app/`（画面）, `components/`（UI コンポーネント）, `docs/`（ドキュメント）。
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。
