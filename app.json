@@ -14,7 +14,6 @@
         "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.s977043.digitalomikuji",
-            "buildNumber": "1",
             "icon": "./assets/icon.png",
             "infoPlist": {
                 "CFBundleDisplayName": "デジタルおみくじ",
@@ -24,7 +23,6 @@
         },
         "android": {
             "package": "com.s977043.digitalomikuji",
-            "versionCode": 1,
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#dc2626"
