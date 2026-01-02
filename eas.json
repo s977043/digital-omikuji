@@ -30,11 +30,11 @@
             "autoIncrement": true,
             "ios": {
                 "simulator": false,
-                "resourceClass": "m-medium"
+                "resourceClass": "medium"
             },
             "android": {
                 "buildType": "app-bundle",
-                "resourceClass": "m-medium"
+                "resourceClass": "medium"
             },
             "env": {
                 "APP_VARIANT": "production"
