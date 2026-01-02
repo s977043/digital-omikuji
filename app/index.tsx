@@ -100,16 +100,24 @@ export default function OmikujiApp() {
 
     // センサーの可用性確認と購読
     async function setupSensor() {
-      const available = await Accelerometer.isAvailableAsync();
-      setIsSensorAvailable(available);
+      // Web版ではセンサーAPIが不安定なため、プラットフォームチェックを追加
+      if (Platform.OS === "web") {
+        // Web版ではセンサー無効として扱い、ボタンUIを表示
+        setIsSensorAvailable(false);
+        return;
+      }
 
-      if (available) {
-        Accelerometer.setUpdateInterval(100);
-        subscription.current = Accelerometer.addListener(
-          (accelerometerData: { x: number; y: number; z: number }) => {
-            setData(accelerometerData);
-          }
-        );
+      try {
+        const available = await Accelerometer.isAvailableAsync();
+        setIsSensorAvailable(available);
+
+        if (available) {
+          Accelerometer.setUpdateInterval(100);
+          subscription.current = Accelerometer.addListener(setData);
+        }
+      } catch (error) {
+        console.warn("Accelerometer initialization failed:", error);
+        setIsSensorAvailable(false);
       }
     }
 
@@ -143,7 +151,10 @@ export default function OmikujiApp() {
     if (appState !== "IDLE") return;
 
     // Haptics: 開始時の軽い振動
-    triggerHaptic({ type: "impact", style: Haptics.ImpactFeedbackStyle.Medium });
+    triggerHaptic({
+      type: "impact",
+      style: Haptics.ImpactFeedbackStyle.Medium,
+    });
 
     setAppState("SHAKING");
     soundManager.playSound("shake");
