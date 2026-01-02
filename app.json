@@ -45,15 +45,14 @@
         ],
         "extra": {
             "eas": {
-                "projectId": "your-project-id"
+                "projectId": "bb6d2a55-da96-4419-8ac9-f8133d4d9fc6"
             }
         },
-        "owner": "s977043",
         "runtimeVersion": {
             "policy": "appVersion"
         },
         "updates": {
-            "url": "https://u.expo.dev/your-project-id"
+            "url": "https://u.expo.dev/bb6d2a55-da96-4419-8ac9-f8133d4d9fc6"
         }
     }
 }
