@@ -38,9 +38,12 @@
 - `git status` / `git diff`
 
 ## 使うべきカスタムコマンド
-- `/check` : 変更後の品質チェック
-- `/pr`    : PR 本文をテンプレで生成
-- `/review`: 差分レビュー（観点固定）
+- `/plan`   : タスクの着手前に計画（Task/Implementation）を作成
+- `/check`  : 変更後の品質チェック
+- `/wt`     : Git Worktree を利用した並行開発の準備
+- `/evidence`: テスト結果を PR 用のエビデンスとして整理
+- `/pr`     : PR 本文をテンプレで生成
+- `/review` : 差分レビュー（観点固定）
 
 （コマンド定義は `.claude/commands/` を参照）
 

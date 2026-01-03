@@ -5,7 +5,9 @@
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Read(./**/*secret*.*)",
-      "Read(./**/*credentials*.*)"
+      "Read(./**/*credentials*.*)",
+      "Read(./node_modules/**)",
+      "Read(./pnpm-lock.yaml)"
     ],
     "allow": [
       "Bash(pnpm install)",
