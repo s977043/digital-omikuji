@@ -6,6 +6,11 @@
 1. **`AGENTS.md` を読み、開発・テスト・PR のルールを把握する。**
 2. Skill 利用時は `.agent/docs/CodexAgentSkills.md` と `.agent/skills/index.json` を確認する。
 
+## ⛔ 禁止事項 (Strict)
+- `node_modules/`, `pnpm-lock.yaml` の読み取り・改変
+- `.env*`, `secrets/` へのアクセス
+- `main`/`develop` への直接コミット
+
 ## プロジェクト概要
 - Expo SDK 52 (Managed) / Expo Router v4
 - NativeWind v4 で `className` を使用

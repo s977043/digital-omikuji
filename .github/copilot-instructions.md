@@ -33,3 +33,9 @@ Please follow the canonical rules in `AGENTS.md`; this file highlights Copilot-s
 
 For workflows, PR rules, and commands (pnpm), always refer to the root `AGENTS.md`.
 Use this document only as a quick Copilot-facing reminder of the stack and style.
+
+## ⛔ PROHIBITED ACTIONS
+
+- **DO NOT** read or modify `node_modules/` or `**/*.lock` (pnpm-lock.yaml).
+- **DO NOT** access `.env*`, `secrets/`, or any credentials.
+- **DO NOT** commit directly to `main` or `develop`.
