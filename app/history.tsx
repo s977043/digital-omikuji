@@ -1,9 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
-import { MotiView } from 'moti';
-import { getHistory, clearHistory, HistoryEntry } from '../utils/HistoryStorage';
-import { VersionDisplay } from '../components/VersionDisplay';
+import React, { useEffect, useState, useCallback } from "react";
+import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
+import { router, useFocusEffect } from "expo-router";
+import { MotiView } from "moti";
+import {
+  getHistory,
+  clearHistory,
+  HistoryEntry,
+} from "../utils/HistoryStorage";
+import { VersionDisplay } from "../components/VersionDisplay";
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
@@ -24,35 +28,37 @@ export default function HistoryScreen() {
   );
 
   const handleClearHistory = () => {
-    Alert.alert(
-      '履歴を削除',
-      '本当にすべての履歴を削除しますか？',
-      [
-        { text: 'キャンセル', style: 'cancel' },
-        {
-          text: '削除',
-          style: 'destructive',
-          onPress: async () => {
-            await clearHistory();
-            setHistory([]);
-          },
+    Alert.alert("履歴を削除", "本当にすべての履歴を削除しますか？", [
+      { text: "キャンセル", style: "cancel" },
+      {
+        text: "削除",
+        style: "destructive",
+        onPress: async () => {
+          await clearHistory();
+          setHistory([]);
         },
-      ]
-    );
+      },
+    ]);
   };
 
-  const formatDate = (isoString: string): string => {
-    const date = new Date(isoString);
-    return date.toLocaleDateString('ja-JP', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+  const formatDate = (timestamp: number): string => {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString("ja-JP", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
-  const renderItem = ({ item, index }: { item: HistoryEntry; index: number }) => (
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: HistoryEntry;
+    index: number;
+  }) => (
     <MotiView
       from={{ opacity: 0, translateX: -20 }}
       animate={{ opacity: 1, translateX: 0 }}
@@ -62,14 +68,16 @@ export default function HistoryScreen() {
       <View className="flex-row justify-between items-center">
         <Text
           className="text-3xl font-shippori-bold"
-          style={{ color: item.fortune.color }}
+          style={{ color: item.color }}
         >
-          {item.fortune.result}
+          {item.fortuneParams.title}
         </Text>
-        <Text className="text-white/60 text-xs">{formatDate(item.drawnAt)}</Text>
+        <Text className="text-white/60 text-xs">
+          {formatDate(item.createdAt)}
+        </Text>
       </View>
       <Text className="text-white/80 mt-2 font-shippori text-sm">
-        {item.fortune.message}
+        {item.fortuneParams.description}
       </Text>
     </MotiView>
   );
@@ -99,7 +107,7 @@ export default function HistoryScreen() {
         <View className="flex-1 items-center justify-center">
           <Text className="text-6xl mb-4">📜</Text>
           <Text className="text-white/60 text-center">
-            まだ履歴がありません。{'\n'}おみくじを引いてみましょう！
+            まだ履歴がありません。{"\n"}おみくじを引いてみましょう！
           </Text>
         </View>
       ) : (
