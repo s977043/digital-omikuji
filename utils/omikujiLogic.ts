@@ -26,7 +26,7 @@ export const drawOmikuji = (): OmikujiResult => {
 
   // 4. Select Random Message
   const messageIndex = Math.floor(Math.random() * selectedData.messages.length);
-  const selectedMessage = selectedData.messages[messageIndex] || selectedData.messages[0];
+  const selectedMessage = selectedData.messages[messageIndex] ?? "吉報を待て。";
 
   // 5. Construct Result
   return {
