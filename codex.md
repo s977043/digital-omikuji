@@ -7,7 +7,7 @@
 2. Skill 利用時は `.agent/docs/CodexAgentSkills.md` と `.agent/skills/index.json` を確認する。
 
 ## ⛔ 禁止事項 (Strict)
-- `node_modules/`, `pnpm-lock.yaml` の読み取り・改変
+- `node_modules/`, `**/*.lock` (例: `pnpm-lock.yaml`) の読み取り・改変
 - `.env*`, `secrets/` へのアクセス
 - `main`/`develop` への直接コミット
 
