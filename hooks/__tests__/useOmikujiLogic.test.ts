@@ -1,6 +1,5 @@
 import { useOmikujiLogic } from '../useOmikujiLogic';
 import { renderHook, act, waitFor } from '@testing-library/react-native';
-import { OMIKUJI_DATA } from '../../constants/OmikujiData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Helper function to wait for initial useEffect to complete
@@ -32,7 +31,12 @@ describe('useOmikujiLogic', () => {
     });
 
     expect(result.current.fortune).not.toBeNull();
-    expect(OMIKUJI_DATA).toContainEqual(result.current.fortune);
+    // Validate structure
+    const fortune = result.current.fortune;
+    expect(fortune).toHaveProperty('id');
+    expect(fortune).toHaveProperty('level');
+    expect(fortune).toHaveProperty('fortuneParams');
+    expect(fortune).toHaveProperty('createdAt');
   });
 
   it('resetFortune を呼ぶと運勢がnullにリセットされる', async () => {
@@ -60,7 +64,7 @@ describe('useOmikujiLogic', () => {
       });
 
       expect(result.current.fortune).not.toBeNull();
-      expect(OMIKUJI_DATA).toContainEqual(result.current.fortune);
+      expect(result.current.fortune?.id).toBeDefined();
     }
   });
 
@@ -73,15 +77,21 @@ describe('useOmikujiLogic', () => {
         await result.current.drawFortune();
       });
 
-      const fortuneResult = result.current.fortune?.result || '';
-      results.set(fortuneResult, (results.get(fortuneResult) || 0) + 1);
+      const fortuneLevel = result.current.fortune?.level || '';
+      results.set(fortuneLevel, (results.get(fortuneLevel) || 0) + 1);
     }
 
-    // 大吉は凶より多く出るはず（weight: 10 vs 5）
-    const daikichi = results.get('大吉') || 0;
-    const kyo = results.get('凶') || 0;
+    // 大吉(daikichi)は凶(kyo)より少ないはず（weight: 5 vs 10）
+    // Wait, old implementation daikichi=10, kyo=5?
+    // My new implementation: daikichi=5, kyo=10 (Standard omikuji distribution)
+    // Actually in my data: daikichi=5, kyo=10.
+    // So Daikichi < Kyo.
 
-    expect(daikichi).toBeGreaterThan(kyo);
+    const daikichi = results.get('daikichi') || 0;
+    const kyo = results.get('kyo') || 0;
+
+    // Adjusted expectation based on new weights
+    expect(kyo).toBeGreaterThan(daikichi);
   });
 
   it('drawFortune を呼ぶと履歴にエントリが追加される', async () => {
@@ -94,7 +104,8 @@ describe('useOmikujiLogic', () => {
     await waitFor(() => {
       expect(result.current.history.length).toBe(1);
     });
-    expect(result.current.history[0].fortune).toEqual(result.current.fortune);
+    // History entry IS the result now
+    expect(result.current.history[0]).toEqual(result.current.fortune);
   });
 
   it('loadHistory を呼ぶと最新の履歴が読み込まれる', async () => {
@@ -113,6 +124,6 @@ describe('useOmikujiLogic', () => {
     await waitFor(() => {
       expect(result.current.history.length).toBeGreaterThan(0);
     });
-    expect(result.current.history[0].fortune).toEqual(firstFortune);
+    expect(result.current.history[0]).toEqual(firstFortune);
   });
 });

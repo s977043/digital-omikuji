@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
 import { View, Text, TouchableOpacity, Share, Platform } from "react-native";
 import { MotiView } from "moti";
-import { OmikujiFortune } from "../constants/OmikujiData";
+import { OmikujiResult } from "../types/omikuji";
 import * as Haptics from "expo-haptics";
 import { captureRef } from "react-native-view-shot";
 
 interface FortuneDisplayProps {
-  fortune: OmikujiFortune;
+  fortune: OmikujiResult;
   onReset: () => void;
 }
 
@@ -22,7 +22,7 @@ export default function FortuneDisplay({
         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
 
-      const message = `🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ ${fortune.result} ✨\n「${fortune.message}」\n\n#おみくじ2026 #新春`;
+      const message = `🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ ${fortune.fortuneParams.title} ✨\n「${fortune.fortuneParams.description}」\n\n#おみくじ2026 #新春`;
 
       // Capture the fortune card as an image
       let imageUri: string | undefined;
@@ -62,7 +62,7 @@ export default function FortuneDisplay({
       className="absolute inset-0 flex-1 items-center justify-center bg-black/80 z-50 p-6"
     >
       {/* 大吉の場合の特別演出 (オーラ) */}
-      {fortune.result === "大吉" && (
+      {fortune.fortuneParams.title === "大吉" && (
         <MotiView
           from={{ scale: 0.8, opacity: 0.5 }}
           animate={{ scale: 1.2, opacity: 0 }}
@@ -81,14 +81,14 @@ export default function FortuneDisplay({
           className="text-6xl font-shippori-bold mb-4 tracking-wi"
           style={{ color: fortune.color }}
         >
-          {fortune.result}
+          {fortune.fortuneParams.title}
         </Text>
 
         <View className="h-0.5 w-16 bg-slate-200 mb-6" />
 
         {/* メッセージ */}
         <Text className="text-slate-700 text-center text-lg font-shippori leading-relaxed mb-8">
-          {fortune.message}
+          {fortune.fortuneParams.description}
         </Text>
 
         {/* アクションボタン */}
