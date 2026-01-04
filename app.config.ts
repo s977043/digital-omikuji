@@ -1,5 +1,8 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
+// Constants
+const PRIVACY_POLICY_URL = "https://digital-omikuji.vercel.app/privacy-policy";
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   const appVariant = process.env.APP_VARIANT || "development";
 
@@ -33,10 +36,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       supportsTablet: true,
       infoPlist: {
         CFBundleDisplayName: name,
-        NSPhotoLibraryUsageDescription:
-          "おみくじ結果を画像として保存するために写真ライブラリへのアクセスが必要です",
-        NSPhotoLibraryAddUsageDescription:
-          "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です",
         ITSAppUsesNonExemptEncryption: false,
       },
     },
@@ -57,7 +56,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     extra: {
       ...config.extra,
       appVariant,
-      privacyPolicyUrl: "https://digital-omikuji.vercel.app/privacy-policy",
+      privacyPolicyUrl: PRIVACY_POLICY_URL,
     },
   };
 };
