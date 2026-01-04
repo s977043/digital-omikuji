@@ -18,11 +18,16 @@ import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
 // global.css is imported in _layout.tsx
 
+import { DrawingOverlay } from "../components/DrawingOverlay"; // Import DrawingOverlay
+
+// ... (other imports)
+
 // ステートマシン
-type AppState = "IDLE" | "SHAKING" | "REVEALING" | "RESULT";
+type AppState = "IDLE" | "SHAKING" | "DRAWING" | "REVEALING" | "RESULT";
 
 const SHAKE_THRESHOLD = 1.8;
 const SHAKING_DURATION_MS = 1500;
+const DRAWING_DURATION_MS = 1200; // New duration for drawing phase
 const REVEALING_DURATION_MS = 2000;
 
 // アニメーション定数
@@ -160,22 +165,38 @@ export default function OmikujiApp() {
     setAppState("SHAKING");
     soundManager.playSound("shake");
 
-    // シェイク演出後に抽選へ
+    // シェイク終了 -> 抽選演出 (DRAWING) へ
     setTimeout(async () => {
+      // 抽選ロジックはここで確定させるが、ユーザーにはまだ見せない
       await drawFortune();
-      setAppState("REVEALING");
-      // Haptics: 抽選完了時のフィードバック
+      setAppState("DRAWING");
+
+      // Haptics: 抽選中への切り替わり
       triggerHaptic({
-        type: "notification",
-        style: Haptics.NotificationFeedbackType.Success,
+        type: "impact",
+        style: Haptics.ImpactFeedbackStyle.Light,
       });
     }, SHAKING_DURATION_MS);
   };
 
   // --- アニメーション状態遷移 ---
   useEffect(() => {
+    // DRAWING -> REVEALING
+    if (appState === "DRAWING") {
+      const timer = setTimeout(() => {
+        setAppState("REVEALING");
+        // Haptics: 棒が出る瞬間
+        triggerHaptic({
+          type: "notification",
+          style: Haptics.NotificationFeedbackType.Success,
+        });
+      }, DRAWING_DURATION_MS);
+      return () => clearTimeout(timer);
+    }
+
+    // REVEALING -> RESULT
     if (appState === "REVEALING") {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setAppState("RESULT");
         // Haptics: 結果が出た時の重い衝撃
         triggerHaptic({
@@ -184,6 +205,7 @@ export default function OmikujiApp() {
         });
         soundManager.playSound("result");
       }, REVEALING_DURATION_MS);
+      return () => clearTimeout(timer);
     }
   }, [appState]);
 
@@ -260,11 +282,14 @@ export default function OmikujiApp() {
                 }}
               >
                 <Text className="text-xl text-yellow-400 font-shippori-bold mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
-                  運命を抽選中...
+                  念を込めて...
                 </Text>
               </MotiView>
             </MotiView>
           )}
+
+          {/* 抽選中 (DRAWING) */}
+          {appState === "DRAWING" && <DrawingOverlay />}
 
           {/* 結果表示中 (REVEALING - 棒が出るアニメ) */}
           {appState === "REVEALING" && (
