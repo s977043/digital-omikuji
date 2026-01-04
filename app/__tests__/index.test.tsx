@@ -30,6 +30,7 @@ jest.mock("../../components/VersionDisplay", () => ({
   VersionDisplay: () => <></>,
 }));
 jest.mock("moti", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
   return {
     MotiView: View,
@@ -115,7 +116,7 @@ describe("IndexScreen", () => {
 
     // RESULT state - FortuneDisplay should be shown (mocked as null, but IDLE UI should be gone)
     await waitFor(() => {
-        expect(queryByText("おみくじを引く")).toBeNull();
+      expect(queryByText("おみくじを引く")).toBeNull();
     });
   });
 
@@ -132,6 +133,7 @@ describe("IndexScreen", () => {
 
     // Navigation
     fireEvent.press(getByText("履歴"));
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { router } = require("expo-router");
     expect(router.push).toHaveBeenCalledWith("/history");
   });

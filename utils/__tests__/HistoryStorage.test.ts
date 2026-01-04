@@ -1,4 +1,11 @@
-import { getHistory, addHistoryEntry, clearHistory, HistoryEntry, getLastDrawDate, setLastDrawDate } from "../HistoryStorage";
+import {
+  getHistory,
+  addHistoryEntry,
+  clearHistory,
+  HistoryEntry,
+  getLastDrawDate,
+  setLastDrawDate,
+} from "../HistoryStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Mock AsyncStorage
@@ -51,20 +58,17 @@ describe("HistoryStorage", () => {
   it("addHistoryEntry saves new entry", async () => {
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(mockHistoryData));
     const newEntry: HistoryEntry = {
-        id: "2",
-        level: "kichi",
-        fortuneParams: { title: "吉", description: "Good" },
-        image: { uri: "image2" },
-        color: "blue",
-        createdAt: 1234567891,
+      id: "2",
+      level: "kichi",
+      fortuneParams: { title: "吉", description: "Good" },
+      image: { uri: "image2" },
+      color: "blue",
+      createdAt: 1234567891,
     };
 
     await addHistoryEntry(newEntry);
 
-    expect(AsyncStorage.setItem).toHaveBeenCalledWith(
-        HISTORY_KEY,
-        expect.any(String)
-    );
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith(HISTORY_KEY, expect.any(String));
 
     // Verify the saved data contains both old and new
     const setItemCalls = (AsyncStorage.setItem as jest.Mock).mock.calls;

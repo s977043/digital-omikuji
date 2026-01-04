@@ -62,10 +62,7 @@ class SoundManager {
       if (status.isLoaded) {
         await sound.replayAsync();
       } else {
-        console.warn(
-          `Cannot play sound ${key}: it is in the map but not loaded. status:`,
-          status
-        );
+        console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
       }
     } catch (error) {
       console.error(`Failed to play sound ${key}:`, error);

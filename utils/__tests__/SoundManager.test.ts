@@ -100,7 +100,7 @@ describe("SoundManager", () => {
   });
 
   it("does not play sound if not initialized", async () => {
-     // Force not ready
+    // Force not ready
     (Audio.setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     await soundManager.initialize(); // isReady = false
@@ -131,7 +131,9 @@ describe("SoundManager", () => {
     await soundManager.initialize();
     const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
     await soundManager.playSound("nonexistent");
-    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Sound nonexistent is not loaded"));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Sound nonexistent is not loaded")
+    );
     consoleSpy.mockRestore();
   });
 
