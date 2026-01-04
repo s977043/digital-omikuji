@@ -9,9 +9,23 @@ jest.mock('react-native-view-shot', () => ({
   captureRef: jest.fn(),
 }));
 
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      if (key === "common.share") return "シェア";
+      if (key === "common.close") return "閉じる";
+      if (key === "fortune.shareTitle") return "おみくじをシェア";
+      if (key === "fortune.shareMessage")
+        return "🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ 大吉 ✨\n「2026年はあなたの黄金イヤー！夢が叶う最高の年になるでしょう。」\n\n#おみくじ2026 #新春";
+      return key;
+    },
+  }),
+}));
+
 // Mock moti
-jest.mock('moti', () => {
-  const { View } = require('react-native');
+jest.mock("moti", () => {
+  const { View } = require("react-native");
   return {
     MotiView: View,
   };

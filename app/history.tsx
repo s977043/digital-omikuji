@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { router, useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { MotiView } from "moti";
 import {
   getHistory,
@@ -12,6 +13,7 @@ import { VersionDisplay } from "../components/VersionDisplay";
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
@@ -28,17 +30,21 @@ export default function HistoryScreen() {
   );
 
   const handleClearHistory = () => {
-    Alert.alert("履歴を削除", "本当にすべての履歴を削除しますか？", [
-      { text: "キャンセル", style: "cancel" },
-      {
-        text: "削除",
-        style: "destructive",
-        onPress: async () => {
-          await clearHistory();
-          setHistory([]);
+    Alert.alert(
+      t("history.deleteConfirmTitle"),
+      t("history.deleteConfirmMessage"),
+      [
+        { text: t("common.cancel"), style: "cancel" },
+        {
+          text: t("common.delete"),
+          style: "destructive",
+          onPress: async () => {
+            await clearHistory();
+            setHistory([]);
+          },
         },
-      },
-    ]);
+      ]
+    );
   };
 
   const formatDate = (timestamp: number): string => {
@@ -87,12 +93,14 @@ export default function HistoryScreen() {
       {/* ヘッダー */}
       <View className="flex-row justify-between items-center mb-6 pt-10">
         <TouchableOpacity onPress={() => router.back()}>
-          <Text className="text-white text-lg">← 戻る</Text>
+          <Text className="text-white text-lg">{t("common.back")}</Text>
         </TouchableOpacity>
-        <Text className="text-white text-2xl font-shippori-bold">運勢手帳</Text>
+        <Text className="text-white text-2xl font-shippori-bold">
+          {t("history.title")}
+        </Text>
         {history.length > 0 && (
           <TouchableOpacity onPress={handleClearHistory}>
-            <Text className="text-red-400 text-sm">全削除</Text>
+            <Text className="text-red-400 text-sm">{t("history.deleteAll")}</Text>
           </TouchableOpacity>
         )}
         {history.length === 0 && <View className="w-12" />}
@@ -101,14 +109,12 @@ export default function HistoryScreen() {
       {/* リスト */}
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-white/60">読み込み中...</Text>
+          <Text className="text-white/60">{t("common.loading")}</Text>
         </View>
       ) : history.length === 0 ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-6xl mb-4">📜</Text>
-          <Text className="text-white/60 text-center">
-            まだ履歴がありません。{"\n"}おみくじを引いてみましょう！
-          </Text>
+          <Text className="text-white/60 text-center">{t("history.empty")}</Text>
         </View>
       ) : (
         <FlatList
