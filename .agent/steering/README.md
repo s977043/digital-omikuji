@@ -43,23 +43,23 @@
 
 ### フォーマット仕様
 
-| フィールド | 説明 |
-|-----------|------|
-| `version` | 設定フォーマットのバージョン |
-| `agents` | 各AIエージェントの設定 |
-| `agents.<name>.configFile` | エージェント固有の設定ファイルパス |
-| `agents.<name>.enabled` | エージェントの有効/無効フラグ |
-| `sharedRules` | 全エージェント共通のルールファイル |
-| `steering` | ステアリングルールのディレクトリパス |
+| フィールド                 | 説明                                 |
+| -------------------------- | ------------------------------------ |
+| `version`                  | 設定フォーマットのバージョン         |
+| `agents`                   | 各AIエージェントの設定               |
+| `agents.<name>.configFile` | エージェント固有の設定ファイルパス   |
+| `agents.<name>.enabled`    | エージェントの有効/無効フラグ        |
+| `sharedRules`              | 全エージェント共通のルールファイル   |
+| `steering`                 | ステアリングルールのディレクトリパス |
 
 ### 対応AIエージェント
 
-| エージェント | 設定ファイル | 説明 |
-|-------------|-------------|------|
-| Claude | `CLAUDE.md` | Claude Code CLI用の設定 |
-| Copilot | `.github/copilot-instructions.md` | GitHub Copilot用の設定 |
-| Codex | `codex.md` | Codex CLI用の設定 |
-| Gemini | `GEMINI.md` | Gemini CLI用の設定 |
+| エージェント | 設定ファイル                      | 説明                    |
+| ------------ | --------------------------------- | ----------------------- |
+| Claude       | `CLAUDE.md`                       | Claude Code CLI用の設定 |
+| Copilot      | `.github/copilot-instructions.md` | GitHub Copilot用の設定  |
+| Codex        | `codex.md`                        | Codex CLI用の設定       |
+| Gemini       | `GEMINI.md`                       | Gemini CLI用の設定      |
 
 ### 運用ルール
 

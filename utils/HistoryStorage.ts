@@ -3,6 +3,8 @@ import { OmikujiResult } from "../types/omikuji";
 
 const HISTORY_KEY = "omikuji_history_v2"; // Changed key to avoid conflict with old schema
 
+const MAX_HISTORY_ITEMS = 50;
+
 // Alias for clarity, but it is just OmikujiResult now
 export type HistoryEntry = OmikujiResult;
 
@@ -25,8 +27,8 @@ export async function getHistory(): Promise<HistoryEntry[]> {
 export async function addHistoryEntry(result: OmikujiResult): Promise<void> {
   try {
     const history = await getHistory();
-    // 最新のものが先頭に来るように追加
-    const updatedHistory = [result, ...history];
+    // 最新のものが先頭に来るように追加し、50件に制限
+    const updatedHistory = [result, ...history].slice(0, MAX_HISTORY_ITEMS);
     await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
   } catch (error) {
     console.error("Failed to save history:", error);

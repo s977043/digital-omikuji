@@ -1,0 +1,89 @@
+{
+    "common": {
+        "share": "Share",
+        "close": "Close",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "back": "← Back",
+        "loading": "Loading..."
+    },
+    "home": {
+        "title": "Happy New Year 2026",
+        "shakeToPlay": "Shake your phone\nto draw Omikuji",
+        "drawing": "Drawing your fortune...",
+        "buttonPlay": "📱 Draw Omikuji",
+        "debugPlay": "🐞 Test shake",
+        "historyButton": "📜 Fortune Book"
+    },
+    "fortune": {
+        "shareTitle": "Share Omikuji",
+        "shareMessage": "🎍 New Year Omikuji 2026 🎍\n\nMy fortune is... ✨ {{title}} ✨\n\"{{description}}\"\n\n#Omikuji2026 #NewYear",
+        "levels": {
+            "daikichi": "Great Blessing",
+            "chukichi": "Middle Blessing",
+            "shokichi": "Small Blessing",
+            "kichi": "Blessing",
+            "suekichi": "Future Blessing",
+            "kyo": "Curse",
+            "daikyo": "Great Curse"
+        },
+        "messages": {
+            "daikichi": [
+                "The best fortune! It's your chance to try something new!",
+                "Your wishes will come true. Move forward without hesitation.",
+                "Someone you've been waiting for will come. Expect wonderful encounters.",
+                "Your financial luck is rising. You might receive unexpected income.",
+                "Good health fortune. You can be active and energetic."
+            ],
+            "chukichi": [
+                "Your fortune is on the rise.",
+                "This is the time when your efforts bear fruit.",
+                "Good travel fortune. Why not take a short trip?",
+                "Signs of prosperous business.",
+                "Studying hard will bring good results."
+            ],
+            "shokichi": [
+                "Small happiness will come to you.",
+                "It's important to build up steadily without rushing.",
+                "Luck in conversations with friends.",
+                "Lost items may be found.",
+                "Stay healthy and things will go smoothly."
+            ],
+            "kichi": [
+                "You can spend a peaceful day.",
+                "Maintaining the status quo will bring good fortune.",
+                "Consult with those around you when in trouble.",
+                "Moderate exercise will boost your luck.",
+                "Don't forget to be grateful."
+            ],
+            "suekichi": [
+                "Now is the time to endure. Fortune will open up eventually.",
+                "Haste makes waste. Be careful in your actions.",
+                "Good things will happen if you contact old friends.",
+                "Clean your room for a change of pace.",
+                "Small kindness will bring good fortune."
+            ],
+            "kyo": [
+                "Don't push yourself. Watch and wait for now.",
+                "Be careful with your words.",
+                "Watch out for forgetting things.",
+                "Unexpected expenses may occur. Keep your wallet tight.",
+                "Fatigue tends to accumulate. Rest early."
+            ],
+            "daikyo": [
+                "The calm before the storm. Act with caution.",
+                "Keep your self-assertion modest. Listen to others.",
+                "Health first. Review your demanding schedule.",
+                "Value trust. Avoid misunderstandings.",
+                "It's darkest before dawn. Morning will surely come."
+            ]
+        }
+    },
+    "history": {
+        "title": "Fortune Book",
+        "deleteAll": "Delete All",
+        "deleteConfirmTitle": "Delete History",
+        "deleteConfirmMessage": "Are you sure you want to delete all history?",
+        "empty": "No history yet.\nTry drawing an Omikuji!"
+    }
+}

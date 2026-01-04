@@ -1,6 +1,7 @@
 ---
 description: "Generate a detailed Task and Implementation Plan"
 ---
+
 このタスクの着手前に、AGENTS.md の「計画先行」ルールに基づき、以下の構成で計画を日本語で提示して：
 
 1. **Task**: 達成すべきゴールと、詳細なチェックリスト。

@@ -1,7 +1,7 @@
-import 'react-native-get-random-values';
-import { v4 as uuidv4 } from 'uuid';
-import { ACQUIRED_FORTUNES, OmikujiMasterData } from '../data/omikujiData';
-import { OmikujiResult, FORTUNE_LEVELS } from '../types/omikuji';
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
+import { ACQUIRED_FORTUNES, OmikujiMasterData } from "../data/omikujiData";
+import { OmikujiResult, FORTUNE_LEVELS } from "../types/omikuji";
 
 /**
  * Perform a weighted lottery to select a fortune result.
