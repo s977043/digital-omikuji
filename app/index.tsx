@@ -67,7 +67,7 @@ export default function OmikujiApp() {
   const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
   const subscription = useRef<Subscription | null>(null);
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { fortune, drawFortune, resetFortune } = useOmikujiLogic();
+  const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
 
   // デバッグボタン用判定
   const appVariant = Constants.expoConfig?.extra?.appVariant || "development";
@@ -135,8 +135,15 @@ export default function OmikujiApp() {
     });
   }, []);
 
+  // Auto-transition to RESULT if fortune is loaded (e.g., daily limit reached)
+  useEffect(() => {
+    if (fortune && appState === "IDLE") {
+      setAppState("RESULT");
+    }
+  }, [fortune, appState]);
+
   const handleShakeStart = useCallback(async () => {
-    if (appState !== "IDLE") return;
+    if (appState !== "IDLE" || hasDrawnToday) return;
 
     // Haptics: 開始時の軽い振動
     triggerHaptic({
@@ -159,7 +166,7 @@ export default function OmikujiApp() {
         style: Haptics.ImpactFeedbackStyle.Light,
       });
     }, SHAKING_DURATION_MS);
-  }, [appState, drawFortune]);
+  }, [appState, drawFortune, hasDrawnToday]);
 
   // シェイク監視
   useEffect(() => {
@@ -237,16 +244,29 @@ export default function OmikujiApp() {
                   source={require("../assets/omikuji_cylinder.png")}
                   className="w-[180px] h-[180px] rounded-full"
                   resizeMode="cover"
+                  style={hasDrawnToday ? { opacity: 0.5 } : {}}
                 />
               </View>
               <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
-                スマホを振っておみくじを引こう
+                {hasDrawnToday ? "本日の運勢は確認済みです" : "スマホを振っておみくじを引こう"}
               </Text>
-              <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
-                <Text className="text-white font-bold text-sm tracking-widest">
-                  令和七年 デジタルおみくじ
-                </Text>
-              </View>
+
+              {!hasDrawnToday && (
+                <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
+                  <Text className="text-white font-bold text-sm tracking-widest">
+                    令和七年 デジタルおみくじ
+                  </Text>
+                </View>
+              )}
+
+              {hasDrawnToday && (
+                <TouchableOpacity
+                  onPress={() => setAppState("RESULT")}
+                  className="bg-amber-500 px-8 py-3 rounded-full mt-6 shadow-lg active:bg-amber-600"
+                >
+                  <Text className="text-white font-bold text-lg">結果をもう一度見る</Text>
+                </TouchableOpacity>
+              )}
             </MotiView>
           )}
 

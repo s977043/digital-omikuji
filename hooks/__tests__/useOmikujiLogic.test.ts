@@ -60,6 +60,7 @@ describe("useOmikujiLogic", () => {
 
     for (let i = 0; i < 10; i++) {
       await act(async () => {
+        await result.current.debugResetDailyLimit();
         await result.current.drawFortune();
       });
 
@@ -74,6 +75,7 @@ describe("useOmikujiLogic", () => {
 
     for (let i = 0; i < 1000; i++) {
       await act(async () => {
+        await result.current.debugResetDailyLimit();
         await result.current.drawFortune();
       });
 
@@ -126,5 +128,35 @@ describe("useOmikujiLogic", () => {
     });
     // Check if distinct ID exists in history
     expect(result.current.history.some((h) => h.id === firstFortune?.id)).toBe(true);
+  });
+
+  it("1日1回制限が機能する", async () => {
+    const { result } = await renderHookAndWaitForInitialLoad();
+
+    // First draw
+    await act(async () => {
+      await result.current.drawFortune();
+    });
+    const firstFortune = result.current.fortune;
+    expect(result.current.hasDrawnToday).toBe(true);
+
+    // Second draw (should return same fortune)
+    await act(async () => {
+      await result.current.drawFortune();
+    });
+    expect(result.current.fortune).toBe(firstFortune); // Same object reference
+
+    // Simulate next day (reset)
+    await act(async () => {
+      await result.current.debugResetDailyLimit();
+    });
+    expect(result.current.hasDrawnToday).toBe(false);
+
+    // Third draw (should be new)
+    await act(async () => {
+      await result.current.drawFortune();
+    });
+    expect(result.current.fortune).not.toBe(firstFortune); // Should be different object (new draw)
+    expect(result.current.hasDrawnToday).toBe(true);
   });
 });

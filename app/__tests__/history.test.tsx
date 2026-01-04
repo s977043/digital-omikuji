@@ -1,8 +1,8 @@
 import React from "react";
-import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { Alert } from "react-native";
 import HistoryScreen from "../history";
 import { getHistory, clearHistory } from "../../utils/HistoryStorage";
-import { router } from "expo-router";
 
 // Mocks
 jest.mock("expo-router", () => ({
@@ -13,14 +13,8 @@ jest.mock("expo-router", () => ({
   },
 }));
 
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: { language: "ja" },
-  }),
-}));
-
 jest.mock("moti", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
   return {
     MotiView: View,
@@ -30,6 +24,7 @@ jest.mock("moti", () => {
 jest.mock("../../utils/HistoryStorage");
 jest.mock("../../components/VersionDisplay", () => ({
   VersionDisplay: () => <></>,
+  __esModule: true, // Fix for default export if any, though VersionDisplay is named export
 }));
 
 const mockHistoryData = [
@@ -47,6 +42,7 @@ describe("HistoryScreen", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (getHistory as jest.Mock).mockResolvedValue([]);
+    jest.spyOn(Alert, "alert");
   });
 
   it("renders empty state", async () => {
@@ -54,7 +50,7 @@ describe("HistoryScreen", () => {
 
     await waitFor(
       () => {
-        expect(getByText("history.empty")).toBeTruthy();
+        expect(getByText("まだ履歴がありません")).toBeTruthy();
       },
       { timeout: 5000 }
     );
@@ -77,12 +73,22 @@ describe("HistoryScreen", () => {
     (getHistory as jest.Mock).mockResolvedValue(mockHistoryData);
     const { getByText } = render(<HistoryScreen />);
 
-    await waitFor(() => expect(getByText("history.deleteAll")).toBeTruthy());
+    await waitFor(() => expect(getByText("全て削除")).toBeTruthy());
 
-    fireEvent.press(getByText("history.deleteAll"));
+    fireEvent.press(getByText("全て削除"));
 
-    // Alert mockup is tricky in React Native without mocking Alert.alert
-    // Assuming Alert is not mocked globally, we might cannot press "Delete" in Alert.
-    // So we just check if Alert.alert was called if we mock it, OR we mock Alert.
+    expect(Alert.alert).toHaveBeenCalledWith(
+      "履歴の削除",
+      "本当に全ての履歴を削除しますか？",
+      expect.any(Array)
+    );
+
+    // Simulate pressing "Delete" in the alert
+    const buttons = (Alert.alert as jest.Mock).mock.calls[0][2];
+    const deleteButton = buttons.find((b: { text: string }) => b.text === "削除");
+
+    await deleteButton.onPress();
+
+    expect(clearHistory).toHaveBeenCalled();
   });
 });

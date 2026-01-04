@@ -1,15 +1,13 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { router, useFocusEffect } from "expo-router";
-import { useTranslation } from "react-i18next";
-import { MotiView } from "moti";
 import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
 import { VersionDisplay } from "../components/VersionDisplay";
+import { HistoryList } from "../components/HistoryList";
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { t, i18n } = useTranslation();
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
@@ -26,10 +24,10 @@ export default function HistoryScreen() {
   );
 
   const handleClearHistory = () => {
-    Alert.alert(t("history.deleteConfirmTitle"), t("history.deleteConfirmMessage"), [
-      { text: t("common.cancel"), style: "cancel" },
+    Alert.alert("履歴の削除", "本当に全ての履歴を削除しますか？", [
+      { text: "キャンセル", style: "cancel" },
       {
-        text: t("common.delete"),
+        text: "削除",
         style: "destructive",
         onPress: async () => {
           await clearHistory();
@@ -39,47 +37,17 @@ export default function HistoryScreen() {
     ]);
   };
 
-  const formatDate = (timestamp: number): string => {
-    const date = new Date(timestamp);
-    return date.toLocaleDateString(i18n.language, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const renderItem = ({ item, index }: { item: HistoryEntry; index: number }) => (
-    <MotiView
-      from={{ opacity: 0, translateX: -20 }}
-      animate={{ opacity: 1, translateX: 0 }}
-      transition={{ delay: index * 50 }}
-      className="bg-white/10 rounded-xl p-4 mb-3 border border-white/20"
-    >
-      <View className="flex-row justify-between items-center">
-        <Text className="text-3xl font-shippori-bold" style={{ color: item.color }}>
-          {item.fortuneParams.title}
-        </Text>
-        <Text className="text-white/60 text-xs">{formatDate(item.createdAt)}</Text>
-      </View>
-      <Text className="text-white/80 mt-2 font-shippori text-sm">
-        {item.fortuneParams.description}
-      </Text>
-    </MotiView>
-  );
-
   return (
     <View className="flex-1 bg-slate-900 p-4">
       {/* ヘッダー */}
       <View className="flex-row justify-between items-center mb-6 pt-10">
         <TouchableOpacity onPress={() => router.back()}>
-          <Text className="text-white text-lg">{t("common.back")}</Text>
+          <Text className="text-white text-lg">戻る</Text>
         </TouchableOpacity>
-        <Text className="text-white text-2xl font-shippori-bold">{t("history.title")}</Text>
+        <Text className="text-white text-2xl font-shippori-bold">履歴</Text>
         {history.length > 0 && (
           <TouchableOpacity onPress={handleClearHistory}>
-            <Text className="text-red-400 text-sm">{t("history.deleteAll")}</Text>
+            <Text className="text-red-400 text-sm">全て削除</Text>
           </TouchableOpacity>
         )}
         {history.length === 0 && <View className="w-12" />}
@@ -88,21 +56,10 @@ export default function HistoryScreen() {
       {/* リスト */}
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-white/60">{t("common.loading")}</Text>
-        </View>
-      ) : history.length === 0 ? (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-6xl mb-4">📜</Text>
-          <Text className="text-white/60 text-center">{t("history.empty")}</Text>
+          <Text className="text-white/60">読み込み中...</Text>
         </View>
       ) : (
-        <FlatList
-          data={history}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 20 }}
-        />
+        <HistoryList history={history} />
       )}
 
       {/* デプロイバージョン表示 */}

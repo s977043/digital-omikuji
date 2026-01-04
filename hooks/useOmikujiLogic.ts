@@ -1,44 +1,96 @@
 import { useState, useCallback, useEffect } from "react";
 import { OmikujiResult } from "../types/omikuji";
 import { drawOmikuji } from "../utils/omikujiLogic";
-import { addHistoryEntry, getHistory, HistoryEntry } from "../utils/HistoryStorage";
+import {
+  addHistoryEntry,
+  getHistory,
+  getLastDrawDate,
+  HistoryEntry,
+} from "../utils/HistoryStorage";
 
 export const useOmikujiLogic = () => {
   const [fortune, setFortune] = useState<OmikujiResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [hasDrawnToday, setHasDrawnToday] = useState(false);
 
   const loadHistory = useCallback(async () => {
     const data = await getHistory();
     setHistory(data);
+    return data;
   }, []);
 
-  // 履歴の初期読み込み
+  const checkDailyStatus = useCallback(async () => {
+    const lastDate = await getLastDrawDate();
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(now.getDate()).padStart(2, "0")}`;
+
+    if (lastDate === today) {
+      setHasDrawnToday(true);
+      // Load history to get the latest result
+      const currentHistory = await getHistory();
+      if (currentHistory.length > 0) {
+        setFortune(currentHistory[0]);
+      }
+    } else {
+      setHasDrawnToday(false);
+    }
+  }, []);
+
+  // 初期読み込み
   useEffect(() => {
-    loadHistory();
-  }, [loadHistory]);
+    loadHistory().then(() => {
+      checkDailyStatus();
+    });
+  }, [loadHistory, checkDailyStatus]);
 
   const drawFortune = useCallback(async () => {
-    // New logic: Use utility
+    // 念のためここでもチェック
+    if (hasDrawnToday) {
+      // すでに引いている場合は既存の結果を返す（通常UIで制御されるためここには来ないはずだが）
+      return fortune;
+    }
+
     const result = drawOmikuji();
 
     setFortune(result);
+    setHasDrawnToday(true);
 
     // 履歴に追加して再読み込み
     await addHistoryEntry(result);
     await loadHistory();
 
     return result;
-  }, [loadHistory]);
+  }, [hasDrawnToday, fortune, loadHistory]);
 
   const resetFortune = useCallback(() => {
+    if (hasDrawnToday) {
+      // 今日すでに引いている場合、リセットしても「今日の運勢」は変わらないので
+      // nullに戻してホームへ行く（そしてまた詳細を開く、というフロー）
+      // しかし、ホームに戻るとまたcheckDailyStatusが走ってfortuneがセットされるかも？
+      // 基本的に「閉じる」＝ホームに戻る、なのでnullにする
+      setFortune(null);
+    } else {
+      setFortune(null);
+    }
+  }, [hasDrawnToday]);
+
+  // デバッグ用：日付リセット（1日1回制限解除）
+  const debugResetDailyLimit = useCallback(async () => {
+    // TODO: Implement cleaner reset if needed needed, for now just clear fortune
+    setHasDrawnToday(false);
     setFortune(null);
   }, []);
 
   return {
     fortune,
     history,
+    hasDrawnToday,
     drawFortune,
     resetFortune,
     loadHistory,
+    debugResetDailyLimit,
   };
 };
