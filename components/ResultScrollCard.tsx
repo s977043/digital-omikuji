@@ -5,6 +5,7 @@ import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
 import { Ionicons } from "@expo/vector-icons";
+import { buildShareText } from "../utils/buildShareText";
 
 interface ResultScrollCardProps {
   fortune: OmikujiResult;
@@ -21,7 +22,7 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
 
-      const message = `🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ ${fortune.fortuneParams.title} ✨\n「${fortune.fortuneParams.description}」\n\n#おみくじ2026 #新春`;
+      const message = buildShareText(fortune);
 
       // Capture logic
       let imageUri: string | undefined;

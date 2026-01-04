@@ -115,6 +115,12 @@ describe("FortuneDisplay", () => {
         }),
         expect.any(Object)
       );
+      expect(Share.share).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining("#エンジニアおみくじ2026"),
+        }),
+        expect.any(Object)
+      );
     });
 
     // Unlock transition might take time, or React state update happens.
