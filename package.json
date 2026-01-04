@@ -13,7 +13,9 @@
     "web": "expo start --web",
     "build": "expo export -p web",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
+    "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --fix"
   },
   "dependencies": {
     "@expo-google-fonts/shippori-mincho": "^0.4.1",
@@ -53,8 +55,13 @@
     "@types/jest": "^29.5.0",
     "@types/react": "~18.3.12",
     "@types/uuid": "^10.0.0",
+    "eslint": "^9.39.2",
+    "eslint-config-expo": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
     "jest": "^29.7.0",
     "jest-expo": "~52.0.0",
+    "prettier": "^3.7.4",
     "tailwindcss": "3.3.2",
     "typescript": "^5.3.3"
   },

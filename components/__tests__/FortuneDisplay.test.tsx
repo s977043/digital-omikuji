@@ -1,11 +1,11 @@
-import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { Share } from 'react-native';
-import FortuneDisplay from '../FortuneDisplay';
-import { OmikujiResult } from '../../types/omikuji';
+import React from "react";
+import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { Share } from "react-native";
+import FortuneDisplay from "../FortuneDisplay";
+import { OmikujiResult } from "../../types/omikuji";
 
 // Mock react-native-view-shot
-jest.mock('react-native-view-shot', () => ({
+jest.mock("react-native-view-shot", () => ({
   captureRef: jest.fn(),
 }));
 
@@ -28,6 +28,7 @@ jest.mock("react-i18next", () => ({
 
 // Mock moti
 jest.mock("moti", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
   return {
     MotiView: View,
@@ -35,28 +36,28 @@ jest.mock("moti", () => {
 });
 
 // Mock expo-haptics
-jest.mock('expo-haptics', () => ({
+jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   ImpactFeedbackStyle: {
-    Light: 'light',
+    Light: "light",
   },
 }));
 
 // Mock Share.share
-jest.spyOn(Share, 'share').mockImplementation(() => Promise.resolve({ action: 'sharedAction' }));
+jest.spyOn(Share, "share").mockImplementation(() => Promise.resolve({ action: "sharedAction" }));
 
-describe('FortuneDisplay', () => {
+describe("FortuneDisplay", () => {
   const mockOnReset = jest.fn();
 
   const mockFortune: OmikujiResult = {
-    id: 'test-id',
-    level: 'daikichi',
+    id: "test-id",
+    level: "daikichi",
     fortuneParams: {
-      title: '大吉',
-      description: '2026年はあなたの黄金イヤー！夢が叶う最高の年になるでしょう。',
+      title: "大吉",
+      description: "2026年はあなたの黄金イヤー！夢が叶う最高の年になるでしょう。",
     },
-    image: { uri: 'test.png' },
-    color: '#FFD700',
+    image: { uri: "test.png" },
+    color: "#FFD700",
     createdAt: 1234567890,
   };
 
@@ -64,29 +65,23 @@ describe('FortuneDisplay', () => {
     jest.clearAllMocks();
   });
 
-  it('fortune が渡された時に結果とメッセージが表示される', () => {
-    const { getByText } = render(
-      <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
-    );
+  it("fortune が渡された時に結果とメッセージが表示される", () => {
+    const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
     expect(getByText(mockFortune.fortuneParams.title)).toBeTruthy();
     expect(getByText(mockFortune.fortuneParams.description)).toBeTruthy();
   });
 
-  it('閉じるボタンを押すと onReset が呼ばれる', () => {
-    const { getByText } = render(
-      <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
-    );
+  it("閉じるボタンを押すと onReset が呼ばれる", () => {
+    const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
-    fireEvent.press(getByText('閉じる'));
+    fireEvent.press(getByText("閉じる"));
 
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 
-  it('シェアボタンを押すと Share.share が呼ばれる', async () => {
-    const { getByText } = render(
-      <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
-    );
+  it("シェアボタンを押すと Share.share が呼ばれる", async () => {
+    const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
     fireEvent.press(getByText(/シェア/));
 
@@ -101,24 +96,22 @@ describe('FortuneDisplay', () => {
     });
   });
 
-  it('異なる運勢結果が正しく表示される', () => {
+  it("異なる運勢結果が正しく表示される", () => {
     const kyoFortune: OmikujiResult = {
-      id: 'kyo-id',
-      level: 'kyo',
+      id: "kyo-id",
+      level: "kyo",
       fortuneParams: {
-        title: '凶',
-        description: '今は耐える時。慎重に行動すれば、災いは転じて福となります。',
+        title: "凶",
+        description: "今は耐える時。慎重に行動すれば、災いは転じて福となります。",
       },
-      image: { uri: 'test.png' },
-      color: '#808080',
+      image: { uri: "test.png" },
+      color: "#808080",
       createdAt: 1234567890,
     };
 
-    const { getByText } = render(
-      <FortuneDisplay fortune={kyoFortune} onReset={mockOnReset} />
-    );
+    const { getByText } = render(<FortuneDisplay fortune={kyoFortune} onReset={mockOnReset} />);
 
-    expect(getByText('凶')).toBeTruthy();
+    expect(getByText("凶")).toBeTruthy();
     expect(getByText(kyoFortune.fortuneParams.description)).toBeTruthy();
   });
 });

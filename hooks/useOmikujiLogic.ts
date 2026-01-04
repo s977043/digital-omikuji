@@ -1,25 +1,21 @@
 import { useState, useCallback, useEffect } from "react";
 import { OmikujiResult } from "../types/omikuji";
 import { drawOmikuji } from "../utils/omikujiLogic";
-import {
-  addHistoryEntry,
-  getHistory,
-  HistoryEntry,
-} from "../utils/HistoryStorage";
+import { addHistoryEntry, getHistory, HistoryEntry } from "../utils/HistoryStorage";
 
 export const useOmikujiLogic = () => {
   const [fortune, setFortune] = useState<OmikujiResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
 
-  // 履歴の初期読み込み
-  useEffect(() => {
-    loadHistory();
-  }, []);
-
   const loadHistory = useCallback(async () => {
     const data = await getHistory();
     setHistory(data);
   }, []);
+
+  // 履歴の初期読み込み
+  useEffect(() => {
+    loadHistory();
+  }, [loadHistory]);
 
   const drawFortune = useCallback(async () => {
     // New logic: Use utility

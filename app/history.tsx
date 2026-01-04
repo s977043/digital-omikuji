@@ -1,13 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { MotiView } from "moti";
-import {
-  getHistory,
-  clearHistory,
-  HistoryEntry,
-} from "../utils/HistoryStorage";
+import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
 import { VersionDisplay } from "../components/VersionDisplay";
 
 export default function HistoryScreen() {
@@ -30,21 +26,17 @@ export default function HistoryScreen() {
   );
 
   const handleClearHistory = () => {
-    Alert.alert(
-      t("history.deleteConfirmTitle"),
-      t("history.deleteConfirmMessage"),
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("common.delete"),
-          style: "destructive",
-          onPress: async () => {
-            await clearHistory();
-            setHistory([]);
-          },
+    Alert.alert(t("history.deleteConfirmTitle"), t("history.deleteConfirmMessage"), [
+      { text: t("common.cancel"), style: "cancel" },
+      {
+        text: t("common.delete"),
+        style: "destructive",
+        onPress: async () => {
+          await clearHistory();
+          setHistory([]);
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const formatDate = (timestamp: number): string => {
@@ -58,13 +50,7 @@ export default function HistoryScreen() {
     });
   };
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: HistoryEntry;
-    index: number;
-  }) => (
+  const renderItem = ({ item, index }: { item: HistoryEntry; index: number }) => (
     <MotiView
       from={{ opacity: 0, translateX: -20 }}
       animate={{ opacity: 1, translateX: 0 }}
@@ -72,15 +58,10 @@ export default function HistoryScreen() {
       className="bg-white/10 rounded-xl p-4 mb-3 border border-white/20"
     >
       <View className="flex-row justify-between items-center">
-        <Text
-          className="text-3xl font-shippori-bold"
-          style={{ color: item.color }}
-        >
+        <Text className="text-3xl font-shippori-bold" style={{ color: item.color }}>
           {item.fortuneParams.title}
         </Text>
-        <Text className="text-white/60 text-xs">
-          {formatDate(item.createdAt)}
-        </Text>
+        <Text className="text-white/60 text-xs">{formatDate(item.createdAt)}</Text>
       </View>
       <Text className="text-white/80 mt-2 font-shippori text-sm">
         {item.fortuneParams.description}
@@ -95,9 +76,7 @@ export default function HistoryScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Text className="text-white text-lg">{t("common.back")}</Text>
         </TouchableOpacity>
-        <Text className="text-white text-2xl font-shippori-bold">
-          {t("history.title")}
-        </Text>
+        <Text className="text-white text-2xl font-shippori-bold">{t("history.title")}</Text>
         {history.length > 0 && (
           <TouchableOpacity onPress={handleClearHistory}>
             <Text className="text-red-400 text-sm">{t("history.deleteAll")}</Text>

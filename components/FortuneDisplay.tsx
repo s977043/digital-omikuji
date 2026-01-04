@@ -12,10 +12,7 @@ interface FortuneDisplayProps {
   onReset: () => void;
 }
 
-export default function FortuneDisplay({
-  fortune,
-  onReset,
-}: FortuneDisplayProps) {
+export default function FortuneDisplay({ fortune, onReset }: FortuneDisplayProps) {
   const fortuneCardRef = useRef<View>(null);
   const { t } = useTranslation();
   const animConfig = FORTUNE_ANIMATIONS[fortune.level];
@@ -170,9 +167,7 @@ export default function FortuneDisplay({
             onPress={handleShare}
             className="flex-1 bg-slate-100 py-3 rounded-xl items-center justify-center active:bg-slate-200 border border-slate-200"
           >
-            <Text className="text-slate-800 font-semibold">
-              {t("common.share")} 📤
-            </Text>
+            <Text className="text-slate-800 font-semibold">{t("common.share")} 📤</Text>
           </TouchableOpacity>
 
           {/* 閉じるボタン */}
@@ -187,4 +182,3 @@ export default function FortuneDisplay({
     </MotiView>
   );
 }
-
