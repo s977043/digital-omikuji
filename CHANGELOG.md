@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-01-05
+
+### Added
+
+- **Drawing Overlay**: 抽選中の「儀式の間」演出を追加。振る→結果の間にアニメーション遷移を挿入。
+- **Scroll UI Result**: 結果画面を巻物風UIに刷新。シェアで詳細コンテンツが解放されるゲート機能を実装。
+- **Daily Limit**: 1日1回制限を導入。同日に再度アプリを開くと「本日の結果」を即座に表示。
+- **History List Component**: 履歴画面をコンポーネント化し、UIを整理。
+- **Design Guidelines**: `docs/design_guidelines.md` にデザイン指針（配色・フォント・アニメーション）を整備。
+
+### Changed
+
+- **Share Text Template**: Xシェア文言をテンプレート化。ハッシュタグ・UTMパラメータを自動付与。
+- **README**: ドキュメントへのリンクを追加（Design Guidelines, Phase 1 Roadmap）。
+
+### Fixed
+
+- 履歴画面テストのi18nキー参照エラーを修正。
+- Markdown lint エラー（trailing spaces, blank lines）を修正。
+
 ## [1.0.0] - 2026-01-04
 
 ### Added
