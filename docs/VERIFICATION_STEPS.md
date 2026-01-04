@@ -8,7 +8,7 @@
 ✓ git: develop ブランチ
 ✓ VersionInfo テスト: 6/6 PASS ✅
 ✓ 実装統合: 完了
-```text
+```
 
 ---
 
@@ -38,7 +38,7 @@ pnpm test -- VersionInfo.test.ts
 ```bash
 # Web開発サーバーを起動（ブラウザで確認）
 pnpm web
-```text
+```
 
 **起動後のステップ:**
 
@@ -47,13 +47,13 @@ pnpm web
 ```text
 http://localhost:19006
 # または http://127.0.0.1:19006
-```text
+```
 
 #### 2️⃣ 開発者ツールを開く
 
 ```text
 F12キー または Ctrl+Shift+I
-```text
+```
 
 #### 3️⃣ Console タブで確認
 
@@ -66,7 +66,7 @@ F12キー または Ctrl+Shift+I
 - 色: 緑色 (#4CAF50)
 - スタイル: 太字
 - タイミング: ページ読み込み直後
-```text
+```
 
 #### 4️⃣ UI で表示確認
 
@@ -81,7 +81,7 @@ F12キー または Ctrl+Shift+I
 ├─ [履歴] をクリック
 ├─ 同じく右下に "v0.1.1" が表示
 └─ 同じスタイル
-```text
+```
 
 ---
 
@@ -104,7 +104,8 @@ console.log(process.env.NODE_ENV); // "development"
 
 ### ✅ UI表示の確認
 
-```text
+```
+
 メイン画面:
  ┌─────────────────────┐
  │  おみくじアプリ UI  │
@@ -121,6 +122,7 @@ console.log(process.env.NODE_ENV); // "development"
  │                 v0.1.1
  └─────────────────────┘
       ↑ 同じく表示
+
 ```text
 
 **確認項目:**
@@ -132,7 +134,8 @@ console.log(process.env.NODE_ENV); // "development"
 
 ### ✅ 開発者ツールの確認
 
-```text
+```
+
 F12 > Elements/Inspector で右下を選択:
 
 <View className="absolute bottom-2 right-2 p-1">
@@ -142,9 +145,11 @@ F12 > Elements/Inspector で右下を選択:
 </View>
 
 確認項目:
+
 - [ ] 要素がレンダリングされている
 - [ ] className に text-white/40 が含まれる
 - [ ] position: absolute, bottom: 8px, right: 8px
+
 ```text
 
 ---
@@ -158,7 +163,7 @@ cd /home/minewo/github/digital-omikuji
 
 # VersionInfo テストのみ実行
 pnpm test -- VersionInfo.test.ts --verbose
-```text
+```
 
 ### Step 2: 出力を確認
 
@@ -178,7 +183,7 @@ VersionInfo
 
 Test Suites: 1 passed, 1 total
 Tests:       6 passed, 6 total ✅
-```text
+```
 
 ### Step 3: テスト内容の確認
 
@@ -213,13 +218,13 @@ pnpm web
 # 💿 Loading Metro...
 # ✅ Metro server started
 # 📲 To open app in browser, press "w"
-```text
+```
 
 ### Step 2: ブラウザで確認
 
 ```text
 Press "w" or manually open: http://localhost:19006
-```text
+```
 
 ### Step 3: コンソール確認
 
@@ -233,7 +238,7 @@ F12 > Console タブ
 │                                               │
 │ (その他のログ)                               │
 └──────────────────────────────────────────────┘
-```text
+```
 
 ### Step 4: ページを操作
 
@@ -248,7 +253,7 @@ F12 > Console タブ
 
 3. コンソールの出力を再確認
    └─ エラーがないことを確認
-```text
+```
 
 ---
 
@@ -271,7 +276,7 @@ UI確認（オプション）:
  □ メイン画面の右下に v0.1.1
  □ 履歴画面の右下に v0.1.1
  □ テキストが薄いグレー（目立たない）
-```text
+```
 
 ---
 
@@ -288,7 +293,7 @@ UI確認（オプション）:
 次のステップ:
  → Vercel へのデプロイ
  → 本番環境での確認
-```text
+```
 
 ---
 
@@ -319,7 +324,7 @@ pnpm exec expo cache clean
 
 # 3. 再起動
 pnpm web
-```text
+```
 
 ### ❌ コンソールメッセージが見えない
 
@@ -356,6 +361,6 @@ F12
 
 # コンソール見る
 Console タブ
-```text
+```
 
 確認完了です！🎉

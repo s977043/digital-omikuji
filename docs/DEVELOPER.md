@@ -24,7 +24,7 @@ digital-omikuji/
 │   └── sounds/           # 音声ファイル
 ├── docker/               # Docker関連設定 (もしあれば)
 └── ...config files       # 各種設定ファイル
-```text
+```
 
 ## 🧪 テスト戦略
 
@@ -54,7 +54,7 @@ Expo Application Services (EAS) を使用したクラウドビルドフローを
 ```bash
 # ビルドコマンド例
 eas build --profile development --platform android
-```text
+```
 
 ## 🌐 Web ビルド & デプロイ (Vercel)
 
@@ -95,7 +95,7 @@ export const FORTUNES = [
   },
   // ...
 ];
-```text
+```
 
 ## 🔊 サウンド実装ガイド
 
