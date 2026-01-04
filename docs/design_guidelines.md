@@ -8,9 +8,8 @@
 - **和の重厚感**: 深い色、明朝体、和柄を使用して神聖な雰囲気を出す。
 - **デジタルの遊び心**: スムーズなアニメーション、パーティクル、触覚フィードバックで「引く」体験を演出する。
 - **シンプル**: 操作に迷わない、直感的なUI。
- 
-![Shrine Concept](./design-samples/shrine_concept.png)
 
+![Shrine Concept](./design-samples/shrine_concept.png)
 
 ## 2. カラーパレット (Color Palette)
 
@@ -26,9 +25,8 @@ Tailwind CSS (`nativewind`) のクラスを使用します。
 | **コンポーネント** | `bg-white/10` | 半透明白 | カード、リストアイテム (Glassmorphism) |
 | **アクション** | `bg-amber-500` | 琥珀色 | ボタン、インタラクティブ要素 |
 | **アクション (押下)** | `active:bg-amber-600` | 暗い琥珀 | ボタン押下時 |
- 
-![Color Palette](./design-samples/color_palette.png)
 
+![Color Palette](./design-samples/color_palette.png)
 
 ## 3. タイポグラフィ (Typography)
 
@@ -77,9 +75,8 @@ transition={{
 ### カード / リストアイテム
 
 Glassmorphism（すりガラス風）を採用します。
- 
-![Scroll UI Concept](./design-samples/scroll_ui_concept.png)
 
+![Scroll UI Concept](./design-samples/scroll_ui_concept.png)
 
 ```tsx
 <View className="bg-white/10 rounded-xl p-4 border border-white/20 backdrop-blur-md shadow-lg">

@@ -121,7 +121,6 @@ npx eas build --profile production --platform ios
 - [design_guidelines.md](./docs/design_guidelines.md): デザイン指針（配色・フォント・アニメーション）
 - [phase1_roadmap.md](./docs/phase1_roadmap.md): フェーズ1 改善計画と進捗状況
 
-
 ## 🤝 コントリビューション
 
 1. Fork this repository
