@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-import { View } from "react-native";
+import React from "react";
 import { OmikujiResult } from "../types/omikuji";
 import { ResultScrollCard } from "./ResultScrollCard";
 

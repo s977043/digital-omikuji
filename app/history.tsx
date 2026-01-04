@@ -1,17 +1,15 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { router, useFocusEffect } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { MotiView } from "moti";
-import {
-  getHistory,
-  clearHistory,
-  HistoryEntry,
-} from "../utils/HistoryStorage";
+import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
 import { VersionDisplay } from "../components/VersionDisplay";
 
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { t, i18n } = useTranslation();
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
@@ -28,10 +26,10 @@ export default function HistoryScreen() {
   );
 
   const handleClearHistory = () => {
-    Alert.alert("履歴を削除", "本当にすべての履歴を削除しますか？", [
-      { text: "キャンセル", style: "cancel" },
+    Alert.alert(t("history.deleteConfirmTitle"), t("history.deleteConfirmMessage"), [
+      { text: t("common.cancel"), style: "cancel" },
       {
-        text: "削除",
+        text: t("common.delete"),
         style: "destructive",
         onPress: async () => {
           await clearHistory();
@@ -43,22 +41,16 @@ export default function HistoryScreen() {
 
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString("ja-JP", {
+    return date.toLocaleDateString(i18n.language, {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
     });
   };
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: HistoryEntry;
-    index: number;
-  }) => (
+  const renderItem = ({ item, index }: { item: HistoryEntry; index: number }) => (
     <MotiView
       from={{ opacity: 0, translateX: -20 }}
       animate={{ opacity: 1, translateX: 0 }}
@@ -66,15 +58,10 @@ export default function HistoryScreen() {
       className="bg-white/10 rounded-xl p-4 mb-3 border border-white/20"
     >
       <View className="flex-row justify-between items-center">
-        <Text
-          className="text-3xl font-shippori-bold"
-          style={{ color: item.color }}
-        >
+        <Text className="text-3xl font-shippori-bold" style={{ color: item.color }}>
           {item.fortuneParams.title}
         </Text>
-        <Text className="text-white/60 text-xs">
-          {formatDate(item.createdAt)}
-        </Text>
+        <Text className="text-white/60 text-xs">{formatDate(item.createdAt)}</Text>
       </View>
       <Text className="text-white/80 mt-2 font-shippori text-sm">
         {item.fortuneParams.description}
@@ -87,12 +74,12 @@ export default function HistoryScreen() {
       {/* ヘッダー */}
       <View className="flex-row justify-between items-center mb-6 pt-10">
         <TouchableOpacity onPress={() => router.back()}>
-          <Text className="text-white text-lg">← 戻る</Text>
+          <Text className="text-white text-lg">{t("common.back")}</Text>
         </TouchableOpacity>
-        <Text className="text-white text-2xl font-shippori-bold">運勢手帳</Text>
+        <Text className="text-white text-2xl font-shippori-bold">{t("history.title")}</Text>
         {history.length > 0 && (
           <TouchableOpacity onPress={handleClearHistory}>
-            <Text className="text-red-400 text-sm">全削除</Text>
+            <Text className="text-red-400 text-sm">{t("history.deleteAll")}</Text>
           </TouchableOpacity>
         )}
         {history.length === 0 && <View className="w-12" />}
@@ -101,14 +88,12 @@ export default function HistoryScreen() {
       {/* リスト */}
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-white/60">読み込み中...</Text>
+          <Text className="text-white/60">{t("common.loading")}</Text>
         </View>
       ) : history.length === 0 ? (
         <View className="flex-1 items-center justify-center">
           <Text className="text-6xl mb-4">📜</Text>
-          <Text className="text-white/60 text-center">
-            まだ履歴がありません。{"\n"}おみくじを引いてみましょう！
-          </Text>
+          <Text className="text-white/60 text-center">{t("history.empty")}</Text>
         </View>
       ) : (
         <FlatList

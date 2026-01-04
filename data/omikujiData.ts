@@ -1,8 +1,8 @@
-import { FortuneLevel } from '../types/omikuji';
-import { ImageSourcePropType } from 'react-native';
+import { FortuneLevel } from "../types/omikuji";
+import { ImageSourcePropType } from "react-native";
 
 // Placeholder image for now
-const PLACEHOLDER_IMAGE = require('../assets/omikuji_cylinder.png');
+const PLACEHOLDER_IMAGE = require("../assets/omikuji_cylinder.png");
 
 export interface OmikujiMasterData {
   level: FortuneLevel;
@@ -18,10 +18,10 @@ export interface OmikujiMasterData {
 
 export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
   {
-    level: 'daikichi',
+    level: "daikichi",
     weight: 5,
     image: PLACEHOLDER_IMAGE,
-    color: '#FFD700', // Gold
+    color: "#FFD700", // Gold
     messages: [
       "最高の運気です。新しいことに挑戦するチャンス！",
       "願望は叶います。迷わず進みましょう。",
@@ -38,10 +38,10 @@ export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
     ]
   },
   {
-    level: 'chukichi',
+    level: "chukichi",
     weight: 15,
     image: PLACEHOLDER_IMAGE,
-    color: '#FF8C00', // DarkOrange
+    color: "#FF8C00", // DarkOrange
     messages: [
       "運気は上昇気流に乗っています。",
       "努力が実を結ぶ時期です。",
@@ -58,10 +58,10 @@ export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
     ]
   },
   {
-    level: 'shokichi',
+    level: "shokichi",
     weight: 20,
     image: PLACEHOLDER_IMAGE,
-    color: '#32CD32', // LimeGreen
+    color: "#32CD32", // LimeGreen
     messages: [
       "ささやかな幸せが訪れます。",
       "焦らずコツコツと積み重ねることが大切。",
@@ -78,10 +78,10 @@ export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
     ]
   },
   {
-    level: 'kichi',
+    level: "kichi",
     weight: 25,
     image: PLACEHOLDER_IMAGE,
-    color: '#4169E1', // RoyalBlue
+    color: "#4169E1", // RoyalBlue
     messages: [
       "平穏な一日が過ごせそうです。",
       "現状維持が吉となります。",
@@ -98,10 +98,10 @@ export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
     ]
   },
   {
-    level: 'suekichi',
+    level: "suekichi",
     weight: 20,
     image: PLACEHOLDER_IMAGE,
-    color: '#9370DB', // MediumPurple
+    color: "#9370DB", // MediumPurple
     messages: [
       "今は耐える時。やがて運が開けます。",
       "急がば回れ。慎重な行動を心がけて。",
@@ -118,10 +118,10 @@ export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
     ]
   },
   {
-    level: 'kyo',
+    level: "kyo",
     weight: 10,
     image: PLACEHOLDER_IMAGE,
-    color: '#808080', // Gray
+    color: "#808080", // Gray
     messages: [
       "無理は禁物。今は静観しましょう。",
       "言葉遣いに注意が必要です。",
@@ -138,10 +138,10 @@ export const ACQUIRED_FORTUNES: OmikujiMasterData[] = [
     ]
   },
   {
-    level: 'daikyo',
+    level: "daikyo",
     weight: 5,
     image: PLACEHOLDER_IMAGE,
-    color: '#2F4F4F', // DarkSlateGray
+    color: "#2F4F4F", // DarkSlateGray
     messages: [
       "嵐の前の静けさ。用心深く行動を。",
       "自己主張は控えめに。聞き役に徹して。",

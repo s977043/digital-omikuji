@@ -85,7 +85,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 | 置き場           | リポジトリ直下に `.worktrees/` を作り、タスクごとにサブディレクトリを切る（命名は短く一意） |
 | ブランチ命名     | `agent/<task-slug>`（タスク単位で必ず分ける）                                               |
 | 作成コマンド     | `git worktree add -b agent/<task-slug> .worktrees/<task-slug> <base-branch>`                |
-| 既存ブランチ割当 | `git worktree add .worktrees/<task-slug> <branch>`                                               |
+| 既存ブランチ割当 | `git worktree add .worktrees/<task-slug> <branch>`                                          |
 | 使い捨て検証     | ブランチ無しの detached worktree も可                                                       |
 
 ### クリーンアップ
