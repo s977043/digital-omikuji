@@ -17,8 +17,11 @@ i18n
         lng: deviceLanguage, // 初期言語
         fallbackLng: "ja", // フォールバック言語
         interpolation: {
-            escapeValue: false, // react already safes from xss
+            escapeValue: false, // react already protects from xss
         },
+    })
+    .catch((err) => {
+        console.error("i18n initialization failed", err);
     });
 
 export default i18n;

@@ -13,7 +13,7 @@ import { VersionDisplay } from "../components/VersionDisplay";
 export default function HistoryScreen() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
@@ -49,9 +49,9 @@ export default function HistoryScreen() {
 
   const formatDate = (timestamp: number): string => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString("ja-JP", {
+    return date.toLocaleDateString(i18n.language, {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
