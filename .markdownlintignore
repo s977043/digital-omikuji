@@ -1,0 +1,7 @@
+node_modules
+.git
+.worktrees
+dist
+web-build
+river-reviewer
+CHANGELOG.md
