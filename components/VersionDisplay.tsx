@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native';
-import { getVersionDisplay } from '../utils/VersionInfo';
+import { View, Text } from "react-native";
+import { getVersionDisplay } from "../utils/VersionInfo";
 
 /**
  * デプロイバージョン表示コンポーネント
@@ -7,8 +7,6 @@ import { getVersionDisplay } from '../utils/VersionInfo';
  */
 export const VersionDisplay = () => (
   <View className="absolute bottom-2 right-2 p-1">
-    <Text className="text-xs text-white/40 font-mono">
-      {getVersionDisplay()}
-    </Text>
+    <Text className="text-xs text-white/40 font-mono">{getVersionDisplay()}</Text>
   </View>
 );

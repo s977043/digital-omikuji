@@ -8,20 +8,20 @@ import en from "./locales/en.json";
 const deviceLanguage = getLocales()[0]?.languageCode ?? "ja";
 
 i18n
-    .use(initReactI18next) // passes i18n down to react-i18next
-    .init({
-        resources: {
-            ja: { translation: ja },
-            en: { translation: en },
-        },
-        lng: deviceLanguage, // 初期言語
-        fallbackLng: "ja", // フォールバック言語
-        interpolation: {
-            escapeValue: false, // react already protects from xss
-        },
-    })
-    .catch((err) => {
-        console.error("i18n initialization failed", err);
-    });
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources: {
+      ja: { translation: ja },
+      en: { translation: en },
+    },
+    lng: deviceLanguage, // 初期言語
+    fallbackLng: "ja", // フォールバック言語
+    interpolation: {
+      escapeValue: false, // react already protects from xss
+    },
+  })
+  .catch((err) => {
+    console.error("i18n initialization failed", err);
+  });
 
 export default i18n;

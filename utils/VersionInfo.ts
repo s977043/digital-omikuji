@@ -3,30 +3,30 @@
  * デプロイバージョン、ビルド時刻などを提供
  */
 
-import Constants from 'expo-constants';
+import Constants from "expo-constants";
 
 export interface VersionInfo {
   packageVersion: string;
   buildTime: string;
   commitHash?: string;
-  environment: 'development' | 'production' | 'unknown';
+  environment: "development" | "production" | "unknown";
 }
 
 export const getVersionInfo = (): VersionInfo => {
   // expo-constants から app.json のバージョンを動的に取得
-  const packageVersion = Constants.expoConfig?.version ?? 'unknown';
+  const packageVersion = Constants.expoConfig?.version ?? "unknown";
 
   // ビルド時刻（開発環境の場合は現在時刻）
-  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isDevelopment = process.env.NODE_ENV === "development";
   const buildTime = isDevelopment
     ? new Date().toISOString()
-    : process.env.BUILD_TIME || 'BUILD_TIME_NOT_SET';
+    : process.env.BUILD_TIME || "BUILD_TIME_NOT_SET";
 
   // コミットハッシュ（環境変数から取得可能）
   const commitHash = process.env.COMMIT_HASH || undefined;
 
   // 環境判定
-  const environment = isDevelopment ? 'development' : 'production';
+  const environment = isDevelopment ? "development" : "production";
 
   return {
     packageVersion,
@@ -45,17 +45,14 @@ export const logVersionInfo = (): void => {
 
   const versionString = [
     `🚀 Digital Omikuji v${version.packageVersion}`,
-    `📅 Build: ${new Date(version.buildTime).toLocaleString('ja-JP')}`,
-    version.commitHash ? `📍 Commit: ${version.commitHash.substring(0, 8)}` : '',
+    `📅 Build: ${new Date(version.buildTime).toLocaleString("ja-JP")}`,
+    version.commitHash ? `📍 Commit: ${version.commitHash.substring(0, 8)}` : "",
     `🌍 Env: ${version.environment}`,
   ]
     .filter(Boolean)
-    .join(' | ');
+    .join(" | ");
 
-  console.log(
-    '%c' + versionString,
-    'color: #4CAF50; font-weight: bold; font-size: 12px;'
-  );
+  console.log("%c" + versionString, "color: #4CAF50; font-weight: bold; font-size: 12px;");
 };
 
 /**
@@ -71,10 +68,10 @@ export const getVersionDisplay = (): string => {
  */
 export const getDetailedVersionInfo = (): string => {
   const version = getVersionInfo();
-  const buildDate = new Date(version.buildTime).toLocaleString('ja-JP');
+  const buildDate = new Date(version.buildTime).toLocaleString("ja-JP");
   const parts = [`v${version.packageVersion}`, buildDate];
   if (version.commitHash) {
     parts.push(`(${version.commitHash.substring(0, 8)})`);
   }
-  return parts.join(' ');
+  return parts.join(" ");
 };

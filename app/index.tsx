@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-  ImageBackground,
-  Image,
-} from "react-native";
+import { View, Text, TouchableOpacity, Platform, ImageBackground, Image } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
@@ -68,9 +61,7 @@ export default function OmikujiApp() {
   const [appState, setAppState] = useState<AppState>("IDLE");
   const { t } = useTranslation();
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
-  const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(
-    null
-  );
+  const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
   const subscription = useRef<Subscription | null>(null);
   const { fortune, drawFortune, resetFortune } = useOmikujiLogic();
 
@@ -94,7 +85,7 @@ export default function OmikujiApp() {
       for (const sound of soundsToLoad) {
         try {
           await soundManager.loadSound(sound.key, sound.loader());
-        } catch (e) {
+        } catch {
           console.warn(`${sound.key} sound not found`);
         }
       }
@@ -140,17 +131,7 @@ export default function OmikujiApp() {
     });
   }, []);
 
-  // シェイク監視
-  useEffect(() => {
-    if (appState === "IDLE") {
-      const totalForce = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
-      if (totalForce > SHAKE_THRESHOLD) {
-        handleShakeStart();
-      }
-    }
-  }, [data, appState]);
-
-  const handleShakeStart = async () => {
+  const handleShakeStart = useCallback(async () => {
     if (appState !== "IDLE") return;
 
     // Haptics: 開始時の軽い振動
@@ -172,7 +153,17 @@ export default function OmikujiApp() {
         style: Haptics.NotificationFeedbackType.Success,
       });
     }, SHAKING_DURATION_MS);
-  };
+  }, [appState, drawFortune]);
+
+  // シェイク監視
+  useEffect(() => {
+    if (appState === "IDLE") {
+      const totalForce = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
+      if (totalForce > SHAKE_THRESHOLD) {
+        handleShakeStart();
+      }
+    }
+  }, [data, appState, handleShakeStart]);
 
   // --- アニメーション状態遷移 ---
   useEffect(() => {
@@ -320,19 +311,16 @@ export default function OmikujiApp() {
           )}
 
           {/* デバッグボタン (開発時 または センサー無効時) */}
-          {(showDebug || isSensorAvailable === false) &&
-            appState === "IDLE" && (
-              <TouchableOpacity
-                onPress={handleShakeStart}
-                className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
-              >
-                <Text className="text-white font-bold">
-                  {isSensorAvailable === false
-                    ? t("home.buttonPlay")
-                    : t("home.debugPlay")}
-                </Text>
-              </TouchableOpacity>
-            )}
+          {(showDebug || isSensorAvailable === false) && appState === "IDLE" && (
+            <TouchableOpacity
+              onPress={handleShakeStart}
+              className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
+            >
+              <Text className="text-white font-bold">
+                {isSensorAvailable === false ? t("home.buttonPlay") : t("home.debugPlay")}
+              </Text>
+            </TouchableOpacity>
+          )}
 
           {/* 履歴画面へのナビゲーションボタン */}
           {appState === "IDLE" && (
