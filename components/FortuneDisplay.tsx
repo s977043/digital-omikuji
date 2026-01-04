@@ -7,9 +7,6 @@ interface FortuneDisplayProps {
   onReset: () => void;
 }
 
-export default function FortuneDisplay({
-  fortune,
-  onReset,
-}: FortuneDisplayProps) {
+export default function FortuneDisplay({ fortune, onReset }: FortuneDisplayProps) {
   return <ResultScrollCard fortune={fortune} onReset={onReset} />;
 }

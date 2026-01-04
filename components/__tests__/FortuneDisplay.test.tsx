@@ -36,8 +36,8 @@ jest.mock("moti", () => {
 });
 
 // Mock @expo/vector-icons
-jest.mock('@expo/vector-icons', () => ({
-  Ionicons: 'Ionicons',
+jest.mock("@expo/vector-icons", () => ({
+  Ionicons: "Ionicons",
 }));
 
 // Mock expo-haptics
@@ -45,12 +45,12 @@ jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
   ImpactFeedbackStyle: {
-    Light: 'light',
-    Medium: 'medium',
-    Heavy: "heavy"
+    Light: "light",
+    Medium: "medium",
+    Heavy: "heavy",
   },
   NotificationFeedbackType: {
-    Success: 'success',
+    Success: "success",
   },
 }));
 
@@ -72,8 +72,8 @@ describe("FortuneDisplay", () => {
     createdAt: 1234567890,
     details: [
       { label: "願望", text: "叶います" },
-      { label: "待人", text: "来ます" }
-    ]
+      { label: "待人", text: "来ます" },
+    ],
   };
 
   beforeEach(() => {
@@ -91,21 +91,21 @@ describe("FortuneDisplay", () => {
     const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
     // Initial locked state has a Close button
-    fireEvent.press(getByText('閉じる'));
+    fireEvent.press(getByText("閉じる"));
 
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 
-  it('シェアボタンを押すと Share.share が呼ばれ、詳細が表示される (Unlock)', async () => {
+  it("シェアボタンを押すと Share.share が呼ばれ、詳細が表示される (Unlock)", async () => {
     const { getByText, queryByText } = render(
       <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
     );
 
     // Initially details are hidden
-    expect(queryByText('叶います')).toBeNull();
+    expect(queryByText("叶います")).toBeNull();
 
     // Click Share to unlock
-    fireEvent.press(getByText('シェアして詳細を見る'));
+    fireEvent.press(getByText("シェアして詳細を見る"));
 
     await waitFor(() => {
       expect(Share.share).toHaveBeenCalledTimes(1);
@@ -121,8 +121,8 @@ describe("FortuneDisplay", () => {
     // In test environment, state updates should be quick but Moti might animate opacity.
     // However, Moti mock renders View, so it should be visible if conditional is true.
     await waitFor(() => {
-      expect(getByText('叶います')).toBeTruthy();
-      expect(getByText('再シェア')).toBeTruthy();
+      expect(getByText("叶います")).toBeTruthy();
+      expect(getByText("再シェア")).toBeTruthy();
     });
   });
 

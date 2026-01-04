@@ -105,7 +105,7 @@ describe("useOmikujiLogic", () => {
       expect(result.current.history.length).toBeGreaterThanOrEqual(1);
     });
     // History entry IS the result now
-    expect(result.current.history.some(h => h.id === result.current.fortune?.id)).toBe(true);
+    expect(result.current.history.some((h) => h.id === result.current.fortune?.id)).toBe(true);
   });
 
   it("loadHistory を呼ぶと最新の履歴が読み込まれる", async () => {
@@ -125,6 +125,6 @@ describe("useOmikujiLogic", () => {
       expect(result.current.history.length).toBeGreaterThan(0);
     });
     // Check if distinct ID exists in history
-    expect(result.current.history.some(h => h.id === firstFortune?.id)).toBe(true);
+    expect(result.current.history.some((h) => h.id === firstFortune?.id)).toBe(true);
   });
 });
