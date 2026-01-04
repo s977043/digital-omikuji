@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import { Alert } from "react-native";
 import HistoryScreen from "../history";
 import { getHistory, clearHistory } from "../../utils/HistoryStorage";
@@ -87,8 +87,12 @@ describe("HistoryScreen", () => {
     const buttons = (Alert.alert as jest.Mock).mock.calls[0][2];
     const deleteButton = buttons.find((b: { text: string }) => b.text === "削除");
 
-    await deleteButton.onPress();
+    await act(async () => {
+      await deleteButton.onPress();
+    });
 
-    expect(clearHistory).toHaveBeenCalled();
+    await waitFor(() => {
+      expect(clearHistory).toHaveBeenCalled();
+    });
   });
 });

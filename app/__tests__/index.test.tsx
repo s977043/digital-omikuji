@@ -24,11 +24,17 @@ jest.mock("../../hooks/useOmikujiLogic", () => ({
 
 // Mock components to avoid native issues
 jest.mock("../../components/FortuneDisplay", () => ({
-  FortuneDisplay: () => null,
+  FortuneDisplay: () => <></>,
 }));
 jest.mock("../../components/VersionDisplay", () => ({
-  VersionDisplay: () => null,
+  VersionDisplay: () => <></>,
 }));
+jest.mock("moti", () => {
+  const { View } = require("react-native");
+  return {
+    MotiView: View,
+  };
+});
 
 // Mock SoundManager
 jest.mock("../../utils/SoundManager", () => ({
@@ -71,7 +77,9 @@ describe("IndexScreen", () => {
     });
 
     // Press Play
-    fireEvent.press(getByText("おみくじを引く"));
+    await act(async () => {
+      fireEvent.press(getByText("おみくじを引く"));
+    });
 
     // Should enter SHAKING state
     // Text changes to "念を込めて..." (implied by SHAKING UI in source)
@@ -79,21 +87,36 @@ describe("IndexScreen", () => {
       expect(getByText("念を込めて...")).toBeTruthy();
     });
 
-    // Fast forward timers for SHAKING -> REVEALING
+    // Fast forward timers for SHAKING -> DRAWING
     act(() => {
       jest.advanceTimersByTime(2000); // SHAKING_DURATION_MS = 1500
     });
 
-    // Should start REVEALING (Result animation, no text specific?)
+    // Should start DRAWING
+    await waitFor(() => {
+      // Assuming DrawingOverlay is rendered. We can check if "念を込めて..." is gone or some other element is present.
+      expect(queryByText("念を込めて...")).toBeNull();
+    });
+
+    // Fast forward timers for DRAWING -> REVEALING
+    act(() => {
+      jest.advanceTimersByTime(1500); // DRAWING_DURATION_MS = 1200
+    });
+
+    // Should start REVEALING
+    await waitFor(() => {
+      expect(getByText("2026\n奉\n納")).toBeTruthy();
+    });
+
     // Wait for REVEALING -> RESULT
     act(() => {
       jest.advanceTimersByTime(2500); // REVEALING_DURATION_MS = 2000
     });
 
-    // Now FortuneDisplay should be visible (mocked as null, so we can't search text inside it)
-    // But we can check if "home.title" is GONE (IDLE state UI gone)
-    // Or better, check if FortuneDisplay mock was rendered.
-    // We can create a mock that renders text for FortuneDisplay.
+    // RESULT state - FortuneDisplay should be shown (mocked as null, but IDLE UI should be gone)
+    await waitFor(() => {
+        expect(queryByText("おみくじを引く")).toBeNull();
+    });
   });
 
   it("handles mute toggle and history navigation", async () => {
