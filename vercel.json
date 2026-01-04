@@ -19,7 +19,7 @@
     ],
     "headers": [
         {
-            "source": "/((assets|fonts|_expo)/.*|.*\\.(js|css|woff|woff2|ttf|otf|eot))",
+            "source": "/(assets|fonts|_expo)/:path*",
             "headers": [
                 {
                     "key": "Cache-Control",
@@ -28,7 +28,7 @@
             ]
         },
         {
-            "source": "/(.*\\.(png|jpg|jpeg|gif|webp|avif|svg|ico))",
+            "source": "/(.*).:ext(png|jpg|jpeg|gif|webp|avif|svg|ico)",
             "headers": [
                 {
                     "key": "Cache-Control",
@@ -37,7 +37,7 @@
             ]
         },
         {
-            "source": "/(.*\\.(mp3|wav|ogg|m4a))",
+            "source": "/(.*).:ext(mp3|wav|ogg|m4a)",
             "headers": [
                 {
                     "key": "Cache-Control",
@@ -46,7 +46,7 @@
             ]
         },
         {
-            "source": "/(.*\\.html)",
+            "source": "/(.*).:ext(html)",
             "headers": [
                 {
                     "key": "Cache-Control",
