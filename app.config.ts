@@ -57,8 +57,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     extra: {
       ...config.extra,
       appVariant,
-      privacyPolicyUrl:
-        "https://github.com/s977043/digital-omikuji/blob/main/docs/privacy-policy.md",
+      privacyPolicyUrl: "https://digital-omikuji.vercel.app/privacy-policy",
     },
   };
 };
