@@ -77,8 +77,8 @@ export default function FortuneDisplay({
         />
       )}
 
-      {/* カード登場時の追加演出 (大吉のみ) */}
-      {fortune.level === "daikichi" && (
+      {/* カード登場時の追加演出 (specialEffect設定がある場合) */}
+      {animConfig.specialEffect && (
         <>
           <MotiView
             from={{ scale: 0.5, opacity: 0.8 }}
@@ -86,17 +86,25 @@ export default function FortuneDisplay({
             transition={{
               loop: true,
               type: "timing",
-              duration: 1500,
+              duration: animConfig.specialEffect.pulseDuration,
               delay: 500,
             }}
             className="absolute inset-0 rounded-full"
-            style={{ backgroundColor: "rgba(255, 215, 0, 0.2)" }}
+            style={{ backgroundColor: animConfig.specialEffect.pulseColor }}
           />
           <MotiView
             from={{ rotate: "0deg" }}
             animate={{ rotate: "360deg" }}
-            transition={{ loop: true, type: "timing", duration: 8000 }}
-            className="absolute w-96 h-96 border-2 border-yellow-400/30 rounded-full"
+            transition={{
+              loop: true,
+              type: "timing",
+              duration: animConfig.specialEffect.rotatingDuration,
+            }}
+            className="absolute w-96 h-96 rounded-full"
+            style={{
+              borderWidth: animConfig.specialEffect.rotatingBorderWidth,
+              borderColor: animConfig.specialEffect.rotatingBorderColor,
+            }}
           />
         </>
       )}
@@ -113,7 +121,7 @@ export default function FortuneDisplay({
           transition={{
             type: "spring",
             damping: 8,
-            delay: 200,
+            delay: animConfig.staggerDelay,
           }}
         >
           <Text
@@ -130,7 +138,11 @@ export default function FortuneDisplay({
         <MotiView
           from={{ opacity: 0, translateY: 10 }}
           animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 400, delay: 400 }}
+          transition={{
+            type: "timing",
+            duration: 400,
+            delay: animConfig.staggerDelay * 2,
+          }}
         >
           <Text className="text-slate-700 text-center text-lg font-shippori leading-relaxed mb-8">
             {fortune.fortuneParams.description}
@@ -141,7 +153,11 @@ export default function FortuneDisplay({
         <MotiView
           from={{ opacity: 0, translateY: 20 }}
           animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: "timing", duration: 300, delay: 600 }}
+          transition={{
+            type: "timing",
+            duration: 300,
+            delay: animConfig.staggerDelay * 3,
+          }}
           className="flex-row gap-4 w-full"
         >
           {/* シェアボタン */}

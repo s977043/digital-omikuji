@@ -1,23 +1,37 @@
 import { FortuneLevel } from "../types/omikuji";
 
 /**
+ * 特別演出設定（大吉専用など）
+ */
+export interface SpecialEffectConfig {
+    /** 追加パルスの色 */
+    pulseColor: string;
+    /** 追加パルスの持続時間 (ms) */
+    pulseDuration: number;
+    /** 回転ボーダーの色 */
+    rotatingBorderColor: string;
+    /** 回転ボーダーの太さ */
+    rotatingBorderWidth: number;
+    /** 回転の持続時間 (ms) */
+    rotatingDuration: number;
+}
+
+/**
  * 運勢別アニメーション設定
  */
 export interface FortuneAnimationConfig {
-    /** 登場アニメーションの持続時間 (ms) */
-    entranceDuration: number;
     /** スプリングのダンピング値 (低いほど弾む) */
     springDamping: number;
     /** パルスアニメーションを有効にするか */
     enablePulse: boolean;
     /** パルスの色 */
     pulseColor: string;
-    /** 背景のグラデーション開始色 */
-    gradientStart: string;
-    /** 背景のグラデーション終了色 */
-    gradientEnd: string;
     /** エントリーアニメーションのスケール開始値 */
     entryScale: number;
+    /** 段階的アニメーションの基本遅延 (ms) */
+    staggerDelay: number;
+    /** 特別演出設定（大吉など） */
+    specialEffect?: SpecialEffectConfig;
 }
 
 /**
@@ -26,66 +40,60 @@ export interface FortuneAnimationConfig {
 export const FORTUNE_ANIMATIONS: Record<FortuneLevel, FortuneAnimationConfig> =
 {
     daikichi: {
-        entranceDuration: 800,
         springDamping: 10,
         enablePulse: true,
         pulseColor: "rgba(255, 215, 0, 0.4)", // Gold
-        gradientStart: "#FFF8DC",
-        gradientEnd: "#FFD700",
         entryScale: 0.6,
+        staggerDelay: 200,
+        specialEffect: {
+            pulseColor: "rgba(255, 215, 0, 0.2)",
+            pulseDuration: 1500,
+            rotatingBorderColor: "rgba(250, 204, 21, 0.3)",
+            rotatingBorderWidth: 2,
+            rotatingDuration: 8000,
+        },
     },
     chukichi: {
-        entranceDuration: 700,
         springDamping: 12,
         enablePulse: true,
         pulseColor: "rgba(255, 140, 0, 0.3)", // DarkOrange
-        gradientStart: "#FFF5E6",
-        gradientEnd: "#FF8C00",
         entryScale: 0.7,
+        staggerDelay: 180,
     },
     shokichi: {
-        entranceDuration: 600,
         springDamping: 14,
         enablePulse: false,
         pulseColor: "rgba(50, 205, 50, 0.2)",
-        gradientStart: "#F0FFF0",
-        gradientEnd: "#32CD32",
         entryScale: 0.75,
+        staggerDelay: 160,
     },
     kichi: {
-        entranceDuration: 500,
         springDamping: 15,
         enablePulse: false,
         pulseColor: "rgba(65, 105, 225, 0.2)",
-        gradientStart: "#F0F8FF",
-        gradientEnd: "#4169E1",
         entryScale: 0.8,
+        staggerDelay: 150,
     },
     suekichi: {
-        entranceDuration: 500,
         springDamping: 15,
         enablePulse: false,
         pulseColor: "rgba(147, 112, 219, 0.2)",
-        gradientStart: "#FAF0FF",
-        gradientEnd: "#9370DB",
         entryScale: 0.8,
+        staggerDelay: 150,
     },
     kyo: {
-        entranceDuration: 600,
         springDamping: 18,
         enablePulse: false,
         pulseColor: "rgba(128, 128, 128, 0.2)",
-        gradientStart: "#F5F5F5",
-        gradientEnd: "#808080",
         entryScale: 0.85,
+        staggerDelay: 140,
     },
     daikyo: {
-        entranceDuration: 700,
         springDamping: 20,
         enablePulse: true,
         pulseColor: "rgba(47, 79, 79, 0.3)", // DarkSlateGray
-        gradientStart: "#E8E8E8",
-        gradientEnd: "#2F4F4F",
         entryScale: 0.9,
+        staggerDelay: 140,
     },
 };
+
