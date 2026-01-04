@@ -1,5 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getHistory, addHistoryEntry, clearHistory } from "../HistoryStorage";
+import {
+  getHistory,
+  addHistoryEntry,
+  clearHistory,
+  getLastDrawDate,
+  setLastDrawDate,
+} from "../HistoryStorage";
 import { OmikujiResult } from "../../types/omikuji";
 
 const mockResult: OmikujiResult = {
@@ -20,11 +26,26 @@ describe("HistoryStorage", () => {
     jest.clearAllMocks();
   });
 
-  it("adds history entry correctly", async () => {
+  it("adds history entry and saves last draw date", async () => {
     await addHistoryEntry(mockResult);
     const history = await getHistory();
     expect(history).toHaveLength(1);
     expect(history[0]).toEqual(mockResult);
+
+    const lastDate = await getLastDrawDate();
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(now.getDate()).padStart(2, "0")}`;
+    expect(lastDate).toBe(today);
+  });
+
+  it("sets and gets last draw date directly", async () => {
+    const testDate = "2023-01-01";
+    await setLastDrawDate(testDate);
+    const date = await getLastDrawDate();
+    expect(date).toBe(testDate);
   });
 
   it("limits history to 50 items", async () => {
