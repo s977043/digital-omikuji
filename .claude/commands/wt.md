@@ -1,6 +1,7 @@
 ---
 description: "Prepare git worktree for parallel tasks"
 ---
+
 AGENTS.md の「並行タスク」ルールに基づき、並行実行の計画を日本語で提示して：
 
 1. Task A/B ... の要約

@@ -1,6 +1,7 @@
 ---
 description: "Review changes focusing on correctness, edge cases, and security"
 ---
+
 差分をレビューして、以下の観点で指摘をまとめて：
 
 - バグになりそうな境界条件
