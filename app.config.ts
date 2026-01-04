@@ -31,6 +31,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ...config.ios,
       bundleIdentifier,
       supportsTablet: true,
+      infoPlist: {
+        CFBundleDisplayName: name,
+        NSPhotoLibraryUsageDescription:
+          "おみくじ結果を画像として保存するために写真ライブラリへのアクセスが必要です",
+        NSPhotoLibraryAddUsageDescription:
+          "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です",
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       ...config.android,
@@ -49,6 +57,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     extra: {
       ...config.extra,
       appVariant,
+      privacyPolicyUrl:
+        "https://github.com/s977043/digital-omikuji/blob/main/docs/privacy-policy.md",
     },
   };
 };
