@@ -75,6 +75,7 @@ export default function OmikujiApp() {
     null
   );
   const subscription = useRef<Subscription | null>(null);
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { fortune, drawFortune, resetFortune } = useOmikujiLogic();
 
   // デバッグボタン用判定
@@ -166,7 +167,7 @@ export default function OmikujiApp() {
     soundManager.playSound("shake");
 
     // シェイク終了 -> 抽選演出 (DRAWING) へ
-    setTimeout(async () => {
+    shakeTimerRef.current = setTimeout(async () => {
       // 抽選ロジックはここで確定させるが、ユーザーにはまだ見せない
       await drawFortune();
       setAppState("DRAWING");
@@ -178,6 +179,15 @@ export default function OmikujiApp() {
       });
     }, SHAKING_DURATION_MS);
   };
+
+  // Cleanup shake timer on unmount
+  useEffect(() => {
+    return () => {
+      if (shakeTimerRef.current) {
+        clearTimeout(shakeTimerRef.current);
+      }
+    };
+  }, []);
 
   // --- アニメーション状態遷移 ---
   useEffect(() => {

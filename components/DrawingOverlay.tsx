@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
 
@@ -7,7 +7,10 @@ export const DrawingOverlay = () => {
     return (
         <View
             className="absolute inset-0 bg-black/80 z-50 items-center justify-center"
-            pointerEvents="none" // Pass touches through if needed, but usually we want to block interactions
+            pointerEvents="auto"
+            accessibilityRole="progressbar"
+            accessibilityLabel="運命を紐解いています"
+            accessibilityLiveRegion="polite"
         >
             <MotiView
                 from={{ opacity: 0, scale: 0.8 }}
@@ -46,7 +49,10 @@ export const DrawingOverlay = () => {
                     animate={{ opacity: 1, translateY: 0 }}
                     transition={{ delay: 200 }}
                 >
-                    <Text className="text-white font-shippori-bold text-xl tracking-[0.2em] text-center">
+                    <Text
+                        className="text-white font-shippori-bold text-xl tracking-[0.2em] text-center"
+                        accessibilityRole="text"
+                    >
                         運命を紐解いています...
                     </Text>
                 </MotiView>
