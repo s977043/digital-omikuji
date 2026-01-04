@@ -52,7 +52,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       output: "static",
       favicon: "./assets/icon.png",
     },
-    plugins: ["expo-router"],
+    plugins: ["expo-router", "expo-localization"],
     extra: {
       ...config.extra,
       appVariant,
