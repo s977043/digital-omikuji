@@ -39,5 +39,6 @@ export const drawOmikuji = (): OmikujiResult => {
     image: selectedData.image,
     color: selectedData.color,
     createdAt: Date.now(),
+    details: selectedData.details, // Pass through details
   };
 };
