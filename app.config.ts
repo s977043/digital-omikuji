@@ -1,5 +1,8 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
+// Constants
+const PRIVACY_POLICY_URL = "https://digital-omikuji.vercel.app/privacy-policy";
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   const appVariant = process.env.APP_VARIANT || "development";
 
@@ -31,6 +34,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       ...config.ios,
       bundleIdentifier,
       supportsTablet: true,
+      infoPlist: {
+        CFBundleDisplayName: name,
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       ...config.android,
@@ -49,6 +56,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     extra: {
       ...config.extra,
       appVariant,
+      privacyPolicyUrl: PRIVACY_POLICY_URL,
     },
   };
 };
