@@ -12,6 +12,7 @@ import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
 import Constants from "expo-constants";
 import { router } from "expo-router";
+import { useTranslation } from "react-i18next";
 import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import FortuneDisplay from "../components/FortuneDisplay";
 import { VersionDisplay } from "../components/VersionDisplay";
@@ -65,6 +66,7 @@ interface Subscription {
 
 export default function OmikujiApp() {
   const [appState, setAppState] = useState<AppState>("IDLE");
+  const { t } = useTranslation();
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
   const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(
     null
@@ -217,11 +219,11 @@ export default function OmikujiApp() {
                 />
               </View>
               <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
-                スマホを振って{"\n"}おみくじを引く
+                {t("home.shakeToPlay")}
               </Text>
               <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
                 <Text className="text-white font-bold text-sm tracking-widest">
-                  2026年 謹賀新年
+                  {t("home.title")}
                 </Text>
               </View>
             </MotiView>
@@ -260,7 +262,7 @@ export default function OmikujiApp() {
                 }}
               >
                 <Text className="text-xl text-yellow-400 font-shippori-bold mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
-                  運命を抽選中...
+                  {t("home.drawing")}
                 </Text>
               </MotiView>
             </MotiView>
@@ -326,8 +328,8 @@ export default function OmikujiApp() {
               >
                 <Text className="text-white font-bold">
                   {isSensorAvailable === false
-                    ? "📱 ボタンでおみくじを引く"
-                    : "🐞 テストで振る"}
+                    ? t("home.buttonPlay")
+                    : t("home.debugPlay")}
                 </Text>
               </TouchableOpacity>
             )}
@@ -339,7 +341,7 @@ export default function OmikujiApp() {
                 onPress={() => router.push("/history")}
                 className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
               >
-                <Text className="text-white font-bold">📜 運勢手帳</Text>
+                <Text className="text-white font-bold">{t("home.historyButton")}</Text>
               </TouchableOpacity>
 
               {/* ミュート切り替えボタン */}

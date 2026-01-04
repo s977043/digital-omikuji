@@ -4,6 +4,7 @@ import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
 import * as Haptics from "expo-haptics";
 import { captureRef } from "react-native-view-shot";
+import { useTranslation } from "react-i18next";
 import { FORTUNE_ANIMATIONS } from "../data/fortuneAnimations";
 
 interface FortuneDisplayProps {
@@ -16,6 +17,7 @@ export default function FortuneDisplay({
   onReset,
 }: FortuneDisplayProps) {
   const fortuneCardRef = useRef<View>(null);
+  const { t } = useTranslation();
   const animConfig = FORTUNE_ANIMATIONS[fortune.level];
 
   const handleShare = async () => {
@@ -24,7 +26,10 @@ export default function FortuneDisplay({
         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
       }
 
-      const message = `🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ ${fortune.fortuneParams.title} ✨\n「${fortune.fortuneParams.description}」\n\n#おみくじ2026 #新春`;
+      const message = t("fortune.shareMessage", {
+        title: fortune.fortuneParams.title,
+        description: fortune.fortuneParams.description,
+      });
 
       // Capture the fortune card as an image
       let imageUri: string | undefined;
@@ -47,7 +52,7 @@ export default function FortuneDisplay({
         },
         {
           ...(imageUri && Platform.OS === "android"
-            ? { dialogTitle: "おみくじをシェア" }
+            ? { dialogTitle: t("fortune.shareTitle") }
             : {}),
         }
       );
@@ -165,7 +170,9 @@ export default function FortuneDisplay({
             onPress={handleShare}
             className="flex-1 bg-slate-100 py-3 rounded-xl items-center justify-center active:bg-slate-200 border border-slate-200"
           >
-            <Text className="text-slate-800 font-semibold">シェア 📤</Text>
+            <Text className="text-slate-800 font-semibold">
+              {t("common.share")} 📤
+            </Text>
           </TouchableOpacity>
 
           {/* 閉じるボタン */}
@@ -173,7 +180,7 @@ export default function FortuneDisplay({
             onPress={onReset}
             className="flex-1 bg-slate-900 py-3 rounded-xl items-center justify-center active:bg-slate-700"
           >
-            <Text className="text-white font-bold">閉じる</Text>
+            <Text className="text-white font-bold">{t("common.close")}</Text>
           </TouchableOpacity>
         </MotiView>
       </View>
