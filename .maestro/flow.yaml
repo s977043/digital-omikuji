@@ -1,0 +1,37 @@
+appId: com.s977043.digitalomikuji
+---
+- launchApp
+
+# 1. 起動確認 (IDLE state)
+- assertVisible: "スマホを振っておみくじを引こう"
+
+# 2. 履歴画面に遷移して戻る (Quick check)
+- tapOn: "履歴"
+- assertVisible: "履歴"
+- assertVisible: "戻る"
+- tapOn: "戻る"
+- assertVisible: "スマホを振っておみくじを引こう"
+
+# 3. おみくじを引く (Use Debug button for stability)
+# Note: Maestro can simulate shake, but debug button is more reliable for "logic" verification if available.
+# Since app/index.tsx shows "Debug" button when appVariant is development OR sensor unavailable.
+# We will try tapping "おみくじを引く" or "🔧 デバッグ" depending on env.
+# Assuming development build or sensor not available in emulator.
+- tapOn: ".*(おみくじを引く|デバッグ).*"
+
+# 4. 演出待ち (SHAKING -> DRAWING -> REVEALING -> RESULT)
+# Transitions take about 1.5s + 1.2s + 2.0s = ~5s total
+- extendedWaitUntil:
+    visible: "もう一度引く" # or "運勢" or something unique in result
+    timeout: 10000
+
+# 5. 結果確認
+# FortuneDisplay component verification
+- assertVisible: ".*運.*" # Matches 大吉, 末吉 etc title
+- assertVisible: ".*これ.*" # Matches part of standard message if specific, or just check existence.
+# Let's check for the reset button or closing logic
+- tapOn: "閉じる" 
+
+# 6. ホームに戻っていることを確認
+- assertVisible: "本日の運勢は確認済みです"
+- assertVisible: "結果をもう一度見る"

@@ -1,0 +1,62 @@
+name: E2E Tests (Maestro)
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  maestro:
+    name: Run Maestro E2E
+    runs-on: macos-latest
+    timeout-minutes: 20 # Cost control
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: Build for Simulator (Expo Prebuild)
+        # We need a native build for Maestro to interact fully, or use Expo Go.
+        # For simplicity in this CI plan, we'll try to build the iOS app in Debug mode.
+        # This might be heavy. Alternative is using EAS Build, but that's external.
+        # Let's try prebuild + xcodebuild (Standard React Native flow)
+        run: |
+          npx expo prebuild --platform ios
+          # Basic xcodebuild command - improving this might be needed later
+          xcodebuild -workspace ios/digitalomikuji.xcworkspace \
+            -scheme digitalomikuji \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -derivedDataPath build \
+            COMPILER_INDEX_STORE_ENABLE=NO
+
+      - name: Install App on Simulator
+        run: |
+          xcrun simctl boot "iPhone 15" || true
+          xcrun simctl install "iPhone 15" build/Build/Products/Debug-iphonesimulator/digitalomikuji.app
+
+      - name: Run Maestro Flow
+        run: maestro test .maestro/flow.yaml
+        env:
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 120000
