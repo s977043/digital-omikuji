@@ -114,7 +114,6 @@ describe("IndexScreen", () => {
       jest.advanceTimersByTime(2500); // REVEALING_DURATION_MS = 2000
     });
 
-    // RESULT state - FortuneDisplay should be shown (mocked as null, but IDLE UI should be gone)
     await waitFor(() => {
       expect(queryByText("おみくじを引く")).toBeNull();
     });
