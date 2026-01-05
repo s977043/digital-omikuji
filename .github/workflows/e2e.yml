@@ -31,26 +31,27 @@ jobs:
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Build for Simulator (Expo Prebuild)
-        # We need a native build for Maestro to interact fully, or use Expo Go.
-        # For simplicity in this CI plan, we'll try to build the iOS app in Debug mode.
-        # This might be heavy. Alternative is using EAS Build, but that's external.
-        # Let's try prebuild + xcodebuild (Standard React Native flow)
         run: |
           npx expo prebuild --platform ios
           cd ios && pod install && cd ..
-          # Basic xcodebuild command - improving this might be needed later
-          xcodebuild -workspace ios/digitalomikuji.xcworkspace \
-            -scheme digitalomikuji \
+          # Dynamically find workspace name
+          WORKSPACE=$(find ios -name "*.xcworkspace" -maxdepth 1 | head -1)
+          SCHEME=$(basename "$WORKSPACE" .xcworkspace)
+          echo "Building workspace: $WORKSPACE, scheme: $SCHEME"
+          xcodebuild -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
             -configuration Debug \
             -sdk iphonesimulator \
             -destination 'platform=iOS Simulator,name=iPhone 15' \
             -derivedDataPath build \
             COMPILER_INDEX_STORE_ENABLE=NO
+          # Save scheme for later steps
+          echo "IOS_SCHEME=$SCHEME" >> $GITHUB_ENV
 
       - name: Install App on Simulator
         run: |
           xcrun simctl boot "iPhone 15" || true
-          xcrun simctl install "iPhone 15" build/Build/Products/Debug-iphonesimulator/digitalomikuji.app
+          xcrun simctl install "iPhone 15" "build/Build/Products/Debug-iphonesimulator/${IOS_SCHEME}.app"
 
       - name: Run Maestro Flow
         run: maestro test .maestro/flow.yaml
