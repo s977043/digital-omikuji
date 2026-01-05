@@ -1,0 +1,39 @@
+ WARN  Unsupported engine: wanted: {"node":"20.x"} (current: {"node":"v22.20.0","pnpm":"9.15.2"})
+
+> digital-omikuji@1.0.0 lint /home/minewo/github/digital-omikuji
+> ESLINT_USE_FLAT_CONFIG=false eslint .
+
+
+/home/minewo/github/digital-omikuji/app/__tests__/history.test.tsx
+  13:5  warning  React Hook useEffect received a function whose dependencies are unknown. Pass an inline function instead  react-hooks/exhaustive-deps
+
+/home/minewo/github/digital-omikuji/types/i18next.d.ts
+  3:8  warning  'en' is defined but never used  @typescript-eslint/no-unused-vars
+
+/home/minewo/github/digital-omikuji/utils/__tests__/omikujiLogic.test.ts
+   1:29  error  Replace `'../omikujiLogic'` with `"../omikujiLogic"`                                                                                                        prettier/prettier
+   2:35  error  Replace `'../../data/omikujiData'` with `"../../data/omikujiData"`                                                                                          prettier/prettier
+   4:10  error  Replace `'omikujiLogic'` with `"omikujiLogic"`                                                                                                              prettier/prettier
+   5:12  error  Replace `'drawOmikuji'` with `"drawOmikuji"`                                                                                                                prettier/prettier
+   6:8   error  Replace `'should·return·a·valid·OmikujiResult·structure'` with `"should·return·a·valid·OmikujiResult·structure"`                                            prettier/prettier
+   9:37  error  Replace `'id'` with `"id"`                                                                                                                                  prettier/prettier
+  10:37  error  Replace `'string'` with `"string"`                                                                                                                          prettier/prettier
+  12:37  error  Replace `'level'` with `"level"`                                                                                                                            prettier/prettier
+  13:40  error  Replace `'string'` with `"string"`                                                                                                                          prettier/prettier
+  15:37  error  Replace `'fortuneParams'` with `"fortuneParams"`                                                                                                            prettier/prettier
+  16:51  error  Replace `'title'` with `"title"`                                                                                                                            prettier/prettier
+  17:51  error  Replace `'description'` with `"description"`                                                                                                                prettier/prettier
+  19:37  error  Replace `'createdAt'` with `"createdAt"`                                                                                                                    prettier/prettier
+  20:44  error  Replace `'number'` with `"number"`                                                                                                                          prettier/prettier
+  23:37  error  Replace `'details'` with `"details"`                                                                                                                        prettier/prettier
+  26:8   error  Replace `'should·select·a·fortune·based·on·random·weight'` with `"should·select·a·fortune·based·on·random·weight"`                                          prettier/prettier
+  28:24  error  Replace `'random'` with `"random"`                                                                                                                          prettier/prettier
+  39:8   error  Replace `'should·fallback·to·the·last·fortune·if·random·value·is·high·(0.99)'` with `"should·fallback·to·the·last·fortune·if·random·value·is·high·(0.99)"`  prettier/prettier
+  41:24  error  Replace `'random'` with `"random"`                                                                                                                          prettier/prettier
+
+✖ 21 problems (19 errors, 2 warnings)
+  19 errors and 0 warnings potentially fixable with the `--fix` option.
+
+(node:68696) ESLintRCWarning: You are using an eslintrc configuration file, which is deprecated and support will be removed in v10.0.0. Please migrate to an eslint.config.js file. See https://eslint.org/docs/latest/use/configure/migration-guide for details. An eslintrc configuration file is used because you have the ESLINT_USE_FLAT_CONFIG environment variable set to false. If you want to use an eslint.config.js file, remove the environment variable. If you want to find the location of the eslintrc configuration file, use the --debug flag.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ELIFECYCLE  Command failed with exit code 1.

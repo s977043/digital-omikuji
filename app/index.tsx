@@ -135,12 +135,14 @@ export default function OmikujiApp() {
     });
   }, []);
 
-  // Auto-transition to RESULT if fortune is loaded (e.g., daily limit reached)
-  useEffect(() => {
-    if (fortune && appState === "IDLE") {
+  // Note: Auto-transition removed - user should explicitly tap "View result again" button
+  // to see the result when hasDrawnToday is true
+
+  const handleResultView = useCallback(() => {
+    if (fortune) {
       setAppState("RESULT");
     }
-  }, [fortune, appState]);
+  }, [fortune]);
 
   const handleShakeStart = useCallback(async () => {
     if (appState !== "IDLE" || hasDrawnToday) return;
@@ -239,12 +241,15 @@ export default function OmikujiApp() {
               animate={{ opacity: 1, scale: 1, translateY: 0 }}
               className="items-center px-6"
             >
-              <View className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden w-[184px] h-[184px] items-center justify-center">
+              <View
+                className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                style={{ width: 184, height: 184 }}
+              >
                 <Image
                   source={require("../assets/omikuji_cylinder.png")}
-                  className="w-[180px] h-[180px] rounded-full"
+                  className="rounded-full"
+                  style={{ width: 180, height: 180, opacity: hasDrawnToday ? 0.5 : 1 }}
                   resizeMode="cover"
-                  style={hasDrawnToday ? { opacity: 0.5 } : {}}
                 />
               </View>
               <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
@@ -261,7 +266,7 @@ export default function OmikujiApp() {
 
               {hasDrawnToday && (
                 <TouchableOpacity
-                  onPress={() => setAppState("RESULT")}
+                  onPress={handleResultView}
                   className="bg-amber-500 px-8 py-3 rounded-full mt-6 shadow-lg active:bg-amber-600"
                 >
                   <Text className="text-white font-bold text-lg">結果をもう一度見る</Text>

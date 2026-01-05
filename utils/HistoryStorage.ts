@@ -47,6 +47,7 @@ export async function addHistoryEntry(result: OmikujiResult): Promise<void> {
 export async function clearHistory(): Promise<void> {
   try {
     await AsyncStorage.removeItem(HISTORY_KEY);
+    await AsyncStorage.removeItem(LAST_DRAW_DATE_KEY);
   } catch (error) {
     console.error("Failed to clear history:", error);
   }

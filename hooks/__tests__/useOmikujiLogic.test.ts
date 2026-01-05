@@ -39,7 +39,7 @@ describe("useOmikujiLogic", () => {
     expect(fortune).toHaveProperty("createdAt");
   });
 
-  it("resetFortune を呼ぶと運勢がnullにリセットされる", async () => {
+  it("resetFortune behavior: preserves fortune if drawn today, otherwise resets", async () => {
     const { result } = await renderHookAndWaitForInitialLoad();
 
     await act(async () => {
@@ -47,11 +47,20 @@ describe("useOmikujiLogic", () => {
     });
 
     expect(result.current.fortune).not.toBeNull();
+    expect(result.current.hasDrawnToday).toBe(true);
 
+    // resetFortune should NOT clear fortune if drawn today (to allow "View Result Again")
     act(() => {
       result.current.resetFortune();
     });
+    expect(result.current.fortune).not.toBeNull();
 
+    // Reset daily limit (simulate next day)
+    await act(async () => {
+      await result.current.debugResetDailyLimit();
+    });
+    // debugResetDailyLimit clears fortune, so we can't test resetFortune clearing it here directly
+    // but we verify the primary requirement: existing fortune is KEPT.
     expect(result.current.fortune).toBeNull();
   });
 

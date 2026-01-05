@@ -1,24 +1,25 @@
-# Dockerfile
-FROM node:20-bullseye
+# Dockerfile for Expo React Native Development
+# Based on: https://zenn.dev/iput_app/articles/8051d4ad7e03bf
+FROM node:22-alpine
 
-# Install pnpm and tools
-RUN corepack enable && corepack prepare pnpm@latest --activate
-RUN pnpm add -g eas-cli
+# Install git and other tools
+RUN apk update && apk add git
 
-# Workdir
+# Set working directory
 WORKDIR /app
 
-# Copy package files first for layer caching
-COPY package.json pnpm-lock.yaml ./
+# Copy package files
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy all source files
+# Install dependencies with shamefully-hoist for Expo compatibility
+RUN pnpm install --shamefully-hoist
+
+# Copy source code
 COPY . .
 
 # Expose Metro bundler port
 EXPOSE 8081
-
-# Default command
-CMD ["npx", "expo", "start", "--host", "0.0.0.0"]

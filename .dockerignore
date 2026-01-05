@@ -1,0 +1,26 @@
+# Dependencies
+node_modules
+river-reviewer/node_modules
+
+# Build outputs
+dist
+.expo
+coverage
+
+# Environment files
+.env*
+!.env.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+
+# Worktrees
+.worktrees
+
+# Logs
+*.log
