@@ -57,9 +57,7 @@ describe("SoundManager", () => {
   });
 
   it("returns null when loading sound if not ready", async () => {
-    // Force not ready by failing init or just not calling it?
-    // Since singleton might be ready from previous tests if not reset (but we don't expose resetReady).
-    // We can simulate fail init to set isReady=false.
+    // Simulate failed initialization so the manager is not ready.
     (Audio.setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     await soundManager.initialize();
