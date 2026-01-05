@@ -42,7 +42,7 @@ jobs:
             -scheme "$SCHEME" \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath build \
             COMPILER_INDEX_STORE_ENABLE=NO
           # Save scheme for later steps
@@ -50,8 +50,8 @@ jobs:
 
       - name: Install App on Simulator
         run: |
-          xcrun simctl boot "iPhone 15" || true
-          xcrun simctl install "iPhone 15" "build/Build/Products/Debug-iphonesimulator/${IOS_SCHEME}.app"
+          xcrun simctl boot "iPhone 16" || true
+          xcrun simctl install "iPhone 16" "build/Build/Products/Debug-iphonesimulator/${IOS_SCHEME}.app"
 
       - name: Run Maestro Flow
         run: maestro test .maestro/flow.yaml
