@@ -1,41 +1,24 @@
-# GitHub Copilot Instructions for Digital Omikuji
+# Copilot instructions (Digital Omikuji)
 
-You are an expert React Native, Expo, and TypeScript developer.
-You are assisting with the "Digital Omikuji" application (2026 New Year Fortune Teller).
-Please follow the canonical rules in `AGENTS.md`; this file highlights Copilot-specific context.
+> **Single source:** 必ずリポジトリルートの [AGENTS.md](./.agent/AGENTS.md) を先に読み、そこで定義された手順・完了条件に従ってください。本ファイルは Copilot 向けの最小差分です。
 
-## 🚀 Project Context
+## 必須チェック（着手前に確認）
+
+- 目的と受入条件を読み、短い計画をコメントで共有してから作業開始。
+- タスク単位でブランチを作成し、PR を用意する。
+- PR 前に `pnpm test` を実行。レビュー依頼を PR 本文に記載。
+- レビューコメントは日本語で記載する。
+
+## 参照ポイント
+
+- 指示ファイル: `.github/instructions/*.instructions.md`
+- 共通ルール: `.agent/AGENTS.md`
+- Docs: 日本語を正とする。
+
+## Project Context
 
 - **Framework**: Expo SDK 52 (Managed Workflow)
 - **Routing**: Expo Router v4 (File-based routing in `app/`)
-- **Styling**: NativeWind v4 (Tailwind CSS)
-  - Use `className` props on standard React Native components.
+- **Styling**: NativeWind v4 (Tailwind CSS) - `className` props
 - **Animation**: Moti (powered by Reanimated)
-  - Use `<MotiView />` for animations.
 - **Language**: TypeScript (Strict Mode)
-
-## 🛠 Feature specific context
-
-- **Sensors**: Uses `expo-sensors` (Accelerometer) for the shake gesture.
-- **Haptics**: Uses `expo-haptics` for tactile feedback.
-- **Sharing**: Uses `react-native-view-shot` to capture and share images.
-- **Assets**: Sounds and images are in `assets/`.
-
-## 📝 Coding Guidelines
-
-1. **Functional Components**: Use React Functional Components with Hooks.
-2. **Type Safety**: Avoid `any`. Define interfaces for props and state.
-3. **Async/Await**: Use `async/await` for asynchronous operations.
-4. **Error Handling**: Implement `try/catch` and user feedback for errors.
-5. **No Barrel Files**: Do not use `index.ts` to export everything from a directory (unless necessary for a specific pattern).
-
-## 🤖 Agent Integration
-
-For workflows, PR rules, and commands (pnpm), always refer to the root `AGENTS.md`.
-Use this document only as a quick Copilot-facing reminder of the stack and style.
-
-## ⛔ PROHIBITED ACTIONS
-
-- **DO NOT** read or modify `node_modules/` or `**/*.lock` (pnpm-lock.yaml).
-- **DO NOT** access `.env*`, `secrets/`, or any credentials.
-- **DO NOT** commit directly to `main` or `develop`.

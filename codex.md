@@ -1,38 +1,18 @@
 # codex.md — OpenAI Codex CLI Agent Guide
 
-このファイルは **OpenAI Codex CLI** がプロジェクトのコンテキストとして認識するためのエントリーポイントです。共通ルールはリポジトリ直下の `AGENTS.md` を必ず参照してください。
+> **Single source:** 共通ルールは [.agent/AGENTS.md](./.agent/AGENTS.md)。本ファイルは Codex 向けの最小差分です。
 
-## 必須アクション
+## Codex-specific settings
 
-1. **`AGENTS.md` を読み、開発・テスト・PR のルールを把握する。**
-2. Skill 利用時は `.agent/docs/CodexAgentSkills.md` と `.agent/skills/index.json` を確認する。
+- Config: See `.codex/config.toml` for approval policy and sandbox mode
+- Detailed instructions: See `.codex/AGENTS.md`
+- Agent Skills: See `.agent/docs/CodexAgentSkills.md`
 
-## ⛔ 禁止事項 (Strict)
+## Quick reference (from AGENTS.md)
 
-- `node_modules/`, `**/*.lock` (例: `pnpm-lock.yaml`) の読み取り・改変
-- `.env*`, `secrets/` へのアクセス
-- `main`/`develop` への直接コミット
-
-## プロジェクト概要
-
-- Expo SDK 52 (Managed) / Expo Router v4
-- NativeWind v4 で `className` を使用
-- TypeScript (Strict), Moti/Reanimated を利用
-
-## 主要コマンド（pnpm）
-
-```bash
-pnpm install   # 依存導入
-pnpm test      # テスト
-pnpm start     # 開発サーバー
-pnpm build     # Web ビルド
-pnpm lint      # Lint（設定がある場合）
-```
-
-## Agent Skills
-
-- Skill 一覧: `.agent/skills/index.json`
-- 各 Skill の詳細: `.agent/skills/<skill>/SKILL.md`
-- 実行スクリプト: `.agent/skills/<skill>/run.js`
-
-> プロジェクト固有ルールの更新は `AGENTS.md` に集約してください。このファイルは Codex CLI の入口とリンク集に留めます。
+- Package manager: `pnpm` (not npm)
+- Install: `pnpm install`
+- Test: `pnpm test`
+- Build: `pnpm build`
+- Safety: No secrets access, no destructive commands without confirmation
+- Workflow: Small changes -> test -> PR

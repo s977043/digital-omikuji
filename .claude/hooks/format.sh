@@ -1,9 +1,33 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# PostToolUse hook: format after file edits
-# Currently a no-op since this project doesn't have Prettier configured.
-# Uncomment below if Prettier is added:
-# pnpm -s prettier -w .
+if ! command -v pnpm >/dev/null 2>&1; then
+  echo "[format] pnpm not found, skipping"
+  exit 0
+fi
 
-echo "Format hook executed (no-op)"
+if [ ! -d .git ]; then
+  echo "[format] Not a git repository, skipping"
+  exit 0
+fi
+
+# Get changed files (both staged and unstaged, excluding deleted)
+CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRTUXB HEAD 2>/dev/null || echo "")
+
+if [ -z "$CHANGED_FILES" ]; then
+  echo "[format] No changed files to format"
+  exit 0
+fi
+
+# Filter for supported extensions and run prettier
+FILES_TO_FORMAT=$(echo "$CHANGED_FILES" | grep -E '\.(js|jsx|ts|tsx|json|md|yml|yaml|mjs)$' || true)
+
+if [ -n "$FILES_TO_FORMAT" ]; then
+  echo "$FILES_TO_FORMAT" | while read -r file; do
+    if [ -f "$file" ]; then
+      pnpm exec prettier --write "$file" || true
+    fi
+  done
+fi
+
+echo "[format] Done"
