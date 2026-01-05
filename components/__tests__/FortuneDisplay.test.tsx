@@ -96,9 +96,7 @@ describe("FortuneDisplay", () => {
   });
 
   it("詳細が最初から表示され、シェアボタンを押すと Share.share が呼ばれる", async () => {
-    const { getByText } = render(
-      <FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />
-    );
+    const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
     // Details are visible from the start (no lock mechanism)
     expect(getByText("叶います")).toBeTruthy();
