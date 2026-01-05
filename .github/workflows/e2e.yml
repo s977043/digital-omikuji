@@ -38,11 +38,12 @@ jobs:
           WORKSPACE=$(find ios -name "*.xcworkspace" -maxdepth 1 | head -1)
           SCHEME=$(basename "$WORKSPACE" .xcworkspace)
           echo "Building workspace: $WORKSPACE, scheme: $SCHEME"
+          # Use generic simulator destination for build
           xcodebuild -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
             -configuration Debug \
             -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
             COMPILER_INDEX_STORE_ENABLE=NO
           # Save scheme for later steps
@@ -50,8 +51,12 @@ jobs:
 
       - name: Install App on Simulator
         run: |
-          xcrun simctl boot "iPhone 16" || true
-          xcrun simctl install "iPhone 16" "build/Build/Products/Debug-iphonesimulator/${IOS_SCHEME}.app"
+          # Find first available iPhone simulator
+          SIMULATOR=$(xcrun simctl list devices available | grep -E "iPhone" | head -1 | sed 's/.*(\([A-Z0-9-]*\)).*/\1/')
+          echo "Using simulator: $SIMULATOR"
+          xcrun simctl boot "$SIMULATOR" || true
+          xcrun simctl install "$SIMULATOR" "build/Build/Products/Debug-iphonesimulator/${IOS_SCHEME}.app"
+          echo "SIMULATOR_UDID=$SIMULATOR" >> $GITHUB_ENV
 
       - name: Run Maestro Flow
         run: maestro test .maestro/flow.yaml
