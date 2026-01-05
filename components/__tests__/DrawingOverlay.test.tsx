@@ -4,6 +4,7 @@ import { DrawingOverlay } from "../DrawingOverlay";
 
 // Mock moti
 jest.mock("moti", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
   return {
     MotiView: View,
