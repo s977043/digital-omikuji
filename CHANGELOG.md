@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-01-05
+
+### Added
+
+- **AI Agent Config Optimization**: Single source pattern for all agent configs (Claude, Codex, Copilot, Gemini, Antigravity)
+- **Claude Code Enhancements**: Extended permissions, PostToolUse hooks for auto-formatting, custom commands (`/check`, `/pr`)
+- **Codex Configuration**: New `.codex/config.toml` and `.codex/AGENTS.md` with kickoff prompt
+- **React Native Instructions**: `.github/instructions/react-native.instructions.md` for Copilot
+
+### Changed
+
+- **Test Coverage**: Increased to 90%+ with comprehensive unit tests
+- **Documentation**: Unified agent documentation with AGENTS.md as single source of truth
+- **Version Alignment**: Synchronized version across package.json, app.config.ts, app.json
+
+### Fixed
+
+- **PNG Format**: Converted omikuji_cylinder.png from JPEG to proper PNG format
+- **Expo Localization**: Updated expo-localization to v16 with proper plugin configuration
+
 ## [1.0.0] - 2026-01-04
 
 ### Added
