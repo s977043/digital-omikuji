@@ -1,8 +1,8 @@
 ---
-description: 'Draft a PR description using our template'
+description: 'Draft a PR description from current diff using the project template'
 ---
 
-この差分を、以下のテンプレートで PR 本文にして：
+現在の差分を分析し、以下のテンプレートに沿って PR 本文を生成してください：
 
 ## 目的
 

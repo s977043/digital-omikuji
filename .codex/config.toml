@@ -9,5 +9,5 @@ sandbox_mode = "workspace-write"
 # model_reasoning_effort = "high"
 
 [shell_environment_policy]
-# Forward as few env vars as possible to reduce accidental secret leakage.
+# Minimal env vars for basic shell operation. Secrets are excluded intentionally.
 include_only = ["PATH", "HOME", "USER", "SHELL", "LANG", "LC_ALL"]
