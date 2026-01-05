@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Platform,
-  ImageBackground,
-  Image,
-} from "react-native";
+import { View, Text, TouchableOpacity, Platform, ImageBackground, Image } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
@@ -18,11 +11,16 @@ import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
 // global.css is imported in _layout.tsx
 
+import { DrawingOverlay } from "../components/DrawingOverlay"; // Import DrawingOverlay
+
+// ... (other imports)
+
 // ステートマシン
-type AppState = "IDLE" | "SHAKING" | "REVEALING" | "RESULT";
+type AppState = "IDLE" | "SHAKING" | "DRAWING" | "REVEALING" | "RESULT";
 
 const SHAKE_THRESHOLD = 1.8;
 const SHAKING_DURATION_MS = 1500;
+const DRAWING_DURATION_MS = 1200; // New duration for drawing phase
 const REVEALING_DURATION_MS = 2000;
 
 // アニメーション定数
@@ -66,11 +64,10 @@ interface Subscription {
 export default function OmikujiApp() {
   const [appState, setAppState] = useState<AppState>("IDLE");
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
-  const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(
-    null
-  );
+  const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
   const subscription = useRef<Subscription | null>(null);
-  const { fortune, drawFortune, resetFortune } = useOmikujiLogic();
+  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
 
   // デバッグボタン用判定
   const appVariant = Constants.expoConfig?.extra?.appVariant || "development";
@@ -92,7 +89,7 @@ export default function OmikujiApp() {
       for (const sound of soundsToLoad) {
         try {
           await soundManager.loadSound(sound.key, sound.loader());
-        } catch (e) {
+        } catch {
           console.warn(`${sound.key} sound not found`);
         }
       }
@@ -138,18 +135,15 @@ export default function OmikujiApp() {
     });
   }, []);
 
-  // シェイク監視
+  // Auto-transition to RESULT if fortune is loaded (e.g., daily limit reached)
   useEffect(() => {
-    if (appState === "IDLE") {
-      const totalForce = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
-      if (totalForce > SHAKE_THRESHOLD) {
-        handleShakeStart();
-      }
+    if (fortune && appState === "IDLE") {
+      setAppState("RESULT");
     }
-  }, [data, appState]);
+  }, [fortune, appState]);
 
-  const handleShakeStart = async () => {
-    if (appState !== "IDLE") return;
+  const handleShakeStart = useCallback(async () => {
+    if (appState !== "IDLE" || hasDrawnToday) return;
 
     // Haptics: 開始時の軽い振動
     triggerHaptic({
@@ -160,22 +154,57 @@ export default function OmikujiApp() {
     setAppState("SHAKING");
     soundManager.playSound("shake");
 
-    // シェイク演出後に抽選へ
-    setTimeout(async () => {
+    // シェイク終了 -> 抽選演出 (DRAWING) へ
+    shakeTimerRef.current = setTimeout(async () => {
+      // 抽選ロジックはここで確定させるが、ユーザーにはまだ見せない
       await drawFortune();
-      setAppState("REVEALING");
-      // Haptics: 抽選完了時のフィードバック
+      setAppState("DRAWING");
+
+      // Haptics: 抽選中への切り替わり
       triggerHaptic({
-        type: "notification",
-        style: Haptics.NotificationFeedbackType.Success,
+        type: "impact",
+        style: Haptics.ImpactFeedbackStyle.Light,
       });
     }, SHAKING_DURATION_MS);
-  };
+  }, [appState, drawFortune, hasDrawnToday]);
+
+  // シェイク監視
+  useEffect(() => {
+    if (appState === "IDLE") {
+      const totalForce = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
+      if (totalForce > SHAKE_THRESHOLD) {
+        handleShakeStart();
+      }
+    }
+  }, [data, appState, handleShakeStart]);
+
+  // Cleanup shake timer on unmount
+  useEffect(() => {
+    return () => {
+      if (shakeTimerRef.current) {
+        clearTimeout(shakeTimerRef.current);
+      }
+    };
+  }, []);
 
   // --- アニメーション状態遷移 ---
   useEffect(() => {
+    // DRAWING -> REVEALING
+    if (appState === "DRAWING") {
+      const timer = setTimeout(() => {
+        setAppState("REVEALING");
+        // Haptics: 棒が出る瞬間
+        triggerHaptic({
+          type: "notification",
+          style: Haptics.NotificationFeedbackType.Success,
+        });
+      }, DRAWING_DURATION_MS);
+      return () => clearTimeout(timer);
+    }
+
+    // REVEALING -> RESULT
     if (appState === "REVEALING") {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setAppState("RESULT");
         // Haptics: 結果が出た時の重い衝撃
         triggerHaptic({
@@ -184,6 +213,7 @@ export default function OmikujiApp() {
         });
         soundManager.playSound("result");
       }, REVEALING_DURATION_MS);
+      return () => clearTimeout(timer);
     }
   }, [appState]);
 
@@ -214,16 +244,29 @@ export default function OmikujiApp() {
                   source={require("../assets/omikuji_cylinder.png")}
                   className="w-[180px] h-[180px] rounded-full"
                   resizeMode="cover"
+                  style={hasDrawnToday ? { opacity: 0.5 } : {}}
                 />
               </View>
               <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
-                スマホを振って{"\n"}おみくじを引く
+                {hasDrawnToday ? "本日の運勢は確認済みです" : "スマホを振っておみくじを引こう"}
               </Text>
-              <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
-                <Text className="text-white font-bold text-sm tracking-widest">
-                  2026年 謹賀新年
-                </Text>
-              </View>
+
+              {!hasDrawnToday && (
+                <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
+                  <Text className="text-white font-bold text-sm tracking-widest">
+                    令和七年 デジタルおみくじ
+                  </Text>
+                </View>
+              )}
+
+              {hasDrawnToday && (
+                <TouchableOpacity
+                  onPress={() => setAppState("RESULT")}
+                  className="bg-amber-500 px-8 py-3 rounded-full mt-6 shadow-lg active:bg-amber-600"
+                >
+                  <Text className="text-white font-bold text-lg">結果をもう一度見る</Text>
+                </TouchableOpacity>
+              )}
             </MotiView>
           )}
 
@@ -260,11 +303,14 @@ export default function OmikujiApp() {
                 }}
               >
                 <Text className="text-xl text-yellow-400 font-shippori-bold mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
-                  運命を抽選中...
+                  念を込めて...
                 </Text>
               </MotiView>
             </MotiView>
           )}
+
+          {/* 抽選中 (DRAWING) */}
+          {appState === "DRAWING" && <DrawingOverlay />}
 
           {/* 結果表示中 (REVEALING - 棒が出るアニメ) */}
           {appState === "REVEALING" && (
@@ -318,19 +364,16 @@ export default function OmikujiApp() {
           )}
 
           {/* デバッグボタン (開発時 または センサー無効時) */}
-          {(showDebug || isSensorAvailable === false) &&
-            appState === "IDLE" && (
-              <TouchableOpacity
-                onPress={handleShakeStart}
-                className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
-              >
-                <Text className="text-white font-bold">
-                  {isSensorAvailable === false
-                    ? "📱 ボタンでおみくじを引く"
-                    : "🐞 テストで振る"}
-                </Text>
-              </TouchableOpacity>
-            )}
+          {(showDebug || isSensorAvailable === false) && appState === "IDLE" && (
+            <TouchableOpacity
+              onPress={handleShakeStart}
+              className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
+            >
+              <Text className="text-white font-bold">
+                {isSensorAvailable === false ? "おみくじを引く" : "🔧 デバッグ"}
+              </Text>
+            </TouchableOpacity>
+          )}
 
           {/* 履歴画面へのナビゲーションボタン */}
           {appState === "IDLE" && (
@@ -339,7 +382,7 @@ export default function OmikujiApp() {
                 onPress={() => router.push("/history")}
                 className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
               >
-                <Text className="text-white font-bold">📜 運勢手帳</Text>
+                <Text className="text-white font-bold">履歴</Text>
               </TouchableOpacity>
 
               {/* ミュート切り替えボタン */}

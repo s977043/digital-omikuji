@@ -1,4 +1,4 @@
-import { Audio, AVPlaybackSource } from 'expo-av';
+import { Audio, AVPlaybackSource } from "expo-av";
 
 class SoundManager {
   private sounds: Map<string, Audio.Sound> = new Map();
@@ -15,7 +15,7 @@ class SoundManager {
       });
       this.isReady = true;
     } catch (error) {
-      console.error('Audio initialization failed:', error);
+      console.error("Audio initialization failed:", error);
       this.isReady = false;
     }
   }
@@ -25,10 +25,11 @@ class SoundManager {
       return null;
     }
     try {
-      const { sound, status } = await Audio.Sound.createAsync(
-        source,
-        { shouldPlay: false, isMuted: this.isMuted, volume: this.volume }
-      );
+      const { sound, status } = await Audio.Sound.createAsync(source, {
+        shouldPlay: false,
+        isMuted: this.isMuted,
+        volume: this.volume,
+      });
 
       if (status.isLoaded) {
         this.sounds.set(key, sound);
@@ -52,15 +53,16 @@ class SoundManager {
 
     try {
       const sound = this.sounds.get(key);
-      if (sound) {
-        const status = await sound.getStatusAsync();
-        if (status.isLoaded) {
-          await sound.replayAsync();
-        } else {
-          console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
-        }
-      } else {
+      if (!sound) {
         console.warn(`Sound ${key} is not loaded (not in map).`);
+        return;
+      }
+
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded) {
+        await sound.replayAsync();
+      } else {
+        console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
       }
     } catch (error) {
       console.error(`Failed to play sound ${key}:`, error);
@@ -73,7 +75,7 @@ class SoundManager {
       try {
         await sound.setVolumeAsync(this.volume);
       } catch (e) {
-        console.error('Failed to set volume for a sound:', e);
+        console.error("Failed to set volume for a sound:", e);
       }
     }
   }
@@ -87,7 +89,7 @@ class SoundManager {
           await sound.setIsMutedAsync(mute);
         }
       } catch (e) {
-        console.error('Failed to set mute for a sound:', e);
+        console.error("Failed to set mute for a sound:", e);
       }
     }
   }

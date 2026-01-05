@@ -117,7 +117,9 @@ npx eas build --profile production --platform ios
 
 ## 📝 ドキュメント
 
-より詳細なアーキテクチャや拡張方法については [DEVELOPER.md](./docs/DEVELOPER.md) を参照してください。
+- [DEVELOPER.md](./docs/DEVELOPER.md): アーキテクチャと拡張方法
+- [design_guidelines.md](./docs/design_guidelines.md): デザイン指針（配色・フォント・アニメーション）
+- [phase1_roadmap.md](./docs/phase1_roadmap.md): フェーズ1 改善計画と進捗状況
 
 ## 🤝 コントリビューション
 

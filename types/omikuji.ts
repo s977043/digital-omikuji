@@ -29,4 +29,8 @@ export interface OmikujiResult {
   image: ImageSourcePropType; // Main result illustration
   color: string; // Theme color
   createdAt: number; // Timestamp
+  details?: {
+    label: string;
+    text: string;
+  }[]; // Detailed fortune content (unlocked by share)
 }
