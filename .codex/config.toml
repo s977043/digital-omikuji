@@ -1,0 +1,13 @@
+# Project-local Codex config
+# Load this by running: CODEX_HOME=$(pwd)/.codex codex ...
+
+# Safer defaults
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+# Optional tuning (uncomment if needed)
+# model_reasoning_effort = "high"
+
+[shell_environment_policy]
+# Minimal env vars for basic shell operation. Secrets are excluded intentionally.
+include_only = ["PATH", "HOME", "USER", "SHELL", "LANG", "LC_ALL"]

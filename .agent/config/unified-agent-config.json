@@ -1,11 +1,31 @@
 {
-  "version": "1.0",
+  "version": "1.1",
   "agents": {
-    "claude": { "configFile": ".agent/CLAUDE.md", "enabled": true },
-    "copilot": { "configFile": ".github/copilot-instructions.md", "enabled": true },
-    "codex": { "configFile": "codex.md", "enabled": true },
-    "gemini": { "configFile": ".gemini/styleguide.md", "enabled": true }
+    "claude": {
+      "configFile": "CLAUDE.md",
+      "settingsFile": ".claude/settings.json",
+      "enabled": true
+    },
+    "copilot": {
+      "configFile": ".github/copilot-instructions.md",
+      "instructionsDir": ".github/instructions",
+      "enabled": true
+    },
+    "codex": {
+      "configFile": "codex.md",
+      "configDir": ".codex",
+      "enabled": true
+    },
+    "gemini": {
+      "configFile": "GEMINI.md",
+      "styleGuide": ".gemini/styleguide.md",
+      "enabled": true
+    },
+    "antigravity": {
+      "configFile": ".antigravity/mission.md",
+      "enabled": true
+    }
   },
-  "sharedRules": ".agent/AGENTS.md",
+  "sharedRules": "AGENTS.md",
   "steering": ".agent/steering"
 }
