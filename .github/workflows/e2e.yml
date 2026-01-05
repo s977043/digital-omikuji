@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v3
+      - uses: pnpm/action-setup@v4
         with:
           version: 9
 
@@ -25,7 +25,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Install Maestro
         run: |
@@ -39,6 +39,7 @@ jobs:
         # Let's try prebuild + xcodebuild (Standard React Native flow)
         run: |
           npx expo prebuild --platform ios
+          cd ios && pod install && cd ..
           # Basic xcodebuild command - improving this might be needed later
           xcodebuild -workspace ios/digitalomikuji.xcworkspace \
             -scheme digitalomikuji \

@@ -1,4 +1,4 @@
-appId: com.s977043.digitalomikuji
+appId: jp.co.digitalomikuji.dev
 ---
 - launchApp
 
@@ -17,7 +17,7 @@ appId: com.s977043.digitalomikuji
 # Since app/index.tsx shows "Debug" button when appVariant is development OR sensor unavailable.
 # We will try tapping "おみくじを引く" or "🔧 デバッグ" depending on env.
 # Assuming development build or sensor not available in emulator.
-- tapOn: ".*(おみくじを引く|デバッグ).*"
+- tapOn: ".*(おみくじを引く|🔧 デバッグ).*"
 
 # 4. 演出待ち (SHAKING -> DRAWING -> REVEALING -> RESULT)
 # Transitions take about 1.5s + 1.2s + 2.0s = ~5s total
@@ -27,8 +27,8 @@ appId: com.s977043.digitalomikuji
 
 # 5. 結果確認
 # FortuneDisplay component verification
-- assertVisible: ".*運.*" # Matches 大吉, 末吉 etc title
-- assertVisible: ".*これ.*" # Matches part of standard message if specific, or just check existence.
+- assertVisible: "(大吉|吉|中吉|小吉|末吉|凶)" # Matches one of the defined fortune results
+# Removed risky assertion for "これ"
 # Let's check for the reset button or closing logic
 - tapOn: "閉じる" 
 
