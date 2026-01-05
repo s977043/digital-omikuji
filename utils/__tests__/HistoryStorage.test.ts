@@ -108,9 +108,7 @@ describe("HistoryStorage", () => {
 
     expect(savedData).toHaveLength(50);
     expect(savedData[0].id).toBe("new-entry");
-    // The last item from original list should be dropped (was index 0? no, we prepend. so last item is index 49)
-    // Original list: [existing-0, ..., existing-49]
-    // New list: [new, existing-0, ..., existing-48]
+    // New entry is prepended and the oldest existing item is dropped.
     expect(savedData[1].id).toBe("existing-0");
     expect(savedData[49].id).toBe("existing-48");
   });
