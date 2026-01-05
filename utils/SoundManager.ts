@@ -53,18 +53,16 @@ class SoundManager {
 
     try {
       const sound = this.sounds.get(key);
-      if (sound) {
-        const status = await sound.getStatusAsync();
-        if (status.isLoaded) {
-          await sound.replayAsync();
-        } else {
-          console.warn(
-            `Cannot play sound ${key}: it is in the map but not loaded. status:`,
-            status
-          );
-        }
-      } else {
+      if (!sound) {
         console.warn(`Sound ${key} is not loaded (not in map).`);
+        return;
+      }
+
+      const status = await sound.getStatusAsync();
+      if (status.isLoaded) {
+        await sound.replayAsync();
+      } else {
+        console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
       }
     } catch (error) {
       console.error(`Failed to play sound ${key}:`, error);
