@@ -12,22 +12,16 @@ if [ ! -d .git ]; then
 fi
 
 # Get changed files (both staged and unstaged, excluding deleted)
-CHANGED_FILES=$(git diff --name-only --diff-filter=ACMRTUXB HEAD 2>/dev/null || echo "")
-
-if [ -z "$CHANGED_FILES" ]; then
-  echo "[format] No changed files to format"
-  exit 0
-fi
-
-# Filter for supported extensions and run prettier
-FILES_TO_FORMAT=$(echo "$CHANGED_FILES" | grep -E '\.(js|jsx|ts|tsx|json|md|yml|yaml|mjs)$' || true)
-
-if [ -n "$FILES_TO_FORMAT" ]; then
-  echo "$FILES_TO_FORMAT" | while read -r file; do
-    if [ -f "$file" ]; then
-      pnpm exec prettier --write "$file" || true
-    fi
-  done
-fi
+# Use -z for null-terminated output to handle spaces in filenames
+git diff -z --name-only --diff-filter=ACMRTUXB HEAD 2>/dev/null | while IFS= read -r -d '' file; do
+  # Filter for supported extensions
+  case "$file" in
+    *.js|*.jsx|*.ts|*.tsx|*.json|*.md|*.yml|*.yaml|*.mjs)
+      if [ -f "$file" ]; then
+        pnpm exec prettier --write "$file" || true
+      fi
+      ;;
+  esac
+done
 
 echo "[format] Done"

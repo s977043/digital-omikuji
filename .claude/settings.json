@@ -62,7 +62,9 @@
       "Read(./**/*credential*)",
       "Read(./**/*secret*)",
       "Read(./**/*.pem)",
-      "Read(./**/*.key)"
+      "Read(./**/*.key)",
+      "Read(./node_modules/**)",
+      "Read(./pnpm-lock.yaml)"
     ]
   },
   "hooks": {

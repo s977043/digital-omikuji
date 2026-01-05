@@ -1,6 +1,6 @@
 # Project Codex Instructions (CODEX_HOME scoped)
 
-> **Single source:** 共通ルールは [AGENTS.md](../.agent/AGENTS.md)。本ファイルは Codex 向けの最小差分です。
+> **Single source:** 共通ルールは [.agent/AGENTS.md](../.agent/AGENTS.md)。本ファイルは Codex 向けの最小差分です。
 
 ## 使い方
 
@@ -10,7 +10,7 @@
 CODEX_HOME=$(pwd)/.codex codex "your prompt"
 ```
 
-## Kickoff snippet（最初に貼る推奨プロンプト）
+## Kickoff プロンプト
 
 ```text
 あなたはこのリポジトリの実装エージェントです。着手前に AGENTS.md を読み、完了条件とポリシーを確認して短い計画を示してください。

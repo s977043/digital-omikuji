@@ -1,6 +1,6 @@
 # Copilot instructions (Digital Omikuji)
 
-> **Single source:** 必ずリポジトリルートの [AGENTS.md](./.agent/AGENTS.md) を先に読み、そこで定義された手順・完了条件に従ってください。本ファイルは Copilot 向けの最小差分です。
+> **Single source:** 必ず [.agent/AGENTS.md](./.agent/AGENTS.md) を先に読み、そこで定義された手順・完了条件に従ってください。本ファイルは Copilot 向けの最小差分です。
 
 ## 必須チェック（着手前に確認）
 
