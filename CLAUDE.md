@@ -1,12 +1,12 @@
 # Claude Code Project Guide (Digital Omikuji)
 
-> **Single source:** Rules are defined in [.agent/AGENTS.md](./.agent/AGENTS.md). This file contains only Claude-specific configurations.
+> **Single source:** Rules are defined in [AGENTS.md](./AGENTS.md). This file contains only Claude-specific configurations.
 
 ## Critical Rules (Summary)
 
 - **Security**: Do not access secrets (`.env`, `secrets/`).
 - **Workflow**: `pnpm test` must pass before PR.
-- **SSOT**: See `.agent/AGENTS.md` for tech stack, style guides, and definitions.
+- **SSOT**: See `AGENTS.md` for tech stack, style guides, and definitions.
 
 ## Claude-specific
 

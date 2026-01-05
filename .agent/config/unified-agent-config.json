@@ -26,6 +26,6 @@
       "enabled": true
     }
   },
-  "sharedRules": ".agent/AGENTS.md",
+  "sharedRules": "AGENTS.md",
   "steering": ".agent/steering"
 }

@@ -1,6 +1,6 @@
 # codex.md — OpenAI Codex CLI Agent Guide
 
-> **Single source:** 共通ルールは [.agent/AGENTS.md](./.agent/AGENTS.md)。本ファイルは Codex 向けの最小差分です。
+> **Single source:** 共通ルールは [AGENTS.md](./AGENTS.md)。本ファイルは Codex 向けの最小差分です。
 
 ## Codex-specific settings
 

@@ -1,6 +1,6 @@
 # Gemini instructions (Digital Omikuji)
 
-> **Single source:** 必ず [.agent/AGENTS.md](./.agent/AGENTS.md) を読み、共通ルールと完了条件に従ってください。本ファイルは Gemini 向けの薄いラッパーです。
+> **Single source:** 必ず [AGENTS.md](./AGENTS.md) を読み、共通ルールと完了条件に従ってください。本ファイルは Gemini 向けの薄いラッパーです。
 
 ## 必須チェック（着手前に確認）
 

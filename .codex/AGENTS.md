@@ -1,6 +1,6 @@
 # Project Codex Instructions (CODEX_HOME scoped)
 
-> **Single source:** 共通ルールは [.agent/AGENTS.md](../.agent/AGENTS.md)。本ファイルは Codex 向けの最小差分です。
+> **Single source:** 共通ルールは [AGENTS.md](../AGENTS.md)。本ファイルは Codex 向けの最小差分です。
 
 ## 使い方
 
@@ -27,7 +27,7 @@ CODEX_HOME=$(pwd)/.codex codex "your prompt"
 
 ## クイックリファレンス
 
-- 共通ルール: `.agent/AGENTS.md` (SSOT)
+- 共通ルール: `AGENTS.md` (SSOT)
 - Package manager: `pnpm` (not npm)
 - Test: `pnpm test`
 - Build: `pnpm build`
