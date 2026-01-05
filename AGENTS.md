@@ -5,7 +5,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 ## 1. スコープと禁止事項
 
 - 本ファイルの指示はリポジトリ全体に適用されます。
-- 触らない: `node_modules/`, `**/*.lock`, `.env*`, `secrets/`（秘密情報の追加・コミットは禁止）。
+- 編集禁止: `node_modules/`, `**/*.lock`, `.env*`, `secrets/`（秘密情報の追加・コミットは禁止）。
 
 ## 2. 技術スタックの要点
 
@@ -37,17 +37,18 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 
 ## 6. ブランチ / PR / レビュー
 
-- 原則として `main`/`develop` への直接コミットは禁止。作業ブランチをベースブランチ（通常は `develop` か現在の作業ベース）から切って PR で統合する。
+- 原則として `main`/`develop` への直接コミットは禁止。作業ブランチは `develop` から切って PR で統合する。
+- `develop` が開発メインブランチ。本番リリース時に `develop` → `main` へマージする。
 - PR タイトル: `[feat|fix|docs|refactor] summary`
 - PR 本文（日本語）: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクリーンショットや動画（UI 変更時）
 - テスト必須: `pnpm test` を Green にする。
-- レビュー: 少なくとも Gemini と Codex にレビューを依頼する。
+- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。
 
 ## 7. 並行タスクは Git Worktree で分離する
 
 ### 目的
 
-- 複数タスクを同時進行しても、作業ディレクトリとブランチを完全に分離し、コンテキスト混線と手戻りを減らす
+- 複数タスクを同時進行しても、作業ディレクトリとブランチを完全に分離し、コンテキスト混乱と手戻りを減らす
 - 1 つのリポジトリに複数の作業ツリーを持てる Git worktree を標準手段とする
 
 ### 基本ルール
@@ -76,7 +77,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 > - Task A: <要約> → worktree: `.worktrees/<slug-a>` / branch: `agent/<slug-a>`
 > - Task B: <要約> → worktree: `.worktrees/<slug-b>` / branch: `agent/<slug-b>`
 >
-> 返答は「並行で OK」か「順番に」でお願いします
+> 返答は「並行で OK」か「順番に」でお願いします。
 
 ### Worktree 運用規約
 
@@ -110,7 +111,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 ## 8. エージェント別エントリーポイント
 
 - **Copilot**: `.github/copilot-instructions.md`（本ファイルを前提に、Copilot 向け要点のみ記載）。
-- **Claude Code**: `.agent/CLAUDE.md`（共通ルール参照を前提にした薄いラッパー）。
+- **Claude Code**: `CLAUDE.md`（共通ルール参照を前提にした薄いラッパー）。
 - **Gemini**: `GEMINI.md`（共通ルール参照を前提にした薄いラッパー）。
 - **Codex CLI**: `codex.md`（共通ルール参照。Skill は `.agent/skills/` を参照）。
 - `.agent/` 配下はエージェント設定と Skill 用の補助ファイルを格納する。
