@@ -1,0 +1,32 @@
+# Docker Compose for Expo React Native Development
+# Based on: https://zenn.dev/iput_app/articles/8051d4ad7e03bf
+services:
+  expo-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.docker
+    ports:
+      - "8081:8081"
+    # Bind + Volume configuration
+    volumes:
+      # Sync code with host filesystem
+      - ./:/app
+      # Keep node_modules in Docker volume only
+      - /app/node_modules
+    stdin_open: true
+    tty: true
+    environment:
+      # Enable polling for file changes (required for Windows/WSL)
+      - CHOKIDAR_USEPOLLING=true
+      - EXPO_DEV_CLIENT_NETWORK_INSPECTOR=true
+      - APP_VARIANT=development
+      # Metro bundler host name
+      - REACT_NATIVE_PACKAGER_HOSTNAME=${HOST_IP_ADDRESS}
+    # Don't auto-start expo - enter container and run manually
+    command: sh
+
+volumes:
+  project:
+    driver: local

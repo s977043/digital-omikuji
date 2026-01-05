@@ -28,11 +28,14 @@ export const useOmikujiLogic = () => {
     )}-${String(now.getDate()).padStart(2, "0")}`;
 
     if (lastDate === today) {
-      setHasDrawnToday(true);
       // Load history to get the latest result
       const currentHistory = await getHistory();
       if (currentHistory.length > 0) {
+        setHasDrawnToday(true);
         setFortune(currentHistory[0]);
+      } else {
+        // If date matches but history is empty (e.g. manually cleared), reset status
+        setHasDrawnToday(false);
       }
     } else {
       setHasDrawnToday(false);
@@ -66,13 +69,10 @@ export const useOmikujiLogic = () => {
   }, [hasDrawnToday, fortune, loadHistory]);
 
   const resetFortune = useCallback(() => {
-    if (hasDrawnToday) {
-      // 今日すでに引いている場合、リセットしても「今日の運勢」は変わらないので
-      // nullに戻してホームへ行く（そしてまた詳細を開く、というフロー）
-      // しかし、ホームに戻るとまたcheckDailyStatusが走ってfortuneがセットされるかも？
-      // 基本的に「閉じる」＝ホームに戻る、なのでnullにする
-      setFortune(null);
-    } else {
+    // hasDrawnToday が true の場合は fortune を保持して再表示可能にする
+    // アプリ側で appState を IDLE に戻すだけで、fortune はそのまま
+    // (fortune を null にしないことで「結果をもう一度見る」が動作する)
+    if (!hasDrawnToday) {
       setFortune(null);
     }
   }, [hasDrawnToday]);
