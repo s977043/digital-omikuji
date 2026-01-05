@@ -135,4 +135,4 @@ npx eas build --profile production --platform ios
 
 ---
 
-**🎍 2026 年も素晴らしい一年になりますように！ Happy New Year! 🎍**
+🎍 2026 年も素晴らしい一年になりますように！ Happy New Year! 🎍

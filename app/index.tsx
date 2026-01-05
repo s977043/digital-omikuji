@@ -241,7 +241,10 @@ export default function OmikujiApp() {
               animate={{ opacity: 1, scale: 1, translateY: 0 }}
               className="items-center px-6"
             >
-              <View className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center" style={{ width: 184, height: 184 }}>
+              <View
+                className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                style={{ width: 184, height: 184 }}
+              >
                 <Image
                   source={require("../assets/omikuji_cylinder.png")}
                   className="rounded-full"
