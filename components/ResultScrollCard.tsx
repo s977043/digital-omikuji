@@ -1,10 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Platform, Share } from "react-native";
 import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
-import { Ionicons } from "@expo/vector-icons";
 import { buildShareText } from "../utils/buildShareText";
 
 interface ResultScrollCardProps {
@@ -13,7 +12,6 @@ interface ResultScrollCardProps {
 }
 
 export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) => {
-  const [isUnlocked, setIsUnlocked] = useState(false);
   const scrollRef = useRef<View>(null);
 
   const handleShare = async () => {
@@ -49,14 +47,6 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
           ...(imageUri && Platform.OS === "android" ? { dialogTitle: "おみくじをシェア" } : {}),
         }
       );
-
-      // Unlock after share attempt (we assume success or intent)
-      if (!isUnlocked) {
-        setIsUnlocked(true);
-        if (Platform.OS !== "web") {
-          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-        }
-      }
     } catch (error) {
       console.error("Sharing failed", error);
     }
@@ -99,87 +89,44 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
             </Text>
           </View>
 
-          {/* Detailed Section (Locked/Unlocked) */}
+          {/* Detailed Section */}
           <View className="relative min-h-[200px]">
             <Text className="text-center text-slate-400 font-bold mb-6 text-sm tracking-widest">
               ── 運勢詳細 ──
             </Text>
 
-            {isUnlocked ? (
-              // Unlocked Content
-              <MotiView
-                from={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 500 }}
-                className="space-y-4"
-              >
-                {fortune.details?.map((detail, index) => (
-                  <View key={index} className="flex-row border-b border-slate-200 pb-2 mb-2">
-                    <Text className="text-slate-500 w-16 font-shippori-bold">{detail.label}</Text>
-                    <Text className="text-slate-800 flex-1 font-shippori">{detail.text}</Text>
-                  </View>
-                ))}
-                {!fortune.details && <Text>詳細情報はありません。</Text>}
-              </MotiView>
-            ) : (
-              // Locked Content (Blurred/Hidden)
-              <View className="relative items-center justify-center py-8">
-                {/* Simulated blurred text */}
-                <View className="w-full opacity-30 blur-sm space-y-4">
-                  <View className="h-4 bg-slate-400 rounded w-3/4 self-center" />
-                  <View className="h-4 bg-slate-400 rounded w-5/6 self-center" />
-                  <View className="h-4 bg-slate-400 rounded w-2/3 self-center" />
-                  <View className="h-4 bg-slate-400 rounded w-4/5 self-center" />
+            <MotiView
+              from={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 500 }}
+              className="space-y-4"
+            >
+              {fortune.details?.map((detail, index) => (
+                <View key={index} className="flex-row border-b border-slate-200 pb-2 mb-2">
+                  <Text className="text-slate-500 w-16 font-shippori-bold">{detail.label}</Text>
+                  <Text className="text-slate-800 flex-1 font-shippori">{detail.text}</Text>
                 </View>
-
-                {/* Unlock Action Overlay */}
-                <View className="absolute inset-0 items-center justify-center">
-                  <TouchableOpacity
-                    onPress={handleShare}
-                    className="bg-black/80 px-6 py-3 rounded-full flex-row items-center space-x-2 shadow-lg active:scale-95 transition-transform"
-                  >
-                    <Ionicons
-                      name="lock-closed"
-                      size={16}
-                      color="white"
-                      style={{ marginRight: 8 }}
-                    />
-                    <Text className="text-white font-bold text-sm">シェアして詳細を見る</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            )}
+              ))}
+              {!fortune.details && <Text>詳細情報はありません。</Text>}
+            </MotiView>
           </View>
         </ScrollView>
 
         {/* Footer Actions (Sticky) */}
-        {!isUnlocked && (
-          <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">
-            <TouchableOpacity
-              onPress={onReset}
-              className="flex-1 py-3 rounded-full border border-slate-300 items-center"
-            >
-              <Text className="text-slate-600 font-bold">閉じる</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {isUnlocked && (
-          <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">
-            <TouchableOpacity
-              onPress={handleShare}
-              className="flex-1 py-3 bg-slate-100 rounded-full items-center border border-slate-200"
-            >
-              <Text className="text-slate-800 font-bold">再シェア</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={onReset}
-              className="flex-1 py-3 bg-slate-900 rounded-full items-center"
-            >
-              <Text className="text-white font-bold">閉じる</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">
+          <TouchableOpacity
+            onPress={handleShare}
+            className="flex-1 py-3 bg-slate-100 rounded-full items-center border border-slate-200"
+          >
+            <Text className="text-slate-800 font-bold">シェア</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onReset}
+            className="flex-1 py-3 bg-slate-900 rounded-full items-center"
+          >
+            <Text className="text-white font-bold">閉じる</Text>
+          </TouchableOpacity>
+        </View>
 
         {/* Scroll Footer Decoration */}
         <View className="h-2 bg-amber-600 w-full mt-auto" />

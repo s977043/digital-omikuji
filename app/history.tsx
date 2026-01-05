@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Platform } from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
 import { VersionDisplay } from "../components/VersionDisplay";
@@ -23,18 +23,28 @@ export default function HistoryScreen() {
     }, [loadHistory])
   );
 
-  const handleClearHistory = () => {
-    Alert.alert("履歴の削除", "本当に全ての履歴を削除しますか？", [
-      { text: "キャンセル", style: "cancel" },
-      {
-        text: "削除",
-        style: "destructive",
-        onPress: async () => {
-          await clearHistory();
-          setHistory([]);
+  const handleClearHistory = async () => {
+    if (Platform.OS === "web") {
+      // Web では window.confirm を使用
+      const confirmed = window.confirm("本当に全ての履歴を削除しますか？");
+      if (confirmed) {
+        await clearHistory();
+        setHistory([]);
+      }
+    } else {
+      // ネイティブでは Alert.alert を使用
+      Alert.alert("履歴の削除", "本当に全ての履歴を削除しますか？", [
+        { text: "キャンセル", style: "cancel" },
+        {
+          text: "削除",
+          style: "destructive",
+          onPress: async () => {
+            await clearHistory();
+            setHistory([]);
+          },
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   return (
