@@ -20,6 +20,10 @@
       "configFile": "GEMINI.md",
       "styleGuide": ".gemini/styleguide.md",
       "enabled": true
+    },
+    "antigravity": {
+      "configFile": ".antigravity/mission.md",
+      "enabled": true
     }
   },
   "sharedRules": ".agent/AGENTS.md",

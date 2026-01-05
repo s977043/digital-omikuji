@@ -114,6 +114,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 - **Claude Code**: `CLAUDE.md`（共通ルール参照を前提にした薄いラッパー）。
 - **Gemini**: `GEMINI.md`（共通ルール参照を前提にした薄いラッパー）。
 - **Codex CLI**: `codex.md`（共通ルール参照。Skill は `.agent/skills/` を参照）。
+- **Antigravity**: `.antigravity/mission.md`（自律実行向けミッション定義）。
 - `.agent/` 配下はエージェント設定と Skill 用の補助ファイルを格納する。
 
 ## 9. 参考
