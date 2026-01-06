@@ -22,7 +22,7 @@ const mockHistoryData: HistoryEntry[] = [
   {
     id: "1",
     level: "daikichi",
-    fortuneParams: { title: "大吉", description: "Great" },
+    messageIndex: 0,
     image: { uri: "image" },
     color: "red",
     createdAt: 1234567890,
@@ -60,7 +60,7 @@ describe("HistoryStorage", () => {
     const newEntry: HistoryEntry = {
       id: "2",
       level: "kichi",
-      fortuneParams: { title: "吉", description: "Good" },
+      messageIndex: 1,
       image: { uri: "image2" },
       color: "blue",
       createdAt: 1234567891,
