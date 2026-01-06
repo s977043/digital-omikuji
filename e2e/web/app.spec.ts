@@ -13,16 +13,16 @@ test.describe("Digital Omikuji Web", () => {
       timeout: 10000,
     });
 
-    // Check for "Draw" button text (Web version shows this when sensors are unavailable)
-    // TouchableOpacity renders as div on web, so use text selector instead of role
-    await expect(page.getByText("おみくじを引く")).toBeVisible({
+    // Check for "Draw" button text (second element with this text - the button)
+    // The first is the instruction text, the second is the button itself
+    await expect(page.getByText("おみくじを引く").nth(1)).toBeVisible({
       timeout: 10000,
     });
   });
 
   test("should draw omikuji and show result", async ({ page }) => {
-    // Wait for draw button to appear and click it
-    const drawButton = page.getByText("おみくじを引く");
+    // Wait for draw button to appear and click it (second element)
+    const drawButton = page.getByText("おみくじを引く").nth(1);
     await expect(drawButton).toBeVisible({ timeout: 15000 });
     await drawButton.click();
 
