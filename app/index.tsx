@@ -246,9 +246,11 @@ export default function OmikujiApp() {
                 style={{ width: 184, height: 184 }}
               >
                 <Image
-                  source={hasDrawnToday
-                    ? require("../assets/omikuji_confirmed.png")
-                    : require("../assets/omikuji_cylinder.png")}
+                  source={
+                    hasDrawnToday
+                      ? require("../assets/omikuji_confirmed.png")
+                      : require("../assets/omikuji_cylinder.png")
+                  }
                   className="rounded-full"
                   style={{ width: 180, height: 180 }}
                   resizeMode="cover"
@@ -263,7 +265,12 @@ export default function OmikujiApp() {
                   <TouchableOpacity
                     onPress={handleShakeStart}
                     className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
-                    style={{ shadowColor: '#B45309', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.5, shadowRadius: 8 }}
+                    style={{
+                      shadowColor: "#B45309",
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 8,
+                    }}
                   >
                     <Text className="text-white font-shippori-bold text-2xl tracking-widest text-center">
                       おみくじを引く

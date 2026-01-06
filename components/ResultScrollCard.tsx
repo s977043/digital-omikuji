@@ -1,6 +1,15 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useRef, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Platform, Share, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  Share,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from "react-native";
 import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
@@ -127,28 +136,29 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
         </ScrollView>
 
         {/* Fade gradient to indicate more content - only on Web */}
-        {showScrollHint && Platform.OS === 'web' && (
+        {showScrollHint && Platform.OS === "web" && (
           <View
             className="absolute left-0 right-0 h-12 pointer-events-none"
             style={{
               bottom: 80,
               // @ts-ignore - web only
-              backgroundImage: 'linear-gradient(to bottom, rgba(253,245,230,0), rgba(253,245,230,1))',
+              backgroundImage:
+                "linear-gradient(to bottom, rgba(253,245,230,0), rgba(253,245,230,1))",
             }}
           />
         )}
 
         {/* Fade gradient for native platforms */}
-        {showScrollHint && Platform.OS !== 'web' && (
+        {showScrollHint && Platform.OS !== "web" && (
           <LinearGradient
-            colors={['transparent', '#FDF5E6']}
+            colors={["transparent", "#FDF5E6"]}
             style={{
-              position: 'absolute',
+              position: "absolute",
               left: 0,
               right: 0,
               height: 48,
               bottom: 80,
-              pointerEvents: 'none',
+              pointerEvents: "none",
             }}
           />
         )}

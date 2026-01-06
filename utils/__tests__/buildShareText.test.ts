@@ -23,7 +23,7 @@ describe("buildShareText", () => {
     expect(text).toContain("#令和七年");
     expect(text).toContain("あなたも占ってみよう👇");
     expect(text).toContain(
-      "https://digital-omikuji-app.vercel.app?utm_source=share&utm_campaign=omikuji2026"
+      "https://digital-omikuji.vercel.app?utm_source=share&utm_campaign=omikuji2026"
     );
   });
 
