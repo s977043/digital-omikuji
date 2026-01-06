@@ -6,10 +6,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Android E2E - runs on all PRs (main + develop)
+  # Android E2E - runs only on main PRs
   android:
     name: Android E2E
     runs-on: ubuntu-latest
+    if: github.base_ref == 'main'
     timeout-minutes: 25
 
     steps:
