@@ -51,7 +51,7 @@ export default function HistoryScreen() {
     <View className="flex-1 bg-slate-900 p-4">
       {/* ヘッダー */}
       <View className="flex-row justify-between items-center mb-6 pt-10">
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.canGoBack() ? router.back() : router.replace('/')}>
           <Text className="text-white text-lg">戻る</Text>
         </TouchableOpacity>
         <Text className="text-white text-2xl font-shippori-bold">履歴</Text>

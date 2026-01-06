@@ -1,5 +1,6 @@
-import React, { useRef } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Platform, Share } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useState } from "react";
+import { View, Text, TouchableOpacity, ScrollView, Platform, Share, NativeScrollEvent, NativeSyntheticEvent } from "react-native";
 import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
@@ -13,6 +14,17 @@ interface ResultScrollCardProps {
 
 export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) => {
   const scrollRef = useRef<View>(null);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const { contentOffset } = event.nativeEvent;
+    // Hide hint after scrolling down a bit
+    if (contentOffset.y > 20) {
+      setShowScrollHint(false);
+    } else {
+      setShowScrollHint(true);
+    }
+  };
 
   const handleShare = async () => {
     try {
@@ -68,7 +80,9 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
         <ScrollView
           className="flex-1 px-6"
           contentContainerStyle={{ paddingBottom: 40 }}
-          showsVerticalScrollIndicator={false}
+          showsVerticalScrollIndicator={true}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         >
           {/* Main Result (Top) */}
           <View className="items-center mt-8 mb-8 border-b-2 border-dashed border-slate-300 pb-8">
@@ -111,6 +125,33 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
             </MotiView>
           </View>
         </ScrollView>
+
+        {/* Fade gradient to indicate more content - only on Web */}
+        {showScrollHint && Platform.OS === 'web' && (
+          <View
+            className="absolute left-0 right-0 h-12 pointer-events-none"
+            style={{
+              bottom: 80,
+              // @ts-ignore - web only
+              backgroundImage: 'linear-gradient(to bottom, rgba(253,245,230,0), rgba(253,245,230,1))',
+            }}
+          />
+        )}
+
+        {/* Fade gradient for native platforms */}
+        {showScrollHint && Platform.OS !== 'web' && (
+          <LinearGradient
+            colors={['transparent', '#FDF5E6']}
+            style={{
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              height: 48,
+              bottom: 80,
+              pointerEvents: 'none',
+            }}
+          />
+        )}
 
         {/* Footer Actions (Sticky) */}
         <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">

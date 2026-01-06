@@ -1,6 +1,6 @@
 import { OmikujiResult } from "../types/omikuji";
 
-const APP_URL = "https://digital-omikuji-app.vercel.app"; // Replace with actual URL if different
+const APP_URL = "https://digital-omikuji.vercel.app"; // Corrected URL matches app.config.ts
 const HASHTAGS = ["#エンジニアおみくじ2026", "#令和七年"];
 
 /**

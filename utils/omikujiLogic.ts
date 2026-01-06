@@ -28,7 +28,11 @@ export const drawOmikuji = (): OmikujiResult => {
   const messageIndex = Math.floor(Math.random() * selectedData.messages.length);
   const selectedMessage = selectedData.messages[messageIndex] ?? "吉報を待て。";
 
-  // 5. Construct Result
+  // 5. Select Random Details Pattern
+  const detailsIndex = Math.floor(Math.random() * selectedData.detailsList.length);
+  const selectedDetails = selectedData.detailsList[detailsIndex];
+
+  // 6. Construct Result
   return {
     id: uuidv4(),
     level: selectedData.level,
@@ -39,6 +43,6 @@ export const drawOmikuji = (): OmikujiResult => {
     image: selectedData.image,
     color: selectedData.color,
     createdAt: Date.now(),
-    details: selectedData.details, // Pass through details
+    details: selectedDetails,
   };
 };
