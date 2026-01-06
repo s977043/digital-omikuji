@@ -77,6 +77,80 @@
                 "Value trust. Avoid misunderstandings.",
                 "It's darkest before dawn. Morning will surely come."
             ]
+        },
+        "detailLabels": {
+            "wish": "Wish",
+            "waitingPerson": "Awaited One",
+            "lostItem": "Lost Item",
+            "business": "Business",
+            "study": "Study",
+            "health": "Health",
+            "love": "Love"
+        },
+        "details": {
+            "daikichi": {
+                "wish": "Your wishes will come true as you desire.",
+                "waitingPerson": "Good news! They will come soon.",
+                "lostItem": "It will be found. Try looking in high places.",
+                "business": "Profitable. Go ahead with confidence.",
+                "study": "Study with peace of mind.",
+                "health": "Excellent condition. Your body can handle anything.",
+                "love": "A fateful encounter awaits. Be proactive."
+            },
+            "chukichi": {
+                "wish": "It will come true, but don't let your guard down.",
+                "waitingPerson": "They will come. Look forward to it.",
+                "lostItem": "Hard to find, but it will appear.",
+                "business": "Profitable, but watch your spending.",
+                "study": "Effort will bring results.",
+                "health": "Generally good. Don't overdo it.",
+                "love": "Good encounters may happen. Be natural."
+            },
+            "shokichi": {
+                "wish": "Small wishes may come true.",
+                "waitingPerson": "They will come. Wait for contact.",
+                "lostItem": "It's somewhere in your home.",
+                "business": "Good fortune if you work sincerely without rushing.",
+                "study": "Time to strengthen the basics.",
+                "health": "Take care of your health.",
+                "love": "Romance may develop from friendship."
+            },
+            "kichi": {
+                "wish": "It will take time to come true.",
+                "waitingPerson": "Delayed, but they will come.",
+                "lostItem": "It might be outside.",
+                "business": "Maintain the status quo.",
+                "study": "Daily accumulation is important.",
+                "health": "No problem if you don't overdo it.",
+                "love": "Take it slowly."
+            },
+            "suekichi": {
+                "wish": "Difficult to achieve now.",
+                "waitingPerson": "They will be late.",
+                "lostItem": "Hard to find.",
+                "business": "Better not to pursue profits now.",
+                "study": "Time to be patient. It will bloom later.",
+                "health": "Fatigue accumulates easily. Rest well.",
+                "love": "Time for self-improvement."
+            },
+            "kyo": {
+                "wish": "Won't come true now.",
+                "waitingPerson": "Won't come.",
+                "lostItem": "Won't be found.",
+                "business": "Be careful not to incur losses.",
+                "study": "In a slump. Try changing your mood.",
+                "health": "Watch out for poor health. Act early.",
+                "love": "Better to watch quietly for now."
+            },
+            "daikyo": {
+                "wish": "It might be best to give up.",
+                "waitingPerson": "Won't come. Don't expect.",
+                "lostItem": "Absolutely won't be found.",
+                "business": "Expect losses. Time to endure.",
+                "study": "Start from basics as if starting over.",
+                "health": "Health first. Absolutely no overwork.",
+                "love": "Prioritize yourself over romance now."
+            }
         }
     },
     "history": {

@@ -12,15 +12,16 @@ describe("omikujiLogic", () => {
       expect(result).toHaveProperty("level");
       expect(typeof result.level).toBe("string");
 
-      expect(result).toHaveProperty("fortuneParams");
-      expect(result.fortuneParams).toHaveProperty("title");
-      expect(result.fortuneParams).toHaveProperty("description");
+      expect(result).toHaveProperty("messageIndex");
+      expect(typeof result.messageIndex).toBe("number");
+      expect(result.messageIndex).toBeGreaterThanOrEqual(0);
+      expect(result.messageIndex).toBeLessThan(5);
 
       expect(result).toHaveProperty("createdAt");
       expect(typeof result.createdAt).toBe("number");
 
-      // Verification of details pass-through
-      expect(result).toHaveProperty("details");
+      expect(result).toHaveProperty("color");
+      expect(result).toHaveProperty("image");
     });
 
     it("should select a fortune based on random weight", () => {
@@ -31,7 +32,6 @@ describe("omikujiLogic", () => {
       const result = drawOmikuji();
 
       expect(result.level).toBe(firstFortune.level);
-      expect(result.fortuneParams.title).toBeDefined();
 
       jest.restoreAllMocks();
     });
