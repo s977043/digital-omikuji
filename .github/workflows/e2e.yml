@@ -9,8 +9,7 @@ jobs:
   maestro:
     name: Run Maestro E2E
     runs-on: macos-latest
-    if: false # Temporarily disabled - iOS build exceeds timeout
-    timeout-minutes: 20 # Cost control
+    timeout-minutes: 30 # Extended for iOS build
 
     steps:
       - uses: actions/checkout@v4
@@ -31,10 +30,21 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Build for Simulator (Expo Prebuild)
+      - name: Expo Prebuild
+        run: npx expo prebuild --platform ios
+
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ios/Pods
+          key: pods-${{ hashFiles('ios/Podfile.lock') }}
+          restore-keys: pods-
+
+      - name: Install CocoaPods
+        run: cd ios && pod install && cd ..
+
+      - name: Build for Simulator
         run: |
-          npx expo prebuild --platform ios
-          cd ios && pod install && cd ..
           # Dynamically find workspace name
           WORKSPACE=$(find ios -name "*.xcworkspace" -maxdepth 1 | head -1)
           SCHEME=$(basename "$WORKSPACE" .xcworkspace)
