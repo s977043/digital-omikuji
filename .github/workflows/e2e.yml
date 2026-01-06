@@ -2,14 +2,83 @@ name: E2E Tests (Maestro)
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, develop]
   workflow_dispatch:
 
 jobs:
-  maestro:
-    name: Run Maestro E2E
+  # Android E2E - runs on all PRs (main + develop)
+  android:
+    name: Android E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Expo Prebuild (Android)
+        run: npx expo prebuild --platform android
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle') }}
+          restore-keys: gradle-
+
+      - name: Build Android Debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug
+          cd ..
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run Android Emulator and Maestro
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          profile: pixel_5
+          script: |
+            adb install android/app/build/outputs/apk/debug/app-debug.apk
+            maestro test .maestro/flow.yaml
+        env:
+          MAESTRO_DRIVER_STARTUP_TIMEOUT: 120000
+
+  # iOS E2E - runs only on main PRs
+  ios:
+    name: iOS E2E
     runs-on: macos-latest
-    timeout-minutes: 30 # Extended for iOS build
+    if: github.base_ref == 'main'
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v4
@@ -45,11 +114,9 @@ jobs:
 
       - name: Build for Simulator
         run: |
-          # Dynamically find workspace name
           WORKSPACE=$(find ios -name "*.xcworkspace" -maxdepth 1 | head -1)
           SCHEME=$(basename "$WORKSPACE" .xcworkspace)
           echo "Building workspace: $WORKSPACE, scheme: $SCHEME"
-          # Use generic simulator destination for build
           xcodebuild -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
             -configuration Debug \
@@ -57,12 +124,10 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath build \
             COMPILER_INDEX_STORE_ENABLE=NO
-          # Save scheme for later steps
           echo "IOS_SCHEME=$SCHEME" >> $GITHUB_ENV
 
       - name: Install App on Simulator
         run: |
-          # Find first available iPhone simulator
           SIMULATOR=$(xcrun simctl list devices available | grep -E "iPhone" | head -1 | sed 's/.*(\([A-Z0-9-]*\)).*/\1/')
           echo "Using simulator: $SIMULATOR"
           xcrun simctl boot "$SIMULATOR" || true
