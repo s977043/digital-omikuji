@@ -20,7 +20,7 @@ type AppState = "IDLE" | "SHAKING" | "DRAWING" | "REVEALING" | "RESULT";
 
 const SHAKE_THRESHOLD = 1.8;
 const SHAKING_DURATION_MS = 1500;
-const DRAWING_DURATION_MS = 1200; // New duration for drawing phase
+const DRAWING_DURATION_MS = 3500; // Duration for drawing phase (3.5 seconds)
 const REVEALING_DURATION_MS = 2000;
 
 // アニメーション定数
@@ -246,30 +246,53 @@ export default function OmikujiApp() {
                 style={{ width: 184, height: 184 }}
               >
                 <Image
-                  source={require("../assets/omikuji_cylinder.png")}
+                  source={
+                    hasDrawnToday
+                      ? require("../assets/omikuji_confirmed.png")
+                      : require("../assets/omikuji_cylinder.png")
+                  }
                   className="rounded-full"
-                  style={{ width: 180, height: 180, opacity: hasDrawnToday ? 0.5 : 1 }}
+                  style={{ width: 180, height: 180 }}
                   resizeMode="cover"
                 />
               </View>
-              <Text className="text-3xl text-white font-shippori-bold tracking-tight mb-2 text-center">
+              <Text className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-black/50 shadow-sm">
                 {hasDrawnToday ? "本日の運勢は確認済みです" : "スマホを振っておみくじを引こう"}
               </Text>
 
               {!hasDrawnToday && (
-                <View className="bg-red-600 px-4 py-1 rounded-full mt-4">
-                  <Text className="text-white font-bold text-sm tracking-widest">
-                    令和七年 デジタルおみくじ
-                  </Text>
-                </View>
+                <>
+                  <TouchableOpacity
+                    onPress={handleShakeStart}
+                    className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
+                    style={{
+                      shadowColor: "#B45309",
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.5,
+                      shadowRadius: 8,
+                    }}
+                  >
+                    <Text className="text-white font-shippori-bold text-2xl tracking-widest text-center">
+                      おみくじを引く
+                    </Text>
+                  </TouchableOpacity>
+
+                  <View className="bg-white/10 px-4 py-1 rounded-full mt-8 border border-white/20">
+                    <Text className="text-white/80 font-bold text-xs tracking-widest">
+                      令和八年 丙午 デジタルおみくじ
+                    </Text>
+                  </View>
+                </>
               )}
 
               {hasDrawnToday && (
                 <TouchableOpacity
                   onPress={handleResultView}
-                  className="bg-amber-500 px-8 py-3 rounded-full mt-6 shadow-lg active:bg-amber-600"
+                  className="bg-slate-800/90 px-8 py-4 rounded-full mt-4 border border-white/30 shadow-xl active:bg-slate-700 backdrop-blur-sm"
                 >
-                  <Text className="text-white font-bold text-lg">結果をもう一度見る</Text>
+                  <Text className="text-white font-shippori font-bold text-lg tracking-wider">
+                    結果をもう一度見る
+                  </Text>
                 </TouchableOpacity>
               )}
             </MotiView>
@@ -393,9 +416,10 @@ export default function OmikujiApp() {
               {/* ミュート切り替えボタン */}
               <TouchableOpacity
                 onPress={toggleMute}
-                className="absolute top-12 left-6 bg-black/30 p-3 rounded-full border border-white/20 active:bg-black/50"
+                className="absolute top-12 left-6 bg-black/40 px-4 py-2 rounded-full border border-white/30 active:bg-black/60 flex-row items-center"
               >
-                <Text className="text-2xl">{isMuted ? "🔇" : "🔊"}</Text>
+                <Text className="text-xl mr-2">{isMuted ? "🔕" : "🔔"}</Text>
+                <Text className="text-white text-sm font-bold">{isMuted ? "OFF" : "ON"}</Text>
               </TouchableOpacity>
 
               {/* デプロイバージョン表示 */}

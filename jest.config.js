@@ -32,5 +32,6 @@ module.exports = {
     "/.agent/",
     "/.gemini/",
     "/river-reviewer/",
+    "/e2e/",
   ],
 };
