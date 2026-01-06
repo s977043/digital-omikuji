@@ -22,17 +22,45 @@ jest.mock("moti", () => {
   };
 });
 
+// Mock react-i18next
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { returnObjects?: boolean }) => {
+      const translations: Record<string, string | string[]> = {
+        "history.title": "運勢手帳",
+        "history.deleteAll": "全て削除",
+        "history.deleteConfirmTitle": "履歴の削除",
+        "history.deleteConfirmMessage": "本当に全ての履歴を削除しますか？",
+        "history.empty": "まだ履歴がありません",
+        "common.back": "← 戻る",
+        "common.delete": "削除",
+        "common.cancel": "キャンセル",
+        "fortune.levels.daikichi": "大吉",
+        "fortune.messages.daikichi": [
+          "最高の運気です。新しいことに挑戦するチャンス！",
+          "願望は叶います。迷わず進みましょう。",
+        ],
+      };
+      const value = translations[key];
+      if (options?.returnObjects && Array.isArray(value)) {
+        return value;
+      }
+      return value || key;
+    },
+  }),
+}));
+
 jest.mock("../../utils/HistoryStorage");
 jest.mock("../../components/VersionDisplay", () => ({
   VersionDisplay: () => <></>,
-  __esModule: true, // Fix for default export if any, though VersionDisplay is named export
+  __esModule: true,
 }));
 
 const mockHistoryData = [
   {
     id: "1",
     level: "daikichi",
-    fortuneParams: { title: "大吉", description: "最高" },
+    messageIndex: 0,
     image: { uri: "test" },
     color: "red",
     createdAt: 1700000000000,
@@ -64,7 +92,7 @@ describe("HistoryScreen", () => {
     await waitFor(
       () => {
         expect(getByText("大吉")).toBeTruthy();
-        expect(getByText("最高")).toBeTruthy();
+        expect(getByText("最高の運気です。新しいことに挑戦するチャンス！")).toBeTruthy();
       },
       { timeout: 3000 }
     );
