@@ -11,9 +11,16 @@ on:
       - "data/**"
       - "types/**"
       - "i18n/**"
+      - "assets/**"
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
+      - ".eslintrc.js"
+      - ".prettierrc"
+      - "jest.config.js"
+      - "babel.config.js"
+      - "metro.config.js"
+      - "tailwind.config.js"
       - ".github/workflows/ci.yml"
   pull_request:
     branches: [main, develop]
@@ -25,9 +32,16 @@ on:
       - "data/**"
       - "types/**"
       - "i18n/**"
+      - "assets/**"
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
+      - ".eslintrc.js"
+      - ".prettierrc"
+      - "jest.config.js"
+      - "babel.config.js"
+      - "metro.config.js"
+      - "tailwind.config.js"
       - ".github/workflows/ci.yml"
 
 jobs:
@@ -60,7 +74,6 @@ jobs:
 
       - name: Markdown Lint
         run: pnpm lint:md
-        continue-on-error: true
 
       - name: Run Tests
         run: pnpm test

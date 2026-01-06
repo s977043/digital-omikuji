@@ -9,6 +9,8 @@ on:
       - "hooks/**"
       - "utils/**"
       - "data/**"
+      - "i18n/**"
+      - "assets/**"
       - "e2e/**"
       - "playwright.config.ts"
       - "package.json"
@@ -22,6 +24,8 @@ on:
       - "hooks/**"
       - "utils/**"
       - "data/**"
+      - "i18n/**"
+      - "assets/**"
       - "e2e/**"
       - "playwright.config.ts"
       - "package.json"
@@ -49,10 +53,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      # Playwright ブラウザのキャッシュ
+      # Playwright ブラウザのキャッシュ (package.jsonからバージョン取得で安定化)
       - name: Get Playwright version
         id: playwright-version
-        run: echo "version=$(pnpm exec playwright --version | head -1)" >> $GITHUB_OUTPUT
+        run: echo "version=$(jq -r '.devDependencies["@playwright/test"]' package.json)" >> "$GITHUB_OUTPUT"
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
