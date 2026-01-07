@@ -234,7 +234,7 @@ export default function OmikujiApp() {
   // --- 描画 (Render) ---
 
   return (
-    <View className="flex-1 bg-slate-900">
+    <View className="flex-1 bg-slate-900" style={{ flex: 1, backgroundColor: "#0f172a" }}>
       <ImageBackground
         source={require("../assets/shrine_background.png")}
         style={{ flex: 1 }}
@@ -244,7 +244,7 @@ export default function OmikujiApp() {
           {/* 待機状態 (IDLE) */}
           {appState === "IDLE" && (
             <MotiView
-              from={{ opacity: 0, scale: 0.9, translateY: 10 }}
+              from={{ opacity: 1, scale: 1, translateY: 0 }}
               animate={{ opacity: 1, scale: 1, translateY: 0 }}
               className="items-center px-6"
             >
