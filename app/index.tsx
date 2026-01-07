@@ -20,7 +20,9 @@ type AppState = "IDLE" | "SHAKING" | "DRAWING" | "REVEALING" | "RESULT";
 
 const SHAKE_THRESHOLD = 1.8;
 const SHAKING_DURATION_MS = 1500;
-const DRAWING_DURATION_MS = 3500; // Duration for drawing phase (3.5 seconds)
+// DRAWING_DURATION_MS was increased from 1200ms to 3500ms to give users enough time
+// to perceive the full drawing animation and keep it in sync with sound/haptic effects.
+const DRAWING_DURATION_MS = 3500;
 const REVEALING_DURATION_MS = 2000;
 
 // アニメーション定数
@@ -234,6 +236,9 @@ export default function OmikujiApp() {
   // --- 描画 (Render) ---
 
   return (
+    // Note: Inline style is intentional fallback for Android white screen issue.
+    // NativeWind styles may not apply immediately on first render, causing a white flash.
+    // The inline backgroundColor ensures the view is never transparent during initialization.
     <View className="flex-1 bg-slate-900" style={{ flex: 1, backgroundColor: "#0f172a" }}>
       <ImageBackground
         source={require("../assets/shrine_background.png")}
