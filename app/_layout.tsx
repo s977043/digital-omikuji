@@ -1,10 +1,6 @@
 // ポリフィル: React Native環境でのuuid生成に必要
 import "react-native-get-random-values";
 
-// Sentry初期化 (エラー監視)
-import { initializeSentry } from "../utils/sentry";
-initializeSentry();
-
 import { SplashScreen, Stack } from "expo-router";
 import {
   useFonts,
