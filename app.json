@@ -40,14 +40,7 @@
         },
         "plugins": [
             "expo-router",
-            "expo-splash-screen",
-            [
-                "@sentry/react-native/expo",
-                {
-                    "organization": "mine-take",
-                    "project": "digital-omikuji"
-                }
-            ]
+            "expo-splash-screen"
         ],
         "extra": {
             "eas": {
