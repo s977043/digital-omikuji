@@ -9,28 +9,22 @@ export type FortuneLevel =
   | "kyo"
   | "daikyo";
 
-export const FORTUNE_LEVELS: Record<FortuneLevel, string> = {
-  daikichi: "大吉",
-  chukichi: "中吉",
-  shokichi: "小吉",
-  kichi: "吉",
-  suekichi: "末吉",
-  kyo: "凶",
-  daikyo: "大凶",
-};
+// Translation keys for fortune levels (used with i18n)
+export const FORTUNE_LEVEL_KEYS: FortuneLevel[] = [
+  "daikichi",
+  "chukichi",
+  "shokichi",
+  "kichi",
+  "suekichi",
+  "kyo",
+  "daikyo",
+];
 
 export interface OmikujiResult {
   id: string; // Unique ID for history
   level: FortuneLevel;
-  fortuneParams: {
-    title: string; // Display title e.g. "大吉"
-    description: string; // One-liner message
-  };
+  messageIndex: number; // Index of the message in fortune.messages.[level]
   image: ImageSourcePropType; // Main result illustration
   color: string; // Theme color
   createdAt: number; // Timestamp
-  details?: {
-    label: string;
-    text: string;
-  }[]; // Detailed fortune content (unlocked by share)
 }

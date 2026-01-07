@@ -1,7 +1,10 @@
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
-import { ACQUIRED_FORTUNES, OmikujiMasterData } from "../data/omikujiData";
-import { OmikujiResult, FORTUNE_LEVELS } from "../types/omikuji";
+import { ACQUIRED_FORTUNES } from "../data/omikujiData";
+import { OmikujiResult } from "../types/omikuji";
+
+// Number of messages per fortune level (matches translation files)
+const MESSAGES_PER_LEVEL = 5;
 
 /**
  * Perform a weighted lottery to select a fortune result.
@@ -14,7 +17,7 @@ export const drawOmikuji = (): OmikujiResult => {
   let randomValue = Math.random() * totalWeight;
 
   // 3. Select Fortune Level
-  let selectedData: OmikujiMasterData = ACQUIRED_FORTUNES[ACQUIRED_FORTUNES.length - 1]; // Default fallback
+  let selectedData = ACQUIRED_FORTUNES[ACQUIRED_FORTUNES.length - 1]; // Default fallback
 
   for (const data of ACQUIRED_FORTUNES) {
     if (randomValue < data.weight) {
@@ -24,21 +27,16 @@ export const drawOmikuji = (): OmikujiResult => {
     randomValue -= data.weight;
   }
 
-  // 4. Select Random Message
-  const messageIndex = Math.floor(Math.random() * selectedData.messages.length);
-  const selectedMessage = selectedData.messages[messageIndex] ?? "吉報を待て。";
+  // 4. Select Random Message Index
+  const messageIndex = Math.floor(Math.random() * MESSAGES_PER_LEVEL);
 
   // 5. Construct Result
   return {
     id: uuidv4(),
     level: selectedData.level,
-    fortuneParams: {
-      title: FORTUNE_LEVELS[selectedData.level],
-      description: selectedMessage,
-    },
+    messageIndex,
     image: selectedData.image,
     color: selectedData.color,
     createdAt: Date.now(),
-    details: selectedData.details, // Pass through details
   };
 };

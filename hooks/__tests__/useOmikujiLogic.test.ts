@@ -35,7 +35,7 @@ describe("useOmikujiLogic", () => {
     const fortune = result.current.fortune;
     expect(fortune).toHaveProperty("id");
     expect(fortune).toHaveProperty("level");
-    expect(fortune).toHaveProperty("fortuneParams");
+    expect(fortune).toHaveProperty("messageIndex");
     expect(fortune).toHaveProperty("createdAt");
   });
 

@@ -2,14 +2,52 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "hooks/**"
+      - "utils/**"
+      - "data/**"
+      - "types/**"
+      - "i18n/**"
+      - "assets/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "tsconfig.json"
+      - ".eslintrc.js"
+      - ".prettierrc"
+      - "jest.config.js"
+      - "babel.config.js"
+      - "metro.config.js"
+      - "tailwind.config.js"
+      - ".github/workflows/ci.yml"
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "hooks/**"
+      - "utils/**"
+      - "data/**"
+      - "types/**"
+      - "i18n/**"
+      - "assets/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "tsconfig.json"
+      - ".eslintrc.js"
+      - ".prettierrc"
+      - "jest.config.js"
+      - "babel.config.js"
+      - "metro.config.js"
+      - "tailwind.config.js"
+      - ".github/workflows/ci.yml"
 
 jobs:
-  # 型チェックジョブ
-  typecheck:
-    name: Type Check
+  # 依存関係のインストールを1回で行い、キャッシュを共有
+  ci:
+    name: Type Check, Lint & Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,65 +56,24 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
 
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      - name: Check Types
+      # 3つのチェックを順次実行（1回のインストールで済む）
+      - name: Type Check
         run: pnpm exec tsc --noEmit
 
-  # Lintジョブ
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
-
-      - name: Run ESLint
+      - name: ESLint
         run: pnpm lint
 
-      - name: Run Markdown Lint
+      - name: Markdown Lint
         run: pnpm lint:md
-
-  # テストジョブ
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Run Tests
         run: pnpm test
