@@ -21,8 +21,10 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
   const fortuneTitle = t(`fortune.levels.${fortune.level}`);
   const fortuneMessages = t(`fortune.messages.${fortune.level}`, {
     returnObjects: true,
-  }) as string[];
-  const fortuneMessage = fortuneMessages[fortune.messageIndex] || fortuneMessages[0];
+  });
+  const fortuneMessage = Array.isArray(fortuneMessages)
+    ? fortuneMessages[fortune.messageIndex] || fortuneMessages[0]
+    : String(fortuneMessages);
 
   const handleShare = async () => {
     try {

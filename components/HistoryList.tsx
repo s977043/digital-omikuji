@@ -24,8 +24,10 @@ const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => 
   const fortuneTitle = t(`fortune.levels.${item.level}`);
   const fortuneMessages = t(`fortune.messages.${item.level}`, {
     returnObjects: true,
-  }) as string[];
-  const fortuneMessage = fortuneMessages[item.messageIndex] || fortuneMessages[0];
+  });
+  const fortuneMessage = Array.isArray(fortuneMessages)
+    ? fortuneMessages[item.messageIndex] || fortuneMessages[0]
+    : String(fortuneMessages);
 
   return (
     <MotiView

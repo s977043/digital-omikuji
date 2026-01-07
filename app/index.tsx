@@ -42,6 +42,13 @@ const REVEAL_ANIMATION = {
   SPARKLE_DURATION: 500,
 };
 
+const DRAW_BUTTON_STYLE = {
+  shadowColor: "#B45309",
+  shadowOffset: { width: 0, height: 4 },
+  shadowOpacity: 0.5,
+  shadowRadius: 8,
+};
+
 // ハプティックフィードバックヘルパー
 type HapticFeedbackType =
   | { type: "impact"; style: Haptics.ImpactFeedbackStyle }
@@ -265,12 +272,7 @@ export default function OmikujiApp() {
                   <TouchableOpacity
                     onPress={handleShakeStart}
                     className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
-                    style={{
-                      shadowColor: "#B45309",
-                      shadowOffset: { width: 0, height: 4 },
-                      shadowOpacity: 0.5,
-                      shadowRadius: 8,
-                    }}
+                    style={DRAW_BUTTON_STYLE}
                   >
                     <Text className="text-white font-shippori-bold text-2xl tracking-widest text-center">
                       おみくじを引く
