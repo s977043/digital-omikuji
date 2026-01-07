@@ -30,6 +30,7 @@
             "autoIncrement": true,
             "ios": {
                 "simulator": false,
+                "distribution": "store",
                 "resourceClass": "medium"
             },
             "android": {
