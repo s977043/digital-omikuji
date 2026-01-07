@@ -45,7 +45,8 @@
                 "@sentry/react-native/expo",
                 {
                     "organization": "mine-take",
-                    "project": "digital-omikuji"
+                    "project": "digital-omikuji",
+                    "url": "https://sentry.io/"
                 }
             ]
         ],
