@@ -119,7 +119,7 @@ npx eas build --profile production --platform ios
 
 - [DEVELOPER.md](./docs/DEVELOPER.md): アーキテクチャと拡張方法
 - [design_guidelines.md](./docs/design_guidelines.md): デザイン指針（配色・フォント・アニメーション）
-- [phase1_roadmap.md](./docs/phase1_roadmap.md): フェーズ1 改善計画と進捗状況
+- [phase1_roadmap.md](./docs/archive/phase1_roadmap.md): フェーズ1 改善計画と進捗状況（完了・アーカイブ）
 
 ## 🤝 コントリビューション
 
