@@ -3,6 +3,26 @@ name: E2E Tests (Maestro)
 on:
   pull_request:
     branches: [main, develop]
+    paths:
+      - "app/**"
+      - "components/**"
+      - "hooks/**"
+      - "utils/**"
+      - "data/**"
+      - "assets/**"
+      - "i18n/**"
+      - ".maestro/**"
+      - "android/**"
+      - "ios/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "app.json"
+      - "eas.json"
+      - "*.config.js"
+      - "*.config.ts"
+      - "tsconfig.json"
+      - "nativewind-env.d.ts"
+      - ".github/workflows/e2e.yml"
   workflow_dispatch:
 
 permissions:
