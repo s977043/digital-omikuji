@@ -12,7 +12,6 @@ import { logVersionInfo } from "../utils/VersionInfo";
 import "../global.css";
 import "../i18n"; // i18n initialization
 
-
 // スプラッシュスクリーンを自動的に隠さないように設定
 SplashScreen.preventAutoHideAsync();
 
