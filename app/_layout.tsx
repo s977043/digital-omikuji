@@ -1,6 +1,10 @@
 // ポリフィル: React Native環境でのuuid生成に必要
 import "react-native-get-random-values";
 
+// Sentry初期化 (エラー監視)
+import { initializeSentry } from "../utils/sentry";
+initializeSentry();
+
 import { SplashScreen, Stack } from "expo-router";
 import {
   useFonts,
@@ -11,6 +15,7 @@ import { useEffect } from "react";
 import { logVersionInfo } from "../utils/VersionInfo";
 import "../global.css";
 import "../i18n"; // i18n initialization
+
 
 // スプラッシュスクリーンを自動的に隠さないように設定
 SplashScreen.preventAutoHideAsync();
