@@ -8,9 +8,9 @@ import { getHistory, clearHistory } from "../../utils/HistoryStorage";
 jest.mock("expo-router", () => ({
   router: { back: jest.fn() },
   useFocusEffect: (callback: () => void) => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, react-hooks/exhaustive-deps
     const { useEffect } = require("react");
-    useEffect(callback, []);
+    useEffect(callback, [callback]);
   },
 }));
 

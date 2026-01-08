@@ -18,7 +18,8 @@
             "infoPlist": {
                 "CFBundleDisplayName": "デジタルおみくじ",
                 "NSPhotoLibraryUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへのアクセスが必要です",
-                "NSPhotoLibraryAddUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です"
+                "NSPhotoLibraryAddUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です",
+                "ITSAppUsesNonExemptEncryption": false
             }
         },
         "android": {
@@ -39,7 +40,15 @@
         },
         "plugins": [
             "expo-router",
-            "expo-splash-screen"
+            "expo-splash-screen",
+            [
+                "@sentry/react-native/expo",
+                {
+                    "organization": "mine-take",
+                    "project": "digital-omikuji",
+                    "url": "https://sentry.io/"
+                }
+            ]
         ],
         "extra": {
             "eas": {
