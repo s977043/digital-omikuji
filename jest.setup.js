@@ -3,7 +3,7 @@ import "@testing-library/jest-native/extend-expect";
 // Mock react-native-reanimated
 jest.mock("react-native-reanimated", () => {
   const Reanimated = require("react-native-reanimated/mock");
-  Reanimated.default.call = () => {};
+  Reanimated.default.call = () => { };
   return Reanimated;
 });
 
@@ -52,3 +52,8 @@ jest.mock("expo-av", () => ({
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock")
 );
+
+// Mock expo-crypto
+jest.mock("expo-crypto", () => ({
+  randomUUID: jest.fn(() => global.crypto.randomUUID()),
+}));

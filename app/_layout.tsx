@@ -1,5 +1,4 @@
-// ポリフィル: React Native環境でのuuid生成に必要
-import "react-native-get-random-values";
+
 
 // Sentry初期化 (エラー監視) - 早期に実行する必要あり
 import { initializeSentry, Sentry } from "../utils/sentry";
