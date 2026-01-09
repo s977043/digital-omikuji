@@ -11,16 +11,21 @@ import { DETAIL_KEYS } from "../data/omikujiData";
 interface ResultScrollCardProps {
   fortune: OmikujiResult;
   onReset: () => void;
+  reducedMotion?: boolean;
 }
 
-export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) => {
+export const ResultScrollCard = ({
+  fortune,
+  onReset,
+  reducedMotion = false,
+}: ResultScrollCardProps) => {
   const animationRef = useRef<View>(null);
   const cardRef = useRef<View>(null);
   const { t } = useTranslation();
   const [exitAnimation, setExitAnimation] = useState<"tie" | "keep" | null>(null);
 
   const handleTie = () => {
-    if (Platform.OS !== "web") {
+    if (Platform.OS !== "web" && !reducedMotion) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("tie");
@@ -40,7 +45,7 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
   };
 
   const handleKeep = () => {
-    if (Platform.OS !== "web") {
+    if (Platform.OS !== "web" && !reducedMotion) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("keep");
@@ -63,7 +68,7 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
 
   const handleShare = async () => {
     try {
-      if (Platform.OS !== "web") {
+      if (Platform.OS !== "web" && !reducedMotion) {
         await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
       }
 
@@ -139,11 +144,33 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
         from={{ opacity: 0, scale: 0.9, translateY: 20 }}
         animate={{
           opacity: exitAnimation ? 0 : 1,
-          scale: exitAnimation === "keep" ? 0.5 : exitAnimation === "tie" ? 0.8 : 1,
-          translateY: exitAnimation === "tie" ? -300 : exitAnimation === "keep" ? 100 : 0,
-          translateX: exitAnimation === "keep" ? -100 : 0,
+          scale:
+            exitAnimation === "keep"
+              ? reducedMotion
+                ? 0.95
+                : 0.5
+              : exitAnimation === "tie"
+                ? reducedMotion
+                  ? 0.95
+                  : 0.8
+                : 1,
+          translateY:
+            exitAnimation === "tie"
+              ? reducedMotion
+                ? -20
+                : -300
+              : exitAnimation === "keep"
+                ? reducedMotion
+                  ? 20
+                  : 100
+                : 0,
+          translateX: exitAnimation === "keep" ? (reducedMotion ? 0 : -100) : 0,
         }}
-        transition={{ type: "spring", damping: 20 }}
+        transition={
+          reducedMotion
+            ? { type: "timing", duration: 400 }
+            : { type: "spring", damping: 20 }
+        }
         className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative"
         ref={animationRef}
       >
