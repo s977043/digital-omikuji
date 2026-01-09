@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import { getVersionDisplay } from "../utils/VersionInfo";
 
 /**
@@ -6,10 +6,10 @@ import { getVersionDisplay } from "../utils/VersionInfo";
  * 画面右下に薄いテキストで表示
  */
 export const VersionDisplay = () => (
-  <View
-    className="absolute bottom-2 right-2 p-1"
+  <Text
+    className="absolute bottom-2 right-2 p-1 text-xs text-white/40 font-mono"
     accessibilityLabel={`アプリバージョン: ${getVersionDisplay()}`}
   >
-    <Text className="text-xs text-white/40 font-mono">{getVersionDisplay()}</Text>
-  </View>
+    {getVersionDisplay()}
+  </Text>
 );
