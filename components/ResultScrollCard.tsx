@@ -14,7 +14,8 @@ interface ResultScrollCardProps {
 }
 
 export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) => {
-  const scrollRef = useRef<View>(null);
+  const animationRef = useRef<View>(null);
+  const cardRef = useRef<View>(null);
   const { t } = useTranslation();
   const [exitAnimation, setExitAnimation] = useState<"tie" | "keep" | null>(null);
 
@@ -72,11 +73,42 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
         description: fortuneMessage,
       });
 
-      // Capture logic
-      let imageUri: string | undefined;
-      if (Platform.OS !== "web" && scrollRef.current) {
+      // --- Web Implementation ---
+      if (Platform.OS === "web") {
         try {
-          imageUri = await captureRef(scrollRef, {
+          const { toPng } = await import("html-to-image");
+          const element = document.querySelector('[data-testid="share-card"]') as HTMLElement;
+          if (element) {
+            const dataUrl = await toPng(element, { backgroundColor: "#FDF5E6" });
+            const response = await fetch(dataUrl);
+            const blob = await response.blob();
+            const file = new File([blob], "omikuji.png", { type: "image/png" });
+
+            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                files: [file],
+                title: t("fortune.shareTitle"),
+                text: message,
+              });
+            } else {
+              // Fallback: Download
+              const link = document.createElement("a");
+              link.download = "omikuji.png";
+              link.href = dataUrl;
+              link.click();
+            }
+            return;
+          }
+        } catch (webShareError) {
+          console.error("Web sharing failed", webShareError);
+        }
+      }
+
+      // --- Native Implementation ---
+      let imageUri: string | undefined;
+      if (cardRef.current) {
+        try {
+          imageUri = await captureRef(cardRef, {
             format: "png",
             quality: 0.8,
           });
@@ -105,70 +137,82 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
     <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8 w-full h-full absolute inset-0 z-50">
       <MotiView
         from={{ opacity: 0, scale: 0.9, translateY: 20 }}
-
         animate={{
           opacity: exitAnimation ? 0 : 1,
           scale: exitAnimation === "keep" ? 0.5 : exitAnimation === "tie" ? 0.8 : 1,
           translateY: exitAnimation === "tie" ? -300 : exitAnimation === "keep" ? 100 : 0,
-          translateX: exitAnimation === "keep" ? -100 : 0
+          translateX: exitAnimation === "keep" ? -100 : 0,
         }}
         transition={{ type: "spring", damping: 20 }}
         className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative"
-        ref={scrollRef}
+        ref={animationRef}
       >
-        {/* Scroll Header Decoration */}
-        <View className="h-4 bg-amber-800 w-full" />
-        <View className="h-2 bg-amber-600 w-full mb-4" />
+        <View ref={cardRef} className="flex-1 bg-[#FDF5E6]">
+          {/* @ts-ignore - data-testid is for web capture selection */}
+          <View
+            nativeID="share-card"
+            {...(Platform.OS === "web" ? { "data-testid": "share-card" } : {})}
+            className="flex-1"
+          >
+            {/* Scroll Header Decoration */}
+            <View className="h-4 bg-amber-800 w-full" />
+            <View className="h-2 bg-amber-600 w-full mb-4" />
 
-        <ScrollView
-          className="flex-1 px-6"
-          contentContainerStyle={{ paddingBottom: 40 }}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Main Result (Top) */}
-          <View className="items-center mt-8 mb-8 border-b-2 border-dashed border-slate-300 pb-8">
-            <Text className="text-xl text-slate-500 font-shippori tracking-widest mb-4">
-              令和八年 丙午
-            </Text>
-
-            {/* Fortune Title */}
-            <Text
-              className="text-7xl font-shippori-bold mb-6 text-center"
-              style={{ color: fortune.color }}
+            <ScrollView
+              className="flex-1 px-6"
+              contentContainerStyle={{ paddingBottom: 40 }}
+              showsVerticalScrollIndicator={false}
             >
-              {fortuneTitle}
-            </Text>
+              {/* Main Result (Top) */}
+              <View className="items-center mt-8 mb-8 border-b-2 border-dashed border-slate-300 pb-8">
+                <Text className="text-xl text-slate-500 font-shippori tracking-widest mb-4">
+                  令和八年 丙午
+                </Text>
 
-            <Text className="text-lg text-slate-700 font-shippori text-center leading-loose px-4">
-              {fortuneMessage}
-            </Text>
+                {/* Fortune Title */}
+                <Text
+                  className="text-7xl font-shippori-bold mb-6 text-center"
+                  style={{ color: fortune.color }}
+                >
+                  {fortuneTitle}
+                </Text>
+
+                <Text className="text-lg text-slate-700 font-shippori text-center leading-loose px-4">
+                  {fortuneMessage}
+                </Text>
+              </View>
+
+              {/* Detailed Section */}
+              <View className="relative min-h-[200px]">
+                <Text className="text-center text-slate-400 font-bold mb-6 text-sm tracking-widest">
+                  ── 運勢詳細 ──
+                </Text>
+
+                <MotiView
+                  from={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 500 }}
+                  className="space-y-4"
+                >
+                  {DETAIL_KEYS.map((key) => (
+                    <View key={key} className="flex-row border-b border-slate-200 pb-2 mb-2">
+                      <Text className="text-slate-500 w-16 font-shippori-bold">
+                        {t(`fortune.detailLabels.${key}`)}
+                      </Text>
+                      <Text className="text-slate-800 flex-1 font-shippori">
+                        {t(`fortune.details.${fortune.level}.${key}`)}
+                      </Text>
+                    </View>
+                  ))}
+                </MotiView>
+              </View>
+            </ScrollView>
+
+            {/* Scroll Footer Decoration */}
+            <View className="h-2 bg-amber-600 w-full mt-auto" />
+            <View className="h-4 bg-amber-800 w-full" />
           </View>
-
-          {/* Detailed Section */}
-          <View className="relative min-h-[200px]">
-            <Text className="text-center text-slate-400 font-bold mb-6 text-sm tracking-widest">
-              ── 運勢詳細 ──
-            </Text>
-
-            <MotiView
-              from={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 500 }}
-              className="space-y-4"
-            >
-              {DETAIL_KEYS.map((key) => (
-                <View key={key} className="flex-row border-b border-slate-200 pb-2 mb-2">
-                  <Text className="text-slate-500 w-16 font-shippori-bold">
-                    {t(`fortune.detailLabels.${key}`)}
-                  </Text>
-                  <Text className="text-slate-800 flex-1 font-shippori">
-                    {t(`fortune.details.${fortune.level}.${key}`)}
-                  </Text>
-                </View>
-              ))}
-            </MotiView>
-          </View>
-        </ScrollView>
+        </View>
 
         {/* Footer Actions (Sticky) */}
         <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">
@@ -193,10 +237,6 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
             <Text className="text-white font-bold">{t("fortune.keep")}</Text>
           </TouchableOpacity>
         </View>
-
-        {/* Scroll Footer Decoration */}
-        <View className="h-2 bg-amber-600 w-full mt-auto" />
-        <View className="h-4 bg-amber-800 w-full" />
       </MotiView>
     </View>
   );
