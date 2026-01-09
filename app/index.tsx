@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Image,
   ViewStyle,
+  AccessibilityInfo,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
@@ -69,8 +70,9 @@ type HapticFeedbackType =
   | { type: "impact"; style: Haptics.ImpactFeedbackStyle }
   | { type: "notification"; style: Haptics.NotificationFeedbackType };
 
-const triggerHaptic = (feedback: HapticFeedbackType) => {
+const triggerHaptic = (feedback: HapticFeedbackType, force = false, reducedMotion = false) => {
   if (Platform.OS === "web") return;
+  if (reducedMotion && !force) return; // Skip minor haptics if reduced motion is enabled
 
   if (feedback.type === "impact") {
     Haptics.impactAsync(feedback.style);
@@ -96,6 +98,19 @@ export default function OmikujiApp() {
   const showDebug = appVariant === "development";
 
   const [isMuted, setIsMuted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // --- Accessibility: Reduced Motion detection ---
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion);
+    const subscription = AccessibilityInfo.addEventListener(
+      "reduceMotionChanged",
+      setReducedMotion
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   // --- サウンドとセンサーの初期化 ---
   useEffect(() => {
@@ -159,7 +174,7 @@ export default function OmikujiApp() {
         triggerHaptic({
           type: "impact",
           style: Haptics.ImpactFeedbackStyle.Light,
-        });
+        }, false, reducedMotion);
       }, 150); // 150ms間隔で振動
     }
 
@@ -192,7 +207,7 @@ export default function OmikujiApp() {
     triggerHaptic({
       type: "impact",
       style: Haptics.ImpactFeedbackStyle.Medium,
-    });
+    }, false, reducedMotion);
 
     setAppState("SHAKING");
     soundManager.playSound("shake");
@@ -207,7 +222,7 @@ export default function OmikujiApp() {
       triggerHaptic({
         type: "impact",
         style: Haptics.ImpactFeedbackStyle.Light,
-      });
+      }, false, reducedMotion);
     }, SHAKING_DURATION_MS);
   }, [appState, drawFortune, hasDrawnToday]);
 
@@ -236,11 +251,11 @@ export default function OmikujiApp() {
     if (appState === "DRAWING") {
       const timer = setTimeout(() => {
         setAppState("REVEALING");
-        // Haptics: 棒が出る瞬間
+        // Haptics: 棒が出る瞬間 (FORCE)
         triggerHaptic({
           type: "notification",
           style: Haptics.NotificationFeedbackType.Success,
-        });
+        }, true);
       }, DRAWING_DURATION_MS);
       return () => clearTimeout(timer);
     }
@@ -249,11 +264,11 @@ export default function OmikujiApp() {
     if (appState === "REVEALING") {
       const timer = setTimeout(() => {
         setAppState("RESULT");
-        // Haptics: 結果が出た時の重い衝撃
+        // Haptics: 結果が出た時の重い衝撃 (FORCE)
         triggerHaptic({
           type: "impact",
           style: Haptics.ImpactFeedbackStyle.Heavy,
-        });
+        }, true);
         soundManager.playSound("result");
       }, REVEALING_DURATION_MS);
       return () => clearTimeout(timer);
@@ -278,11 +293,11 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-              // 強制的にビューポート全体を覆うように 100vh を指定する。
-              minHeight: "100vh",
-            } as WebStyle)
+            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+            // 強制的にビューポート全体を覆うように 100vh を指定する。
+            minHeight: "100vh",
+          } as WebStyle)
           : {}),
       }}
     >
@@ -365,16 +380,17 @@ export default function OmikujiApp() {
                 scale: SHAKE_ANIMATION.SCALE_FROM,
               }}
               animate={{
-                translateX: SHAKE_ANIMATION.TRANSLATE_X,
-                rotateZ: `${SHAKE_ANIMATION.ROTATE_Z_DEG}deg`,
-                scale: SHAKE_ANIMATION.SCALE_TO,
+                translateX:
+                  appState === "SHAKING" ? (reducedMotion ? [-5, 5, -5] : [-15, 15, -15, 15, 0]) : 0,
+                rotateZ:
+                  appState === "SHAKING" ? (reducedMotion ? "-2deg" : ["-10deg", "10deg", "0deg"]) : "0deg",
+                scale: appState === "SHAKING" ? (reducedMotion ? 1 : [0.9, 1.1, 1]) : 1,
               }}
-              transition={{
-                type: "timing",
-                duration: SHAKE_ANIMATION.DURATION,
-                loop: true,
-                repeatReverse: true,
-              }}
+              transition={
+                reducedMotion
+                  ? { type: "timing", duration: SHAKE_ANIMATION.DURATION, loop: appState === "SHAKING" }
+                  : { type: "spring", duration: SHAKE_ANIMATION.DURATION, loop: appState === "SHAKING" }
+              }
               className="items-center"
             >
               <Text className="text-9xl mb-6">🫨</Text>
@@ -404,10 +420,11 @@ export default function OmikujiApp() {
               <MotiView
                 from={{ translateY: 200, rotate: "180deg" }}
                 animate={{ translateY: 0, rotate: "0deg" }}
-                transition={{
-                  type: "spring",
-                  damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING,
-                }}
+                transition={
+                  reducedMotion
+                    ? { type: "timing", duration: 300 }
+                    : { type: "spring", damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING }
+                }
                 className="w-40 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center"
               >
                 <View className="w-20 h-2 bg-yellow-600/30 rounded-full mb-2" />
@@ -418,12 +435,16 @@ export default function OmikujiApp() {
                 className="absolute w-16 h-48 bg-amber-50 bottom-12 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
                 from={{ translateY: 100, opacity: 0 }}
                 animate={{ translateY: -100, opacity: 1 }}
-                transition={{
-                  type: "spring",
-                  delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                  damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                  stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                }}
+                transition={
+                  reducedMotion
+                    ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
+                    : {
+                      type: "spring",
+                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                    }
+                }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
                   {"2026\n奉\n納"}
@@ -446,7 +467,11 @@ export default function OmikujiApp() {
 
           {/* 結果画面 (コンポーネント) */}
           {appState === "RESULT" && fortune && (
-            <FortuneDisplay fortune={fortune} onReset={handleReset} />
+            <FortuneDisplay
+              fortune={fortune}
+              onReset={handleReset}
+              reducedMotion={reducedMotion}
+            />
           )}
 
           {/* デバッグボタン (開発時 または センサー無効時) */}
