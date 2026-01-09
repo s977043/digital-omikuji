@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { View, Text, TouchableOpacity, Platform, ImageBackground, Image } from "react-native";
+import { View, Text, TouchableOpacity, Platform, ImageBackground, Image, ViewStyle } from "react-native";
+
+// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
+type WebStyle = ViewStyle & {
+  minHeight?: number | string;
+};
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
@@ -239,7 +244,21 @@ export default function OmikujiApp() {
     // Note: Inline style is intentional fallback for Android white screen issue.
     // NativeWind styles may not apply immediately on first render, causing a white flash.
     // The inline backgroundColor ensures the view is never transparent during initialization.
-    <View className="flex-1 bg-slate-900" style={{ flex: 1, backgroundColor: "#0f172a" }}>
+    <View
+      className="flex-1 bg-slate-900"
+      style={{
+        flex: 1,
+        backgroundColor: "#0f172a",
+        ...(Platform.OS === "web"
+          ? ({
+            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+            // 強制的にビューポート全体を覆うように 100vh を指定する。
+            minHeight: "100vh",
+          } as WebStyle)
+          : {}),
+      }}
+    >
       <ImageBackground
         source={require("../assets/shrine_background.png")}
         style={{ flex: 1 }}
@@ -435,6 +454,6 @@ export default function OmikujiApp() {
           )}
         </View>
       </ImageBackground>
-    </View>
+    </View >
   );
 }

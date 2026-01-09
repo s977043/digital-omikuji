@@ -1,5 +1,3 @@
-
-
 // Sentry初期化 (エラー監視) - 早期に実行する必要あり
 import { initializeSentry, Sentry } from "../utils/sentry";
 
