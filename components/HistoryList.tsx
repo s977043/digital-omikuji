@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, Image } from "react-native";
 import { MotiView } from "moti";
 import { HistoryEntry } from "../utils/HistoryStorage";
 import { useTranslation } from "react-i18next";
@@ -53,7 +53,11 @@ export const HistoryList = ({ history }: HistoryListProps) => {
   if (history.length === 0) {
     return (
       <View className="flex-1 items-center justify-center">
-        <Text className="text-6xl mb-4">📜</Text>
+        <Image
+          source={require("../assets/empty_history.png")}
+          className="w-32 h-32 mb-4 opacity-60"
+          resizeMode="contain"
+        />
         <Text className="text-white/60 text-center">{t("history.empty")}</Text>
       </View>
     );
