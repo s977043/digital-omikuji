@@ -239,7 +239,14 @@ export default function OmikujiApp() {
     // Note: Inline style is intentional fallback for Android white screen issue.
     // NativeWind styles may not apply immediately on first render, causing a white flash.
     // The inline backgroundColor ensures the view is never transparent during initialization.
-    <View className="flex-1 bg-slate-900" style={{ flex: 1, backgroundColor: "#0f172a" }}>
+    <View
+      className="flex-1 bg-slate-900"
+      style={{
+        flex: 1,
+        backgroundColor: "#0f172a",
+        ...(Platform.OS === "web" ? ({ minHeight: "100vh" } as any) : {}),
+      }}
+    >
       <ImageBackground
         source={require("../assets/shrine_background.png")}
         style={{ flex: 1 }}
