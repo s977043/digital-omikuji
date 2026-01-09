@@ -33,12 +33,15 @@ This project and everyone participating in it is governed by the [Digital Omikuj
 
 This project uses **Expo** and **pnpm**.
 
-1.  Clone the repository
-2.  Install dependencies:
+1. Clone the repository
+2. Install dependencies:
+
     ```bash
     pnpm install
     ```
-3.  Start the development server:
+
+3. Start the development server:
+
     ```bash
     pnpm start
     ```
@@ -54,7 +57,7 @@ This project uses **Expo** and **pnpm**.
 
 ### Coding Standards
 
-- We use **Typescript** for type safety.
+- We use **TypeScript** for type safety.
 - We use **Prettier** and **ESLint** for code formatting and linting.
 
 ## License

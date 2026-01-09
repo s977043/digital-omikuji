@@ -59,8 +59,8 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-[INSERT EMAIL ADDRESS].
+reported to the community leaders responsible for enforcement through
+[GitHub Security Advisories](https://github.com/s977043/digital-omikuji/security/advisories/new).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
