@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Platform, Share } from "react-native";
+import React, { useRef, useState } from "react";
+import { View, Text, TouchableOpacity, ScrollView, Platform, Share, ToastAndroid } from "react-native";
 import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
@@ -16,6 +16,40 @@ interface ResultScrollCardProps {
 export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) => {
   const scrollRef = useRef<View>(null);
   const { t } = useTranslation();
+  const [exitAnimation, setExitAnimation] = useState<"tie" | "keep" | null>(null);
+
+  const handleTie = () => {
+    if (Platform.OS !== "web") {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+    setExitAnimation("tie");
+
+    // Show toast
+    if (Platform.OS === "android") {
+      ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
+    } else {
+      // iOS/Web doesn't have native toast easily accessible without library, 
+      // strictly following plan: "Show brief toast/message".
+      // For now, no-op or simple alert if strictly needed, but let's stick to simple animation transition for now as per minimal deps.
+      // Or actually, Alert on iOS is modal, which disrupts flow.
+      // Let's assume the animation is enough feedback for now for non-Android.
+    }
+
+    setTimeout(onReset, 800);
+  };
+
+  const handleKeep = () => {
+    if (Platform.OS !== "web") {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
+    setExitAnimation("keep");
+
+    if (Platform.OS === "android") {
+      ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
+    }
+
+    setTimeout(onReset, 800);
+  };
 
   // Get translated fortune title and message
   const fortuneTitle = t(`fortune.levels.${fortune.level}`);
@@ -71,7 +105,13 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
     <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8 w-full h-full absolute inset-0 z-50">
       <MotiView
         from={{ opacity: 0, scale: 0.9, translateY: 20 }}
-        animate={{ opacity: 1, scale: 1, translateY: 0 }}
+
+        animate={{
+          opacity: exitAnimation ? 0 : 1,
+          scale: exitAnimation === "keep" ? 0.5 : exitAnimation === "tie" ? 0.8 : 1,
+          translateY: exitAnimation === "tie" ? -300 : exitAnimation === "keep" ? 100 : 0,
+          translateX: exitAnimation === "keep" ? -100 : 0
+        }}
         transition={{ type: "spring", damping: 20 }}
         className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative"
         ref={scrollRef}
@@ -138,11 +178,19 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
           >
             <Text className="text-slate-800 font-bold">{t("common.share")}</Text>
           </TouchableOpacity>
+
           <TouchableOpacity
-            onPress={onReset}
-            className="flex-1 py-3 bg-slate-900 rounded-full items-center"
+            onPress={handleTie}
+            className="flex-1 py-3 bg-white border border-amber-200 rounded-full items-center"
           >
-            <Text className="text-white font-bold">{t("common.close")}</Text>
+            <Text className="text-amber-700 font-bold">{t("fortune.tie")}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={handleKeep}
+            className="flex-1 py-3 bg-amber-600 rounded-full items-center shadow-sm"
+          >
+            <Text className="text-white font-bold">{t("fortune.keep")}</Text>
           </TouchableOpacity>
         </View>
 

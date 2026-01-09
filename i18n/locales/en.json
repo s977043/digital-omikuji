@@ -18,6 +18,10 @@
     "fortune": {
         "shareTitle": "Share Omikuji",
         "shareMessage": "🎍 New Year Omikuji 2026 🎍\n\nMy fortune is... ✨ {{title}} ✨\n\"{{description}}\"\n\n#Omikuji2026 #NewYear",
+        "tie": "Tie",
+        "keep": "Keep",
+        "toastTie": "Fortune tied",
+        "toastKeep": "Fortune kept",
         "levels": {
             "daikichi": "Great Blessing",
             "chukichi": "Middle Blessing",
