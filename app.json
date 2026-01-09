@@ -2,7 +2,7 @@
     "expo": {
         "name": "デジタルおみくじ",
         "slug": "digital-omikuji",
-        "version": "1.1.0",
+        "version": "1.0.0",
         "orientation": "portrait",
         "userInterfaceStyle": "light",
         "icon": "./assets/icon.png",
@@ -45,7 +45,8 @@
                 "@sentry/react-native/expo",
                 {
                     "organization": "mine-take",
-                    "project": "digital-omikuji"
+                    "project": "digital-omikuji",
+                    "url": "https://sentry.io/"
                 }
             ]
         ],

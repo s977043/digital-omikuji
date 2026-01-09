@@ -152,7 +152,7 @@ jobs:
 
       - name: Install App on Simulator
         run: |
-          SIMULATOR=$(xcrun simctl list devices available | grep -E "iPhone" | head -1 | sed 's/.*(\([A-Z0-9-]*\)).*/\1/')
+          SIMULATOR=$(xcrun simctl list devices available | grep -E "iPhone" | head -1 | sed 's/.*(\ ([A-Z0-9-]*\)).*/\1/')
           echo "Using simulator: $SIMULATOR"
           xcrun simctl boot "$SIMULATOR" || true
           xcrun simctl install "$SIMULATOR" "build/Build/Products/Debug-iphonesimulator/${IOS_SCHEME}.app"
