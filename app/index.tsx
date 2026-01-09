@@ -427,7 +427,9 @@ export default function OmikujiApp() {
             <TouchableOpacity
               onPress={handleShakeStart}
               className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
-              accessibilityLabel={isSensorAvailable === false ? "おみくじを引く" : "デバッグ用に強制実行"}
+              accessibilityLabel={
+                isSensorAvailable === false ? "おみくじを引く" : "デバッグ用に強制実行"
+              }
               accessibilityRole="button"
             >
               <Text className="text-white font-bold">
