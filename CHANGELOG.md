@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2026-01-09
+
+### Added
+
+- **Digital Ritual Enrichment**: Enhanced haptic patterns during omikuji shaking for more realistic feedback.
+- **Accessibility Improvements**: Added accessibility labels and hints to primary UI elements (Draw button, History, Mute).
+
+### Changed
+
+- **Sentry Trace Accuracy**: Updated app versioning to 1.1.0 to correctly sync with Sentry releases.
+
+### Fixed
+
+- Fixed a bug where the application version was hardcoded to 1.0.0 in `app.config.ts`, overriding the configuration in `app.json`.
+
 ## [1.0.0] - 2026-01-05
 
 ### Added

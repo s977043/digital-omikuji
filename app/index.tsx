@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { View, Text, TouchableOpacity, Platform, ImageBackground, Image, ViewStyle } from "react-native";
-
-// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
-type WebStyle = ViewStyle & {
-  minHeight?: number | string;
-};
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ImageBackground,
+  Image,
+  ViewStyle,
+} from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
@@ -16,7 +19,12 @@ import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
 // global.css is imported in _layout.tsx
 
-import { DrawingOverlay } from "../components/DrawingOverlay"; // Import DrawingOverlay
+import { DrawingOverlay } from "../components/DrawingOverlay";
+
+// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
+type WebStyle = ViewStyle & {
+  minHeight?: number | string;
+}; // Import DrawingOverlay
 
 // ... (other imports)
 
@@ -141,6 +149,25 @@ export default function OmikujiApp() {
     };
   }, []);
 
+  // --- おみくじを振る際の小刻みな振動（儀式性向上） ---
+  useEffect(() => {
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    if (appState === "SHAKING") {
+      // 儀式感を出すために小刻みな振動を繰り返す
+      intervalId = setInterval(() => {
+        triggerHaptic({
+          type: "impact",
+          style: Haptics.ImpactFeedbackStyle.Light,
+        });
+      }, 150); // 150ms間隔で振動
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [appState]);
+
   const toggleMute = useCallback(() => {
     setIsMuted((prevMuted) => {
       const nextMuted = !prevMuted;
@@ -251,11 +278,11 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-            // 強制的にビューポート全体を覆うように 100vh を指定する。
-            minHeight: "100vh",
-          } as WebStyle)
+              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+              // 強制的にビューポート全体を覆うように 100vh を指定する。
+              minHeight: "100vh",
+            } as WebStyle)
           : {}),
       }}
     >
@@ -297,6 +324,9 @@ export default function OmikujiApp() {
                     onPress={handleShakeStart}
                     className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
                     style={DRAW_BUTTON_STYLE}
+                    accessibilityLabel="おみくじを引く"
+                    accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
+                    accessibilityRole="button"
                   >
                     <Text className="text-white font-shippori-bold text-2xl tracking-widest text-center">
                       おみくじを引く
@@ -315,6 +345,8 @@ export default function OmikujiApp() {
                 <TouchableOpacity
                   onPress={handleResultView}
                   className="bg-slate-800/90 px-8 py-4 rounded-full mt-4 border border-white/30 shadow-xl active:bg-slate-700 backdrop-blur-sm"
+                  accessibilityLabel="結果をもう一度見る"
+                  accessibilityRole="button"
                 >
                   <Text className="text-white font-shippori font-bold text-lg tracking-wider">
                     結果をもう一度見る
@@ -422,6 +454,10 @@ export default function OmikujiApp() {
             <TouchableOpacity
               onPress={handleShakeStart}
               className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
+              accessibilityLabel={
+                isSensorAvailable === false ? "おみくじを引く" : "デバッグ用に強制実行"
+              }
+              accessibilityRole="button"
             >
               <Text className="text-white font-bold">
                 {isSensorAvailable === false ? "おみくじを引く" : "🔧 デバッグ"}
@@ -435,6 +471,9 @@ export default function OmikujiApp() {
               <TouchableOpacity
                 onPress={() => router.push("/history")}
                 className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+                accessibilityLabel="履歴を見る"
+                accessibilityHint="これまでに引いたおみくじの履歴を表示します"
+                accessibilityRole="button"
               >
                 <Text className="text-white font-bold">履歴</Text>
               </TouchableOpacity>
@@ -443,6 +482,8 @@ export default function OmikujiApp() {
               <TouchableOpacity
                 onPress={toggleMute}
                 className="absolute top-12 left-6 bg-black/40 px-4 py-2 rounded-full border border-white/30 active:bg-black/60 flex-row items-center"
+                accessibilityLabel={isMuted ? "音声をオンにする" : "音声をオフにする"}
+                accessibilityRole="button"
               >
                 <Text className="text-xl mr-2">{isMuted ? "🔕" : "🔔"}</Text>
                 <Text className="text-white text-sm font-bold">{isMuted ? "OFF" : "ON"}</Text>
@@ -454,6 +495,6 @@ export default function OmikujiApp() {
           )}
         </View>
       </ImageBackground>
-    </View >
+    </View>
   );
 }
