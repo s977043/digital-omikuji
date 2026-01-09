@@ -1,5 +1,4 @@
-import "react-native-get-random-values";
-import { v4 as uuidv4 } from "uuid";
+import * as Crypto from "expo-crypto";
 import { ACQUIRED_FORTUNES } from "../data/omikujiData";
 import { OmikujiResult } from "../types/omikuji";
 
@@ -32,7 +31,7 @@ export const drawOmikuji = (): OmikujiResult => {
 
   // 5. Construct Result
   return {
-    id: uuidv4(),
+    id: Crypto.randomUUID(),
     level: selectedData.level,
     messageIndex,
     image: selectedData.image,
