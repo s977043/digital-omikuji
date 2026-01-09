@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { View, Text, TouchableOpacity, Platform, ImageBackground, Image, ViewStyle } from "react-native";
-
-// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
-type WebStyle = ViewStyle & {
-  minHeight?: number | string;
-};
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ImageBackground,
+  Image,
+  ViewStyle,
+} from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
@@ -16,7 +19,12 @@ import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
 // global.css is imported in _layout.tsx
 
-import { DrawingOverlay } from "../components/DrawingOverlay"; // Import DrawingOverlay
+import { DrawingOverlay } from "../components/DrawingOverlay";
+
+// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
+type WebStyle = ViewStyle & {
+  minHeight?: number | string;
+}; // Import DrawingOverlay
 
 // ... (other imports)
 
@@ -270,11 +278,11 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-            // 強制的にビューポート全体を覆うように 100vh を指定する。
-            minHeight: "100vh",
-          } as WebStyle)
+              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+              // 強制的にビューポート全体を覆うように 100vh を指定する。
+              minHeight: "100vh",
+            } as WebStyle)
           : {}),
       }}
     >
@@ -487,6 +495,6 @@ export default function OmikujiApp() {
           )}
         </View>
       </ImageBackground>
-    </View >
+    </View>
   );
 }
