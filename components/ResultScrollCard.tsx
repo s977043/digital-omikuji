@@ -31,11 +31,11 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
       ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
     }
 
-    // 1段階目: カードが飛んでいく (800ms)
+    // 1段階目: カードが飛んでいく (1200ms)
     // 2段階目: 結ばれた状態を表示 (ユーザーが閉じるまで固定)
     setTimeout(() => {
       setShowTiedComplete(true);
-    }, 800);
+    }, 1200);
   };
 
   const handleKeep = () => {
@@ -183,25 +183,30 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
 
       {/* 光のパーティクルエフェクト - 結ぶ時のみ */}
       {exitAnimation === "tie" && !showTiedComplete && (
-        <MotiView
-          from={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 2.5 }}
-          transition={{ type: "timing", duration: 700 }}
-          className="absolute w-48 h-48 bg-yellow-300/50 rounded-full z-0"
-          style={{ top: "20%", left: "50%", transform: [{ translateX: -96 }, { translateY: -96 }] }}
-        />
+        <View className="absolute inset-0 items-center justify-center z-0">
+          <MotiView
+            from={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 2.5 }}
+            transition={{ type: "timing", duration: 700 }}
+            className="w-48 h-48 bg-yellow-300/50 rounded-full"
+          />
+        </View>
       )}
       {!showTiedComplete && (
         <MotiView
           from={{ opacity: 0, scale: 0.9, translateY: 20 }}
           animate={{
-            opacity: exitAnimation ? 0 : 1,
-            scale: exitAnimation === "keep" ? 0.15 : exitAnimation === "tie" ? 0.25 : 1,
-            translateY: exitAnimation === "tie" ? -450 : exitAnimation === "keep" ? 250 : 0,
+            opacity: exitAnimation === "tie" ? 0.2 : exitAnimation === "keep" ? 0 : 1,
+            scale: exitAnimation === "keep" ? 0.15 : exitAnimation === "tie" ? 0.3 : 1,
+            translateY: exitAnimation === "tie" ? -500 : exitAnimation === "keep" ? 250 : 0,
             translateX: exitAnimation === "keep" ? -180 : 0,
-            rotateZ: exitAnimation === "tie" ? "20deg" : exitAnimation === "keep" ? "-15deg" : "0deg",
+            rotateZ: exitAnimation === "tie" ? "25deg" : exitAnimation === "keep" ? "-15deg" : "0deg",
           }}
-          transition={{ type: "spring", damping: 18, stiffness: 90 }}
+          transition={
+            exitAnimation === "tie"
+              ? { type: "timing", duration: 1000 }
+              : { type: "spring", damping: 18, stiffness: 90 }
+          }
           className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10"
           ref={animationRef}
         >
