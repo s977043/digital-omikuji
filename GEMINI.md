@@ -16,12 +16,18 @@
 - 本ファイル（GEMINI.md）は、Gemini固有の振る舞い調整が必要な場合のみ参照する。
 - タスク概要、受入条件、編集対象ファイルを明確にする。
 
-## Project Context
+### Development Guidelines
 
-- **Framework**: Expo SDK 52 (Managed Workflow)
-- **Routing**: Expo Router v4 (File-based routing in `app/`)
-- **Styling**: NativeWind v4 (Tailwind CSS) - `className` props
-- **Animation**: Moti (powered by Reanimated)
-- **Language**: TypeScript (Strict Mode)
+- **CI Check**:
+  - CIエラーを防ぐため、PRプッシュ前やLintエラー発生時は必ずローカルで `pnpm lint:fix` と `pnpm tsc --noEmit` を実行する。
+  - `gh run list` と `gh run view <ID> --log-failed` でCIの結果を積極的に確認する。
+
+- **PR Review**:
+  - PRレビュー対応時は、`.agent/workflows/respond_to_pr_review.md` の手順に従い、CIエラー対応・コンフリクト解消・コメント対応を網羅的に行う。
+
+- **Accessibility & UX**:
+  - アニメーション実装時は必ず `reducedMotion` を考慮し、条件分岐を入れる。
+  - タップ可能な要素には必ず `accessibilityLabel` と `accessibilityRole` を設定する。
+  - マジックナンバーは避け、定数 (`const ANIMATION_TIMING` 等) として定義する。
 
 > ルール変更や運用メモは`AGENTS.md`に集約し、このファイルは最小限に保ってください。
