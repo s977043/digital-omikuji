@@ -13,7 +13,5 @@ export default function FortuneDisplay({
   onReset,
   reducedMotion = false,
 }: FortuneDisplayProps) {
-  return (
-    <ResultScrollCard fortune={fortune} onReset={onReset} reducedMotion={reducedMotion} />
-  );
+  return <ResultScrollCard fortune={fortune} onReset={onReset} reducedMotion={reducedMotion} />;
 }

@@ -1,5 +1,13 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import { View, Text, TouchableOpacity, ScrollView, Platform, Share, ToastAndroid } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  Share,
+  ToastAndroid,
+} from "react-native";
 import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
@@ -193,10 +201,16 @@ export const ResultScrollCard = ({
             <Text className="text-6xl mb-2">🌸</Text>
             <View className="flex-row items-start">
               <Text className="text-4xl">🌿</Text>
-              <View className="bg-white/90 px-3 py-4 rounded-sm mx-1 shadow-lg border border-amber-200" style={{ transform: [{ rotate: "-8deg" }] }}>
+              <View
+                className="bg-white/90 px-3 py-4 rounded-sm mx-1 shadow-lg border border-amber-200"
+                style={{ transform: [{ rotate: "-8deg" }] }}
+              >
                 <Text className="text-red-700 font-shippori-bold text-xs text-center">{`御\n神\n籤`}</Text>
               </View>
-              <View className="bg-white/90 px-3 py-4 rounded-sm mx-1 shadow-lg border border-amber-200" style={{ transform: [{ rotate: "5deg" }] }}>
+              <View
+                className="bg-white/90 px-3 py-4 rounded-sm mx-1 shadow-lg border border-amber-200"
+                style={{ transform: [{ rotate: "5deg" }] }}
+              >
                 <Text className="text-red-700 font-shippori-bold text-xs text-center">{`願\n成\n就`}</Text>
               </View>
               <Text className="text-4xl">🌿</Text>
@@ -232,17 +246,35 @@ export const ResultScrollCard = ({
       {!showTiedComplete && (
         <MotiView
           from={{ opacity: 0, scale: 0.9, translateY: 20 }}
-          animate={{
-            opacity: exitAnimation === "tie" ? 0.2 : exitAnimation === "keep" ? 0 : 1,
-            scale: exitAnimation === "keep" ? 0.15 : exitAnimation === "tie" ? 0.3 : 1,
-            translateY: exitAnimation === "tie" ? -500 : exitAnimation === "keep" ? 250 : 0,
-            translateX: exitAnimation === "keep" ? -180 : 0,
-            rotateZ: exitAnimation === "tie" ? "25deg" : exitAnimation === "keep" ? "-15deg" : "0deg",
-          }}
-          transition={
+          animate={
             exitAnimation === "tie"
-              ? { type: "timing", duration: 1000 }
-              : { type: "spring", damping: 18, stiffness: 90 }
+              ? reducedMotion
+                ? {
+                    opacity: 0,
+                    scale: REDUCED_MOTION_ANIMATION.scale,
+                    translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
+                    rotateZ: "0deg",
+                    translateX: 0,
+                  }
+                : TIE_ANIMATION
+              : exitAnimation === "keep"
+                ? reducedMotion
+                  ? {
+                      opacity: 0,
+                      scale: REDUCED_MOTION_ANIMATION.scale,
+                      translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
+                      translateX: 0,
+                      rotateZ: "0deg",
+                    }
+                  : KEEP_ANIMATION
+                : { opacity: 1, scale: 1, translateY: 0, translateX: 0, rotateZ: "0deg" }
+          }
+          transition={
+            reducedMotion
+              ? { type: "timing", duration: ANIMATION_TIMING.REDUCED_MOTION }
+              : exitAnimation === "tie"
+                ? { type: "timing", duration: ANIMATION_TIMING.TIE_TRANSITION }
+                : { type: "spring", damping: 18, stiffness: 90 }
           }
           className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10"
           ref={animationRef}
