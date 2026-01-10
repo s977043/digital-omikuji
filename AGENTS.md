@@ -42,7 +42,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 - PR タイトル: `[feat|fix|docs|refactor] summary`
 - PR 本文（日本語）: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクリーンショットや動画（UI 変更時）
 - テスト必須: `pnpm test` を Green にする。
-- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。
+- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。**その際、レビューコメントおよび対応は必ず日本語で行うこと。**
 
 ## 7. 並行タスクは Git Worktree で分離する
 
