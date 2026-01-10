@@ -4,8 +4,10 @@ import { router, useFocusEffect } from "expo-router";
 import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
 import { VersionDisplay } from "../components/VersionDisplay";
 import { HistoryList } from "../components/HistoryList";
+import { useTranslation } from "react-i18next";
 
 export default function HistoryScreen() {
+  const { t } = useTranslation();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,6 +24,14 @@ export default function HistoryScreen() {
       loadHistory();
     }, [loadHistory])
   );
+
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/");
+    }
+  }, []);
 
   const handleClearHistory = async () => {
     if (Platform.OS === "web") {
@@ -50,11 +60,15 @@ export default function HistoryScreen() {
   return (
     <View className="flex-1 bg-slate-900 p-4">
       {/* ヘッダー */}
-      <View className="flex-row justify-between items-center mb-6 pt-10">
+      <View className="flex-row justify-between items-center mb-6 pt-10 z-50">
         <TouchableOpacity
-          onPress={() => (router.canGoBack() ? router.back() : router.replace("/"))}
+          onPress={handleBack}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          className="py-2 pr-4"
+          accessibilityLabel={t("common.back")}
+          accessibilityRole="button"
         >
-          <Text className="text-white text-lg">戻る</Text>
+          <Text className="text-white text-lg">{t("common.back")}</Text>
         </TouchableOpacity>
         <Text className="text-white text-2xl font-shippori-bold">履歴</Text>
         {history.length > 0 && (
