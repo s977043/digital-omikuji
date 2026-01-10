@@ -32,10 +32,9 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
     }
 
     // 1段階目: カードが飛んでいく (800ms)
-    // 2段階目: 結ばれた状態を表示 (2000ms)
+    // 2段階目: 結ばれた状態を表示 (ユーザーが閉じるまで固定)
     setTimeout(() => {
       setShowTiedComplete(true);
-      setTimeout(onReset, 2000);
     }, 800);
   };
 
@@ -149,10 +148,10 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
             <View className="flex-row items-start">
               <Text className="text-4xl">🌿</Text>
               <View className="bg-white/90 px-3 py-4 rounded-sm mx-1 shadow-lg border border-amber-200" style={{ transform: [{ rotate: "-8deg" }] }}>
-                <Text className="text-red-700 font-shippori-bold text-xs text-center">御\n神\n籤</Text>
+                <Text className="text-red-700 font-shippori-bold text-xs text-center">{`御\n神\n籤`}</Text>
               </View>
               <View className="bg-white/90 px-3 py-4 rounded-sm mx-1 shadow-lg border border-amber-200" style={{ transform: [{ rotate: "5deg" }] }}>
-                <Text className="text-red-700 font-shippori-bold text-xs text-center">願\n成\n就</Text>
+                <Text className="text-red-700 font-shippori-bold text-xs text-center">{`願\n成\n就`}</Text>
               </View>
               <Text className="text-4xl">🌿</Text>
             </View>
@@ -163,7 +162,7 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
             from={{ opacity: 0, translateY: 20 }}
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ type: "timing", duration: 500, delay: 300 }}
-            className="mt-8"
+            className="mt-8 items-center"
           >
             <Text className="text-white text-xl font-shippori-bold text-center tracking-widest">
               おみくじを結びました
@@ -171,6 +170,13 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
             <Text className="text-white/70 text-sm font-shippori text-center mt-2">
               願いが届きますように...
             </Text>
+            {/* 閉じるリンク */}
+            <TouchableOpacity
+              onPress={onReset}
+              className="mt-8 px-6 py-3 bg-white/20 rounded-full border border-white/40"
+            >
+              <Text className="text-white font-bold text-base">{t("common.close")}</Text>
+            </TouchableOpacity>
           </MotiView>
         </MotiView>
       )}
