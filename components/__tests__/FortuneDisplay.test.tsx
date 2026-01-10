@@ -133,7 +133,8 @@ describe("FortuneDisplay", () => {
     fireEvent.press(getByText("結ぶ"));
 
     expect(mockOnReset).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(800);
+    // 1段階目: カードが飛んでいく (800ms) + 2段階目: 完了画面表示 (2000ms)
+    jest.advanceTimersByTime(2800);
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 
