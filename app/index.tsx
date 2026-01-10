@@ -171,17 +171,21 @@ export default function OmikujiApp() {
     if (appState === "SHAKING") {
       // 儀式感を出すために小刻みな振動を繰り返す
       intervalId = setInterval(() => {
-        triggerHaptic({
-          type: "impact",
-          style: Haptics.ImpactFeedbackStyle.Light,
-        }, false, reducedMotion);
+        triggerHaptic(
+          {
+            type: "impact",
+            style: Haptics.ImpactFeedbackStyle.Light,
+          },
+          false,
+          reducedMotion
+        );
       }, 150); // 150ms間隔で振動
     }
 
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [appState]);
+  }, [appState, reducedMotion]);
 
   const toggleMute = useCallback(() => {
     setIsMuted((prevMuted) => {
@@ -204,10 +208,14 @@ export default function OmikujiApp() {
     if (appState !== "IDLE" || hasDrawnToday) return;
 
     // Haptics: 開始時の軽い振動
-    triggerHaptic({
-      type: "impact",
-      style: Haptics.ImpactFeedbackStyle.Medium,
-    }, false, reducedMotion);
+    triggerHaptic(
+      {
+        type: "impact",
+        style: Haptics.ImpactFeedbackStyle.Medium,
+      },
+      false,
+      reducedMotion
+    );
 
     setAppState("SHAKING");
     soundManager.playSound("shake");
@@ -219,12 +227,16 @@ export default function OmikujiApp() {
       setAppState("DRAWING");
 
       // Haptics: 抽選中への切り替わり
-      triggerHaptic({
-        type: "impact",
-        style: Haptics.ImpactFeedbackStyle.Light,
-      }, false, reducedMotion);
+      triggerHaptic(
+        {
+          type: "impact",
+          style: Haptics.ImpactFeedbackStyle.Light,
+        },
+        false,
+        reducedMotion
+      );
     }, SHAKING_DURATION_MS);
-  }, [appState, drawFortune, hasDrawnToday]);
+  }, [appState, drawFortune, hasDrawnToday, reducedMotion]);
 
   // シェイク監視
   useEffect(() => {
@@ -252,10 +264,13 @@ export default function OmikujiApp() {
       const timer = setTimeout(() => {
         setAppState("REVEALING");
         // Haptics: 棒が出る瞬間 (FORCE)
-        triggerHaptic({
-          type: "notification",
-          style: Haptics.NotificationFeedbackType.Success,
-        }, true);
+        triggerHaptic(
+          {
+            type: "notification",
+            style: Haptics.NotificationFeedbackType.Success,
+          },
+          true
+        );
       }, DRAWING_DURATION_MS);
       return () => clearTimeout(timer);
     }
@@ -265,10 +280,13 @@ export default function OmikujiApp() {
       const timer = setTimeout(() => {
         setAppState("RESULT");
         // Haptics: 結果が出た時の重い衝撃 (FORCE)
-        triggerHaptic({
-          type: "impact",
-          style: Haptics.ImpactFeedbackStyle.Heavy,
-        }, true);
+        triggerHaptic(
+          {
+            type: "impact",
+            style: Haptics.ImpactFeedbackStyle.Heavy,
+          },
+          true
+        );
         soundManager.playSound("result");
       }, REVEALING_DURATION_MS);
       return () => clearTimeout(timer);
@@ -293,11 +311,11 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-            // 強制的にビューポート全体を覆うように 100vh を指定する。
-            minHeight: "100vh",
-          } as WebStyle)
+              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+              // 強制的にビューポート全体を覆うように 100vh を指定する。
+              minHeight: "100vh",
+            } as WebStyle)
           : {}),
       }}
     >
@@ -381,15 +399,31 @@ export default function OmikujiApp() {
               }}
               animate={{
                 translateX:
-                  appState === "SHAKING" ? (reducedMotion ? [-5, 5, -5] : [-15, 15, -15, 15, 0]) : 0,
+                  appState === "SHAKING"
+                    ? reducedMotion
+                      ? [-5, 5, -5]
+                      : [-15, 15, -15, 15, 0]
+                    : 0,
                 rotateZ:
-                  appState === "SHAKING" ? (reducedMotion ? "-2deg" : ["-10deg", "10deg", "0deg"]) : "0deg",
+                  appState === "SHAKING"
+                    ? reducedMotion
+                      ? "-2deg"
+                      : ["-10deg", "10deg", "0deg"]
+                    : "0deg",
                 scale: appState === "SHAKING" ? (reducedMotion ? 1 : [0.9, 1.1, 1]) : 1,
               }}
               transition={
                 reducedMotion
-                  ? { type: "timing", duration: SHAKE_ANIMATION.DURATION, loop: appState === "SHAKING" }
-                  : { type: "spring", duration: SHAKE_ANIMATION.DURATION, loop: appState === "SHAKING" }
+                  ? {
+                      type: "timing",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
+                  : {
+                      type: "spring",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
               }
               className="items-center"
             >
@@ -439,11 +473,11 @@ export default function OmikujiApp() {
                   reducedMotion
                     ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
                     : {
-                      type: "spring",
-                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                    }
+                        type: "spring",
+                        delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                        damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                        stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                      }
                 }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
@@ -467,11 +501,7 @@ export default function OmikujiApp() {
 
           {/* 結果画面 (コンポーネント) */}
           {appState === "RESULT" && fortune && (
-            <FortuneDisplay
-              fortune={fortune}
-              onReset={handleReset}
-              reducedMotion={reducedMotion}
-            />
+            <FortuneDisplay fortune={fortune} onReset={handleReset} reducedMotion={reducedMotion} />
           )}
 
           {/* デバッグボタン (開発時 または センサー無効時) */}

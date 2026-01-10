@@ -22,6 +22,8 @@
         "keep": "持ち帰る",
         "toastTie": "運勢を結びました",
         "toastKeep": "運勢を持ち帰りました",
+        "tiedTitle": "おみくじを結びました",
+        "tiedMessage": "願いが届きますように...",
         "levels": {
             "daikichi": "大吉",
             "chukichi": "中吉",

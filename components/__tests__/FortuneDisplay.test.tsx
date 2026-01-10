@@ -127,13 +127,17 @@ describe("FortuneDisplay", () => {
     expect(getByText("最高の運気です。新しいことに挑戦するチャンス！")).toBeTruthy();
   });
 
-  it("「結ぶ」ボタンを押すと遅延後に onReset が呼ばれる", () => {
+  it("「結ぶ」ボタンを押すと完了画面が表示され、閉じるボタンで onReset が呼ばれる", () => {
     const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
     fireEvent.press(getByText("結ぶ"));
 
     expect(mockOnReset).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(800);
+    // 1段階目: カードが飛んでいく (1200ms) → 完了画面表示
+    jest.advanceTimersByTime(1200);
+
+    // 完了画面の「閉じる」ボタンを押す
+    fireEvent.press(getByText("閉じる"));
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 
