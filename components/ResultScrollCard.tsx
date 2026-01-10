@@ -11,9 +11,14 @@ import { DETAIL_KEYS } from "../data/omikujiData";
 interface ResultScrollCardProps {
   fortune: OmikujiResult;
   onReset: () => void;
+  reducedMotion?: boolean;
 }
 
-export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) => {
+export const ResultScrollCard = ({
+  fortune,
+  onReset,
+  reducedMotion = false,
+}: ResultScrollCardProps) => {
   const animationRef = useRef<View>(null);
   const cardRef = useRef<View>(null);
   const { t } = useTranslation();
@@ -21,7 +26,7 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
   const [showTiedComplete, setShowTiedComplete] = useState(false);
 
   const handleTie = () => {
-    if (Platform.OS !== "web") {
+    if (Platform.OS !== "web" && !reducedMotion) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("tie");
@@ -39,7 +44,7 @@ export const ResultScrollCard = ({ fortune, onReset }: ResultScrollCardProps) =>
   };
 
   const handleKeep = () => {
-    if (Platform.OS !== "web") {
+    if (Platform.OS !== "web" && !reducedMotion) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("keep");
