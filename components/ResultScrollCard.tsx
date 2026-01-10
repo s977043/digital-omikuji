@@ -140,6 +140,16 @@ export const ResultScrollCard = ({
 
   return (
     <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8 w-full h-full absolute inset-0 z-50">
+      {/* 光のパーティクルエフェクト - 結ぶ時のみ */}
+      {exitAnimation === "tie" && (
+        <MotiView
+          from={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 2.5 }}
+          transition={{ type: "timing", duration: 700 }}
+          className="absolute w-48 h-48 bg-yellow-300/50 rounded-full z-0"
+          style={{ top: "20%", left: "50%", transform: [{ translateX: -96 }, { translateY: -96 }] }}
+        />
+      )}
       <MotiView
         from={{ opacity: 0, scale: 0.9, translateY: 20 }}
         animate={{
@@ -148,30 +158,33 @@ export const ResultScrollCard = ({
             exitAnimation === "keep"
               ? reducedMotion
                 ? 0.95
-                : 0.5
+                : 0.15
               : exitAnimation === "tie"
                 ? reducedMotion
                   ? 0.95
-                  : 0.8
+                  : 0.3
                 : 1,
           translateY:
             exitAnimation === "tie"
               ? reducedMotion
                 ? -20
-                : -300
+                : -500
               : exitAnimation === "keep"
                 ? reducedMotion
                   ? 20
-                  : 100
+                  : 250
                 : 0,
-          translateX: exitAnimation === "keep" ? (reducedMotion ? 0 : -100) : 0,
+          translateX: exitAnimation === "keep" ? (reducedMotion ? 0 : -180) : 0,
+          rotateZ: exitAnimation === "tie" ? "25deg" : exitAnimation === "keep" ? "-15deg" : "0deg",
         }}
         transition={
           reducedMotion
             ? { type: "timing", duration: 400 }
-            : { type: "spring", damping: 20 }
+            : exitAnimation === "tie"
+              ? { type: "timing", duration: 1000 }
+              : { type: "spring", damping: 18, stiffness: 90 }
         }
-        className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative"
+        className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10"
         ref={animationRef}
       >
         <View ref={cardRef} className="flex-1 bg-[#FDF5E6]">
