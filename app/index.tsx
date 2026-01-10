@@ -311,11 +311,11 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-            // 強制的にビューポート全体を覆うように 100vh を指定する。
-            minHeight: "100vh",
-          } as WebStyle)
+              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+              // 強制的にビューポート全体を覆うように 100vh を指定する。
+              minHeight: "100vh",
+            } as WebStyle)
           : {}),
       }}
     >
@@ -415,15 +415,15 @@ export default function OmikujiApp() {
               transition={
                 reducedMotion
                   ? {
-                    type: "timing",
-                    duration: SHAKE_ANIMATION.DURATION,
-                    loop: appState === "SHAKING",
-                  }
+                      type: "timing",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
                   : {
-                    type: "spring",
-                    duration: SHAKE_ANIMATION.DURATION,
-                    loop: appState === "SHAKING",
-                  }
+                      type: "spring",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
               }
               className="items-center"
             >
@@ -473,11 +473,11 @@ export default function OmikujiApp() {
                   reducedMotion
                     ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
                     : {
-                      type: "spring",
-                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                    }
+                        type: "spring",
+                        delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                        damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                        stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                      }
                 }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
