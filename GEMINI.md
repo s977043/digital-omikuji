@@ -18,6 +18,11 @@
 
 ### Development Guidelines
 
+- **Branch Strategy & Commits (CRITICAL)**:
+  - **`main` / `develop` への直接コミットは、いかなる理由（ドキュメント修正、小規模な調整等）があっても厳禁です。**
+  - すべての変更は必ず `feature/` 等の作業ブランチを作成し、PR を通じて反映してください。
+  - 作業完了後は必ずブランチを削除し、クリーンな状態を維持してください。
+
 - **CI Check**:
   - CIエラーを防ぐため、PRプッシュ前やLintエラー発生時は必ずローカルで `pnpm lint:fix` と `pnpm tsc --noEmit` を実行する。
   - `gh run list` と `gh run view <ID> --log-failed` でCIの結果を積極的に確認する。
