@@ -22,6 +22,8 @@
         "keep": "Keep",
         "toastTie": "Fortune tied",
         "toastKeep": "Fortune kept",
+        "tiedTitle": "Omikuji has been tied",
+        "tiedMessage": "May your wish come true...",
         "levels": {
             "daikichi": "Great Blessing",
             "chukichi": "Middle Blessing",

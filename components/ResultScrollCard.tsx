@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { View, Text, TouchableOpacity, ScrollView, Platform, Share, ToastAndroid } from "react-native";
 import { MotiView } from "moti";
 import { OmikujiResult } from "../types/omikuji";
@@ -7,6 +7,34 @@ import * as Haptics from "expo-haptics";
 import { buildShareText } from "../utils/buildShareText";
 import { useTranslation } from "react-i18next";
 import { DETAIL_KEYS } from "../data/omikujiData";
+
+// アニメーション定数
+const ANIMATION_TIMING = {
+  TIE_CARD_FLY: 1200,
+  TIE_TRANSITION: 1000,
+  KEEP_TRANSITION: 800,
+  REDUCED_MOTION: 400,
+} as const;
+
+const TIE_ANIMATION = {
+  opacity: 0.2,
+  scale: 0.3,
+  translateY: -500,
+  rotateZ: "25deg",
+} as const;
+
+const KEEP_ANIMATION = {
+  opacity: 0,
+  scale: 0.15,
+  translateY: 250,
+  translateX: -180,
+  rotateZ: "-15deg",
+} as const;
+
+const REDUCED_MOTION_ANIMATION = {
+  scale: 0.95,
+  translateY: { tie: -20, keep: 20 },
+} as const;
 
 interface ResultScrollCardProps {
   fortune: OmikujiResult;
@@ -21,29 +49,42 @@ export const ResultScrollCard = ({
 }: ResultScrollCardProps) => {
   const animationRef = useRef<View>(null);
   const cardRef = useRef<View>(null);
+  const tieTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const keepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { t } = useTranslation();
   const [exitAnimation, setExitAnimation] = useState<"tie" | "keep" | null>(null);
   const [showTiedComplete, setShowTiedComplete] = useState(false);
 
-  const handleTie = () => {
+  // タイマークリーンアップ
+  useEffect(() => {
+    return () => {
+      if (tieTimerRef.current) clearTimeout(tieTimerRef.current);
+      if (keepTimerRef.current) clearTimeout(keepTimerRef.current);
+    };
+  }, []);
+
+  const handleTie = useCallback(() => {
+    // ボタン連打防止
+    if (exitAnimation) return;
+
     if (Platform.OS !== "web" && !reducedMotion) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("tie");
 
-    // Show toast
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
     }
 
-    // 1段階目: カードが飛んでいく (1200ms)
-    // 2段階目: 結ばれた状態を表示 (ユーザーが閉じるまで固定)
-    setTimeout(() => {
+    tieTimerRef.current = setTimeout(() => {
       setShowTiedComplete(true);
-    }, 1200);
-  };
+    }, ANIMATION_TIMING.TIE_CARD_FLY);
+  }, [exitAnimation, reducedMotion, t]);
 
-  const handleKeep = () => {
+  const handleKeep = useCallback(() => {
+    // ボタン連打防止
+    if (exitAnimation) return;
+
     if (Platform.OS !== "web" && !reducedMotion) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
@@ -53,8 +94,8 @@ export const ResultScrollCard = ({
       ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
     }
 
-    setTimeout(onReset, 800);
-  };
+    keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.KEEP_TRANSITION);
+  }, [exitAnimation, reducedMotion, t, onReset]);
 
   // Get translated fortune title and message
   const fortuneTitle = t(`fortune.levels.${fortune.level}`);
@@ -170,15 +211,17 @@ export const ResultScrollCard = ({
             className="mt-8 items-center"
           >
             <Text className="text-white text-xl font-shippori-bold text-center tracking-widest">
-              おみくじを結びました
+              {t("fortune.tiedTitle")}
             </Text>
             <Text className="text-white/70 text-sm font-shippori text-center mt-2">
-              願いが届きますように...
+              {t("fortune.tiedMessage")}
             </Text>
             {/* 閉じるリンク */}
             <TouchableOpacity
               onPress={onReset}
               className="mt-8 px-6 py-3 bg-white/20 rounded-full border border-white/40"
+              accessibilityLabel={t("common.close")}
+              accessibilityRole="button"
             >
               <Text className="text-white font-bold text-base">{t("common.close")}</Text>
             </TouchableOpacity>
