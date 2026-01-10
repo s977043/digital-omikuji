@@ -37,7 +37,7 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 
 ## 6. ブランチ / PR / レビュー
 
-- 原則として `main`/`develop` への直接コミットは禁止。作業ブランチは `develop` から切って PR で統合する。
+- `main`/`develop` への直接コミットは禁止。ドキュメント修正等の軽微な変更であっても、必ず作業ブランチを `develop` から切り、PR を経由して統合すること。
 - `develop` が開発メインブランチ。本番リリース時に `develop` → `main` へマージする。
 - PR タイトル: `[feat|fix|docs|refactor] summary`
 - PR 本文（日本語）: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクリーンショットや動画（UI 変更時）
