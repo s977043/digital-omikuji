@@ -1,6 +1,7 @@
 # Agent Guide (Digital Omikuji)
 
 目的: このリポジトリで作業するコーディングエージェントが、最小の差分で安全に前進できるようにする。
+**言語: エージェントとのやり取り、思考ログ、PRの記述、コミットメッセージ等は原則として日本語を使用する。**
 
 ## WHAT（地図）
 
@@ -15,7 +16,7 @@
   - hooks/: 抽選ロジックなどのフック
   - utils/: サウンド管理などのユーティリティ
   - assets/: 静的リソース
-  - docs/: 詳細ドキュメント（必要なときだけ参照）
+  - docs/: 詳細ドキュメント（guides/project/designなどに分類）
 - Entrypoints:
   - app/: 画面の起点
   - hooks/: くじ抽選・状態管理の起点
@@ -42,7 +43,7 @@
   - pnpm build（必要なときだけ）
   - CI: .github/workflows/ を参照
 - When unsure:
-  - README → docs/ の順で一次情報を読む
+  - README → docs/guides/ の順で一次情報を読む
   - 既存の実装パターンを優先し、一般論で上書きしない
 
 - Expo SDK 52（Managed）, Expo Router v4。
@@ -261,4 +262,9 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
 ## 12. 参考
 
 - プロジェクト構成: `app/`（画面）, `components/`（UI コンポーネント）, `docs/`（ドキュメント）。
+- 詳細なドキュメント構成:
+  - `docs/guides/`: 開発者およびユーザー向けガイド
+  - `docs/project/`: プロジェクト管理、メタ情報
+  - `docs/design/`: デザインガイドライン
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。
+
