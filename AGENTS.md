@@ -37,7 +37,10 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 
 ## 6. ブランチ / PR / レビュー
 
-- `main`/`develop` への直接コミットは禁止。ドキュメント修正等の軽微な変更であっても、必ず作業ブランチを `develop` から切り、PR を経由して統合すること。
+- `main`/`develop` への直接コミットは禁止（例外なし）。必ず作業ブランチを切り、PR を経由して統合すること。
+- 作業ブランチは `develop` から作成し、命名は `feature/`, `fix/`, `docs/`, `refactor/` を基本とする（並行タスクの worktree は §7 の `agent/<task-slug>` に従う）。
+- hotfix は `main` から `hotfix/<summary>` を作成し、`main` に PR。マージ後は同内容を `develop` に戻す（cherry-pick か follow-up PR）。
+- PR は原則 `develop` を base にして作成する（例外: リリースPRは `develop` → `main`、hotfix PR は `main` を base）。
 - `develop` が開発メインブランチ。本番リリース時に `develop` → `main` へマージする。
 - PR タイトル: `[feat|fix|docs|refactor] summary`
 - PR 本文（日本語）: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクリーンショットや動画（UI 変更時）
