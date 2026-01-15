@@ -1,13 +1,49 @@
-# AGENTS.md — Digital Omikuji Canonical Guide
+# Agent Guide (Digital Omikuji)
 
-Digital Omikuji での開発ルールを一元管理する正本です。Copilot / Claude / Gemini / Codex など、すべてのエージェントと人間開発者はこのファイルを参照してください。
+目的: このリポジトリで作業するコーディングエージェントが、最小の差分で安全に前進できるようにする。
 
-## 1. スコープと禁止事項
+## WHAT（地図）
 
-- 本ファイルの指示はリポジトリ全体に適用されます。
-- 編集禁止: `node_modules/`, `**/*.lock`, `.env*`, `secrets/`（秘密情報の追加・コミットは禁止）。
+- Stack:
+  - Expo SDK 52 (Managed) / TypeScript
+  - Expo Router v4
+  - NativeWind v4
+  - Moti (Reanimated)
+- Layout:
+  - app/: 画面・ルーティング
+  - components/: 再利用 UI
+  - hooks/: 抽選ロジックなどのフック
+  - utils/: サウンド管理などのユーティリティ
+  - assets/: 静的リソース
+  - docs/: 詳細ドキュメント（必要なときだけ参照）
+- Entrypoints:
+  - app/: 画面の起点
+  - hooks/: くじ抽選・状態管理の起点
 
-## 2. 技術スタックの要点
+## WHY（意図）
+
+- Goal: 「新春のデジタルおみくじ」をシェイク/触覚/アニメで体験として成立させる。
+- Architecture intent:
+  - 画面 (app) と部品 (components) とロジック (hooks/utils) を分離して影響範囲を小さくする。
+  - 実機依存（センサー/触覚/音）は Expo API で吸収し、UI から直接呼び出さない。
+- Non-goals:
+  - 無関係なリファクタ・命名祭り・整形だけの変更
+  - “便利そう” という理由だけで新規技術を追加
+  - “リンター家事”: 整形だけ、警告潰しだけ、スタイル統一だけの変更
+  - 自動生成の乱用: 大量の雛形生成・無根拠なファイル追加
+  - 管理外ファイルの編集: `node_modules/`, `**/*.lock`, `.env*`, `secrets/`
+
+## HOW（正解の検証）
+
+- Fast checks:
+  - pnpm start
+  - pnpm test
+- Build / CI parity:
+  - pnpm build（必要なときだけ）
+  - CI: .github/workflows/ を参照
+- When unsure:
+  - README → docs/ の順で一次情報を読む
+  - 既存の実装パターンを優先し、一般論で上書きしない
 
 - Expo SDK 52（Managed）, Expo Router v4。
 - スタイル: NativeWind v4（React Native コンポーネントに `className` を使用）。
@@ -37,12 +73,15 @@ Digital Omikuji での開発ルールを一元管理する正本です。Copilot
 
 ## 6. ブランチ / PR / レビュー
 
-- `main`/`develop` への直接コミットは禁止。ドキュメント修正等の軽微な変更であっても、必ず作業ブランチを `develop` から切り、PR を経由して統合すること。
+- `main`/`develop` への直接コミットは禁止（例外なし）。必ず作業ブランチを切り、PR を経由して統合すること。
+- 作業ブランチは `develop` から作成し、命名は `feature/`, `fix/`, `docs/`, `refactor/` を基本とする（並行タスクの worktree は 7. の `agent/<task-slug>` に従う）。
+- hotfix は `main` から `hotfix/<summary>` を作成し、`main` に PR。マージ後は同内容を `develop` に戻す（cherry-pick か follow-up PR）。
+- PR は原則 `develop` を base にして作成する（例外: リリースPRは `develop` → `main`、hotfix PR は `main` を base）。
 - `develop` が開発メインブランチ。本番リリース時に `develop` → `main` へマージする。
 - PR タイトル: `[feat|fix|docs|refactor] summary`
 - PR 本文（日本語）: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクリーンショットや動画（UI 変更時）
 - テスト必須: `pnpm test` を Green にする。
-- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。**その際、レビューコメントおよび対応は必ず日本語で行うこと。**
+- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。**その際、AI エージェントとのやりとりや、チーム内メンバー同士のレビューコメントおよび対応は原則として日本語で行うこと。外部コントリビューターや日本語話者でないレビュワーは英語でコメントしてよいが、必要に応じてメンテナーが日本語の要約コメントを追記する。**
 
 ## 7. 並行タスクは Git Worktree で分離する
 

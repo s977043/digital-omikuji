@@ -1,6 +1,28 @@
 {
   "skills": [
     {
+      "id": "sdd-core",
+      "name": "SDD Core",
+      "description": "仕様駆動開発（SDD）の原則とワークフローを強制するスキル。全ての実装作業の前に参照必須。Gate強制、Steering/Working ドキュメント体系を定義。",
+      "skill_path": "skills/sdd-core/SKILL.md",
+      "priority": "highest",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude",
+        "Copilot"
+      ],
+      "tags": [
+        "sdd",
+        "workflow",
+        "specification",
+        "gate",
+        "documentation"
+      ],
+      "last_updated": "2026-01-15"
+    },
+    {
       "id": "chrome-devtools-ui-survey",
       "name": "Chrome DevTools UI 調査",
       "description": "Chrome DevTools MCP で対象 UI をスクリーンショットし、レイアウトや要素構成を記録するスキル。Codex エージェントが L1 〜 L3 を順に読み込んで実行できるように整備します。",
@@ -49,6 +71,24 @@
         "generation"
       ],
       "last_updated": "2026-01-06"
+    },
+    {
+      "id": "react-best-practices",
+      "name": "React Best Practices",
+      "description": "Vercel流 React/Next.js パフォーマンス最適化ルール集（45ルール/8カテゴリ）。コードレビュー・リファクタ時に影響度順で適用。",
+      "skill_path": "skills/react-best-practices/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "react",
+        "performance",
+        "nextjs",
+        "optimization"
+      ],
+      "last_updated": "2026-01-15"
     }
   ]
 }
