@@ -13,6 +13,17 @@ const renderHookAndWaitForInitialLoad = async () => {
   return renderResult;
 };
 
+// Helper function to reset daily limit for testing
+// This clears both hook state and AsyncStorage to simulate a new day
+const resetDailyLimitForTest = async (
+  result: ReturnType<typeof renderHook<ReturnType<typeof useOmikujiLogic>, unknown>>["result"]
+) => {
+  await act(async () => {
+    await result.current.debugResetDailyLimit();
+    await AsyncStorage.removeItem("omikuji_last_draw_date");
+  });
+};
+
 describe("useOmikujiLogic", () => {
   beforeEach(async () => {
     await AsyncStorage.clear();
