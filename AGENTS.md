@@ -74,14 +74,14 @@
 ## 6. ブランチ / PR / レビュー
 
 - `main`/`develop` への直接コミットは禁止（例外なし）。必ず作業ブランチを切り、PR を経由して統合すること。
-- 作業ブランチは `develop` から作成し、命名は `feature/`, `fix/`, `docs/`, `refactor/` を基本とする（並行タスクの worktree は §7 の `agent/<task-slug>` に従う）。
+- 作業ブランチは `develop` から作成し、命名は `feature/`, `fix/`, `docs/`, `refactor/` を基本とする（並行タスクの worktree は 7. の `agent/<task-slug>` に従う）。
 - hotfix は `main` から `hotfix/<summary>` を作成し、`main` に PR。マージ後は同内容を `develop` に戻す（cherry-pick か follow-up PR）。
 - PR は原則 `develop` を base にして作成する（例外: リリースPRは `develop` → `main`、hotfix PR は `main` を base）。
 - `develop` が開発メインブランチ。本番リリース時に `develop` → `main` へマージする。
 - PR タイトル: `[feat|fix|docs|refactor] summary`
 - PR 本文（日本語）: 目的 / 変更点 / テスト結果ログ / 影響範囲 / スクリーンショットや動画（UI 変更時）
 - テスト必須: `pnpm test` を Green にする。
-- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。**その際、レビューコメントおよび対応は必ず日本語で行うこと。**
+- レビュー: 少なくとも Copilot / Gemini / Codex にレビューを依頼する。**その際、AI エージェントとのやりとりや、チーム内メンバー同士のレビューコメントおよび対応は原則として日本語で行うこと。外部コントリビューターや日本語話者でないレビュワーは英語でコメントしてよいが、必要に応じてメンテナーが日本語の要約コメントを追記する。**
 
 ## 7. 並行タスクは Git Worktree で分離する
 
