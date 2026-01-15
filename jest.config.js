@@ -1,7 +1,7 @@
 module.exports = {
   preset: "jest-expo",
   transformIgnorePatterns: [
-    "[/\\\\](?:node_modules|\\.pnpm)[/\\\\](?!.*((jest-)?react-native|@react-native(-community)?|@react-native/js-polyfills|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|uuid|moti))",
+    "node_modules/(?!(.pnpm|react-native|@react-native|expo|@expo|moti|react-native-reanimated|react-native-css-interop|react-native-worklets|react-native-worklets-core|@react-native-community|@testing-library))",
   ],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   coverageDirectory: "coverage",
