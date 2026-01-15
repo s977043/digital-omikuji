@@ -67,10 +67,7 @@ describe("useOmikujiLogic", () => {
     expect(result.current.fortune).not.toBeNull();
 
     // Reset daily limit (simulate next day)
-    await act(async () => {
-      await result.current.debugResetDailyLimit();
-      await AsyncStorage.removeItem("omikuji_last_draw_date");
-    });
+    await resetDailyLimitForTest(result);
     // debugResetDailyLimit clears fortune, so we can't test resetFortune clearing it here directly
     // but we verify the primary requirement: existing fortune is KEPT.
     expect(result.current.fortune).toBeNull();
@@ -80,10 +77,7 @@ describe("useOmikujiLogic", () => {
     const { result } = await renderHookAndWaitForInitialLoad();
 
     for (let i = 0; i < 10; i++) {
-      await act(async () => {
-        await result.current.debugResetDailyLimit();
-        await AsyncStorage.removeItem("omikuji_last_draw_date");
-      });
+      await resetDailyLimitForTest(result);
       await act(async () => {
         await result.current.drawFortune();
       });
@@ -100,9 +94,8 @@ describe("useOmikujiLogic", () => {
     const { result } = await renderHookAndWaitForInitialLoad();
 
     for (let i = 0; i < 1000; i++) {
+      await resetDailyLimitForTest(result);
       await act(async () => {
-        await result.current.debugResetDailyLimit();
-        await AsyncStorage.removeItem("omikuji_last_draw_date");
         await result.current.drawFortune();
       });
 
@@ -174,10 +167,7 @@ describe("useOmikujiLogic", () => {
     expect(result.current.fortune).toBe(firstFortune); // Same object reference
 
     // Simulate next day (reset)
-    await act(async () => {
-      await result.current.debugResetDailyLimit();
-      await AsyncStorage.removeItem("omikuji_last_draw_date");
-    });
+    await resetDailyLimitForTest(result);
     expect(result.current.hasDrawnToday).toBe(false);
 
     // Third draw (should be new)
