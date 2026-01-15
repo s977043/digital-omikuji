@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import { Share } from "react-native";
 import FortuneDisplay from "../FortuneDisplay";
 import { OmikujiResult } from "../../types/omikuji";
@@ -134,7 +134,9 @@ describe("FortuneDisplay", () => {
 
     expect(mockOnReset).not.toHaveBeenCalled();
     // 1段階目: カードが飛んでいく (1200ms) → 完了画面表示
-    jest.advanceTimersByTime(1200);
+    act(() => {
+      jest.advanceTimersByTime(1200);
+    });
 
     // 完了画面の「閉じる」ボタンを押す
     fireEvent.press(getByText("閉じる"));
@@ -147,7 +149,9 @@ describe("FortuneDisplay", () => {
     fireEvent.press(getByText("持ち帰る"));
 
     expect(mockOnReset).not.toHaveBeenCalled();
-    jest.advanceTimersByTime(800);
+    act(() => {
+      jest.advanceTimersByTime(800);
+    });
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 

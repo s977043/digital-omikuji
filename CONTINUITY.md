@@ -1,3 +1,5 @@
+# Continuity Context
+
 Goal (成功条件を含む):
 
 - Update agent configuration files (AGENTS.md and thin wrappers) with concise WHAT/WHY/HOW/Constraints guidance and commit changes.

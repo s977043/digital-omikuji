@@ -1,11 +1,35 @@
 import "@testing-library/jest-native/extend-expect";
 
-// Mock react-native-reanimated
-jest.mock("react-native-reanimated", () => {
-  const Reanimated = require("react-native-reanimated/mock");
-  Reanimated.default.call = () => {};
-  return Reanimated;
-});
+// Mock react-native-worklets for Reanimated v4 compatibility
+// Reanimated v4 requires worklets for its threading model, but in Jest (Node.js environment)
+// native worklet execution is not available. These mocks provide necessary stubs.
+jest.mock("react-native-worklets", () => ({
+  init: jest.fn(),
+  Worklets: {
+    createRunInContext: jest.fn(),
+    createContext: jest.fn(),
+  },
+  // createSerializable: pass-through for serialization in tests
+  createSerializable: (val) => val,
+  // isWorklet/isWorkletCallable: return false since we're not in a real worklet context
+  isWorklet: () => false,
+  isWorkletCallable: () => false,
+  WorkletsError: class extends Error {},
+  // serializableMappingCache: used by Reanimated for caching serialized objects
+  serializableMappingCache: new Map(),
+  // scheduleOnUI/scheduleOnRN: execute synchronously in tests for predictable behavior
+  scheduleOnUI: (fn) => fn,
+  scheduleOnRN: (fn) => fn,
+}));
+
+jest.mock("react-native-worklets-core", () => ({
+  Worklets: {
+    createRunInContext: jest.fn(),
+    createContext: jest.fn(),
+  },
+}));
+
+require("react-native-reanimated").setUpTests();
 
 // Mock expo-haptics
 jest.mock("expo-haptics", () => ({
