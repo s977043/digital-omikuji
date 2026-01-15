@@ -207,7 +207,7 @@ git push origin develop
 
 ## 💡 参考資料
 
-- **VersionInfo 実装**: [utils/VersionInfo.ts](../utils/VersionInfo.ts)
-- **テスト実装**: [utils/**tests**/VersionInfo.test.ts](../utils/__tests__/VersionInfo.test.ts)
+- **VersionInfo 実装**: [utils/VersionInfo.ts](../../utils/VersionInfo.ts)
+- **テスト実装**: [utils/**tests**/VersionInfo.test.ts](../../utils/__tests__/VersionInfo.test.ts)
 - **Expo ドキュメント**: <https://docs.expo.dev/>
 - **Vercel デプロイ**: <https://vercel.com/docs>
