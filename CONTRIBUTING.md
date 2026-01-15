@@ -22,12 +22,12 @@ This project and everyone participating in it is governed by the [Digital Omikuj
 
 ### Pull Requests
 
-1. Fork the repo and create your branch from `main`.
+1. Fork the repo and create your branch from `develop`.
 2. If you've added code that should be tested, add tests.
 3. If you've changed APIs, update the documentation.
 4. Ensure the test suite passes.
 5. Make sure your code lints.
-6. Issue that pull request!
+6. Issue that pull request! (For detailed agent guidelines, see [AGENTS.md](AGENTS.md).)
 
 ## Development Setup
 
