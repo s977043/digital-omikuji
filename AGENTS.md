@@ -155,8 +155,21 @@
 - **Codex CLI**: `codex.md`（共通ルール参照。Skill は `.agent/skills/` を参照）。
 - **Antigravity**: `.antigravity/mission.md`（自律実行向けミッション定義）。
 - `.agent/` 配下はエージェント設定と Skill 用の補助ファイルを格納する。
+- **Agent Skills**: `.agent/skills/` に AI エージェントの知識を拡張する `SKILL.md` を配置する。
 
-## 9. テスト環境 (Jest + Reanimated v4)
+## 9. エージェントスキルの管理
+
+### 構成
+- スキル定義: `.agent/skills/<skill-name>/SKILL.md`
+- スキル登録: `.agent/skills/index.json`（すべてのスキルをここでリスト化する）
+
+### 新規スキルの追加手順
+1. `.agent/skills/` 配下に新しいディレクトリを作成する。
+2. `SKILL.md` を作成し、スキルの説明と具体的な指示を記述する。
+3. `.agent/skills/index.json` に新しく作成したスキルの情報を追記する。
+4. PR 段階でエージェントに「新しいスキルを試して」と指示し、動作を確認する。
+
+## 10. テスト環境 (Jest + Reanimated v4)
 
 ### 概要
 
@@ -223,8 +236,10 @@ await waitFor(() => {
 | `WorkletsError: Native part doesn't seem initialized` | worklets モック不足 | `jest.setup.js` で worklets を Reanimated より先にモック |
 | `SyntaxError: Cannot use import statement outside a module` | ESM 変換漏れ | `transformIgnorePatterns` にパッケージを追加 |
 | テストが不安定 (flaky) | 非同期状態更新の競合 | `act()` を分離し `waitFor()` を使用 |
+| `Git command failed: stdout maxBuffer length exceeded` | diff が大きすぎる (River Reviewer) | `river-reviewer/src/lib/git.mjs` の `maxBuffer` を拡大 |
+| CIで `River Reviewer` が失敗する | サブモジュールの更新漏れ | サブモジュールをプッシュし、親リポジトリで参照を更新 |
 
-## 10. サブモジュール (river-reviewer)
+## 11. サブモジュール (river-reviewer)
 
 - `river-reviewer/` は Git サブモジュールとして管理
 - 変更手順:
@@ -240,7 +255,7 @@ cd ..
 git add river-reviewer && git commit -m "chore: update river-reviewer"
 ```
 
-## 11. 参考
+## 12. 参考
 
 - プロジェクト構成: `app/`（画面）, `components/`（UI コンポーネント）, `docs/`（ドキュメント）。
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。
