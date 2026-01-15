@@ -5,7 +5,7 @@
 ## WHAT（地図）
 
 - Stack:
-  - Expo SDK 52 (Managed) / TypeScript
+  - Expo SDK 54 (Managed) / TypeScript
   - Expo Router v4
   - NativeWind v4
   - Moti (Reanimated)
@@ -156,7 +156,91 @@
 - **Antigravity**: `.antigravity/mission.md`（自律実行向けミッション定義）。
 - `.agent/` 配下はエージェント設定と Skill 用の補助ファイルを格納する。
 
-## 9. 参考
+## 9. テスト環境 (Jest + Reanimated v4)
+
+### 概要
+
+- Jest 29 + jest-expo を使用
+- Reanimated v4 は worklets エンジンを必要とするため、Node.js 環境では適切なモックが必須
+
+### 必須設定
+
+#### jest.setup.js
+
+```javascript
+// react-native-worklets のモック（Reanimated v4 より前に定義必須）
+jest.mock("react-native-worklets", () => ({
+  init: jest.fn(),
+  Worklets: { createRunInContext: jest.fn(), createContext: jest.fn() },
+  createSerializable: (val) => val,
+  isWorklet: () => false,
+  isWorkletCallable: () => false,
+  WorkletsError: class extends Error {},
+  serializableMappingCache: new Map(),
+  scheduleOnUI: (fn) => fn,
+  scheduleOnRN: (fn) => fn,
+}));
+
+// 公式セットアップを使用
+require("react-native-reanimated").setUpTests();
+```
+
+#### jest.config.js (pnpm 対応)
+
+```javascript
+transformIgnorePatterns: [
+  "node_modules/(?!(.pnpm|react-native|@react-native|expo|@expo|moti|react-native-reanimated|react-native-css-interop|react-native-worklets|react-native-worklets-core|@react-native-community|@testing-library))"
+],
+```
+
+### 非同期テストのパターン
+
+React 19 では状態更新の非同期処理が変更されたため、以下のパターンを使用:
+
+```typescript
+// ❌ 避ける: 同じ act 内でリセットとドローを実行
+await act(async () => {
+  await result.current.debugResetDailyLimit();
+  await result.current.drawFortune();
+});
+
+// ✅ 推奨: 別々の act ブロックに分離し、waitFor で待機
+await act(async () => {
+  await result.current.debugResetDailyLimit();
+});
+await act(async () => {
+  await result.current.drawFortune();
+});
+await waitFor(() => {
+  expect(result.current.fortune).not.toBeNull();
+});
+```
+
+### トラブルシューティング
+
+| エラー | 原因 | 解決策 |
+| ------ | ---- | ------ |
+| `WorkletsError: Native part doesn't seem initialized` | worklets モック不足 | `jest.setup.js` で worklets を Reanimated より先にモック |
+| `SyntaxError: Cannot use import statement outside a module` | ESM 変換漏れ | `transformIgnorePatterns` にパッケージを追加 |
+| テストが不安定 (flaky) | 非同期状態更新の競合 | `act()` を分離し `waitFor()` を使用 |
+
+## 10. サブモジュール (river-reviewer)
+
+- `river-reviewer/` は Git サブモジュールとして管理
+- 変更手順:
+  1. サブモジュール内でコミット・プッシュ
+  2. 親リポジトリでサブモジュール参照を更新してコミット
+
+```bash
+cd river-reviewer
+git checkout main && git pull
+# 変更を加える
+git add . && git commit -m "fix: ..." && git push
+cd ..
+git add river-reviewer && git commit -m "chore: update river-reviewer"
+```
+
+## 11. 参考
 
 - プロジェクト構成: `app/`（画面）, `components/`（UI コンポーネント）, `docs/`（ドキュメント）。
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。
