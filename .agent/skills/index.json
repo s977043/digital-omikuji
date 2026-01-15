@@ -89,6 +89,62 @@
         "optimization"
       ],
       "last_updated": "2026-01-15"
+    },
+    {
+      "id": "expo-building-ui",
+      "name": "building-ui",
+      "description": "Complete guide for building beautiful apps with Expo Router. Covers fundamentals, styling, components, navigation, animations, patterns, and native tabs.",
+      "skill_path": "skills/expo-building-ui/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "expo",
+        "react-native",
+        "ui",
+        "navigation",
+        "styling"
+      ],
+      "last_updated": "2026-01-16"
+    },
+    {
+      "id": "expo-deployment",
+      "name": "deployment",
+      "description": "Deploying Expo apps to iOS App Store, Android Play Store, web hosting, and API routes",
+      "skill_path": "skills/expo-deployment/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "expo",
+        "deployment",
+        "eas",
+        "app-store",
+        "play-store"
+      ],
+      "last_updated": "2026-01-16"
+    },
+    {
+      "id": "expo-upgrading",
+      "name": "upgrading-expo",
+      "description": "Guidelines for upgrading Expo SDK versions and fixing dependency issues",
+      "skill_path": "skills/expo-upgrading/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "expo",
+        "upgrade",
+        "migration",
+        "sdk"
+      ],
+      "last_updated": "2026-01-16"
     }
   ]
 }
