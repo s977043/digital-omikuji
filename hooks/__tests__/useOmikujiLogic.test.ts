@@ -58,6 +58,7 @@ describe("useOmikujiLogic", () => {
     // Reset daily limit (simulate next day)
     await act(async () => {
       await result.current.debugResetDailyLimit();
+      await AsyncStorage.removeItem("omikuji_last_draw_date");
     });
     // debugResetDailyLimit clears fortune, so we can't test resetFortune clearing it here directly
     // but we verify the primary requirement: existing fortune is KEPT.
@@ -70,11 +71,16 @@ describe("useOmikujiLogic", () => {
     for (let i = 0; i < 10; i++) {
       await act(async () => {
         await result.current.debugResetDailyLimit();
+        await AsyncStorage.removeItem("omikuji_last_draw_date");
+      });
+      await act(async () => {
         await result.current.drawFortune();
       });
 
-      expect(result.current.fortune).not.toBeNull();
-      expect(result.current.fortune?.id).toBeDefined();
+      await waitFor(() => {
+        expect(result.current.fortune).not.toBeNull();
+        expect(result.current.fortune?.id).toBeDefined();
+      });
     }
   });
 
@@ -85,6 +91,7 @@ describe("useOmikujiLogic", () => {
     for (let i = 0; i < 1000; i++) {
       await act(async () => {
         await result.current.debugResetDailyLimit();
+        await AsyncStorage.removeItem("omikuji_last_draw_date");
         await result.current.drawFortune();
       });
 
@@ -158,6 +165,7 @@ describe("useOmikujiLogic", () => {
     // Simulate next day (reset)
     await act(async () => {
       await result.current.debugResetDailyLimit();
+      await AsyncStorage.removeItem("omikuji_last_draw_date");
     });
     expect(result.current.hasDrawnToday).toBe(false);
 

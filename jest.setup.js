@@ -1,11 +1,29 @@
 import "@testing-library/jest-native/extend-expect";
 
-// Mock react-native-reanimated
-jest.mock("react-native-reanimated", () => {
-  const Reanimated = require("react-native-reanimated/mock");
-  Reanimated.default.call = () => {};
-  return Reanimated;
-});
+// Mock react-native-reanimated and its dependencies
+jest.mock("react-native-worklets", () => ({
+  init: jest.fn(),
+  Worklets: {
+    createRunInContext: jest.fn(),
+    createContext: jest.fn(),
+  },
+  createSerializable: (val) => val,
+  isWorklet: () => false,
+  isWorkletCallable: () => false,
+  WorkletsError: class extends Error {},
+  serializableMappingCache: new Map(),
+  scheduleOnUI: (fn) => fn,
+  scheduleOnRN: (fn) => fn,
+}));
+
+jest.mock("react-native-worklets-core", () => ({
+  Worklets: {
+    createRunInContext: jest.fn(),
+    createContext: jest.fn(),
+  },
+}));
+
+require("react-native-reanimated").setUpTests();
 
 // Mock expo-haptics
 jest.mock("expo-haptics", () => ({
