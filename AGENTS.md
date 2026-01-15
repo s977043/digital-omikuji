@@ -3,6 +3,7 @@
 目的: このリポジトリで作業するコーディングエージェントが、最小の差分で安全に前進できるようにする。
 
 ## WHAT（地図）
+
 - Stack:
   - Expo SDK 52 (Managed) / TypeScript
   - Expo Router v4
@@ -20,6 +21,7 @@
   - hooks/: くじ抽選・状態管理の起点
 
 ## WHY（意図）
+
 - Goal: 「新春のデジタルおみくじ」をシェイク/触覚/アニメで体験として成立させる。
 - Architecture intent:
   - 画面 (app) と部品 (components) とロジック (hooks/utils) を分離して影響範囲を小さくする。
@@ -32,6 +34,7 @@
   - 管理外ファイルの編集: `node_modules/`, `**/*.lock`, `.env*`, `secrets/`
 
 ## HOW（正解の検証）
+
 - Fast checks:
   - pnpm start
   - pnpm test
