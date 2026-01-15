@@ -71,7 +71,7 @@
 ## 6. ブランチ / PR / レビュー
 
 - `main`/`develop` への直接コミットは禁止（例外なし）。必ず作業ブランチを切り、PR を経由して統合すること。
-- 作業ブランチは `develop` から作成し、命名は `feature/`, `fix/`, `docs/`, `refactor/` を基本とする（並行タスクの worktree は §7 の `agent/<task-slug>` に従う）。
+- 作業ブランチは `develop` から作成し、命名は `feature/`, `fix/`, `docs/`, `refactor/` を基本とする（並行タスクの worktree は 7. の `agent/<task-slug>` に従う）。
 - hotfix は `main` から `hotfix/<summary>` を作成し、`main` に PR。マージ後は同内容を `develop` に戻す（cherry-pick か follow-up PR）。
 - PR は原則 `develop` を base にして作成する（例外: リリースPRは `develop` → `main`、hotfix PR は `main` を base）。
 - `develop` が開発メインブランチ。本番リリース時に `develop` → `main` へマージする。
