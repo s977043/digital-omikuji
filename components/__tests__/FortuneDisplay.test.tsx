@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react-native";
+import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
 import { Share } from "react-native";
 import FortuneDisplay from "../FortuneDisplay";
 import { OmikujiResult } from "../../types/omikuji";
@@ -17,6 +17,10 @@ jest.mock("react-i18next", () => ({
         "common.share": "シェア",
         "common.close": "閉じる",
         "fortune.shareTitle": "おみくじをシェア",
+        "fortune.tie": "結ぶ",
+        "fortune.keep": "持ち帰る",
+        "fortune.toastTie": "運勢を結びました",
+        "fortune.toastKeep": "運勢を持ち帰りました",
         "fortune.levels.daikichi": "大吉",
         "fortune.levels.kyo": "凶",
         "fortune.messages.daikichi": [
@@ -108,7 +112,12 @@ describe("FortuneDisplay", () => {
   };
 
   beforeEach(() => {
+    jest.useFakeTimers();
     jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
   });
 
   it("fortune が渡された時に結果とメッセージが表示される", () => {
@@ -118,11 +127,31 @@ describe("FortuneDisplay", () => {
     expect(getByText("最高の運気です。新しいことに挑戦するチャンス！")).toBeTruthy();
   });
 
-  it("閉じるボタンを押すと onReset が呼ばれる", () => {
+  it("「結ぶ」ボタンを押すと完了画面が表示され、閉じるボタンで onReset が呼ばれる", () => {
     const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
 
-    fireEvent.press(getByText("閉じる"));
+    fireEvent.press(getByText("結ぶ"));
 
+    expect(mockOnReset).not.toHaveBeenCalled();
+    // 1段階目: カードが飛んでいく (1200ms) → 完了画面表示
+    act(() => {
+      jest.advanceTimersByTime(1200);
+    });
+
+    // 完了画面の「閉じる」ボタンを押す
+    fireEvent.press(getByText("閉じる"));
+    expect(mockOnReset).toHaveBeenCalledTimes(1);
+  });
+
+  it("「持ち帰る」ボタンを押すと遅延後に onReset が呼ばれる", () => {
+    const { getByText } = render(<FortuneDisplay fortune={mockFortune} onReset={mockOnReset} />);
+
+    fireEvent.press(getByText("持ち帰る"));
+
+    expect(mockOnReset).not.toHaveBeenCalled();
+    act(() => {
+      jest.advanceTimersByTime(800);
+    });
     expect(mockOnReset).toHaveBeenCalledTimes(1);
   });
 

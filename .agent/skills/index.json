@@ -1,6 +1,28 @@
 {
   "skills": [
     {
+      "id": "sdd-core",
+      "name": "SDD Core",
+      "description": "仕様駆動開発（SDD）の原則とワークフローを強制するスキル。全ての実装作業の前に参照必須。Gate強制、Steering/Working ドキュメント体系を定義。",
+      "skill_path": "skills/sdd-core/SKILL.md",
+      "priority": "highest",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude",
+        "Copilot"
+      ],
+      "tags": [
+        "sdd",
+        "workflow",
+        "specification",
+        "gate",
+        "documentation"
+      ],
+      "last_updated": "2026-01-15"
+    },
+    {
       "id": "chrome-devtools-ui-survey",
       "name": "Chrome DevTools UI 調査",
       "description": "Chrome DevTools MCP で対象 UI をスクリーンショットし、レイアウトや要素構成を記録するスキル。Codex エージェントが L1 〜 L3 を順に読み込んで実行できるように整備します。",
@@ -49,6 +71,80 @@
         "generation"
       ],
       "last_updated": "2026-01-06"
+    },
+    {
+      "id": "react-best-practices",
+      "name": "React Best Practices",
+      "description": "Vercel流 React/Next.js パフォーマンス最適化ルール集（45ルール/8カテゴリ）。コードレビュー・リファクタ時に影響度順で適用。",
+      "skill_path": "skills/react-best-practices/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "react",
+        "performance",
+        "nextjs",
+        "optimization"
+      ],
+      "last_updated": "2026-01-15"
+    },
+    {
+      "id": "expo-building-ui",
+      "name": "building-ui",
+      "description": "Complete guide for building beautiful apps with Expo Router. Covers fundamentals, styling, components, navigation, animations, patterns, and native tabs.",
+      "skill_path": "skills/expo-building-ui/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "expo",
+        "react-native",
+        "ui",
+        "navigation",
+        "styling"
+      ],
+      "last_updated": "2026-01-16"
+    },
+    {
+      "id": "expo-deployment",
+      "name": "deployment",
+      "description": "Deploying Expo apps to iOS App Store, Android Play Store, web hosting, and API routes",
+      "skill_path": "skills/expo-deployment/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "expo",
+        "deployment",
+        "eas",
+        "app-store",
+        "play-store"
+      ],
+      "last_updated": "2026-01-16"
+    },
+    {
+      "id": "expo-upgrading",
+      "name": "upgrading-expo",
+      "description": "Guidelines for upgrading Expo SDK versions and fixing dependency issues",
+      "skill_path": "skills/expo-upgrading/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity"
+      ],
+      "tags": [
+        "expo",
+        "upgrade",
+        "migration",
+        "sdk"
+      ],
+      "last_updated": "2026-01-16"
     }
   ]
 }

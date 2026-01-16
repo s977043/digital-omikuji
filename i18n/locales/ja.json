@@ -18,6 +18,12 @@
     "fortune": {
         "shareTitle": "おみくじをシェア",
         "shareMessage": "🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ {{title}} ✨\n「{{description}}」\n\n#おみくじ2026 #新春",
+        "tie": "結ぶ",
+        "keep": "持ち帰る",
+        "toastTie": "運勢を結びました",
+        "toastKeep": "運勢を持ち帰りました",
+        "tiedTitle": "おみくじを結びました",
+        "tiedMessage": "願いが届きますように...",
         "levels": {
             "daikichi": "大吉",
             "chukichi": "中吉",

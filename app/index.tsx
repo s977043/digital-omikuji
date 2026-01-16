@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { View, Text, TouchableOpacity, Platform, ImageBackground, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Platform,
+  ImageBackground,
+  Image,
+  ViewStyle,
+  AccessibilityInfo,
+} from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
@@ -11,7 +20,12 @@ import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
 // global.css is imported in _layout.tsx
 
-import { DrawingOverlay } from "../components/DrawingOverlay"; // Import DrawingOverlay
+import { DrawingOverlay } from "../components/DrawingOverlay";
+
+// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
+type WebStyle = ViewStyle & {
+  minHeight?: number | string;
+}; // Import DrawingOverlay
 
 // ... (other imports)
 
@@ -56,8 +70,9 @@ type HapticFeedbackType =
   | { type: "impact"; style: Haptics.ImpactFeedbackStyle }
   | { type: "notification"; style: Haptics.NotificationFeedbackType };
 
-const triggerHaptic = (feedback: HapticFeedbackType) => {
+const triggerHaptic = (feedback: HapticFeedbackType, force = false, reducedMotion = false) => {
   if (Platform.OS === "web") return;
+  if (reducedMotion && !force) return; // Skip minor haptics if reduced motion is enabled
 
   if (feedback.type === "impact") {
     Haptics.impactAsync(feedback.style);
@@ -83,6 +98,19 @@ export default function OmikujiApp() {
   const showDebug = appVariant === "development";
 
   const [isMuted, setIsMuted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // --- Accessibility: Reduced Motion detection ---
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion);
+    const subscription = AccessibilityInfo.addEventListener(
+      "reduceMotionChanged",
+      setReducedMotion
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   // --- サウンドとセンサーの初期化 ---
   useEffect(() => {
@@ -136,6 +164,29 @@ export default function OmikujiApp() {
     };
   }, []);
 
+  // --- おみくじを振る際の小刻みな振動（儀式性向上） ---
+  useEffect(() => {
+    let intervalId: ReturnType<typeof setInterval> | null = null;
+
+    if (appState === "SHAKING") {
+      // 儀式感を出すために小刻みな振動を繰り返す
+      intervalId = setInterval(() => {
+        triggerHaptic(
+          {
+            type: "impact",
+            style: Haptics.ImpactFeedbackStyle.Light,
+          },
+          false,
+          reducedMotion
+        );
+      }, 150); // 150ms間隔で振動
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [appState, reducedMotion]);
+
   const toggleMute = useCallback(() => {
     setIsMuted((prevMuted) => {
       const nextMuted = !prevMuted;
@@ -157,10 +208,14 @@ export default function OmikujiApp() {
     if (appState !== "IDLE" || hasDrawnToday) return;
 
     // Haptics: 開始時の軽い振動
-    triggerHaptic({
-      type: "impact",
-      style: Haptics.ImpactFeedbackStyle.Medium,
-    });
+    triggerHaptic(
+      {
+        type: "impact",
+        style: Haptics.ImpactFeedbackStyle.Medium,
+      },
+      false,
+      reducedMotion
+    );
 
     setAppState("SHAKING");
     soundManager.playSound("shake");
@@ -172,12 +227,16 @@ export default function OmikujiApp() {
       setAppState("DRAWING");
 
       // Haptics: 抽選中への切り替わり
-      triggerHaptic({
-        type: "impact",
-        style: Haptics.ImpactFeedbackStyle.Light,
-      });
+      triggerHaptic(
+        {
+          type: "impact",
+          style: Haptics.ImpactFeedbackStyle.Light,
+        },
+        false,
+        reducedMotion
+      );
     }, SHAKING_DURATION_MS);
-  }, [appState, drawFortune, hasDrawnToday]);
+  }, [appState, drawFortune, hasDrawnToday, reducedMotion]);
 
   // シェイク監視
   useEffect(() => {
@@ -204,11 +263,14 @@ export default function OmikujiApp() {
     if (appState === "DRAWING") {
       const timer = setTimeout(() => {
         setAppState("REVEALING");
-        // Haptics: 棒が出る瞬間
-        triggerHaptic({
-          type: "notification",
-          style: Haptics.NotificationFeedbackType.Success,
-        });
+        // Haptics: 棒が出る瞬間 (FORCE)
+        triggerHaptic(
+          {
+            type: "notification",
+            style: Haptics.NotificationFeedbackType.Success,
+          },
+          true
+        );
       }, DRAWING_DURATION_MS);
       return () => clearTimeout(timer);
     }
@@ -217,11 +279,14 @@ export default function OmikujiApp() {
     if (appState === "REVEALING") {
       const timer = setTimeout(() => {
         setAppState("RESULT");
-        // Haptics: 結果が出た時の重い衝撃
-        triggerHaptic({
-          type: "impact",
-          style: Haptics.ImpactFeedbackStyle.Heavy,
-        });
+        // Haptics: 結果が出た時の重い衝撃 (FORCE)
+        triggerHaptic(
+          {
+            type: "impact",
+            style: Haptics.ImpactFeedbackStyle.Heavy,
+          },
+          true
+        );
         soundManager.playSound("result");
       }, REVEALING_DURATION_MS);
       return () => clearTimeout(timer);
@@ -239,7 +304,21 @@ export default function OmikujiApp() {
     // Note: Inline style is intentional fallback for Android white screen issue.
     // NativeWind styles may not apply immediately on first render, causing a white flash.
     // The inline backgroundColor ensures the view is never transparent during initialization.
-    <View className="flex-1 bg-slate-900" style={{ flex: 1, backgroundColor: "#0f172a" }}>
+    <View
+      className="flex-1 bg-slate-900"
+      style={{
+        flex: 1,
+        backgroundColor: "#0f172a",
+        ...(Platform.OS === "web"
+          ? ({
+              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+              // 強制的にビューポート全体を覆うように 100vh を指定する。
+              minHeight: "100vh",
+            } as WebStyle)
+          : {}),
+      }}
+    >
       <ImageBackground
         source={require("../assets/shrine_background.png")}
         style={{ flex: 1 }}
@@ -278,6 +357,9 @@ export default function OmikujiApp() {
                     onPress={handleShakeStart}
                     className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
                     style={DRAW_BUTTON_STYLE}
+                    accessibilityLabel="おみくじを引く"
+                    accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
+                    accessibilityRole="button"
                   >
                     <Text className="text-white font-shippori-bold text-2xl tracking-widest text-center">
                       おみくじを引く
@@ -296,6 +378,8 @@ export default function OmikujiApp() {
                 <TouchableOpacity
                   onPress={handleResultView}
                   className="bg-slate-800/90 px-8 py-4 rounded-full mt-4 border border-white/30 shadow-xl active:bg-slate-700 backdrop-blur-sm"
+                  accessibilityLabel="結果をもう一度見る"
+                  accessibilityRole="button"
                 >
                   <Text className="text-white font-shippori font-bold text-lg tracking-wider">
                     結果をもう一度見る
@@ -314,16 +398,33 @@ export default function OmikujiApp() {
                 scale: SHAKE_ANIMATION.SCALE_FROM,
               }}
               animate={{
-                translateX: SHAKE_ANIMATION.TRANSLATE_X,
-                rotateZ: `${SHAKE_ANIMATION.ROTATE_Z_DEG}deg`,
-                scale: SHAKE_ANIMATION.SCALE_TO,
+                translateX:
+                  appState === "SHAKING"
+                    ? reducedMotion
+                      ? [-5, 5, -5]
+                      : [-15, 15, -15, 15, 0]
+                    : 0,
+                rotateZ:
+                  appState === "SHAKING"
+                    ? reducedMotion
+                      ? "-2deg"
+                      : ["-10deg", "10deg", "0deg"]
+                    : "0deg",
+                scale: appState === "SHAKING" ? (reducedMotion ? 1 : [0.9, 1.1, 1]) : 1,
               }}
-              transition={{
-                type: "timing",
-                duration: SHAKE_ANIMATION.DURATION,
-                loop: true,
-                repeatReverse: true,
-              }}
+              transition={
+                reducedMotion
+                  ? {
+                      type: "timing",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
+                  : {
+                      type: "spring",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
+              }
               className="items-center"
             >
               <Text className="text-9xl mb-6">🫨</Text>
@@ -353,10 +454,11 @@ export default function OmikujiApp() {
               <MotiView
                 from={{ translateY: 200, rotate: "180deg" }}
                 animate={{ translateY: 0, rotate: "0deg" }}
-                transition={{
-                  type: "spring",
-                  damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING,
-                }}
+                transition={
+                  reducedMotion
+                    ? { type: "timing", duration: 300 }
+                    : { type: "spring", damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING }
+                }
                 className="w-40 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center"
               >
                 <View className="w-20 h-2 bg-yellow-600/30 rounded-full mb-2" />
@@ -367,12 +469,16 @@ export default function OmikujiApp() {
                 className="absolute w-16 h-48 bg-amber-50 bottom-12 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
                 from={{ translateY: 100, opacity: 0 }}
                 animate={{ translateY: -100, opacity: 1 }}
-                transition={{
-                  type: "spring",
-                  delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                  damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                  stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                }}
+                transition={
+                  reducedMotion
+                    ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
+                    : {
+                        type: "spring",
+                        delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                        damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                        stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                      }
+                }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
                   {"2026\n奉\n納"}
@@ -395,7 +501,7 @@ export default function OmikujiApp() {
 
           {/* 結果画面 (コンポーネント) */}
           {appState === "RESULT" && fortune && (
-            <FortuneDisplay fortune={fortune} onReset={handleReset} />
+            <FortuneDisplay fortune={fortune} onReset={handleReset} reducedMotion={reducedMotion} />
           )}
 
           {/* デバッグボタン (開発時 または センサー無効時) */}
@@ -403,6 +509,10 @@ export default function OmikujiApp() {
             <TouchableOpacity
               onPress={handleShakeStart}
               className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
+              accessibilityLabel={
+                isSensorAvailable === false ? "おみくじを引く" : "デバッグ用に強制実行"
+              }
+              accessibilityRole="button"
             >
               <Text className="text-white font-bold">
                 {isSensorAvailable === false ? "おみくじを引く" : "🔧 デバッグ"}
@@ -416,6 +526,9 @@ export default function OmikujiApp() {
               <TouchableOpacity
                 onPress={() => router.push("/history")}
                 className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+                accessibilityLabel="履歴を見る"
+                accessibilityHint="これまでに引いたおみくじの履歴を表示します"
+                accessibilityRole="button"
               >
                 <Text className="text-white font-bold">履歴</Text>
               </TouchableOpacity>
@@ -424,6 +537,8 @@ export default function OmikujiApp() {
               <TouchableOpacity
                 onPress={toggleMute}
                 className="absolute top-12 left-6 bg-black/40 px-4 py-2 rounded-full border border-white/30 active:bg-black/60 flex-row items-center"
+                accessibilityLabel={isMuted ? "音声をオンにする" : "音声をオフにする"}
+                accessibilityRole="button"
               >
                 <Text className="text-xl mr-2">{isMuted ? "🔕" : "🔔"}</Text>
                 <Text className="text-white text-sm font-bold">{isMuted ? "OFF" : "ON"}</Text>
