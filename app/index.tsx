@@ -94,8 +94,8 @@ export default function OmikujiApp() {
   const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
 
   // デバッグボタン用判定
-  const appVariant = Constants.expoConfig?.extra?.appVariant || "development";
-  const showDebug = appVariant === "development";
+  const appVariant = Constants.expoConfig?.extra?.appVariant || "production";
+  const showDebug = appVariant === "development" || __DEV__;
 
   const [isMuted, setIsMuted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -307,21 +307,21 @@ export default function OmikujiApp() {
     <View
       className="flex-1 bg-slate-900"
       style={{
-        flex: 1,
+        width: "100%",
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-            // 強制的にビューポート全体を覆うように 100vh を指定する。
-            minHeight: "100vh",
-          } as WebStyle)
-          : {}),
+            height: "100vh",
+            overflow: "hidden",
+          } as any)
+          : {
+            flex: 1,
+          }),
       }}
     >
       <ImageBackground
         source={require("../assets/shrine_background.png")}
-        style={{ flex: 1 }}
+        style={{ flex: 1, width: "100%" }}
         resizeMode="cover"
       >
         <View className="flex-1 items-center justify-center bg-black/40 relative overflow-hidden">

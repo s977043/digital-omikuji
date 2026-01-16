@@ -4,7 +4,8 @@ import { ExpoConfig, ConfigContext } from "expo/config";
 const PRIVACY_POLICY_URL = "https://digital-omikuji.vercel.app/privacy-policy";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const appVariant = process.env.APP_VARIANT || "development";
+  // NODE_ENVがproductionの場合はデフォルトでproductionとして扱う
+  const appVariant = process.env.APP_VARIANT || (process.env.NODE_ENV === "production" ? "production" : "development");
 
   let name = "おみくじ (Dev)";
   let bundleIdentifier = "jp.co.digitalomikuji.dev";
