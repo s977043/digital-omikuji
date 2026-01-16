@@ -6,7 +6,6 @@ import {
   Platform,
   ImageBackground,
   Image,
-  ViewStyle,
   AccessibilityInfo,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
@@ -22,10 +21,8 @@ import { soundManager } from "../utils/SoundManager";
 
 import { DrawingOverlay } from "../components/DrawingOverlay";
 
-// Web環境固有のスタイル定義（ViewStyleを拡張して vh/vw などの単位を許容）
-type WebStyle = ViewStyle & {
-  minHeight?: number | string;
-}; // Import DrawingOverlay
+// Web環境固有のスタイル定義は必要に応じて拡張可
+// Import DrawingOverlay
 
 // ... (other imports)
 
@@ -88,7 +85,7 @@ interface Subscription {
 export default function OmikujiApp() {
   const [appState, setAppState] = useState<AppState>("IDLE");
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
-  const [isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
+  const [_isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
   const subscription = useRef<Subscription | null>(null);
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
@@ -311,12 +308,12 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            height: "100vh",
-            overflow: "hidden",
-          } as any)
+              height: "100vh",
+              overflow: "hidden",
+            } as any)
           : {
-            flex: 1,
-          }),
+              flex: 1,
+            }),
       }}
     >
       <ImageBackground
@@ -336,8 +333,8 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
-                style={{ width: 184, height: 184 }}
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden"
+                style={{ width: 184, height: 184, position: "relative" }}
               >
                 <Image
                   source={
@@ -346,12 +343,18 @@ export default function OmikujiApp() {
                       : require("../assets/omikuji_cylinder.png")
                   }
                   className="rounded-full"
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="center"
+                  style={{
+                    width: 210,
+                    height: 210,
+                    position: "absolute",
+                    top: -13,
+                    left: 0,
+                  }}
+                  resizeMode="cover"
                 />
               </View>
               <Text
-                className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-black/50 shadow-sm"
+                className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-lg"
                 style={{ textDecorationLine: "none" }}
               >
                 {hasDrawnToday ? "本日の運勢は確認済みです" : "スマホを振っておみくじを引こう"}
@@ -421,15 +424,15 @@ export default function OmikujiApp() {
               transition={
                 reducedMotion
                   ? {
-                    type: "timing",
-                    duration: SHAKE_ANIMATION.DURATION,
-                    loop: appState === "SHAKING",
-                  }
+                      type: "timing",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
                   : {
-                    type: "spring",
-                    duration: SHAKE_ANIMATION.DURATION,
-                    loop: appState === "SHAKING",
-                  }
+                      type: "spring",
+                      duration: SHAKE_ANIMATION.DURATION,
+                      loop: appState === "SHAKING",
+                    }
               }
               className="items-center"
             >
@@ -479,11 +482,11 @@ export default function OmikujiApp() {
                   reducedMotion
                     ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
                     : {
-                      type: "spring",
-                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                    }
+                        type: "spring",
+                        delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                        damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                        stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                      }
                 }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">

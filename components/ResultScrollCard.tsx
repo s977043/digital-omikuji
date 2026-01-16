@@ -237,7 +237,9 @@ export const ResultScrollCard = ({
               accessibilityLabel={t("common.close")}
               accessibilityRole="button"
             >
-              <Text className="text-white font-bold text-base text-center">{t("common.close")}</Text>
+              <Text className="text-white font-bold text-base text-center">
+                {t("common.close")}
+              </Text>
             </TouchableOpacity>
           </MotiView>
         </MotiView>
@@ -250,22 +252,22 @@ export const ResultScrollCard = ({
             exitAnimation === "tie"
               ? reducedMotion
                 ? {
-                  opacity: 0,
-                  scale: REDUCED_MOTION_ANIMATION.scale,
-                  translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
-                  rotateZ: "0deg",
-                  translateX: 0,
-                }
+                    opacity: 0,
+                    scale: REDUCED_MOTION_ANIMATION.scale,
+                    translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
+                    rotateZ: "0deg",
+                    translateX: 0,
+                  }
                 : TIE_ANIMATION
               : exitAnimation === "keep"
                 ? reducedMotion
                   ? {
-                    opacity: 0,
-                    scale: REDUCED_MOTION_ANIMATION.scale,
-                    translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
-                    translateX: 0,
-                    rotateZ: "0deg",
-                  }
+                      opacity: 0,
+                      scale: REDUCED_MOTION_ANIMATION.scale,
+                      translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
+                      translateX: 0,
+                      rotateZ: "0deg",
+                    }
                   : KEEP_ANIMATION
                 : { opacity: 1, scale: 1, translateY: 0, translateX: 0, rotateZ: "0deg" }
           }
