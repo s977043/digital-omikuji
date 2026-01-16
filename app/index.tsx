@@ -308,12 +308,12 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-              height: "100vh",
-              overflow: "hidden",
-            } as any)
+            height: "100vh",
+            overflow: "hidden",
+          } as any)
           : {
-              flex: 1,
-            }),
+            flex: 1,
+          }),
       }}
     >
       <ImageBackground
@@ -347,8 +347,8 @@ export default function OmikujiApp() {
                     width: 210,
                     height: 210,
                     position: "absolute",
-                    top: -13,
-                    left: 0,
+                    top: -8,
+                    left: 6,
                   }}
                   resizeMode="cover"
                 />
@@ -424,15 +424,15 @@ export default function OmikujiApp() {
               transition={
                 reducedMotion
                   ? {
-                      type: "timing",
-                      duration: SHAKE_ANIMATION.DURATION,
-                      loop: appState === "SHAKING",
-                    }
+                    type: "timing",
+                    duration: SHAKE_ANIMATION.DURATION,
+                    loop: appState === "SHAKING",
+                  }
                   : {
-                      type: "spring",
-                      duration: SHAKE_ANIMATION.DURATION,
-                      loop: appState === "SHAKING",
-                    }
+                    type: "spring",
+                    duration: SHAKE_ANIMATION.DURATION,
+                    loop: appState === "SHAKING",
+                  }
               }
               className="items-center"
             >
@@ -482,11 +482,11 @@ export default function OmikujiApp() {
                   reducedMotion
                     ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
                     : {
-                        type: "spring",
-                        delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                        damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                        stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                      }
+                      type: "spring",
+                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                    }
                 }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
