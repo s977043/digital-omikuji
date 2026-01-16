@@ -160,6 +160,27 @@
         "sdk"
       ],
       "last_updated": "2026-01-16"
+    },
+    {
+      "id": "solo-product-planning",
+      "name": "solo-product-planning",
+      "description": "個人開発の企画を「概要→体験→検証→画面→類似」の順で1枚に整理し、勢い実装で迷子になるのを防ぐ。JTBD/Time to Wow、最大リスク仮説、最小実験、成功指標まで落とし込む。個人開発、企画、要件定義、ユーザーフロー、MVP、検証、プロトタイプ、競合調査の依頼で使う。",
+      "skill_path": "skills/solo-product-planning/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude"
+      ],
+      "tags": [
+        "planning",
+        "mvp",
+        "validation",
+        "user-flow",
+        "lean",
+        "individual-dev"
+      ],
+      "last_updated": "2026-01-17"
     }
   ]
 }
