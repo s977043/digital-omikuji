@@ -187,7 +187,7 @@ export const ResultScrollCard = ({
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8 w-full h-full absolute inset-0 z-50">
+    <View className="flex-1 items-center justify-center bg-black/80 w-full h-full absolute inset-0 z-50">
       {/* 結ばれたおみくじ完了画面 */}
       {showTiedComplete && (
         <MotiView
@@ -250,22 +250,22 @@ export const ResultScrollCard = ({
             exitAnimation === "tie"
               ? reducedMotion
                 ? {
-                    opacity: 0,
-                    scale: REDUCED_MOTION_ANIMATION.scale,
-                    translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
-                    rotateZ: "0deg",
-                    translateX: 0,
-                  }
+                  opacity: 0,
+                  scale: REDUCED_MOTION_ANIMATION.scale,
+                  translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
+                  rotateZ: "0deg",
+                  translateX: 0,
+                }
                 : TIE_ANIMATION
               : exitAnimation === "keep"
                 ? reducedMotion
                   ? {
-                      opacity: 0,
-                      scale: REDUCED_MOTION_ANIMATION.scale,
-                      translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
-                      translateX: 0,
-                      rotateZ: "0deg",
-                    }
+                    opacity: 0,
+                    scale: REDUCED_MOTION_ANIMATION.scale,
+                    translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
+                    translateX: 0,
+                    rotateZ: "0deg",
+                  }
                   : KEEP_ANIMATION
                 : { opacity: 1, scale: 1, translateY: 0, translateX: 0, rotateZ: "0deg" }
           }
@@ -276,7 +276,8 @@ export const ResultScrollCard = ({
                 ? { type: "timing", duration: ANIMATION_TIMING.TIE_TRANSITION }
                 : { type: "spring", damping: 18, stiffness: 90 }
           }
-          className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10"
+          className="w-full max-w-md bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10 m-4 flex-shrink"
+          style={{ maxHeight: Platform.OS === "web" ? "85vh" : "85%" } as any}
           ref={animationRef}
         >
           <View ref={cardRef} className="flex-1 bg-[#FDF5E6]">
