@@ -61,8 +61,7 @@ AIエージェントが作成したUIを校正するための制約ルールセ�
 
 ## Typography（タイポグラフィ）
 
-- 見出しには `text-balance`、本文には `text-pretty` を使用（Web のみ）
-- 数値データには `tabular-nums` フォント機能を使用
+- 数値データには `tabular-nums` フォント機能を使用（フォントがサポートしている場合）
 - 密なUIには `numberOfLines` で行数制限、または `ellipsizeMode` を使用
 - 明示的に要求されない限り `letterSpacing` を変更しない
 
@@ -76,7 +75,6 @@ AIエージェントが作成したUIを校正するための制約ルールセ�
 ## Performance（パフォーマンス）
 
 - 大きな `blur` や `backdrop-filter` サーフェースをアニメーションしない
-- アクティブなアニメーション外で `will-change` を適用しない
 - レンダーロジックで表現できることに `useEffect` を使用しない
 - `FlatList` / `FlashList` で長いリストを仮想化
 - 画像は適切なサイズにリサイズ（`expo-image` 推奨）
