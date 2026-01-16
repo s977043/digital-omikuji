@@ -336,7 +336,7 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
                 style={{ width: 184, height: 184 }}
               >
                 <Image
@@ -346,8 +346,8 @@ export default function OmikujiApp() {
                       : require("../assets/omikuji_cylinder.png")
                   }
                   className="rounded-full"
-                  style={{ width: 180, height: 180 }}
-                  resizeMode="cover"
+                  style={{ width: "100%", height: "100%" }}
+                  resizeMode="center"
                 />
               </View>
               <Text
