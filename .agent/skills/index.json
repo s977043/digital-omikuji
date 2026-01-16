@@ -181,6 +181,27 @@
         "individual-dev"
       ],
       "last_updated": "2026-01-17"
+    },
+    {
+      "id": "ui-skills",
+      "name": "ui-skills",
+      "description": "AIエージェントが作成したUIを校正するための制約ルールセット。Expo/React Native/NativeWind向けにカスタマイズ。",
+      "skill_path": "skills/ui-skills/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude"
+      ],
+      "tags": [
+        "ui",
+        "review",
+        "accessibility",
+        "animation",
+        "nativewind",
+        "expo"
+      ],
+      "last_updated": "2026-01-17"
     }
   ]
 }
