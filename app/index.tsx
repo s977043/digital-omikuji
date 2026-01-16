@@ -99,10 +99,11 @@ export default function OmikujiApp() {
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
     fortune,
+    hasDrawnToday,
     drawFortune,
     resetFortune,
-    hasDrawnToday,
     checkDailyStatus,
+    lastResultAction,
     debugResetDailyLimit,
   } = useOmikujiLogic();
 
@@ -112,7 +113,7 @@ export default function OmikujiApp() {
 
   const [isMuted, setIsMuted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [lastResultAction, setLastResultAction] = useState<ResultAction | null>(null);
+  // useOmikujiLogic 側の状態を使用するためローカルステートは削除
 
   // 画面がフォーカスされるたびに状態をチェック（履歴削除後の同期用）
   useFocusEffect(
@@ -122,12 +123,8 @@ export default function OmikujiApp() {
       } else {
         console.warn("checkDailyStatus is not a function", checkDailyStatus);
       }
-      // 最後のアクションを取得
-      getLastResultAction().then(setLastResultAction);
     }, [checkDailyStatus])
   );
-
-  // --- Accessibility: Reduced Motion detection ---
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then(setReducedMotion);
     const subscription = AccessibilityInfo.addEventListener(

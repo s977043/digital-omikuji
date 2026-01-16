@@ -6,12 +6,15 @@ import {
   getHistory,
   getLastDrawDate,
   HistoryEntry,
+  getLastResultAction,
+  ResultAction,
 } from "../utils/HistoryStorage";
 
 export const useOmikujiLogic = () => {
   const [fortune, setFortune] = useState<OmikujiResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [hasDrawnToday, setHasDrawnToday] = useState(false);
+  const [lastResultAction, setLastResultAction] = useState<ResultAction | null>(null);
 
   const loadHistory = useCallback(async () => {
     const data = await getHistory();
@@ -40,6 +43,10 @@ export const useOmikujiLogic = () => {
     } else {
       setHasDrawnToday(false);
     }
+
+    // Load last result action
+    const action = await getLastResultAction();
+    setLastResultAction(action);
   }, []);
 
   // 初期読み込み
@@ -65,8 +72,11 @@ export const useOmikujiLogic = () => {
     await addHistoryEntry(result);
     await loadHistory();
 
+    // アクション状態を更新（リセット）
+    await checkDailyStatus();
+
     return result;
-  }, [hasDrawnToday, fortune, loadHistory]);
+  }, [hasDrawnToday, fortune, loadHistory, checkDailyStatus]);
 
   const resetFortune = useCallback(() => {
     // hasDrawnToday が true の場合は fortune を保持して再表示可能にする
@@ -93,5 +103,6 @@ export const useOmikujiLogic = () => {
     loadHistory,
     checkDailyStatus,
     debugResetDailyLimit,
+    lastResultAction,
   };
 };

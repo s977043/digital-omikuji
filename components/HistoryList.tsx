@@ -40,7 +40,7 @@ const HistoryItem = ({
       from={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 50 }}
-      className="bg-white/85 rounded-sm p-6 mb-8 shadow-sm border border-stone-200/60 relative"
+      className="bg-white/95 rounded-sm p-6 mb-8 shadow-sm border border-stone-200/60 relative"
       style={{
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 1 },
@@ -64,10 +64,10 @@ const HistoryItem = ({
         </View>
 
         <View className="items-end">
-          <Text className="text-stone-600 text-[10px] font-shippori leading-none mb-1">
+          <Text className="text-stone-700 text-[10px] font-shippori leading-none mb-1">
             {formatDate(item.createdAt).split(" ")[0]}
           </Text>
-          <Text className="text-stone-400 text-[9px] font-shippori leading-none">
+          <Text className="text-stone-500 text-[9px] font-shippori leading-none">
             {formatDate(item.createdAt).split(" ")[1]}
           </Text>
         </View>
@@ -79,7 +79,7 @@ const HistoryItem = ({
         <View className="absolute inset-0 border-t border-stone-300/40" style={{ marginTop: 56 }} />
 
         <Text
-          className="text-stone-700 font-shippori text-[15px] leading-7"
+          className="text-stone-900 font-shippori text-base leading-7"
           style={{ minHeight: 56 }}
         >
           {fortuneMessage}

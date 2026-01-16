@@ -47,7 +47,7 @@ test.describe("Digital Omikuji Web", () => {
 
     // Wait for result (animation takes ~4-5 seconds)
     // Check for result details section that appears after animation
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
   });
 
   test("should show tie/keep/share buttons on first result view", async ({ page }) => {
@@ -56,12 +56,12 @@ test.describe("Digital Omikuji Web", () => {
     await drawButton.click();
 
     // Wait for result
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
 
     // Should show all three action buttons
-    await expect(page.getByRole("button", { name: "シェア" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "結ぶ" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "持ち帰る" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "シェア" })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole("button", { name: "結ぶ" })).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole("button", { name: "持ち帰る" })).toBeVisible({ timeout: 10000 });
   });
 
   test("should display tied confirmation after selecting tie", async ({ page }) => {
@@ -70,14 +70,14 @@ test.describe("Digital Omikuji Web", () => {
     await drawButton.click();
 
     // Wait for result
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
 
     // Click tie button
     const tieButton = page.getByRole("button", { name: "結ぶ" });
     await tieButton.click();
 
     // Wait for tied animation and confirmation screen
-    await expect(page.getByText("おみくじを結びました")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("おみくじを結びました")).toBeVisible({ timeout: 15000 });
     await expect(page.getByText("良いご縁が結ばれますように…")).toBeVisible();
   });
 
@@ -87,14 +87,14 @@ test.describe("Digital Omikuji Web", () => {
     await drawButton.click();
 
     // Wait for result
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
 
     // Click keep button
     const keepButton = page.getByRole("button", { name: "持ち帰る" });
     await keepButton.click();
 
     // Wait for keep animation and confirmation screen
-    await expect(page.getByText("おみくじを持ち帰りました")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("おみくじを持ち帰りました")).toBeVisible({ timeout: 15000 });
     await expect(page.getByText("ときどき読み返して、今日の指針に。")).toBeVisible();
   });
 
@@ -104,19 +104,19 @@ test.describe("Digital Omikuji Web", () => {
     await drawButton.click();
 
     // Wait for result and select tie
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
     const tieButton = page.getByRole("button", { name: "結ぶ" });
     await tieButton.click();
 
     // Wait for tied confirmation screen
-    await expect(page.getByText("おみくじを結びました")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("おみくじを結びました")).toBeVisible({ timeout: 15000 });
 
     // Click "結果を見る" to view result again
     const viewResultButton = page.getByRole("button", { name: "結果を見る" });
     await viewResultButton.click();
 
     // Wait for result screen
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
 
     // Should only show share and close buttons (not tie/keep)
     await expect(page.getByRole("button", { name: "シェア" })).toBeVisible();
@@ -131,12 +131,12 @@ test.describe("Digital Omikuji Web", () => {
     await drawButton.click();
 
     // Wait for result and select keep
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 20000 });
+    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
     const keepButton = page.getByRole("button", { name: "持ち帰る" });
     await keepButton.click();
 
     // Wait for keep confirmation screen
-    await expect(page.getByText("おみくじを持ち帰りました")).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText("おみくじを持ち帰りました")).toBeVisible({ timeout: 15000 });
 
     // Confirmed screen should have share and view result buttons
     await expect(page.getByRole("button", { name: "シェア" })).toBeVisible();

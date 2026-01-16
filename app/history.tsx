@@ -95,12 +95,12 @@ export default function HistoryScreen() {
           <View className="w-[84px] items-end">
             {history.length > 0 && (
               <TouchableOpacity
-                onPress={confirmClearHistory}
-                className="px-3 py-1.5 bg-red-900/60 border border-red-500/40 rounded-md active:bg-red-800/80 shadow-sm"
+                onPress={handleClearHistory}
+                className="flex-1 py-3 bg-red-800 rounded-sm active:bg-red-700 shadow-sm"
                 accessibilityLabel={t("history.deleteAll")}
                 accessibilityRole="button"
               >
-                <Text className="text-red-100 text-xs font-shippori-bold">
+                <Text className="text-white font-shippori-bold text-center leading-none">
                   {t("history.deleteAll")}
                 </Text>
               </TouchableOpacity>
@@ -114,7 +114,7 @@ export default function HistoryScreen() {
         <ImageBackground
           source={require("../assets/diary_paper.png")}
           className="absolute inset-0"
-          style={{ opacity: 0.8 }}
+          style={{ opacity: 0.7 }}
           resizeMode="repeat"
         />
         <View className="flex-1 px-5">
@@ -136,18 +136,20 @@ export default function HistoryScreen() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[#fdfaf5] p-8 rounded-sm border-2 border-stone-300 w-full max-w-sm"
           >
-            <Text className="text-stone-800 font-shippori-bold text-xl mb-4 text-center tracking-widest">
+            <Text className="text-stone-900 font-shippori-bold text-xl mb-4 text-center tracking-widest">
               {t("history.deleteConfirmTitle")}
             </Text>
-            <Text className="text-stone-600 font-shippori text-sm mb-8 text-center leading-relaxed">
+            <Text className="text-stone-800 font-shippori text-base mb-8 text-center leading-relaxed">
               {t("history.deleteConfirmMessage")}
             </Text>
             <View className="flex-row justify-between gap-4">
               <TouchableOpacity
                 onPress={() => setShowConfirm(false)}
-                className="flex-1 py-3 bg-stone-200 rounded-sm active:bg-stone-300"
+                className="flex-1 py-3 bg-stone-300 rounded-sm active:bg-stone-400"
+                accessibilityLabel={t("common.cancel")}
+                accessibilityRole="button"
               >
-                <Text className="text-stone-600 font-shippori-bold text-center leading-none">
+                <Text className="text-stone-900 font-shippori-bold text-center leading-none">
                   {t("common.cancel")}
                 </Text>
               </TouchableOpacity>
