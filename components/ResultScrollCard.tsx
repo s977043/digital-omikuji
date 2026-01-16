@@ -276,8 +276,9 @@ export const ResultScrollCard = ({
                 ? { type: "timing", duration: ANIMATION_TIMING.TIE_TRANSITION }
                 : { type: "spring", damping: 18, stiffness: 90 }
           }
-          className="w-full max-w-md bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10 m-4 flex-shrink"
-          style={{ maxHeight: Platform.OS === "web" ? "85vh" : "85%" } as any}
+          className="w-full max-w-md bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10 m-4 shrink"
+          // @ts-ignore: vh unit is valid for web but not typed in React Native ViewStyle
+          style={{ maxHeight: Platform.OS === "web" ? "85vh" : "85%" }}
           ref={animationRef}
         >
           <View ref={cardRef} className="flex-1 bg-[#FDF5E6]">

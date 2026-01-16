@@ -311,11 +311,11 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-              // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
-              // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
-              // 強制的にビューポート全体を覆うように 100vh を指定する。
-              minHeight: "100vh",
-            } as WebStyle)
+            // Web環境（特にモバイルブラウザ）では、アドレスバーの表示/非表示により
+            // 画面の高さ計算がずれ、下部に余白が生じる場合があるため、
+            // 強制的にビューポート全体を覆うように 100vh を指定する。
+            minHeight: "100vh",
+          } as WebStyle)
           : {}),
       }}
     >
@@ -347,7 +347,10 @@ export default function OmikujiApp() {
                   resizeMode="cover"
                 />
               </View>
-              <Text className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-black/50 shadow-sm">
+              <Text
+                className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-black/50 shadow-sm"
+                style={{ textDecorationLine: "none" }}
+              >
                 {hasDrawnToday ? "本日の運勢は確認済みです" : "スマホを振っておみくじを引こう"}
               </Text>
 
@@ -415,15 +418,15 @@ export default function OmikujiApp() {
               transition={
                 reducedMotion
                   ? {
-                      type: "timing",
-                      duration: SHAKE_ANIMATION.DURATION,
-                      loop: appState === "SHAKING",
-                    }
+                    type: "timing",
+                    duration: SHAKE_ANIMATION.DURATION,
+                    loop: appState === "SHAKING",
+                  }
                   : {
-                      type: "spring",
-                      duration: SHAKE_ANIMATION.DURATION,
-                      loop: appState === "SHAKING",
-                    }
+                    type: "spring",
+                    duration: SHAKE_ANIMATION.DURATION,
+                    loop: appState === "SHAKING",
+                  }
               }
               className="items-center"
             >
@@ -473,11 +476,11 @@ export default function OmikujiApp() {
                   reducedMotion
                     ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
                     : {
-                        type: "spring",
-                        delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                        damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                        stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
-                      }
+                      type: "spring",
+                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
+                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
+                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                    }
                 }
               >
                 <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
@@ -504,19 +507,15 @@ export default function OmikujiApp() {
             <FortuneDisplay fortune={fortune} onReset={handleReset} reducedMotion={reducedMotion} />
           )}
 
-          {/* デバッグボタン (開発時 または センサー無効時) */}
-          {(showDebug || isSensorAvailable === false) && appState === "IDLE" && (
+          {/* デバッグボタン (開発時のみ - センサー無効時は中央ボタンで対応) */}
+          {showDebug && appState === "IDLE" && (
             <TouchableOpacity
               onPress={handleShakeStart}
               className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
-              accessibilityLabel={
-                isSensorAvailable === false ? "おみくじを引く" : "デバッグ用に強制実行"
-              }
+              accessibilityLabel="デバッグ用に強制実行"
               accessibilityRole="button"
             >
-              <Text className="text-white font-bold">
-                {isSensorAvailable === false ? "おみくじを引く" : "🔧 デバッグ"}
-              </Text>
+              <Text className="text-white font-bold">🔧 デバッグ</Text>
             </TouchableOpacity>
           )}
 
