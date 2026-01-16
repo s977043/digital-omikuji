@@ -14,7 +14,11 @@ jest.mock("moti", () => {
 // Mock react-native-reanimated
 jest.mock("react-native-reanimated", () => ({
   Easing: {
-    linear: jest.fn(),
+    linear: jest.fn((v) => v),
+    ease: jest.fn((v) => v),
+    inOut: jest.fn(() => jest.fn((v) => v)),
+    out: jest.fn(() => jest.fn((v) => v)),
+    bezier: jest.fn(() => jest.fn((v) => v)),
   },
 }));
 

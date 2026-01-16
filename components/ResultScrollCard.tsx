@@ -13,6 +13,7 @@ import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
 import { buildShareText } from "../utils/buildShareText";
+import { setLastResultAction } from "../utils/HistoryStorage";
 import { useTranslation } from "react-i18next";
 import { DETAIL_KEYS } from "../data/omikujiData";
 
@@ -48,12 +49,14 @@ interface ResultScrollCardProps {
   fortune: OmikujiResult;
   onReset: () => void;
   reducedMotion?: boolean;
+  hasSelectedAction?: boolean; // 結ぶ/持ち帰るが選択済みかどうか
 }
 
 export const ResultScrollCard = ({
   fortune,
   onReset,
   reducedMotion = false,
+  hasSelectedAction = false,
 }: ResultScrollCardProps) => {
   const animationRef = useRef<View>(null);
   const cardRef = useRef<View>(null);
@@ -79,6 +82,7 @@ export const ResultScrollCard = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("tie");
+    setLastResultAction("tie"); // アクションを保存
 
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
@@ -97,6 +101,7 @@ export const ResultScrollCard = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("keep");
+    setLastResultAction("keep"); // アクションを保存
 
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
@@ -360,24 +365,37 @@ export const ResultScrollCard = ({
           <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">
             <TouchableOpacity
               onPress={handleShare}
-              className="flex-1 py-3 bg-slate-100 rounded-full items-center border border-slate-200"
+              className={`${hasSelectedAction ? "flex-1" : ""} py-3 bg-slate-100 rounded-full items-center border border-slate-200 px-6`}
             >
               <Text className="text-slate-800 font-bold">{t("common.share")}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleTie}
-              className="flex-1 py-3 bg-white border border-amber-200 rounded-full items-center"
-            >
-              <Text className="text-amber-700 font-bold">{t("fortune.tie")}</Text>
-            </TouchableOpacity>
+            {!hasSelectedAction && (
+              <>
+                <TouchableOpacity
+                  onPress={handleTie}
+                  className="flex-1 py-3 bg-white border border-amber-200 rounded-full items-center"
+                >
+                  <Text className="text-amber-700 font-bold">{t("fortune.tie")}</Text>
+                </TouchableOpacity>
 
-            <TouchableOpacity
-              onPress={handleKeep}
-              className="flex-1 py-3 bg-amber-600 rounded-full items-center shadow-sm"
-            >
-              <Text className="text-white font-bold">{t("fortune.keep")}</Text>
-            </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={handleKeep}
+                  className="flex-1 py-3 bg-amber-600 rounded-full items-center shadow-sm"
+                >
+                  <Text className="text-white font-bold">{t("fortune.keep")}</Text>
+                </TouchableOpacity>
+              </>
+            )}
+
+            {hasSelectedAction && (
+              <TouchableOpacity
+                onPress={onReset}
+                className="flex-1 py-3 bg-slate-800 rounded-full items-center shadow-sm"
+              >
+                <Text className="text-white font-bold">閉じる</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </MotiView>
       )}

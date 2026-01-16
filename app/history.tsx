@@ -9,9 +9,15 @@ import {
 } from "react-native";
 import { router, useFocusEffect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
+import {
+  getHistory,
+  clearHistory,
+  HistoryEntry,
+  deleteHistoryEntry,
+} from "../utils/HistoryStorage";
 import { HistoryList } from "../components/HistoryList";
 import { useTranslation } from "react-i18next";
+import { Alert } from "react-native";
 
 export default function HistoryScreen() {
   const { t } = useTranslation();
@@ -23,7 +29,6 @@ export default function HistoryScreen() {
       router.back();
       return;
     }
-    // 直接URL遷移で履歴ページを開いた場合のフォールバック
     router.replace("/");
   };
 
@@ -34,16 +39,45 @@ export default function HistoryScreen() {
     setIsLoading(false);
   }, []);
 
-  // 画面がフォーカスされるたびに履歴を再読み込み
   useFocusEffect(
     useCallback(() => {
       loadHistory();
     }, [loadHistory])
   );
 
+  const handleDeleteEntry = async (id: string) => {
+    // 手帳の世界観に合わせて、削除の確認を行う
+    Alert.alert(
+      "日記の切り取り",
+      "この日のおみくじの記録を切り取りますか？",
+      [
+        { text: "やめる", style: "cancel" },
+        {
+          text: "切り取る",
+          style: "destructive",
+          onPress: async () => {
+            await deleteHistoryEntry(id);
+            await loadHistory();
+          },
+        },
+      ]
+    );
+  };
+
   const confirmClearHistory = () => {
     if (history.length === 0) return;
-    handleClearHistory();
+    Alert.alert(
+      "手帳の整理",
+      "全てのおみくじの記録を白紙に戻しますか？",
+      [
+        { text: "やめる", style: "cancel" },
+        {
+          text: "白紙にする",
+          style: "destructive",
+          onPress: handleClearHistory,
+        },
+      ]
+    );
   };
 
   const handleClearHistory = async () => {
@@ -52,7 +86,7 @@ export default function HistoryScreen() {
   };
 
   return (
-    <View className="flex-1 bg-slate-900">
+    <View className="flex-1 bg-[#2d1e12]">
       <Stack.Screen
         options={{
           headerShown: false,
@@ -61,31 +95,33 @@ export default function HistoryScreen() {
       />
       <StatusBar style="light" />
 
-      {/* --- Header --- */}
+      {/* --- Notebook Header (Cover) --- */}
       <View
-        className="pt-10 pb-4 px-6 bg-slate-900 z-10 border-b border-white/10"
+        className="pt-10 pb-4 px-6 bg-[#3d2b1f] z-10 border-b-2 border-[#1a110a] shadow-xl"
         style={{
-          paddingTop: Platform.OS === "android" ? 32 : undefined, // Safe area for Android (控えめに)
+          paddingTop: Platform.OS === "android" ? 32 : undefined,
         }}
       >
         <View className="flex-row items-center justify-between">
           <TouchableOpacity
             onPress={handleBack}
-            className="flex-row items-center p-2 -ml-2 rounded-full active:bg-white/10"
+            className="flex-row items-center p-2 -ml-2 rounded-lg bg-black/20 border border-white/10 active:bg-black/40"
             accessibilityLabel={t("common.back")}
             accessibilityRole="button"
           >
-            <Text className="text-white font-bold text-lg">
-              {t("common.back")}
+            <Text className="text-stone-200 font-bold">
+              ← {t("common.back")}
             </Text>
           </TouchableOpacity>
-          <Text className="text-white font-shippori-bold text-xl tracking-widest absolute left-0 right-0 text-center pointer-events-none z-0">
-            {t("history.title")}
-          </Text>
+          <View className="items-center absolute left-0 right-0 -z-10">
+            <Text className="text-stone-100 font-shippori-bold text-2xl tracking-[0.3em] drop-shadow-sm">
+              {t("history.title")}
+            </Text>
+          </View>
           {history.length > 0 && (
             <TouchableOpacity
               onPress={confirmClearHistory}
-              className="px-3 py-1 bg-red-900/50 border border-red-500/50 rounded-full active:bg-red-800/80"
+              className="px-3 py-1.5 bg-red-950/40 border border-red-500/30 rounded-md active:bg-red-900/60"
               accessibilityLabel={t("history.deleteAll")}
               accessibilityRole="button"
             >
@@ -97,21 +133,21 @@ export default function HistoryScreen() {
         </View>
       </View>
 
-      {/* --- History List --- */}
-      <View className="flex-1 bg-slate-50/5 relative">
+      {/* --- Diary Pages --- */}
+      <View className="flex-1 relative bg-[#fdfaf5]">
         <ImageBackground
-          source={require("../assets/shrine_background.png")}
-          className="flex-1"
-          style={{ opacity: 0.3 }}
-          resizeMode="cover"
+          source={require("../assets/diary_paper.png")}
+          className="absolute inset-0"
+          style={{ opacity: 0.8 }}
+          resizeMode="repeat"
         />
-        <View className="absolute inset-0 px-6 pt-6">
+        <View className="flex-1 px-5">
           {isLoading ? (
             <View className="flex-1 items-center justify-center">
-              <Text className="text-white/60">{t("common.loading")}</Text>
+              <Text className="text-stone-500 font-shippori">{t("common.loading")}</Text>
             </View>
           ) : (
-            <HistoryList history={history} />
+            <HistoryList history={history} onDelete={handleDeleteEntry} />
           )}
         </View>
       </View>

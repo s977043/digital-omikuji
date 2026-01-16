@@ -7,6 +7,7 @@ import {
   ImageBackground,
   Image,
   AccessibilityInfo,
+  Share,
 } from "react-native";
 import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
@@ -17,9 +18,11 @@ import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import FortuneDisplay from "../components/FortuneDisplay";
 import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
+import { getLastResultAction, ResultAction } from "../utils/HistoryStorage";
 // global.css is imported in _layout.tsx
 
 import { DrawingOverlay } from "../components/DrawingOverlay";
+import { ShakingOverlay } from "../components/ShakingOverlay";
 
 // Web環境固有のスタイル定義は必要に応じて拡張可
 // Import DrawingOverlay
@@ -109,6 +112,7 @@ export default function OmikujiApp() {
 
   const [isMuted, setIsMuted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [lastResultAction, setLastResultAction] = useState<ResultAction | null>(null);
 
   // 画面がフォーカスされるたびに状態をチェック（履歴削除後の同期用）
   useFocusEffect(
@@ -118,6 +122,8 @@ export default function OmikujiApp() {
       } else {
         console.warn("checkDailyStatus is not a function", checkDailyStatus);
       }
+      // 最後のアクションを取得
+      getLastResultAction().then(setLastResultAction);
     }, [checkDailyStatus])
   );
 
@@ -280,24 +286,8 @@ export default function OmikujiApp() {
 
   // --- アニメーション状態遷移 ---
   useEffect(() => {
-    // DRAWING -> REVEALING
+    // DRAWING -> RESULT (REVEALINGフェーズをスキップ)
     if (appState === "DRAWING") {
-      const timer = setTimeout(() => {
-        setAppState("REVEALING");
-        // Haptics: 棒が出る瞬間 (FORCE)
-        triggerHaptic(
-          {
-            type: "notification",
-            style: Haptics.NotificationFeedbackType.Success,
-          },
-          true
-        );
-      }, DRAWING_DURATION_MS);
-      return () => clearTimeout(timer);
-    }
-
-    // REVEALING -> RESULT
-    if (appState === "REVEALING") {
       const timer = setTimeout(() => {
         setAppState("RESULT");
         // Haptics: 結果が出た時の重い衝撃 (FORCE)
@@ -309,7 +299,7 @@ export default function OmikujiApp() {
           true
         );
         soundManager.playSound("result");
-      }, REVEALING_DURATION_MS);
+      }, DRAWING_DURATION_MS);
       return () => clearTimeout(timer);
     }
   }, [appState]);
@@ -348,263 +338,267 @@ export default function OmikujiApp() {
         }}
         resizeMode="cover"
       >
-        <View className="flex-1 items-center justify-center bg-black/40 relative overflow-hidden">
-          {/* 待機状態 (IDLE) */}
-          {appState === "IDLE" && (
-            <MotiView
-              from={{ opacity: 1, scale: 1, translateY: 0 }}
-              animate={{ opacity: 1, scale: 1, translateY: 0 }}
-              className="items-center px-6"
-            >
-              <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center self-center"
-                style={{ width: OMIKUJI_FRAME_SIZE, height: OMIKUJI_FRAME_SIZE }}
-              >
-                <Image
-                  source={
-                    hasDrawnToday
-                      ? require("../assets/omikuji_confirmed.png")
-                      : require("../assets/omikuji_cylinder.png")
-                  }
-                  style={{
-                    width: OMIKUJI_IMAGE_SIZE,
-                    height: OMIKUJI_IMAGE_SIZE,
-                    borderRadius: OMIKUJI_IMAGE_SIZE / 2,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
-              <Text
-                className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-lg"
-                style={{ textDecorationLine: "none" }}
-              >
-                {hasDrawnToday ? "本日の運勢は確認済みです" : "スマホを振っておみくじを引こう"}
-              </Text>
-
-              {!hasDrawnToday && (
-                <>
-                  <TouchableOpacity
-                    onPress={handleShakeStart}
-                  className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
-                  style={DRAW_BUTTON_STYLE}
-                  accessibilityLabel="おみくじを引く"
-                  accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
-                  accessibilityRole="button"
-                >
-                    <Text className="text-white font-shippori-bold text-xl tracking-widest text-center">
-                      おみくじを引く
-                    </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-
-              {hasDrawnToday && (
-                <TouchableOpacity
-                  onPress={handleResultView}
-                  className="bg-slate-800/90 px-8 py-4 rounded-full mt-4 border border-white/30 shadow-xl active:bg-slate-700 backdrop-blur-sm"
-                  accessibilityLabel="結果をもう一度見る"
-                  accessibilityRole="button"
-                >
-                  <Text className="text-white font-shippori font-bold text-lg tracking-wider text-center">
-                    結果をもう一度見る
-                  </Text>
-                </TouchableOpacity>
-              )}
-            </MotiView>
-          )}
-
-          {/* シェイク中 (SHAKING) */}
-          {appState === "SHAKING" && (
-            <MotiView
-              from={{
-                translateX: -SHAKE_ANIMATION.TRANSLATE_X,
-                rotateZ: `-${SHAKE_ANIMATION.ROTATE_Z_DEG}deg`,
-                scale: SHAKE_ANIMATION.SCALE_FROM,
-              }}
-              animate={{
-                translateX:
-                  appState === "SHAKING"
-                    ? reducedMotion
-                      ? [-5, 5, -5]
-                      : [-15, 15, -15, 15, 0]
-                    : 0,
-                rotateZ:
-                  appState === "SHAKING"
-                    ? reducedMotion
-                      ? "-2deg"
-                      : ["-10deg", "10deg", "0deg"]
-                    : "0deg",
-                scale: appState === "SHAKING" ? (reducedMotion ? 1 : [0.9, 1.1, 1]) : 1,
-              }}
-              transition={
-                reducedMotion
-                  ? {
-                    type: "timing",
-                    duration: SHAKE_ANIMATION.DURATION,
-                    loop: appState === "SHAKING",
-                  }
-                  : {
-                    type: "spring",
-                    duration: SHAKE_ANIMATION.DURATION,
-                    loop: appState === "SHAKING",
-                  }
-              }
-              className="items-center"
-            >
-              <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
-                style={{ width: OMIKUJI_FRAME_SIZE, height: OMIKUJI_FRAME_SIZE }}
-              >
-                <Image
-                  source={require("../assets/omikuji_cylinder.png")}
-                  style={{
-                    width: OMIKUJI_IMAGE_SIZE,
-                    height: OMIKUJI_IMAGE_SIZE,
-                    borderRadius: OMIKUJI_IMAGE_SIZE / 2,
-                  }}
-                  resizeMode="contain"
-                />
-              </View>
+        <MotiView
+          animate={{
+            translateX: appState === "SHAKING" ? [-2, 2, -2, 2, 0] : 0,
+            translateY: appState === "SHAKING" ? [-1, 1, -1, 1, 0] : 0,
+          }}
+          transition={{
+            type: "timing",
+            duration: 100,
+            loop: appState === "SHAKING",
+          }}
+          style={{ flex: 1 }}
+        >
+          <View
+            style={{ flex: 1 }}
+            className="items-center justify-center bg-black/40 relative overflow-hidden"
+          >
+            {/* 待機状態 (IDLE) */}
+            {appState === "IDLE" && (
               <MotiView
-                from={{ opacity: 0.5, scale: 1 }}
-                animate={{ opacity: 1, scale: 1.2 }}
-                transition={{
-                  type: "timing",
-                  duration: SHAKE_ANIMATION.TEXT_PULSE_DURATION,
-                  loop: true,
-                  repeatReverse: true,
-                }}
+                from={{ opacity: 1, scale: 1, translateY: 0 }}
+                animate={{ opacity: 1, scale: 1, translateY: 0 }}
+                className="items-center px-6"
               >
-                <Text className="text-xl text-yellow-400 font-shippori-bold mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
-                  願いを込めて...
-                </Text>
-              </MotiView>
-            </MotiView>
-          )}
-
-          {/* 抽選中 (DRAWING) */}
-          {appState === "DRAWING" && <DrawingOverlay reducedMotion={reducedMotion} />}
-
-          {/* 結果表示中 (REVEALING - 棒が出るアニメ) */}
-          {appState === "REVEALING" && (
-            <View className="items-center relative h-72 w-full justify-end">
-              <MotiView
-                from={{ translateY: 200 }}
-                animate={{ translateY: 0 }}
-                transition={
-                  reducedMotion
-                    ? { type: "timing", duration: 300 }
-                    : { type: "spring", damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING }
-                }
-                className="w-44 h-56 rounded-xl border-[5px] z-20 flex items-center justify-center"
-                style={{
-                  backgroundColor: "#8b0b0b",
-                  borderColor: "#d97706",
-                  ...(Platform.OS === "web"
-                    ? { boxShadow: "0px 10px 18px rgba(217,119,6,0.4)" }
-                    : {
-                      shadowColor: "#d97706",
-                      shadowOpacity: 0.4,
-                      shadowRadius: 18,
-                      shadowOffset: { width: 0, height: 10 },
-                    }),
-                }}
-              >
-                <View className="w-24 h-2 bg-yellow-500/30 rounded-full mb-3" />
-                <View className="w-20 h-2 bg-yellow-500/30 rounded-full" />
-              </MotiView>
-
-              <MotiView
-                className="absolute w-16 h-52 bg-amber-50 bottom-16 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
-                from={{ translateY: 100, opacity: 0 }}
-                animate={{ translateY: -140, opacity: 1 }}
-                transition={
-                  reducedMotion
-                    ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
-                    : {
-                      type: "spring",
-                      delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY,
-                      damping: REVEAL_ANIMATION.STICK_SPRING_DAMPING,
-                      stiffness: REVEAL_ANIMATION.STICK_SPRING_STIFFNESS,
+                {/* おみくじ画像（確認済みの場合はアクションに応じて分岐） */}
+                {hasDrawnToday ? (
+                  <MotiView
+                    from={
+                      reducedMotion
+                        ? { opacity: 0, scale: 1 }
+                        : { opacity: 0, scale: 0.8, translateY: -20 }
                     }
-                }
-              >
-                <Text className="text-red-700 font-shippori-bold text-sm text-center leading-tight">
-                  {"2026\n奉\n納"}
+                    animate={
+                      reducedMotion
+                        ? { opacity: 1, scale: 1 }
+                        : { opacity: 1, scale: 1, translateY: 0 }
+                    }
+                    transition={
+                      reducedMotion
+                        ? { type: "timing", duration: 300 }
+                        : {
+                          type: "spring",
+                          damping: 12,
+                          stiffness: 200,
+                          mass: 0.8,
+                        }
+                    }
+                    className="mb-8 items-center"
+                  >
+                    {/* アクションに応じたアニメーション（円形フレーム付き） */}
+                    <MotiView
+                      from={{ scale: lastResultAction === "tie" ? 1.15 : 1.1 }}
+                      animate={{ scale: 1 }}
+                      transition={{
+                        type: "timing",
+                        duration: 300,
+                        delay: 100,
+                      }}
+                    >
+                      <View
+                        className="bg-white/10 rounded-full border border-white/20 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center self-center"
+                        style={{ width: OMIKUJI_FRAME_SIZE, height: OMIKUJI_FRAME_SIZE }}
+                      >
+                        <Image
+                          source={
+                            lastResultAction === "keep"
+                              ? require("../assets/omikuji_takehome.png")
+                              : require("../assets/omikuji_confirmed.png")
+                          }
+                          style={{
+                            width: OMIKUJI_IMAGE_SIZE,
+                            height: OMIKUJI_IMAGE_SIZE,
+                          }}
+                          resizeMode="contain"
+                        />
+                      </View>
+                    </MotiView>
+                    {/* 余韻のエフェクト */}
+                    {!reducedMotion && (
+                      <MotiView
+                        from={{ opacity: 0, scale: 0.5 }}
+                        animate={{ opacity: [0, 0.6, 0], scale: [0.5, 1.2, 1.5] }}
+                        transition={{
+                          type: "timing",
+                          duration: 400,
+                          delay: 350,
+                        }}
+                        className="absolute w-48 h-48 rounded-full"
+                        style={{
+                          backgroundColor:
+                            lastResultAction === "keep"
+                              ? "rgba(147, 197, 253, 0.15)" // 青系（持ち帰り）
+                              : "rgba(253, 224, 71, 0.15)", // 黄系（結ぶ）
+                        }}
+                      />
+                    )}
+                  </MotiView>
+                ) : (
+                  <View
+                    className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center self-center"
+                    style={{ width: OMIKUJI_FRAME_SIZE, height: OMIKUJI_FRAME_SIZE }}
+                  >
+                    <Image
+                      source={require("../assets/omikuji_cylinder.png")}
+                      style={{
+                        width: OMIKUJI_IMAGE_SIZE,
+                        height: OMIKUJI_IMAGE_SIZE,
+                        borderRadius: OMIKUJI_IMAGE_SIZE / 2,
+                      }}
+                      resizeMode="contain"
+                    />
+                  </View>
+                )}
+
+                <Text
+                  className="text-2xl text-white font-shippori-bold tracking-tight mb-6 text-center shadow-lg"
+                  style={{ textDecorationLine: "none" }}
+                >
+                  {hasDrawnToday
+                    ? lastResultAction === "keep"
+                      ? "おみくじを持ち帰りました"
+                      : "おみくじを結びました"
+                    : "スマホを振っておみくじを引こう"}
                 </Text>
+
+                {/* サブメッセージ（確認済みの場合） */}
+                {hasDrawnToday && (
+                  <Text
+                    className="text-base text-white/70 font-shippori mb-4 text-center"
+                    style={{ letterSpacing: 0.5 }}
+                  >
+                    {lastResultAction === "keep"
+                      ? "ときどき読み返して、今日の指針に。"
+                      : "良いご縁が結ばれますように…"}
+                  </Text>
+                )}
+
+                {!hasDrawnToday && (
+                  <>
+                    <TouchableOpacity
+                      onPress={handleShakeStart}
+                      className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
+                      style={DRAW_BUTTON_STYLE}
+                      accessibilityLabel="おみくじを引く"
+                      accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
+                      accessibilityRole="button"
+                    >
+                      <Text className="text-white font-shippori-bold text-xl tracking-widest text-center">
+                        おみくじを引く
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+
+                {hasDrawnToday && (
+                  <View className="flex-row gap-3 mt-4">
+                    <TouchableOpacity
+                      onPress={async () => {
+                        if (Platform.OS !== "web") {
+                          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                        }
+                        const message = `🎍 本日の運勢を確認しました！\n#デジタルおみくじ #令和八年`;
+                        try {
+                          await Share.share({ message });
+                        } catch (error) {
+                          console.error("Share failed:", error);
+                        }
+                      }}
+                      className="flex-1 bg-white/20 px-6 py-4 rounded-full border border-white/30 shadow-xl active:bg-white/30 items-center justify-center"
+                      accessibilityLabel="シェア"
+                      accessibilityRole="button"
+                    >
+                      <Text className="text-white font-shippori font-bold text-base tracking-wider text-center">
+                        シェア
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={handleResultView}
+                      className="flex-1 bg-slate-800/90 px-6 py-4 rounded-full border border-white/30 shadow-xl active:bg-slate-700 items-center justify-center"
+                      accessibilityLabel="結果をもう一度見る"
+                      accessibilityRole="button"
+                    >
+                      <Text className="text-white font-shippori font-bold text-base tracking-wider text-center">
+                        結果を見る
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
               </MotiView>
+            )}
 
-              {/* キラキラエフェクト */}
-              <MotiView
-                from={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1.5 }}
-                transition={{
-                  delay: REVEAL_ANIMATION.SPARKLE_APPEAR_DELAY,
-                  type: "timing",
-                  duration: REVEAL_ANIMATION.SPARKLE_DURATION,
-                }}
-                className="absolute -top-10 z-0 bg-yellow-400/30 w-40 h-40 rounded-full blur-xl"
+            {/* シェイク中 (SHAKING) */}
+            {appState === "SHAKING" && <ShakingOverlay reducedMotion={reducedMotion} />}
+
+            {/* 抽選中 (DRAWING) */}
+            {appState === "DRAWING" && <DrawingOverlay reducedMotion={reducedMotion} />}
+
+
+
+            {/* 結果画面 (コンポーネント) */}
+            {appState === "RESULT" && fortune && (
+              <FortuneDisplay
+                fortune={fortune}
+                onReset={handleReset}
+                reducedMotion={reducedMotion}
+                hasSelectedAction={lastResultAction !== null}
               />
-            </View>
-          )}
+            )}
 
-          {/* 結果画面 (コンポーネント) */}
-          {appState === "RESULT" && fortune && (
-            <FortuneDisplay fortune={fortune} onReset={handleReset} reducedMotion={reducedMotion} />
-          )}
-
-          {/* デバッグボタン (開発時のみ - センサー無効時は中央ボタンで対応) */}
-          {showDebug && appState === "IDLE" && (
-            <TouchableOpacity
-              onPress={async () => {
-                await debugResetDailyLimit();
-                handleShakeStart();
-              }}
-              className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
-              accessibilityLabel="デバッグ用に強制実行"
-              accessibilityRole="button"
-            >
-              <Text className="text-white font-bold">🔧 デバッグ</Text>
-            </TouchableOpacity>
-          )}
-
-          {/* 履歴画面へのナビゲーションボタン */}
-          {appState === "IDLE" && (
-            <>
-              {/* ヘッダーボタン群 */}
-              {/* ヘッダーボタン群 */}
+            {/* デバッグボタン (開発時のみ - センサー無効時は中央ボタンで対応) */}
+            {showDebug && appState === "IDLE" && (
               <TouchableOpacity
-                onPress={() => router.push("/history")}
-                className="absolute top-12 right-6 bg-slate-700/80 w-[52px] h-[52px] rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
-                accessibilityLabel="履歴を見る"
-                accessibilityHint="これまでに引いたおみくじの履歴を表示します"
+                onPress={async () => {
+                  await debugResetDailyLimit();
+                  handleShakeStart();
+                }}
+                className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
+                accessibilityLabel="デバッグ用に強制実行"
                 accessibilityRole="button"
               >
-                <Text className="text-white font-bold text-xs">履歴</Text>
+                <Text className="text-white font-bold">🔧 デバッグ</Text>
               </TouchableOpacity>
+            )}
 
-              <TouchableOpacity
-                onPress={toggleMute}
-                className="absolute top-12 left-6 bg-black/40 w-[52px] h-[52px] rounded-full border border-white/30 active:bg-black/60 items-center justify-center"
-                accessibilityLabel={isMuted ? "音声をオンにする" : "音声をオフにする"}
-                accessibilityRole="button"
-              >
-                <Text className="text-xl">{isMuted ? "🔕" : "🔔"}</Text>
-              </TouchableOpacity>
+            {/* 履歴画面へのナビゲーションボタン */}
+            {appState === "IDLE" && (
+              <>
+                {/* ヘッダーボタン群 */}
+                {/* ヘッダーボタン群 */}
+                <TouchableOpacity
+                  onPress={() => router.push("/history")}
+                  className="absolute top-12 right-6 bg-slate-700/80 w-[52px] h-[52px] rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+                  accessibilityLabel="履歴を見る"
+                  accessibilityHint="これまでに引いたおみくじの履歴を表示します"
+                  accessibilityRole="button"
+                >
+                  <Text className="text-white font-bold text-xs">履歴</Text>
+                </TouchableOpacity>
 
-              {/* デプロイバージョン表示 */}
-              <VersionDisplay />
-            </>
-          )}
+                <TouchableOpacity
+                  onPress={toggleMute}
+                  className="absolute top-12 left-6 bg-black/40 w-[52px] h-[52px] rounded-full border border-white/30 active:bg-black/60 items-center justify-center"
+                  accessibilityLabel={isMuted ? "音声をオンにする" : "音声をオフにする"}
+                  accessibilityRole="button"
+                >
+                  <Text className="text-xl">{isMuted ? "🔕" : "🔔"}</Text>
+                </TouchableOpacity>
 
-          {appState === "IDLE" && !hasDrawnToday && (
-            <View className="absolute bottom-8 bg-white/10 px-4 py-1 rounded-full border border-white/20">
-              <Text className="text-white/80 font-bold text-xs tracking-widest leading-tight">
-                令和八年 丙午 デジタルおみくじ
-              </Text>
-            </View>
-          )}
-        </View>
+                {/* デプロイバージョン表示 */}
+                <VersionDisplay />
+              </>
+            )}
+
+            {appState === "IDLE" && !hasDrawnToday && (
+              <View className="absolute bottom-8 bg-white/10 px-4 py-1 rounded-full border border-white/20">
+                <Text className="text-white/80 font-bold text-xs tracking-widest leading-tight">
+                  令和八年 丙午 デジタルおみくじ
+                </Text>
+              </View>
+            )}
+          </View>
+        </MotiView>
       </ImageBackground>
     </View>
   );
