@@ -222,18 +222,18 @@ export const ResultScrollCard = ({
             from={{ opacity: 0, translateY: 20 }}
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ type: "timing", duration: 500, delay: 300 }}
-            className="mt-8 items-center"
+            className="mt-12 items-center"
           >
-            <Text className="text-white text-xl font-shippori-bold text-center tracking-widest">
+            <Text className="text-white text-xl font-shippori-bold text-center tracking-widest leading-loose">
               {t("fortune.tiedTitle")}
             </Text>
-            <Text className="text-white/70 text-sm font-shippori text-center mt-2">
+            <Text className="text-white/70 text-sm font-shippori text-center mt-4">
               {t("fortune.tiedMessage")}
             </Text>
             {/* 閉じるリンク */}
             <TouchableOpacity
               onPress={onReset}
-              className="mt-8 px-6 py-3 bg-white/20 rounded-full border border-white/40 items-center"
+              className="mt-10 px-8 py-3 bg-white/20 rounded-full border border-white/40 items-center"
               accessibilityLabel={t("common.close")}
               accessibilityRole="button"
             >
@@ -252,22 +252,22 @@ export const ResultScrollCard = ({
             exitAnimation === "tie"
               ? reducedMotion
                 ? {
-                    opacity: 0,
-                    scale: REDUCED_MOTION_ANIMATION.scale,
-                    translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
-                    rotateZ: "0deg",
-                    translateX: 0,
-                  }
+                  opacity: 0,
+                  scale: REDUCED_MOTION_ANIMATION.scale,
+                  translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
+                  rotateZ: "0deg",
+                  translateX: 0,
+                }
                 : TIE_ANIMATION
               : exitAnimation === "keep"
                 ? reducedMotion
                   ? {
-                      opacity: 0,
-                      scale: REDUCED_MOTION_ANIMATION.scale,
-                      translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
-                      translateX: 0,
-                      rotateZ: "0deg",
-                    }
+                    opacity: 0,
+                    scale: REDUCED_MOTION_ANIMATION.scale,
+                    translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
+                    translateX: 0,
+                    rotateZ: "0deg",
+                  }
                   : KEEP_ANIMATION
                 : { opacity: 1, scale: 1, translateY: 0, translateX: 0, rotateZ: "0deg" }
           }

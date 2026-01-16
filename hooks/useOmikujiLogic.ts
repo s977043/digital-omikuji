@@ -91,6 +91,7 @@ export const useOmikujiLogic = () => {
     drawFortune,
     resetFortune,
     loadHistory,
+    checkDailyStatus,
     debugResetDailyLimit,
   };
 };

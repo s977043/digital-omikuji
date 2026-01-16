@@ -12,7 +12,7 @@ import { Accelerometer } from "expo-sensors";
 import { MotiView } from "moti";
 import * as Haptics from "expo-haptics";
 import Constants from "expo-constants";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import FortuneDisplay from "../components/FortuneDisplay";
 import { VersionDisplay } from "../components/VersionDisplay";
@@ -88,7 +88,14 @@ export default function OmikujiApp() {
   const [_isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
   const subscription = useRef<Subscription | null>(null);
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
+  const {
+    fortune,
+    drawFortune,
+    resetFortune,
+    hasDrawnToday,
+    checkDailyStatus,
+    debugResetDailyLimit,
+  } = useOmikujiLogic();
 
   // デバッグボタン用判定
   const appVariant = Constants.expoConfig?.extra?.appVariant || "production";
@@ -96,6 +103,17 @@ export default function OmikujiApp() {
 
   const [isMuted, setIsMuted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+
+  // 画面がフォーカスされるたびに状態をチェック（履歴削除後の同期用）
+  useFocusEffect(
+    useCallback(() => {
+      if (typeof checkDailyStatus === "function") {
+        checkDailyStatus();
+      } else {
+        console.warn("checkDailyStatus is not a function", checkDailyStatus);
+      }
+    }, [checkDailyStatus])
+  );
 
   // --- Accessibility: Reduced Motion detection ---
   useEffect(() => {
@@ -333,8 +351,8 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
-                style={{ width: 184, height: 184 }}
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden"
+                style={{ width: 184, height: 184, position: "relative" }}
               >
                 <Image
                   source={
@@ -342,11 +360,13 @@ export default function OmikujiApp() {
                       ? require("../assets/omikuji_confirmed.png")
                       : require("../assets/omikuji_cylinder.png")
                   }
-                  className="rounded-full"
                   style={{
-                    width: "130%",
-                    height: "130%",
-                    transform: [{ translateX: hasDrawnToday ? 20 : 10 }],
+                    width: 240,
+                    height: 240,
+                    position: "absolute",
+                    top: -28,
+                    left: -28,
+                    transform: [{ translateX: hasDrawnToday ? 6 : 10 }],
                   }}
                   resizeMode="cover"
                 />
@@ -372,12 +392,6 @@ export default function OmikujiApp() {
                       おみくじを引く
                     </Text>
                   </TouchableOpacity>
-
-                  <View className="bg-white/10 px-4 py-1 rounded-full mt-8 border border-white/20">
-                    <Text className="text-white/80 font-bold text-xs tracking-widest">
-                      令和八年 丙午 デジタルおみくじ
-                    </Text>
-                  </View>
                 </>
               )}
 
@@ -514,7 +528,10 @@ export default function OmikujiApp() {
           {/* デバッグボタン (開発時のみ - センサー無効時は中央ボタンで対応) */}
           {showDebug && appState === "IDLE" && (
             <TouchableOpacity
-              onPress={handleShakeStart}
+              onPress={async () => {
+                await debugResetDailyLimit();
+                handleShakeStart();
+              }}
               className="absolute bottom-16 right-6 bg-amber-500 py-3 px-6 rounded-full shadow-lg border-2 border-white items-center justify-center active:bg-amber-600"
               accessibilityLabel="デバッグ用に強制実行"
               accessibilityRole="button"
@@ -527,19 +544,20 @@ export default function OmikujiApp() {
           {appState === "IDLE" && (
             <>
               {/* ヘッダーボタン群 */}
+              {/* ヘッダーボタン群 */}
               <TouchableOpacity
                 onPress={() => router.push("/history")}
-                className="absolute top-12 right-6 bg-slate-700/80 p-3 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+                className="absolute top-12 right-6 bg-slate-700/80 w-[52px] h-[52px] rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
                 accessibilityLabel="履歴を見る"
                 accessibilityHint="これまでに引いたおみくじの履歴を表示します"
                 accessibilityRole="button"
               >
-                <Text className="text-white font-bold px-2">履歴</Text>
+                <Text className="text-white font-bold text-xs">履歴</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 onPress={toggleMute}
-                className="absolute top-12 left-6 bg-black/40 p-3 rounded-full border border-white/30 active:bg-black/60 flex-row items-center"
+                className="absolute top-12 left-6 bg-black/40 w-[52px] h-[52px] rounded-full border border-white/30 active:bg-black/60 items-center justify-center"
                 accessibilityLabel={isMuted ? "音声をオンにする" : "音声をオフにする"}
                 accessibilityRole="button"
               >
@@ -549,6 +567,14 @@ export default function OmikujiApp() {
               {/* デプロイバージョン表示 */}
               <VersionDisplay />
             </>
+          )}
+
+          {appState === "IDLE" && !hasDrawnToday && (
+            <View className="absolute bottom-12 bg-white/10 px-4 py-1 rounded-full border border-white/20">
+              <Text className="text-white/80 font-bold text-xs tracking-widest">
+                令和八年 丙午 デジタルおみくじ
+              </Text>
+            </View>
           )}
         </View>
       </ImageBackground>
