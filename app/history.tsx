@@ -13,7 +13,6 @@ import {
   getHistory,
   clearHistory,
   HistoryEntry,
-  deleteHistoryEntry,
 } from "../utils/HistoryStorage";
 import { HistoryList } from "../components/HistoryList";
 import { useTranslation } from "react-i18next";
@@ -45,34 +44,15 @@ export default function HistoryScreen() {
     }, [loadHistory])
   );
 
-  const handleDeleteEntry = async (id: string) => {
-    // 手帳の世界観に合わせて、削除の確認を行う
-    Alert.alert(
-      "日記の切り取り",
-      "この日のおみくじの記録を切り取りますか？",
-      [
-        { text: "やめる", style: "cancel" },
-        {
-          text: "切り取る",
-          style: "destructive",
-          onPress: async () => {
-            await deleteHistoryEntry(id);
-            await loadHistory();
-          },
-        },
-      ]
-    );
-  };
-
   const confirmClearHistory = () => {
     if (history.length === 0) return;
     Alert.alert(
-      "手帳の整理",
-      "全てのおみくじの記録を白紙に戻しますか？",
+      t("history.deleteConfirmTitle"),
+      t("history.deleteConfirmMessage"),
       [
-        { text: "やめる", style: "cancel" },
+        { text: t("common.cancel"), style: "cancel" },
         {
-          text: "白紙にする",
+          text: t("history.deleteAll"),
           style: "destructive",
           onPress: handleClearHistory,
         },
@@ -147,7 +127,7 @@ export default function HistoryScreen() {
               <Text className="text-stone-500 font-shippori">{t("common.loading")}</Text>
             </View>
           ) : (
-            <HistoryList history={history} onDelete={handleDeleteEntry} />
+            <HistoryList history={history} />
           )}
         </View>
       </View>

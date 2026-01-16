@@ -161,9 +161,9 @@
     },
     "history": {
         "title": "運勢手帳",
-        "deleteAll": "全削除",
-        "deleteConfirmTitle": "履歴を削除",
-        "deleteConfirmMessage": "本当にすべての履歴を削除しますか？",
+        "deleteAll": "奉納する",
+        "deleteConfirmTitle": "手帳の奉納",
+        "deleteConfirmMessage": "これまでの運勢を感謝とともに神様に返し、手帳を白紙に戻しますか？",
         "empty": "まだ履歴がありません。\nおみくじを引いてみましょう！"
     }
 }

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 
 interface HistoryListProps {
   history: HistoryEntry[];
-  onDelete: (id: string) => void;
 }
 
 const formatDate = (timestamp: number): string => {
@@ -23,11 +22,9 @@ const formatDate = (timestamp: number): string => {
 const HistoryItem = ({
   item,
   index,
-  onDelete,
 }: {
   item: HistoryEntry;
   index: number;
-  onDelete: (id: string) => void;
 }) => {
   const { t } = useTranslation();
   const fortuneTitle = t(`fortune.levels.${item.level}`);
@@ -66,22 +63,13 @@ const HistoryItem = ({
           </Text>
         </View>
 
-        <View className="items-end flex-row">
-          <View className="items-end mr-3">
-            <Text className="text-stone-600 text-[10px] font-shippori leading-none mb-1">
-              {formatDate(item.createdAt).split(" ")[0]}
-            </Text>
-            <Text className="text-stone-400 text-[9px] font-shippori leading-none">
-              {formatDate(item.createdAt).split(" ")[1]}
-            </Text>
-          </View>
-          <TouchableOpacity
-            onPress={() => onDelete(item.id)}
-            className="w-8 h-8 items-center justify-center rounded-full bg-stone-100 border border-stone-200"
-            accessibilityLabel="この履歴を削除"
-          >
-            <Text className="text-stone-400 text-xs text-center">✕</Text>
-          </TouchableOpacity>
+        <View className="items-end">
+          <Text className="text-stone-600 text-[10px] font-shippori leading-none mb-1">
+            {formatDate(item.createdAt).split(" ")[0]}
+          </Text>
+          <Text className="text-stone-400 text-[9px] font-shippori leading-none">
+            {formatDate(item.createdAt).split(" ")[1]}
+          </Text>
         </View>
       </View>
 
@@ -101,7 +89,7 @@ const HistoryItem = ({
   );
 };
 
-export const HistoryList = ({ history, onDelete }: HistoryListProps) => {
+export const HistoryList = ({ history }: HistoryListProps) => {
   const { t } = useTranslation();
 
   if (history.length === 0) {
@@ -121,7 +109,7 @@ export const HistoryList = ({ history, onDelete }: HistoryListProps) => {
     <FlatList
       data={history}
       renderItem={({ item, index }) => (
-        <HistoryItem item={item} index={index} onDelete={onDelete} />
+        <HistoryItem item={item} index={index} />
       )}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
