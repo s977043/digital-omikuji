@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { router, useFocusEffect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { MotiView } from "moti";
 import {
   getHistory,
   clearHistory,
@@ -22,6 +23,7 @@ export default function HistoryScreen() {
   const { t } = useTranslation();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleBack = () => {
     if (router.canGoBack()) {
@@ -46,23 +48,13 @@ export default function HistoryScreen() {
 
   const confirmClearHistory = () => {
     if (history.length === 0) return;
-    Alert.alert(
-      t("history.deleteConfirmTitle"),
-      t("history.deleteConfirmMessage"),
-      [
-        { text: t("common.cancel"), style: "cancel" },
-        {
-          text: t("history.deleteAll"),
-          style: "destructive",
-          onPress: handleClearHistory,
-        },
-      ]
-    );
+    setShowConfirm(true);
   };
 
   const handleClearHistory = async () => {
     await clearHistory();
     setHistory([]);
+    setShowConfirm(false);
   };
 
   return (
@@ -85,31 +77,35 @@ export default function HistoryScreen() {
         <View className="flex-row items-center justify-between">
           <TouchableOpacity
             onPress={handleBack}
-            className="flex-row items-center p-2 -ml-2 rounded-lg bg-black/20 border border-white/10 active:bg-black/40"
+            className="flex-row items-center px-4 py-2 rounded-lg bg-black/20 border border-white/10 active:bg-black/40"
             accessibilityLabel={t("common.back")}
             accessibilityRole="button"
           >
-            <Text className="text-stone-200 font-bold">
-              ← {t("common.back")}
+            <Text className="text-stone-200 font-shippori-bold leading-none">
+              {t("common.back")}
             </Text>
           </TouchableOpacity>
-          <View className="items-center absolute left-0 right-0 -z-10">
+
+          <View className="items-center">
             <Text className="text-stone-100 font-shippori-bold text-2xl tracking-[0.3em] drop-shadow-sm">
               {t("history.title")}
             </Text>
           </View>
-          {history.length > 0 && (
-            <TouchableOpacity
-              onPress={confirmClearHistory}
-              className="px-3 py-1.5 bg-red-950/40 border border-red-500/30 rounded-md active:bg-red-900/60"
-              accessibilityLabel={t("history.deleteAll")}
-              accessibilityRole="button"
-            >
-              <Text className="text-red-200 text-xs font-bold">
-                {t("history.deleteAll")}
-              </Text>
-            </TouchableOpacity>
-          )}
+
+          <View className="w-[84px] items-end">
+            {history.length > 0 && (
+              <TouchableOpacity
+                onPress={confirmClearHistory}
+                className="px-3 py-1.5 bg-red-900/60 border border-red-500/40 rounded-md active:bg-red-800/80 shadow-sm"
+                accessibilityLabel={t("history.deleteAll")}
+                accessibilityRole="button"
+              >
+                <Text className="text-red-100 text-xs font-shippori-bold">
+                  {t("history.deleteAll")}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
       </View>
 
@@ -132,6 +128,41 @@ export default function HistoryScreen() {
         </View>
       </View>
 
+      {/* --- Confirmation Modal --- */}
+      {showConfirm && (
+        <View className="absolute inset-0 bg-black/80 z-[100] items-center justify-center px-8">
+          <MotiView
+            from={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#fdfaf5] p-8 rounded-sm border-2 border-stone-300 w-full max-w-sm"
+          >
+            <Text className="text-stone-800 font-shippori-bold text-xl mb-4 text-center tracking-widest">
+              {t("history.deleteConfirmTitle")}
+            </Text>
+            <Text className="text-stone-600 font-shippori text-sm mb-8 text-center leading-relaxed">
+              {t("history.deleteConfirmMessage")}
+            </Text>
+            <View className="flex-row justify-between gap-4">
+              <TouchableOpacity
+                onPress={() => setShowConfirm(false)}
+                className="flex-1 py-3 bg-stone-200 rounded-sm active:bg-stone-300"
+              >
+                <Text className="text-stone-600 font-shippori-bold text-center leading-none">
+                  {t("common.cancel")}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleClearHistory}
+                className="flex-1 py-3 bg-red-900 rounded-sm active:bg-red-800 shadow-sm"
+              >
+                <Text className="text-white font-shippori-bold text-center leading-none">
+                  {t("history.deleteAll")}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </MotiView>
+        </View>
+      )}
     </View>
   );
 }

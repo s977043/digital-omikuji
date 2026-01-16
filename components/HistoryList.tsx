@@ -40,7 +40,7 @@ const HistoryItem = ({
       from={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: index * 50 }}
-      className="bg-white/70 rounded-sm p-5 mb-6 shadow-sm border border-stone-200/50 relative"
+      className="bg-white/85 rounded-sm p-6 mb-8 shadow-sm border border-stone-200/60 relative"
       style={{
         shadowColor: "#000",
         shadowOffset: { width: 1, height: 1 },
@@ -74,13 +74,13 @@ const HistoryItem = ({
       </View>
 
       {/* Message with Lined Paper Effect */}
-      <View className="mt-1 relative">
-        <View className="absolute inset-0 border-t border-stone-200" style={{ marginTop: 24 }} />
-        <View className="absolute inset-0 border-t border-stone-200" style={{ marginTop: 48 }} />
+      <View className="mt-2 relative">
+        <View className="absolute inset-0 border-t border-stone-300/40" style={{ marginTop: 28 }} />
+        <View className="absolute inset-0 border-t border-stone-300/40" style={{ marginTop: 56 }} />
 
         <Text
-          className="text-stone-800 font-shippori text-sm leading-6"
-          style={{ minHeight: 48 }}
+          className="text-stone-700 font-shippori text-[15px] leading-7"
+          style={{ minHeight: 56 }}
         >
           {fortuneMessage}
         </Text>
