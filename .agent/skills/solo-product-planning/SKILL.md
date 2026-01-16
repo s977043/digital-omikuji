@@ -3,10 +3,9 @@ name: solo-product-planning
 description: 個人開発の企画を「概要→体験→検証→画面→類似」の順で1枚に整理し、勢い実装で迷子になるのを防ぐ。JTBD/Time to Wow、最大リスク仮説、最小実験、成功指標まで落とし込む。個人開発、企画、要件定義、ユーザーフロー、MVP、検証、プロトタイプ、競合調査の依頼で使う。
 license: Proprietary
 compatibility: Works in agents that support the Agent Skills SKILL.md format (e.g., Codex CLI/IDE, Claude Code, Cursor).
-metadata:
-  author: "3396"
-  version: "1.0"
-  short-description: "個人開発の企画を1枚に畳む（検証込み）"
+version: "1.0"
+author: "3396"
+short-description: "個人開発の企画を1枚に畳む（検証込み）"
 ---
 
 # 個人開発 企画1枚化スキル（概要→体験→検証→画面→類似）
