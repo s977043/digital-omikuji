@@ -91,8 +91,8 @@ if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-// Generate WAV files only (expo-av supports WAV natively on all platforms)
+// Generate WAV files only (expo-audio supports WAV natively on all platforms)
 generateShakeSound(path.join(dir, "shake.wav"));
 generateResultSound(path.join(dir, "result.wav"));
 
-console.log("Note: WAV files generated. expo-av supports WAV format on iOS, Android, and Web.");
+console.log("Note: WAV files generated. expo-audio supports WAV format on iOS, Android, and Web.");

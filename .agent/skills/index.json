@@ -23,6 +23,21 @@
       "last_updated": "2026-01-15"
     },
     {
+      "id": "agent-browser",
+      "name": "agent-browser",
+      "description": "Vercel製 CLI agent-browser でのWeb操作手順（open/snapshot/click/fill/credentialsと再スナップショットのループ、インストール含む）。",
+      "skill_path": "skills/agent-browser/SKILL.md",
+      "contexts": [
+        "Codex"
+      ],
+      "tags": [
+        "agent-browser",
+        "cli",
+        "web-automation"
+      ],
+      "last_updated": "2026-01-16"
+    },
+    {
       "id": "chrome-devtools-ui-survey",
       "name": "Chrome DevTools UI 調査",
       "description": "Chrome DevTools MCP で対象 UI をスクリーンショットし、レイアウトや要素構成を記録するスキル。Codex エージェントが L1 〜 L3 を順に読み込んで実行できるように整備します。",

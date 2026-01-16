@@ -34,15 +34,15 @@ const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => 
       from={{ opacity: 0, translateX: -20 }}
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ delay: index * 50 }}
-      className="bg-white/10 rounded-xl p-4 mb-3 border border-white/20"
+      className="bg-slate-800/85 rounded-2xl p-4 mb-5 border border-white/10 shadow-lg shadow-black/30"
     >
       <View className="flex-row justify-between items-center">
         <Text className="text-3xl font-shippori-bold" style={{ color: item.color }}>
           {fortuneTitle}
         </Text>
-        <Text className="text-white/60 text-xs">{formatDate(item.createdAt)}</Text>
+        <Text className="text-white/70 text-xs">{formatDate(item.createdAt)}</Text>
       </View>
-      <Text className="text-white/80 mt-2 font-shippori text-sm">{fortuneMessage}</Text>
+      <Text className="text-white/85 mt-2 font-shippori text-sm">{fortuneMessage}</Text>
     </MotiView>
   );
 };
@@ -69,7 +69,7 @@ export const HistoryList = ({ history }: HistoryListProps) => {
       renderItem={({ item, index }) => <HistoryItem item={item} index={index} />}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ paddingBottom: 20 }}
+      contentContainerStyle={{ paddingBottom: 32, paddingTop: 4 }}
     />
   );
 };

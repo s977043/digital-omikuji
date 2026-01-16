@@ -3,7 +3,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Modal,
   Image,
   ImageBackground,
   Platform,
@@ -18,7 +17,15 @@ export default function HistoryScreen() {
   const { t } = useTranslation();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+      return;
+    }
+    // 直接URL遷移で履歴ページを開いた場合のフォールバック
+    router.replace("/");
+  };
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
@@ -36,13 +43,12 @@ export default function HistoryScreen() {
 
   const confirmClearHistory = () => {
     if (history.length === 0) return;
-    setIsDeleteModalVisible(true);
+    handleClearHistory();
   };
 
   const handleClearHistory = async () => {
     await clearHistory();
     setHistory([]);
-    setIsDeleteModalVisible(false);
   };
 
   return (
@@ -57,14 +63,14 @@ export default function HistoryScreen() {
 
       {/* --- Header --- */}
       <View
-        className="pt-16 pb-6 px-6 bg-slate-900 z-10 border-b border-white/10"
+        className="pt-10 pb-4 px-6 bg-slate-900 z-10 border-b border-white/10"
         style={{
-          paddingTop: Platform.OS === "android" ? 40 : undefined, // Safe area for Android
+          paddingTop: Platform.OS === "android" ? 32 : undefined, // Safe area for Android (控えめに)
         }}
       >
         <View className="flex-row items-center justify-between">
           <TouchableOpacity
-            onPress={() => router.back()}
+            onPress={handleBack}
             className="flex-row items-center p-2 -ml-2 rounded-full active:bg-white/10"
             accessibilityLabel={t("common.back")}
             accessibilityRole="button"
@@ -99,7 +105,7 @@ export default function HistoryScreen() {
           style={{ opacity: 0.3 }}
           resizeMode="cover"
         />
-        <View className="absolute inset-0">
+        <View className="absolute inset-0 px-6 pt-6">
           {isLoading ? (
             <View className="flex-1 items-center justify-center">
               <Text className="text-white/60">{t("common.loading")}</Text>
@@ -110,53 +116,6 @@ export default function HistoryScreen() {
         </View>
       </View>
 
-      {/* --- Custom Delete Confirmation Modal (View Overlay for Web Compat) --- */}
-      {isDeleteModalVisible && (
-        <View
-          className="absolute inset-0 flex-1 justify-center items-center bg-black/70 px-4"
-          style={{ zIndex: 9999, elevation: 10 }}
-        >
-          <View className="w-full max-w-sm bg-[#FDF5E6] rounded-2xl p-6 items-center shadow-2xl border-4 border-double border-amber-200">
-            {/* Visual Element */}
-            <View className="bg-white/50 p-4 rounded-full mb-4 border border-amber-100">
-              <Image
-                source={require("../assets/empty_history.png")}
-                className="w-16 h-16 opacity-80"
-                resizeMode="contain"
-              />
-            </View>
-
-            <Text className="text-xl font-shippori-bold text-slate-800 mb-2 tracking-widest text-center">
-              {t("history.deleteConfirmTitle")}
-            </Text>
-            <Text className="text-slate-600 text-sm font-shippori text-center mb-8 leading-relaxed">
-              {t("history.deleteConfirmMessage")}
-            </Text>
-
-            <View className="flex-row gap-3 w-full">
-              <TouchableOpacity
-                onPress={() => setIsDeleteModalVisible(false)}
-                className="flex-1 py-3 bg-slate-200 rounded-full items-center active:bg-slate-300"
-                accessibilityLabel={t("common.cancel")}
-                accessibilityRole="button"
-              >
-                <Text className="text-slate-700 font-bold">
-                  {t("common.cancel")}
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={handleClearHistory}
-                className="flex-1 py-3 bg-red-600 rounded-full items-center shadow-md active:bg-red-700"
-                accessibilityLabel={t("common.delete")}
-                accessibilityRole="button"
-              >
-                <Text className="text-white font-bold">{t("common.delete")}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      )}
     </View>
   );
 }

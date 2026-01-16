@@ -224,10 +224,16 @@ export const ResultScrollCard = ({
             transition={{ type: "timing", duration: 500, delay: 300 }}
             className="mt-12 items-center"
           >
-            <Text className="text-white text-xl font-shippori-bold text-center tracking-widest leading-loose">
+            <Text
+              className="text-white text-2xl font-shippori-bold text-center leading-relaxed"
+              style={{ letterSpacing: 1 }}
+            >
               {t("fortune.tiedTitle")}
             </Text>
-            <Text className="text-white/70 text-sm font-shippori text-center mt-4">
+            <Text
+              className="text-white/70 text-base font-shippori text-center mt-3"
+              style={{ letterSpacing: 0.5 }}
+            >
               {t("fortune.tiedMessage")}
             </Text>
             {/* 閉じるリンク */}

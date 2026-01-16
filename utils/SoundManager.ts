@@ -1,14 +1,14 @@
-import { Audio, AVPlaybackSource } from "expo-av";
+import { AudioPlayer, AudioSource, createAudioPlayer, setAudioModeAsync } from "expo-audio";
 
 class SoundManager {
-  private sounds: Map<string, Audio.Sound> = new Map();
+  private sounds: Map<string, AudioPlayer> = new Map();
   private isReady: boolean = false;
   private volume: number = 1.0;
   private isMuted: boolean = false;
 
   async initialize() {
     try {
-      await Audio.setAudioModeAsync({
+      await setAudioModeAsync({
         playsInSilentModeIOS: true,
         staysActiveInBackground: false,
         shouldDuckAndroid: true,
@@ -20,24 +20,16 @@ class SoundManager {
     }
   }
 
-  async loadSound(key: string, source: AVPlaybackSource): Promise<Audio.Sound | null> {
+  async loadSound(key: string, source: AudioSource): Promise<AudioPlayer | null> {
     if (!this.isReady) {
       return null;
     }
     try {
-      const { sound, status } = await Audio.Sound.createAsync(source, {
-        shouldPlay: false,
-        isMuted: this.isMuted,
-        volume: this.volume,
-      });
-
-      if (status.isLoaded) {
-        this.sounds.set(key, sound);
-        return sound;
-      } else {
-        // Sound object created but not loaded; do not add to map
-        return null;
-      }
+      const player = createAudioPlayer(source, { keepAudioSessionActive: false });
+      player.volume = this.volume;
+      player.muted = this.isMuted;
+      this.sounds.set(key, player);
+      return player;
     } catch (error) {
       console.error(`Failed to load sound ${key}:`, error);
       return null;
@@ -58,12 +50,13 @@ class SoundManager {
         return;
       }
 
-      const status = await sound.getStatusAsync();
-      if (status.isLoaded) {
-        await sound.replayAsync();
-      } else {
-        console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
+      if (!sound.isLoaded) {
+        console.warn(`Cannot play sound ${key}: it is in the map but not loaded.`);
+        return;
       }
+
+      await sound.seekTo(0);
+      sound.play();
     } catch (error) {
       console.error(`Failed to play sound ${key}:`, error);
     }
@@ -73,7 +66,7 @@ class SoundManager {
     this.volume = Math.max(0, Math.min(1, vol));
     for (const sound of this.sounds.values()) {
       try {
-        await sound.setVolumeAsync(this.volume);
+        sound.volume = this.volume;
       } catch (e) {
         console.error("Failed to set volume for a sound:", e);
       }
@@ -84,10 +77,7 @@ class SoundManager {
     this.isMuted = mute;
     for (const sound of this.sounds.values()) {
       try {
-        const status = await sound.getStatusAsync();
-        if (status.isLoaded) {
-          await sound.setIsMutedAsync(mute);
-        }
+        sound.muted = mute;
       } catch (e) {
         console.error("Failed to set mute for a sound:", e);
       }
@@ -97,7 +87,7 @@ class SoundManager {
   async unloadAll() {
     for (const [key, sound] of this.sounds.entries()) {
       try {
-        await sound.unloadAsync();
+        sound.remove();
       } catch (error) {
         console.error(`Failed to unload sound ${key}:`, error);
       }

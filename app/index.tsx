@@ -55,12 +55,18 @@ const REVEAL_ANIMATION = {
   SPARKLE_DURATION: 500,
 };
 
-const DRAW_BUTTON_STYLE = {
-  shadowColor: "#B45309",
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.5,
-  shadowRadius: 8,
-};
+const DRAW_BUTTON_STYLE =
+  Platform.OS === "web"
+    ? { boxShadow: "0px 6px 14px rgba(180,83,9,0.5)" }
+    : {
+      shadowColor: "#B45309",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.5,
+      shadowRadius: 8,
+    };
+
+const OMIKUJI_FRAME_SIZE = 184;
+const OMIKUJI_IMAGE_SIZE = OMIKUJI_FRAME_SIZE;
 
 // ハプティックフィードバックヘルパー
 type HapticFeedbackType =
@@ -351,8 +357,8 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden"
-                style={{ width: 184, height: 184, position: "relative" }}
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center self-center"
+                style={{ width: OMIKUJI_FRAME_SIZE, height: OMIKUJI_FRAME_SIZE }}
               >
                 <Image
                   source={
@@ -361,14 +367,11 @@ export default function OmikujiApp() {
                       : require("../assets/omikuji_cylinder.png")
                   }
                   style={{
-                    width: 240,
-                    height: 240,
-                    position: "absolute",
-                    top: -28,
-                    left: -28,
-                    transform: [{ translateX: hasDrawnToday ? 6 : 10 }],
+                    width: OMIKUJI_IMAGE_SIZE,
+                    height: OMIKUJI_IMAGE_SIZE,
+                    borderRadius: OMIKUJI_IMAGE_SIZE / 2,
                   }}
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
               </View>
               <Text
@@ -382,13 +385,13 @@ export default function OmikujiApp() {
                 <>
                   <TouchableOpacity
                     onPress={handleShakeStart}
-                    className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
-                    style={DRAW_BUTTON_STYLE}
-                    accessibilityLabel="おみくじを引く"
-                    accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
-                    accessibilityRole="button"
-                  >
-                    <Text className="text-white font-shippori-bold text-2xl tracking-widest text-center">
+                  className="bg-red-600 px-10 py-5 rounded-full border-4 border-amber-400 shadow-2xl shadow-red-900/50 active:scale-95 transition-transform"
+                  style={DRAW_BUTTON_STYLE}
+                  accessibilityLabel="おみくじを引く"
+                  accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
+                  accessibilityRole="button"
+                >
+                    <Text className="text-white font-shippori-bold text-xl tracking-widest text-center">
                       おみくじを引く
                     </Text>
                   </TouchableOpacity>
@@ -448,7 +451,20 @@ export default function OmikujiApp() {
               }
               className="items-center"
             >
-              <Text className="text-9xl mb-6">🫨</Text>
+              <View
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                style={{ width: OMIKUJI_FRAME_SIZE, height: OMIKUJI_FRAME_SIZE }}
+              >
+                <Image
+                  source={require("../assets/omikuji_cylinder.png")}
+                  style={{
+                    width: OMIKUJI_IMAGE_SIZE,
+                    height: OMIKUJI_IMAGE_SIZE,
+                    borderRadius: OMIKUJI_IMAGE_SIZE / 2,
+                  }}
+                  resizeMode="contain"
+                />
+              </View>
               <MotiView
                 from={{ opacity: 0.5, scale: 1 }}
                 animate={{ opacity: 1, scale: 1.2 }}
@@ -460,36 +476,48 @@ export default function OmikujiApp() {
                 }}
               >
                 <Text className="text-xl text-yellow-400 font-shippori-bold mt-8 tracking-widest uppercase bg-black/50 px-6 py-2 rounded-full border border-yellow-400/50">
-                  念を込めて...
+                  願いを込めて...
                 </Text>
               </MotiView>
             </MotiView>
           )}
 
           {/* 抽選中 (DRAWING) */}
-          {appState === "DRAWING" && <DrawingOverlay />}
+          {appState === "DRAWING" && <DrawingOverlay reducedMotion={reducedMotion} />}
 
           {/* 結果表示中 (REVEALING - 棒が出るアニメ) */}
           {appState === "REVEALING" && (
-            <View className="items-center relative h-64 w-full justify-end">
+            <View className="items-center relative h-72 w-full justify-end">
               <MotiView
-                from={{ translateY: 200, rotate: "180deg" }}
-                animate={{ translateY: 0, rotate: "0deg" }}
+                from={{ translateY: 200 }}
+                animate={{ translateY: 0 }}
                 transition={
                   reducedMotion
                     ? { type: "timing", duration: 300 }
                     : { type: "spring", damping: REVEAL_ANIMATION.BOX_SPRING_DAMPING }
                 }
-                className="w-40 h-48 bg-red-800 rounded-lg border-4 border-yellow-600 z-20 shadow-2xl flex items-center justify-center"
+                className="w-44 h-56 rounded-xl border-[5px] z-20 flex items-center justify-center"
+                style={{
+                  backgroundColor: "#8b0b0b",
+                  borderColor: "#d97706",
+                  ...(Platform.OS === "web"
+                    ? { boxShadow: "0px 10px 18px rgba(217,119,6,0.4)" }
+                    : {
+                      shadowColor: "#d97706",
+                      shadowOpacity: 0.4,
+                      shadowRadius: 18,
+                      shadowOffset: { width: 0, height: 10 },
+                    }),
+                }}
               >
-                <View className="w-20 h-2 bg-yellow-600/30 rounded-full mb-2" />
-                <View className="w-16 h-2 bg-yellow-600/30 rounded-full" />
+                <View className="w-24 h-2 bg-yellow-500/30 rounded-full mb-3" />
+                <View className="w-20 h-2 bg-yellow-500/30 rounded-full" />
               </MotiView>
 
               <MotiView
-                className="absolute w-16 h-48 bg-amber-50 bottom-12 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
+                className="absolute w-16 h-52 bg-amber-50 bottom-16 z-10 rounded-t-lg border-x-2 border-t-2 border-amber-200 items-center justify-start pt-4 shadow-lg"
                 from={{ translateY: 100, opacity: 0 }}
-                animate={{ translateY: -100, opacity: 1 }}
+                animate={{ translateY: -140, opacity: 1 }}
                 transition={
                   reducedMotion
                     ? { type: "timing", duration: 400, delay: REVEAL_ANIMATION.STICK_APPEAR_DELAY }
@@ -570,8 +598,8 @@ export default function OmikujiApp() {
           )}
 
           {appState === "IDLE" && !hasDrawnToday && (
-            <View className="absolute bottom-12 bg-white/10 px-4 py-1 rounded-full border border-white/20">
-              <Text className="text-white/80 font-bold text-xs tracking-widest">
+            <View className="absolute bottom-8 bg-white/10 px-4 py-1 rounded-full border border-white/20">
+              <Text className="text-white/80 font-bold text-xs tracking-widest leading-tight">
                 令和八年 丙午 デジタルおみくじ
               </Text>
             </View>
