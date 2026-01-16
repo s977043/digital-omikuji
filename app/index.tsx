@@ -333,8 +333,8 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden"
-                style={{ width: 184, height: 184, position: "relative" }}
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                style={{ width: 184, height: 184 }}
               >
                 <Image
                   source={
@@ -344,11 +344,9 @@ export default function OmikujiApp() {
                   }
                   className="rounded-full"
                   style={{
-                    width: 210,
-                    height: 210,
-                    position: "absolute",
-                    top: -8,
-                    left: 6,
+                    width: "130%",
+                    height: "130%",
+                    transform: [{ translateX: hasDrawnToday ? 20 : 10 }],
                   }}
                   resizeMode="cover"
                 />
@@ -528,25 +526,24 @@ export default function OmikujiApp() {
           {/* 履歴画面へのナビゲーションボタン */}
           {appState === "IDLE" && (
             <>
+              {/* ヘッダーボタン群 */}
               <TouchableOpacity
                 onPress={() => router.push("/history")}
-                className="absolute bottom-16 left-6 bg-slate-700/80 py-3 px-5 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
+                className="absolute top-12 right-6 bg-slate-700/80 p-3 rounded-full shadow-lg border border-white/30 items-center justify-center active:bg-slate-600"
                 accessibilityLabel="履歴を見る"
                 accessibilityHint="これまでに引いたおみくじの履歴を表示します"
                 accessibilityRole="button"
               >
-                <Text className="text-white font-bold">履歴</Text>
+                <Text className="text-white font-bold px-2">履歴</Text>
               </TouchableOpacity>
 
-              {/* ミュート切り替えボタン */}
               <TouchableOpacity
                 onPress={toggleMute}
-                className="absolute top-12 left-6 bg-black/40 px-4 py-2 rounded-full border border-white/30 active:bg-black/60 flex-row items-center"
+                className="absolute top-12 left-6 bg-black/40 p-3 rounded-full border border-white/30 active:bg-black/60 flex-row items-center"
                 accessibilityLabel={isMuted ? "音声をオンにする" : "音声をオフにする"}
                 accessibilityRole="button"
               >
-                <Text className="text-xl mr-2">{isMuted ? "🔕" : "🔔"}</Text>
-                <Text className="text-white text-sm font-bold">{isMuted ? "OFF" : "ON"}</Text>
+                <Text className="text-xl">{isMuted ? "🔕" : "🔔"}</Text>
               </TouchableOpacity>
 
               {/* デプロイバージョン表示 */}
