@@ -233,11 +233,11 @@ export const ResultScrollCard = ({
             {/* 閉じるリンク */}
             <TouchableOpacity
               onPress={onReset}
-              className="mt-8 px-6 py-3 bg-white/20 rounded-full border border-white/40"
+              className="mt-8 px-8 py-3 bg-white rounded-full shadow-lg active:scale-95 transition-transform"
               accessibilityLabel={t("common.close")}
               accessibilityRole="button"
             >
-              <Text className="text-white font-bold text-base">{t("common.close")}</Text>
+              <Text className="text-slate-800 font-bold text-lg">{t("common.close")}</Text>
             </TouchableOpacity>
           </MotiView>
         </MotiView>

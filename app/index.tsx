@@ -322,6 +322,9 @@ export default function OmikujiApp() {
       <ImageBackground
         source={require("../assets/shrine_background.png")}
         style={{ flex: 1, width: "100%" }}
+        imageStyle={{
+          ...(Platform.OS === "web" ? ({ backgroundPosition: "center" } as any) : {}),
+        }}
         resizeMode="cover"
       >
         <View className="flex-1 items-center justify-center bg-black/40 relative overflow-hidden">
@@ -333,7 +336,7 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
                 style={{ width: 184, height: 184 }}
               >
                 <Image
