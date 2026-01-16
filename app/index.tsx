@@ -336,7 +336,7 @@ export default function OmikujiApp() {
               className="items-center px-6"
             >
               <View
-                className="bg-white/10 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
+                className="bg-white/10 p-2 rounded-full border border-white/20 mb-8 backdrop-blur-md shadow-lg overflow-hidden items-center justify-center"
                 style={{ width: 184, height: 184 }}
               >
                 <Image
@@ -387,7 +387,7 @@ export default function OmikujiApp() {
                   accessibilityLabel="結果をもう一度見る"
                   accessibilityRole="button"
                 >
-                  <Text className="text-white font-shippori font-bold text-lg tracking-wider">
+                  <Text className="text-white font-shippori font-bold text-lg tracking-wider text-center">
                     結果をもう一度見る
                   </Text>
                 </TouchableOpacity>
