@@ -19,13 +19,7 @@ const formatDate = (timestamp: number): string => {
   });
 };
 
-const HistoryItem = ({
-  item,
-  index,
-}: {
-  item: HistoryEntry;
-  index: number;
-}) => {
+const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => {
   const { t } = useTranslation();
   const fortuneTitle = t(`fortune.levels.${item.level}`);
   const fortuneMessages = t(`fortune.messages.${item.level}`, {
@@ -108,9 +102,7 @@ export const HistoryList = ({ history }: HistoryListProps) => {
   return (
     <FlatList
       data={history}
-      renderItem={({ item, index }) => (
-        <HistoryItem item={item} index={index} />
-      )}
+      renderItem={({ item, index }) => <HistoryItem item={item} index={index} />}
       keyExtractor={(item) => item.id}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{ paddingBottom: 32, paddingTop: 4 }}

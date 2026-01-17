@@ -7,6 +7,7 @@ interface FortuneDisplayProps {
   onReset: () => void;
   reducedMotion?: boolean;
   hasSelectedAction?: boolean;
+  onActionSelected?: () => void;
 }
 
 export default function FortuneDisplay({
@@ -14,6 +15,7 @@ export default function FortuneDisplay({
   onReset,
   reducedMotion = false,
   hasSelectedAction = false,
+  onActionSelected,
 }: FortuneDisplayProps) {
   return (
     <ResultScrollCard
@@ -21,6 +23,7 @@ export default function FortuneDisplay({
       onReset={onReset}
       reducedMotion={reducedMotion}
       hasSelectedAction={hasSelectedAction}
+      onActionSelected={onActionSelected}
     />
   );
 }

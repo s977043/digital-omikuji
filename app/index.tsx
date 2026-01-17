@@ -21,6 +21,7 @@ import { soundManager } from "../utils/SoundManager";
 import { getLastResultAction, ResultAction } from "../utils/HistoryStorage";
 // global.css is imported in _layout.tsx
 
+import { useTranslation } from "react-i18next";
 import { DrawingOverlay } from "../components/DrawingOverlay";
 import { ShakingOverlay } from "../components/ShakingOverlay";
 
@@ -62,11 +63,11 @@ const DRAW_BUTTON_STYLE =
   Platform.OS === "web"
     ? { boxShadow: "0px 6px 14px rgba(180,83,9,0.5)" }
     : {
-      shadowColor: "#B45309",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.5,
-      shadowRadius: 8,
-    };
+        shadowColor: "#B45309",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.5,
+        shadowRadius: 8,
+      };
 
 const OMIKUJI_FRAME_SIZE = 184;
 const OMIKUJI_IMAGE_SIZE = OMIKUJI_FRAME_SIZE;
@@ -92,6 +93,7 @@ interface Subscription {
 }
 
 export default function OmikujiApp() {
+  const { t } = useTranslation();
   const [appState, setAppState] = useState<AppState>("IDLE");
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
   const [_isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
@@ -228,6 +230,10 @@ export default function OmikujiApp() {
     }
   }, [fortune]);
 
+  const handleActionSelected = useCallback(async () => {
+    await checkDailyStatus();
+  }, [checkDailyStatus]);
+
   const handleShakeStart = useCallback(async () => {
     if (appState !== "IDLE" || hasDrawnToday) return;
 
@@ -241,8 +247,16 @@ export default function OmikujiApp() {
       reducedMotion
     );
 
+    const safePlaySound = async (key: string) => {
+      try {
+        await soundManager.playSound(key);
+      } catch (e) {
+        console.warn(`Failed to play sound ${key}:`, e);
+      }
+    };
+
     setAppState("SHAKING");
-    soundManager.playSound("shake");
+    safePlaySound("shake");
 
     // シェイク終了 -> 抽選演出 (DRAWING) へ
     shakeTimerRef.current = setTimeout(async () => {
@@ -295,7 +309,9 @@ export default function OmikujiApp() {
           },
           true
         );
-        soundManager.playSound("result");
+        soundManager
+          .playSound("result")
+          .catch((e) => console.warn("Failed to play result sound:", e));
       }, DRAWING_DURATION_MS);
       return () => clearTimeout(timer);
     }
@@ -319,12 +335,12 @@ export default function OmikujiApp() {
         backgroundColor: "#0f172a",
         ...(Platform.OS === "web"
           ? ({
-            height: "100vh",
-            overflow: "hidden",
-          } as any)
+              height: "100vh",
+              overflow: "hidden",
+            } as any)
           : {
-            flex: 1,
-          }),
+              flex: 1,
+            }),
       }}
     >
       <ImageBackground
@@ -375,11 +391,11 @@ export default function OmikujiApp() {
                       reducedMotion
                         ? { type: "timing", duration: 300 }
                         : {
-                          type: "spring",
-                          damping: 12,
-                          stiffness: 200,
-                          mass: 0.8,
-                        }
+                            type: "spring",
+                            damping: 12,
+                            stiffness: 200,
+                            mass: 0.8,
+                          }
                     }
                     className="mb-8 items-center"
                   >
@@ -454,9 +470,9 @@ export default function OmikujiApp() {
                 >
                   {hasDrawnToday
                     ? lastResultAction === "keep"
-                      ? "おみくじを持ち帰りました"
-                      : "おみくじを結びました"
-                    : "スマホを振っておみくじを引こう"}
+                      ? t("fortune.tiedKeepTitle", { defaultValue: "おみくじを持ち帰りました" })
+                      : t("fortune.tiedTitle")
+                    : t("home.shakeToPlay")}
                 </Text>
 
                 {/* サブメッセージ（確認済みの場合） */}
@@ -466,8 +482,10 @@ export default function OmikujiApp() {
                     style={{ letterSpacing: 0.5 }}
                   >
                     {lastResultAction === "keep"
-                      ? "ときどき読み返して、今日の指針に。"
-                      : "良いご縁が結ばれますように…"}
+                      ? t("fortune.tiedKeepMessage", {
+                          defaultValue: "ときどき読み返して、今日の指針に。",
+                        })
+                      : t("fortune.tiedMessage")}
                   </Text>
                 )}
 
@@ -513,11 +531,11 @@ export default function OmikujiApp() {
                     <TouchableOpacity
                       onPress={handleResultView}
                       className="flex-1 bg-slate-800/90 px-6 py-4 rounded-full border border-white/30 shadow-xl active:bg-slate-700 items-center justify-center"
-                      accessibilityLabel="結果をもう一度見る"
+                      accessibilityLabel="結果を見る"
                       accessibilityRole="button"
                     >
                       <Text className="text-white font-shippori font-bold text-base tracking-wider text-center">
-                        結果を見る
+                        {t("fortune.viewAgain", { defaultValue: "結果を見る" })}
                       </Text>
                     </TouchableOpacity>
                   </View>
@@ -531,8 +549,6 @@ export default function OmikujiApp() {
             {/* 抽選中 (DRAWING) */}
             {appState === "DRAWING" && <DrawingOverlay reducedMotion={reducedMotion} />}
 
-
-
             {/* 結果画面 (コンポーネント) */}
             {appState === "RESULT" && fortune && (
               <FortuneDisplay
@@ -540,6 +556,7 @@ export default function OmikujiApp() {
                 onReset={handleReset}
                 reducedMotion={reducedMotion}
                 hasSelectedAction={lastResultAction !== null}
+                onActionSelected={handleActionSelected}
               />
             )}
 
@@ -554,7 +571,9 @@ export default function OmikujiApp() {
                 accessibilityLabel="デバッグ用に強制実行"
                 accessibilityRole="button"
               >
-                <Text className="text-white font-bold">🔧 デバッグ</Text>
+                <Text className="text-white font-bold">
+                  {t("home.debugPlay", { defaultValue: "🔧 デバッグ" })}
+                </Text>
               </TouchableOpacity>
             )}
 
@@ -570,7 +589,9 @@ export default function OmikujiApp() {
                   accessibilityHint="これまでに引いたおみくじの履歴を表示します"
                   accessibilityRole="button"
                 >
-                  <Text className="text-white font-bold text-xs">履歴</Text>
+                  <Text className="text-white font-bold text-xs">
+                    {t("history.title", { defaultValue: "履歴" })}
+                  </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity

@@ -50,9 +50,9 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
             height: 400,
             ...(Platform.OS === "web"
               ? {
-                background:
-                  "conic-gradient(from 0deg, transparent 0%, rgba(253, 224, 71, 0.15) 25%, transparent 50%, rgba(253, 224, 71, 0.15) 75%, transparent 100%)",
-              }
+                  background:
+                    "conic-gradient(from 0deg, transparent 0%, rgba(253, 224, 71, 0.15) 25%, transparent 50%, rgba(253, 224, 71, 0.15) 75%, transparent 100%)",
+                }
               : {}),
           }}
         />
@@ -109,10 +109,10 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
               ...(Platform.OS === "web"
                 ? { boxShadow: "0px 0px 50px 25px rgba(220, 38, 38, 0.3)" }
                 : {
-                  shadowColor: "#dc2626",
-                  shadowOpacity: 0.3,
-                  shadowRadius: 50,
-                }),
+                    shadowColor: "#dc2626",
+                    shadowOpacity: 0.3,
+                    shadowRadius: 50,
+                  }),
             }}
           />
 
@@ -124,10 +124,10 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
               reducedMotion
                 ? { type: "timing", duration: 2500, easing: Easing.out(Easing.ease) }
                 : {
-                  type: "timing",
-                  duration: 2800,
-                  easing: Easing.bezier(0.25, 0.1, 0.25, 1),
-                }
+                    type: "timing",
+                    duration: 2800,
+                    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+                  }
             }
             className="absolute z-10 items-center"
             style={{ top: 20 }}
@@ -150,10 +150,10 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
                 ...(Platform.OS === "web"
                   ? { boxShadow: "0px 0px 20px 10px rgba(253, 224, 71, 0.4)" }
                   : {
-                    shadowColor: "#fde047",
-                    shadowOpacity: 0.4,
-                    shadowRadius: 20,
-                  }),
+                      shadowColor: "#fde047",
+                      shadowOpacity: 0.4,
+                      shadowRadius: 20,
+                    }),
               }}
             />
 
@@ -166,11 +166,11 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
                 ...(Platform.OS === "web"
                   ? { boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.3)" }
                   : {
-                    shadowColor: "#000",
-                    shadowOpacity: 0.3,
-                    shadowRadius: 12,
-                    shadowOffset: { width: 0, height: 4 },
-                  }),
+                      shadowColor: "#000",
+                      shadowOpacity: 0.3,
+                      shadowRadius: 12,
+                      shadowOffset: { width: 0, height: 4 },
+                    }),
               }}
               resizeMode="contain"
               accessibilityIgnoresInvertColors
@@ -194,11 +194,11 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
                 ...(Platform.OS === "web"
                   ? { boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.4)" }
                   : {
-                    shadowColor: "#000",
-                    shadowOpacity: 0.4,
-                    shadowRadius: 20,
-                    shadowOffset: { width: 0, height: 8 },
-                  }),
+                      shadowColor: "#000",
+                      shadowOpacity: 0.4,
+                      shadowRadius: 20,
+                      shadowOffset: { width: 0, height: 8 },
+                    }),
               }}
             >
               <Image
@@ -297,10 +297,10 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
           ...(Platform.OS === "web"
             ? { boxShadow: "0px 0px 60px 30px rgba(253, 224, 71, 0.5)" }
             : {
-              shadowColor: "#fde047",
-              shadowOpacity: 0.5,
-              shadowRadius: 60,
-            }),
+                shadowColor: "#fde047",
+                shadowOpacity: 0.5,
+                shadowRadius: 60,
+              }),
         }}
       />
     </View>

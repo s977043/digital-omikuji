@@ -50,6 +50,7 @@ interface ResultScrollCardProps {
   onReset: () => void;
   reducedMotion?: boolean;
   hasSelectedAction?: boolean; // 結ぶ/持ち帰るが選択済みかどうか
+  onActionSelected?: () => void;
 }
 
 export const ResultScrollCard = ({
@@ -57,6 +58,7 @@ export const ResultScrollCard = ({
   onReset,
   reducedMotion = false,
   hasSelectedAction = false,
+  onActionSelected,
 }: ResultScrollCardProps) => {
   const animationRef = useRef<View>(null);
   const cardRef = useRef<View>(null);
@@ -84,6 +86,11 @@ export const ResultScrollCard = ({
     setExitAnimation("tie");
     setLastResultAction("tie"); // アクションを保存
 
+    // 親コンポーネントに通知（少し遅延させてアニメーションと同期）
+    if (onActionSelected) {
+      setTimeout(onActionSelected, 100);
+    }
+
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
     }
@@ -91,7 +98,7 @@ export const ResultScrollCard = ({
     tieTimerRef.current = setTimeout(() => {
       setShowTiedComplete(true);
     }, ANIMATION_TIMING.TIE_CARD_FLY);
-  }, [exitAnimation, reducedMotion, t]);
+  }, [exitAnimation, reducedMotion, t, onActionSelected]);
 
   const handleKeep = useCallback(() => {
     // ボタン連打防止
@@ -103,12 +110,17 @@ export const ResultScrollCard = ({
     setExitAnimation("keep");
     setLastResultAction("keep"); // アクションを保存
 
+    // 親コンポーネントに通知
+    if (onActionSelected) {
+      setTimeout(onActionSelected, 100);
+    }
+
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
     }
 
     keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.KEEP_TRANSITION);
-  }, [exitAnimation, reducedMotion, t, onReset]);
+  }, [exitAnimation, reducedMotion, t, onReset, onActionSelected]);
 
   // Get translated fortune title and message
   const fortuneTitle = t(`fortune.levels.${fortune.level}`);
@@ -263,22 +275,22 @@ export const ResultScrollCard = ({
             exitAnimation === "tie"
               ? reducedMotion
                 ? {
-                  opacity: 0,
-                  scale: REDUCED_MOTION_ANIMATION.scale,
-                  translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
-                  rotateZ: "0deg",
-                  translateX: 0,
-                }
+                    opacity: 0,
+                    scale: REDUCED_MOTION_ANIMATION.scale,
+                    translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
+                    rotateZ: "0deg",
+                    translateX: 0,
+                  }
                 : TIE_ANIMATION
               : exitAnimation === "keep"
                 ? reducedMotion
                   ? {
-                    opacity: 0,
-                    scale: REDUCED_MOTION_ANIMATION.scale,
-                    translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
-                    translateX: 0,
-                    rotateZ: "0deg",
-                  }
+                      opacity: 0,
+                      scale: REDUCED_MOTION_ANIMATION.scale,
+                      translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
+                      translateX: 0,
+                      rotateZ: "0deg",
+                    }
                   : KEEP_ANIMATION
                 : { opacity: 1, scale: 1, translateY: 0, translateX: 0, rotateZ: "0deg" }
           }
@@ -366,6 +378,8 @@ export const ResultScrollCard = ({
             <TouchableOpacity
               onPress={handleShare}
               className={`${hasSelectedAction ? "flex-1" : ""} py-3 bg-slate-100 rounded-full items-center border border-slate-200 px-6`}
+              accessibilityRole="button"
+              accessibilityLabel="シェア"
             >
               <Text className="text-slate-800 font-bold">{t("common.share")}</Text>
             </TouchableOpacity>
@@ -375,6 +389,8 @@ export const ResultScrollCard = ({
                 <TouchableOpacity
                   onPress={handleTie}
                   className="flex-1 py-3 bg-white border border-amber-200 rounded-full items-center"
+                  accessibilityRole="button"
+                  accessibilityLabel="結ぶ"
                 >
                   <Text className="text-amber-700 font-bold">{t("fortune.tie")}</Text>
                 </TouchableOpacity>
@@ -382,6 +398,8 @@ export const ResultScrollCard = ({
                 <TouchableOpacity
                   onPress={handleKeep}
                   className="flex-1 py-3 bg-amber-600 rounded-full items-center shadow-sm"
+                  accessibilityRole="button"
+                  accessibilityLabel="持ち帰る"
                 >
                   <Text className="text-white font-bold">{t("fortune.keep")}</Text>
                 </TouchableOpacity>
@@ -392,6 +410,8 @@ export const ResultScrollCard = ({
               <TouchableOpacity
                 onPress={onReset}
                 className="flex-1 py-3 bg-slate-800 rounded-full items-center shadow-sm"
+                accessibilityRole="button"
+                accessibilityLabel="閉じる"
               >
                 <Text className="text-white font-bold">閉じる</Text>
               </TouchableOpacity>
