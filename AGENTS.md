@@ -160,6 +160,7 @@
 - **Agent Skills**: `.agent/skills/` に AI エージェントの知識を拡張する `SKILL.md` を配置する。
 
 ## Browser Automation (agent-browser)
+
 - いつ使うか: 実際の画面挙動確認、フォーム操作、スクショ取得が必要なとき（DOMだけでは不安な場合）。
 - 基本手順: `open <url>` → `snapshot -i` で ref (@e1…) を取る → refで `click/fill/type` → 画面が変わったら再 `snapshot` → `wait`（`--load networkidle` 等）で安定化 → `screenshot` → `close`。
 - セレクタは ref 優先（CSSは最後の手段）。詳細は `.agent/skills/agent-browser/SKILL.md` を参照。

@@ -26,4 +26,6 @@ worktree-*/
 
 # Coverage
 coverage/
+playwright-report/
+test-results/
 .env.docker
