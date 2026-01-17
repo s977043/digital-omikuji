@@ -64,6 +64,7 @@ export async function clearHistory(): Promise<void> {
   try {
     await AsyncStorage.removeItem(HISTORY_KEY);
     await AsyncStorage.removeItem(LAST_DRAW_DATE_KEY);
+    await AsyncStorage.removeItem(LAST_RESULT_ACTION_KEY);
   } catch (error) {
     console.error("Failed to clear history:", error);
   }
@@ -108,9 +109,13 @@ export async function getLastResultAction(): Promise<ResultAction | null> {
 /**
  * 最後の結果アクション（結ぶ/持ち帰る）を保存する
  */
-export async function setLastResultAction(action: ResultAction): Promise<void> {
+export async function setLastResultAction(action: ResultAction | null): Promise<void> {
   try {
-    await AsyncStorage.setItem(LAST_RESULT_ACTION_KEY, action);
+    if (action === null) {
+      await AsyncStorage.removeItem(LAST_RESULT_ACTION_KEY);
+    } else {
+      await AsyncStorage.setItem(LAST_RESULT_ACTION_KEY, action);
+    }
   } catch (error) {
     console.error("Failed to save last result action:", error);
   }

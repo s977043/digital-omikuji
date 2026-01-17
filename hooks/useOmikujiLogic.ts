@@ -8,6 +8,7 @@ import {
   HistoryEntry,
   getLastResultAction,
   ResultAction,
+  setLastResultAction as setLastResultActionStorage,
 } from "../utils/HistoryStorage";
 
 export const useOmikujiLogic = () => {
@@ -70,9 +71,13 @@ export const useOmikujiLogic = () => {
 
     // 履歴に追加して再読み込み
     await addHistoryEntry(result);
+    // アクション状態を明示的にクリア（UI側でのボタン表示のため）
+    await setLastResultActionStorage(null); // utilsからインポートが必要だが名前が重複するため注意
+    setLastResultAction(null);
+
     await loadHistory();
 
-    // アクション状態を更新（リセット）
+    // アクション状態を更新（リセット確認）
     await checkDailyStatus();
 
     return result;

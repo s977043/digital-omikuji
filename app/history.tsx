@@ -84,7 +84,7 @@ export default function HistoryScreen() {
           <View className="w-[84px] items-end">
             {history.length > 0 && (
               <TouchableOpacity
-                onPress={handleClearHistory}
+                onPress={confirmClearHistory}
                 className="flex-1 py-3 bg-red-800 rounded-sm active:bg-red-700 shadow-sm"
                 accessibilityLabel={t("history.deleteAll")}
                 accessibilityRole="button"

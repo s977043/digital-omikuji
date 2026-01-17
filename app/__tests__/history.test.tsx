@@ -7,6 +7,9 @@ import { getHistory, clearHistory } from "../../utils/HistoryStorage";
 // Mocks
 jest.mock("expo-router", () => ({
   router: { back: jest.fn() },
+  Stack: {
+    Screen: jest.fn(() => null),
+  },
   useFocusEffect: (callback: () => void) => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports, react-hooks/exhaustive-deps
     const { useEffect } = require("react");
@@ -100,24 +103,24 @@ describe("HistoryScreen", () => {
 
   it("calls clearHistory when delete button is pressed", async () => {
     (getHistory as jest.Mock).mockResolvedValue(mockHistoryData);
-    const { getByText } = render(<HistoryScreen />);
+    const { getByText, getAllByText } = render(<HistoryScreen />);
 
     await waitFor(() => expect(getByText("全て削除")).toBeTruthy());
 
     fireEvent.press(getByText("全て削除"));
 
-    expect(Alert.alert).toHaveBeenCalledWith(
-      "履歴の削除",
-      "本当に全ての履歴を削除しますか？",
-      expect.any(Array)
-    );
+    // カスタムモーダルの表示確認
+    await waitFor(() => {
+      expect(getByText("本当に全ての履歴を削除しますか？")).toBeTruthy();
+    });
 
-    // Simulate pressing "Delete" in the alert
-    const buttons = (Alert.alert as jest.Mock).mock.calls[0][2];
-    const deleteButton = buttons.find((b: { text: string }) => b.text === "削除");
+    // モーダル内の「全て削除」ボタンを取得 (画面上に2つあるため、モーダル内のものを特定するか、getAllByTextで取得)
+    const deleteButtons = getAllByText("全て削除");
+    // モーダル内のボタンは最後にあるはず (または親要素で絞り込む)
+    const confirmButton = deleteButtons[deleteButtons.length - 1];
 
     await act(async () => {
-      await deleteButton.onPress();
+      fireEvent.press(confirmButton);
     });
 
     await waitFor(() => {
