@@ -9,9 +9,7 @@ class SoundManager {
   async initialize() {
     try {
       await setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: true,
+        playsInSilentMode: true,
       });
       this.isReady = true;
     } catch (error) {
