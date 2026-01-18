@@ -2,20 +2,23 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Digital Omikuji Web", () => {
   test.beforeEach(async ({ page }) => {
+    const testLocale = process.env.E2E_LOCALE ?? "ja";
     await page.goto("/");
     await page.waitForLoadState("domcontentloaded");
 
     // Reset persisted state (AsyncStorage uses localStorage on web) on the same origin
-    await page.evaluate(async () => {
+    await page.evaluate(async (locale) => {
       localStorage.clear();
-      localStorage.setItem("i18nextLng", "ja");
+      if (locale) {
+        localStorage.setItem("i18nextLng", locale);
+      }
       if (indexedDB && "databases" in indexedDB) {
         const dbs = await indexedDB.databases();
         for (const db of dbs) {
           if (db.name) indexedDB.deleteDatabase(db.name);
         }
       }
-    });
+    }, testLocale);
 
     // Reload once to start from a clean slate after clearing storage
     await page.reload({ waitUntil: "networkidle" });

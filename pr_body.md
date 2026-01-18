@@ -1,14 +1,17 @@
 # 概要
 
-結果画面のフッター（シェアボタン等）が画面サイズによって見切れる問題を修正しました。
-また、Vercelデプロイでビルドエラーとなっていた Sentry 初期化の重複宣言も併せて修正しています。
+モバイルビルドのRNWorklets不足、履歴/アクション状態の不整合、Jest・Web E2Eの失敗を中心に修正しました。
+Web E2Eの導線・言語初期化も安定化しています。
 
 ## 変更点
 
-- **layout**: 結果カードの高さを `max-height` + `flex-shrink` に変更し、見切れを防止。
-- **fix**: `app/_layout.tsx` での `initializeSentry` 重複呼び出しを削除。
+- **build**: `react-native-worklets` のリンク設定を修正し、RNWorklets Pod 解決を安定化。
+- **fix**: 履歴削除時のアクション状態クリア、おみくじ再抽選時の状態リセット。
+- **test**: Jest/Historyのテスト更新、Web E2Eの「結ぶ→閉じる→結果を見る」導線を修正。
+- **i18n**: `localStorage` の `i18nextLng` を優先して初期言語を決定。
 
 ## 確認方法
 
-- `pnpm start` で起動し、結果画面でフッターが全て表示されていること。
-- `pnpm build` が正常に通ること。
+- `pnpm test`
+- `pnpm test:e2e:web`
+- iOS/AndroidのE2E（CI）
