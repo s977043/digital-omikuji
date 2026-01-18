@@ -99,7 +99,10 @@ export async function setLastDrawDate(date: string): Promise<void> {
 export async function getLastResultAction(): Promise<ResultAction | null> {
   try {
     const value = await AsyncStorage.getItem(LAST_RESULT_ACTION_KEY);
-    return value as ResultAction | null;
+    if (value === "tie" || value === "keep") {
+      return value;
+    }
+    return null;
   } catch (error) {
     console.error("Failed to load last result action:", error);
     return null;
