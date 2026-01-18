@@ -21,8 +21,8 @@ const formatDate = (timestamp: number): string => {
 
 const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => {
   const { t } = useTranslation();
-  const fortuneTitle = t(`fortune.levels.${item.level} `);
-  const fortuneMessages = t(`fortune.messages.${item.level} `, {
+  const fortuneTitle = t(`fortune.levels.${item.level}`);
+  const fortuneMessages = t(`fortune.messages.${item.level}`, {
     returnObjects: true,
   });
   const fortuneMessage = Array.isArray(fortuneMessages)
