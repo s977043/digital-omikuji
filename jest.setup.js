@@ -14,19 +14,12 @@ jest.mock("react-native-worklets", () => ({
   // isWorklet/isWorkletCallable: return false since we're not in a real worklet context
   isWorklet: () => false,
   isWorkletCallable: () => false,
-  WorkletsError: class extends Error {},
+  WorkletsError: class extends Error { },
   // serializableMappingCache: used by Reanimated for caching serialized objects
   serializableMappingCache: new Map(),
   // scheduleOnUI/scheduleOnRN: execute synchronously in tests for predictable behavior
   scheduleOnUI: (fn) => fn,
   scheduleOnRN: (fn) => fn,
-}));
-
-jest.mock("react-native-worklets-core", () => ({
-  Worklets: {
-    createRunInContext: jest.fn(),
-    createContext: jest.fn(),
-  },
 }));
 
 require("react-native-reanimated").setUpTests();
@@ -56,23 +49,28 @@ jest.mock("expo-sensors", () => ({
   },
 }));
 
-// Mock expo-audio
-jest.mock(
-  "expo-audio",
-  () => ({
-    createAudioPlayer: jest.fn(() => ({
-      play: jest.fn(),
-      pause: jest.fn(),
-      seekTo: jest.fn(),
-      remove: jest.fn(),
-      isLoaded: true,
-      muted: false,
-      volume: 1,
-    })),
+// Mock expo-av
+jest.mock("expo-av", () => ({
+  Audio: {
+    Sound: {
+      createAsync: jest.fn(() =>
+        Promise.resolve({
+          sound: {
+            playAsync: jest.fn(),
+            replayAsync: jest.fn(),
+            unloadAsync: jest.fn(),
+            setVolumeAsync: jest.fn(),
+            setIsMutedAsync: jest.fn(),
+            getStatusAsync: jest.fn().mockResolvedValue({ isLoaded: true }),
+          },
+          status: { isLoaded: true },
+        })
+      ),
+    },
     setAudioModeAsync: jest.fn(),
-  }),
-  { virtual: true }
-);
+  },
+}));
+
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock")
