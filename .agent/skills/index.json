@@ -166,6 +166,61 @@
         "expo"
       ],
       "last_updated": "2026-01-17"
+    },
+    {
+      "id": "codex-review",
+      "name": "codex-review",
+      "description": "Codex CLIを使ったレビュー依頼。tmux経由でcodexコマンドを操作し、ファイルや出力をレビューさせる。",
+      "skill_path": "skills/codex-review/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude"
+      ],
+      "tags": [
+        "codex",
+        "review",
+        "tmux",
+        "cli"
+      ],
+      "last_updated": "2026-01-18"
+    },
+    {
+      "id": "gemini-review",
+      "name": "gemini-review",
+      "description": "Gemini CLIを使ったレビュー依頼。",
+      "skill_path": "skills/gemini-review/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude"
+      ],
+      "tags": [
+        "gemini",
+        "review",
+        "cli"
+      ],
+      "last_updated": "2026-01-18"
+    },
+    {
+      "id": "copilot-review",
+      "name": "copilot-review",
+      "description": "GitHub Copilot CLI (`copilot`) を使ったレビュー依頼。",
+      "skill_path": "skills/copilot-review/SKILL.md",
+      "contexts": [
+        "Codex",
+        "Gemini",
+        "Antigravity",
+        "Claude"
+      ],
+      "tags": [
+        "copilot",
+        "review",
+        "cli"
+      ],
+      "last_updated": "2026-01-18"
     }
   ]
 }
