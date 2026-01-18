@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Platform, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import { MotiView } from "moti";
 import { Easing } from "react-native-reanimated";
 

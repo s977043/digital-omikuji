@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, Image } from "react-native";
 import { MotiView } from "moti";
 import { HistoryEntry } from "../utils/HistoryStorage";
 import { useTranslation } from "react-i18next";
@@ -21,8 +21,8 @@ const formatDate = (timestamp: number): string => {
 
 const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => {
   const { t } = useTranslation();
-  const fortuneTitle = t(`fortune.levels.${item.level}`);
-  const fortuneMessages = t(`fortune.messages.${item.level}`, {
+  const fortuneTitle = t(`fortune.levels.${item.level} `);
+  const fortuneMessages = t(`fortune.messages.${item.level} `, {
     returnObjects: true,
   });
   const fortuneMessage = Array.isArray(fortuneMessages)

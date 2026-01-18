@@ -18,7 +18,6 @@ import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import FortuneDisplay from "../components/FortuneDisplay";
 import { VersionDisplay } from "../components/VersionDisplay";
 import { soundManager } from "../utils/SoundManager";
-import { getLastResultAction, ResultAction } from "../utils/HistoryStorage";
 // global.css is imported in _layout.tsx
 
 import { useTranslation } from "react-i18next";
@@ -38,10 +37,10 @@ const SHAKING_DURATION_MS = 1500;
 // DRAWING_DURATION_MS was increased from 1200ms to 3500ms to give users enough time
 // to perceive the full drawing animation and keep it in sync with sound/haptic effects.
 const DRAWING_DURATION_MS = 3500;
-const REVEALING_DURATION_MS = 2000;
+const _REVEALING_DURATION_MS = 2000;
 
 // アニメーション定数
-const SHAKE_ANIMATION = {
+const _SHAKE_ANIMATION = {
   TRANSLATE_X: 15,
   ROTATE_Z_DEG: 10,
   SCALE_FROM: 0.9,
@@ -50,7 +49,7 @@ const SHAKE_ANIMATION = {
   TEXT_PULSE_DURATION: 500,
 };
 
-const REVEAL_ANIMATION = {
+const _REVEAL_ANIMATION = {
   BOX_SPRING_DAMPING: 15,
   STICK_SPRING_DAMPING: 12,
   STICK_SPRING_STIFFNESS: 100,

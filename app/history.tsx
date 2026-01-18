@@ -1,12 +1,11 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, Image, ImageBackground, Platform } from "react-native";
+import { View, Text, TouchableOpacity, ImageBackground, Platform } from "react-native";
 import { router, useFocusEffect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { MotiView } from "moti";
 import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
 import { HistoryList } from "../components/HistoryList";
 import { useTranslation } from "react-i18next";
-import { Alert } from "react-native";
 
 export default function HistoryScreen() {
   const { t } = useTranslation();
