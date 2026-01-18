@@ -134,7 +134,7 @@ jobs:
           restore-keys: pods-
 
       - name: Install CocoaPods
-        run: cd ios && pod install && cd ..
+        run: cd ios && pod install --repo-update && cd ..
 
       - name: Build for Simulator
         run: |
