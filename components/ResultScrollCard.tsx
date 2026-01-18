@@ -84,20 +84,23 @@ export const ResultScrollCard = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("tie");
-    await setLastResultAction("tie"); // アクションを保存
 
-    // 親コンポーネントに通知（少し遅延させてアニメーションと同期）
-    if (onActionSelected) {
-      setTimeout(onActionSelected, 100);
-    }
+    // UIタイマーを先に開始（Optimistic UI）
+    tieTimerRef.current = setTimeout(() => {
+      setShowTiedComplete(true);
+    }, ANIMATION_TIMING.TIE_CARD_FLY);
 
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
     }
 
-    tieTimerRef.current = setTimeout(() => {
-      setShowTiedComplete(true);
-    }, ANIMATION_TIMING.TIE_CARD_FLY);
+    // Storage保存は裏で実行（ただし失敗時は補償が必要かもしれないが、このアプリでは許容）
+    await setLastResultAction("tie");
+
+    // 親コンポーネントに通知
+    if (onActionSelected) {
+      onActionSelected();
+    }
   }, [exitAnimation, reducedMotion, t, onActionSelected]);
 
   const handleKeep = useCallback(async () => {
@@ -108,18 +111,20 @@ export const ResultScrollCard = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("keep");
-    await setLastResultAction("keep"); // アクションを保存
 
-    // 親コンポーネントに通知
-    if (onActionSelected) {
-      setTimeout(onActionSelected, 100);
-    }
+    // UIタイマーを先に開始
+    keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.KEEP_TRANSITION);
 
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
     }
 
-    keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.KEEP_TRANSITION);
+    await setLastResultAction("keep");
+
+    // 親コンポーネントに通知
+    if (onActionSelected) {
+      onActionSelected();
+    }
   }, [exitAnimation, reducedMotion, t, onReset, onActionSelected]);
 
   // Get translated fortune title and message
