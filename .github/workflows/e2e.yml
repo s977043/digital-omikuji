@@ -62,7 +62,7 @@ jobs:
           java-version: '17'
 
       - name: Expo Prebuild (Android)
-        run: npx expo prebuild --platform android
+        run: npx expo prebuild --platform android --clean
 
       - name: Cache Gradle
         uses: actions/cache@v5
@@ -124,7 +124,7 @@ jobs:
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Expo Prebuild
-        run: npx expo prebuild --platform ios
+        run: npx expo prebuild --platform ios --clean
 
       - name: Cache CocoaPods
         uses: actions/cache@v5
