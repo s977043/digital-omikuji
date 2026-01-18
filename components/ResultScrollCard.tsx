@@ -76,7 +76,7 @@ export const ResultScrollCard = ({
     };
   }, []);
 
-  const handleTie = useCallback(() => {
+  const handleTie = useCallback(async () => {
     // ボタン連打防止
     if (exitAnimation) return;
 
@@ -84,7 +84,7 @@ export const ResultScrollCard = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("tie");
-    setLastResultAction("tie"); // アクションを保存
+    await setLastResultAction("tie"); // アクションを保存
 
     // 親コンポーネントに通知（少し遅延させてアニメーションと同期）
     if (onActionSelected) {
@@ -100,7 +100,7 @@ export const ResultScrollCard = ({
     }, ANIMATION_TIMING.TIE_CARD_FLY);
   }, [exitAnimation, reducedMotion, t, onActionSelected]);
 
-  const handleKeep = useCallback(() => {
+  const handleKeep = useCallback(async () => {
     // ボタン連打防止
     if (exitAnimation) return;
 
@@ -108,7 +108,7 @@ export const ResultScrollCard = ({
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
     setExitAnimation("keep");
-    setLastResultAction("keep"); // アクションを保存
+    await setLastResultAction("keep"); // アクションを保存
 
     // 親コンポーネントに通知
     if (onActionSelected) {
@@ -275,22 +275,22 @@ export const ResultScrollCard = ({
             exitAnimation === "tie"
               ? reducedMotion
                 ? {
-                    opacity: 0,
-                    scale: REDUCED_MOTION_ANIMATION.scale,
-                    translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
-                    rotateZ: "0deg",
-                    translateX: 0,
-                  }
+                  opacity: 0,
+                  scale: REDUCED_MOTION_ANIMATION.scale,
+                  translateY: REDUCED_MOTION_ANIMATION.translateY.tie,
+                  rotateZ: "0deg",
+                  translateX: 0,
+                }
                 : TIE_ANIMATION
               : exitAnimation === "keep"
                 ? reducedMotion
                   ? {
-                      opacity: 0,
-                      scale: REDUCED_MOTION_ANIMATION.scale,
-                      translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
-                      translateX: 0,
-                      rotateZ: "0deg",
-                    }
+                    opacity: 0,
+                    scale: REDUCED_MOTION_ANIMATION.scale,
+                    translateY: REDUCED_MOTION_ANIMATION.translateY.keep,
+                    translateX: 0,
+                    rotateZ: "0deg",
+                  }
                   : KEEP_ANIMATION
                 : { opacity: 1, scale: 1, translateY: 0, translateX: 0, rotateZ: "0deg" }
           }
