@@ -107,8 +107,13 @@ test.describe("Digital Omikuji Web", () => {
     // Wait for tied confirmation screen
     await expect(page.getByText("おみくじを結びました")).toBeVisible({ timeout: 30000 });
 
+    // Close confirmation screen to return to IDLE
+    const closeButton = page.getByRole("button", { name: "閉じる" });
+    await closeButton.click();
+
     // Click "結果を見る" to view result again
     const viewResultButton = page.getByRole("button", { name: /結果を見る/ });
+    await expect(viewResultButton).toBeVisible({ timeout: 30000 });
     await viewResultButton.click();
 
     // Wait for result screen
