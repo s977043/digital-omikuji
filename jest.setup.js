@@ -14,7 +14,7 @@ jest.mock("react-native-worklets", () => ({
   // isWorklet/isWorkletCallable: return false since we're not in a real worklet context
   isWorklet: () => false,
   isWorkletCallable: () => false,
-  WorkletsError: class extends Error {},
+  WorkletsError: class extends Error { },
   // serializableMappingCache: used by Reanimated for caching serialized objects
   serializableMappingCache: new Map(),
   // scheduleOnUI/scheduleOnRN: execute synchronously in tests for predictable behavior
@@ -22,12 +22,7 @@ jest.mock("react-native-worklets", () => ({
   scheduleOnRN: (fn) => fn,
 }));
 
-jest.mock("react-native-worklets-core", () => ({
-  Worklets: {
-    createRunInContext: jest.fn(),
-    createContext: jest.fn(),
-  },
-}));
+
 
 require("react-native-reanimated").setUpTests();
 
@@ -64,8 +59,13 @@ jest.mock("expo-av", () => ({
         Promise.resolve({
           sound: {
             playAsync: jest.fn(),
+            replayAsync: jest.fn(),
             unloadAsync: jest.fn(),
+            setVolumeAsync: jest.fn(),
+            setIsMutedAsync: jest.fn(),
+            getStatusAsync: jest.fn().mockResolvedValue({ isLoaded: true }),
           },
+          status: { isLoaded: true },
         })
       ),
     },
