@@ -2,7 +2,7 @@
 title: "開発フロー・AI連携ガイドライン"
 description: "本プロジェクトにおける開発プロセス、コード品質基準、AIエージェントの役割分担を定義します。"
 version: 2.0
-last_updated: "2025-12-31"
+last_updated: "2026-01-19"
 target_audience: ["developer", "ai_agent"]
 ---
 
@@ -10,13 +10,7 @@ target_audience: ["developer", "ai_agent"]
 
 ## 技術スタック
 
-- **Framework**: Expo (React Native)
-- **Language**: TypeScript
-- **Styling**: NativeWind (Tailwind CSS)
-- **Routing**: Expo Router
-- **State Management**: React Hooks (useState, useReducer, useContext)
-- **Testing**: Jest, React Native Testing Library
-- **Package Manager**: pnpm
+技術スタック、ビルドシステム、共通コマンドの詳細は [AGENTS.md](../../AGENTS.md) の「WHAT（地図）」セクションを参照してください。
 
 ## 開発フロー
 

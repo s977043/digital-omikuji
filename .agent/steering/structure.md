@@ -2,7 +2,7 @@
 title: "プロジェクト構造・組織"
 description: "ディレクトリ構成、命名規則、設定ファイルの配置、開発フローなど、プロジェクトの構造に関する規約を定義します。"
 version: 2.0
-last_updated: "2025-12-31"
+last_updated: "2026-01-19"
 target_audience: ["developer", "ai_agent"]
 ---
 

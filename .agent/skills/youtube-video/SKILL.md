@@ -1,8 +1,8 @@
 ---
 id: youtube-video-download
-title: "YouTube動画のダウンロード"
+name: "YouTube動画のダウンロード"
 description: "指定されたYouTube URLから資料や調査用動画を取得し、Codexで参照できるようにするAgent Skill。"
-entryScript: "skills/youtube-video/run.js"
+entryScript: "youtube-video/run.js"
 contexts:
   - Codex
 tags:

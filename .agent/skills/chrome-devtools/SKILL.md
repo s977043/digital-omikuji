@@ -1,8 +1,8 @@
 ---
 id: chrome-devtools-ui-survey
-title: "Chrome DevTools UI調査"
+name: "Chrome DevTools UI調査"
 description: "ユーザーインタフェースの構造を記録し、スクリーンショットを保管するAgent Skill。Codexに必要なファイルと命令をL1〜L3で提供します。"
-entryScript: "skills/chrome-devtools/run.js"
+entryScript: "chrome-devtools/run.js"
 contexts:
   - Codex
 tags:

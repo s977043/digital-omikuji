@@ -1,3 +1,12 @@
+---
+title: "Agent Guide (Digital Omikuji)"
+description: "コーディングエージェントのための統合開発ガイド - SSOT"
+version: "3.0"
+last_updated: "2026-01-19"
+target_audience: ["ai_agent", "developer"]
+status: "active"
+---
+
 # Agent Guide (Digital Omikuji)
 
 目的: このリポジトリで作業するコーディングエージェントが、最小の差分で安全に前進できるようにする。
@@ -267,4 +276,3 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
   - `docs/project/`: プロジェクト管理、メタ情報
   - `docs/design/`: デザインガイドライン
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。
-

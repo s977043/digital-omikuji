@@ -1,3 +1,8 @@
+---
+name: test-case-generation
+description: TS/TSX実装ファイルからJestテスト雛形を生成するスキル。
+---
+
 # Test Case Generation Skill
 
 ## 1. 目的
