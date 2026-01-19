@@ -11,14 +11,14 @@
   - [ ] `id`: 一意のスキルID（kebab-case）
   - [ ] `name`: スキル名
   - [ ] `description`: スキルの説明
-  - [ ] `skill_path`: SKILL.md へのパス（`skills/<skill-name>/SKILL.md`）
+  - [ ] `skill_path`: SKILL.md へのパス（`<skill-name>/SKILL.md`）
   - [ ] `contexts`: 対象エージェントの配列（`["Codex", "Gemini", "Antigravity", "Claude", "Copilot"]` から選択）
   - [ ] `tags`: タグの配列
   - [ ] `last_updated`: 最終更新日（YYYY-MM-DD形式）
 
 ### 2. ディレクトリとファイルの作成
 
-- [ ] `skills/<skill-name>/` ディレクトリを作成
+- [ ] `<skill-name>/` ディレクトリを作成
 - [ ] `SKILL.md` ファイルを作成
 - [ ] スクリプトがある場合は `run.js` または適切なファイル名で作成
 

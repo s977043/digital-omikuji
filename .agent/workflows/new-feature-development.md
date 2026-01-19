@@ -35,7 +35,7 @@ git checkout -b feature/<feature-name>
 - 受け入れ基準
 - 非機能要件（パフォーマンス、セキュリティなど）
 
-参考: [.agent/skills/sdd-core/SKILL.md](./.agent/skills/sdd-core/SKILL.md)
+参考: [.agent/skills/sdd-core/SKILL.md](../skills/sdd-core/SKILL.md)
 
 ### 2.2 設計書作成
 `docs/working/YYYYMMDD_<feature-name>/design.md` を作成
@@ -145,6 +145,6 @@ GitHub Actionsが Greenになるまで待つ:
 ## 参考リンク
 
 - [AGENTS.md](../../AGENTS.md) - 開発ガイド
-- [.agent/steering/sdd-workflow.md](../.agent/steering/sdd-workflow.md) - SDDワークフロー詳細
+- [.agent/steering/sdd-workflow.md](../steering/sdd-workflow.md) - SDDワークフロー詳細
 - [fix_ci_errors.md](./fix_ci_errors.md) - CIエラー対応
 - [respond_to_pr_review.md](./respond_to_pr_review.md) - PRレビュー対応

@@ -4,7 +4,7 @@
       "id": "sdd-core",
       "name": "SDD Core",
       "description": "仕様駆動開発（SDD）の原則とワークフローを強制するスキル。全ての実装作業の前に参照必須。Gate強制、Steering/Working ドキュメント体系を定義。",
-      "skill_path": "skills/sdd-core/SKILL.md",
+      "skill_path": "sdd-core/SKILL.md",
       "priority": "highest",
       "contexts": [
         "Codex",
@@ -26,8 +26,8 @@
       "id": "chrome-devtools-ui-survey",
       "name": "Chrome DevTools UI 調査",
       "description": "Chrome DevTools MCP で対象 UI をスクリーンショットし、レイアウトや要素構成を記録するスキル。Codex エージェントが L1 〜 L3 を順に読み込んで実行できるように整備します。",
-      "skill_path": "skills/chrome-devtools/SKILL.md",
-      "script": "skills/chrome-devtools/run.js",
+      "skill_path": "chrome-devtools/SKILL.md",
+      "script": "chrome-devtools/run.js",
       "contexts": [
         "Codex"
       ],
@@ -42,8 +42,8 @@
       "id": "youtube-video-download",
       "name": "YouTube 動画のダウンロード",
       "description": "YouTube URL を指定し、ダウンロードスクリプト経由で資料や分析用の動画を取得するスキル。Agent Skills の構成に沿って Codex から自律的に呼び出せるようメタデータを揃えます。",
-      "skill_path": "skills/youtube-video/SKILL.md",
-      "script": "skills/youtube-video/run.js",
+      "skill_path": "youtube-video/SKILL.md",
+      "script": "youtube-video/run.js",
       "contexts": [
         "Codex"
       ],
@@ -58,8 +58,8 @@
       "id": "test-case-generation",
       "name": "テストケース生成",
       "description": "指定された実装ファイルの単体テスト・コンポーネントテストの雛形を作成し、AIによる実装を支援するスキル。",
-      "skill_path": "skills/test-case-generation/SKILL.md",
-      "script": "skills/test-case-generation/run.js",
+      "skill_path": "test-case-generation/SKILL.md",
+      "script": "test-case-generation/run.js",
       "contexts": [
         "Codex",
         "Gemini",
@@ -76,7 +76,7 @@
       "id": "react-best-practices",
       "name": "React Best Practices",
       "description": "Vercel流 React/Next.js パフォーマンス最適化ルール集（45ルール/8カテゴリ）。コードレビュー・リファクタ時に影響度順で適用。",
-      "skill_path": "skills/react-best-practices/SKILL.md",
+      "skill_path": "react-best-practices/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -94,7 +94,7 @@
       "id": "expo-building-ui",
       "name": "building-ui",
       "description": "Complete guide for building beautiful apps with Expo Router. Covers fundamentals, styling, components, navigation, animations, patterns, and native tabs.",
-      "skill_path": "skills/expo-building-ui/SKILL.md",
+      "skill_path": "expo-building-ui/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -113,7 +113,7 @@
       "id": "expo-deployment",
       "name": "deployment",
       "description": "Deploying Expo apps to iOS App Store, Android Play Store, web hosting, and API routes",
-      "skill_path": "skills/expo-deployment/SKILL.md",
+      "skill_path": "expo-deployment/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -132,7 +132,7 @@
       "id": "expo-upgrading",
       "name": "upgrading-expo",
       "description": "Guidelines for upgrading Expo SDK versions and fixing dependency issues",
-      "skill_path": "skills/expo-upgrading/SKILL.md",
+      "skill_path": "expo-upgrading/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -150,7 +150,7 @@
       "id": "ui-skills",
       "name": "ui-skills",
       "description": "AIエージェントが作成したUIを校正するための制約ルールセット。Expo/React Native/NativeWind向けにカスタマイズ。",
-      "skill_path": "skills/ui-skills/SKILL.md",
+      "skill_path": "ui-skills/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -171,7 +171,7 @@
       "id": "codex-review",
       "name": "codex-review",
       "description": "Codex CLIを使ったレビュー依頼。tmux経由でcodexコマンドを操作し、ファイルや出力をレビューさせる。",
-      "skill_path": "skills/codex-review/SKILL.md",
+      "skill_path": "codex-review/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -190,7 +190,7 @@
       "id": "gemini-review",
       "name": "gemini-review",
       "description": "Gemini CLIを使ったレビュー依頼。",
-      "skill_path": "skills/gemini-review/SKILL.md",
+      "skill_path": "gemini-review/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",
@@ -208,7 +208,7 @@
       "id": "copilot-review",
       "name": "copilot-review",
       "description": "GitHub Copilot CLI (`copilot`) を使ったレビュー依頼。",
-      "skill_path": "skills/copilot-review/SKILL.md",
+      "skill_path": "copilot-review/SKILL.md",
       "contexts": [
         "Codex",
         "Gemini",

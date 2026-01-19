@@ -15,43 +15,51 @@ const path = require('path');
 // Required fields for each skill in index.json
 const REQUIRED_FIELDS = ['id', 'name', 'description', 'skill_path', 'contexts', 'tags', 'last_updated'];
 
-// Base directory for skills (project root)
-const PROJECT_ROOT = path.join(__dirname, '..', '..');
+// Base directory for skills (.agent/skills)
+const SKILLS_ROOT = __dirname;
 
 /**
- * Safely resolve a path relative to project root and validate it's within allowed directory
+ * Safely resolve a path relative to skills root and validate it's within allowed directory
  * @param {string} relativePath - Path from index.json
  * @returns {string|null} - Resolved path if valid, null if path traversal detected
  */
 function safeResolvePath(relativePath) {
-  // Resolve and normalize the path
-  const resolvedPath = path.resolve(PROJECT_ROOT, relativePath);
-  const normalizedPath = path.normalize(resolvedPath);
-  const normalizedRoot = path.normalize(PROJECT_ROOT);
-
-  // Ensure the resolved path is within project root
-  if (!normalizedPath.startsWith(normalizedRoot + path.sep) && normalizedPath !== normalizedRoot) {
-    return null; // Path traversal attempt detected
+  if (typeof relativePath !== 'string') {
+    return null;
   }
 
-  return normalizedPath;
+  const resolvedPath = path.resolve(SKILLS_ROOT, relativePath);
+  const normalizedRoot = path.resolve(SKILLS_ROOT);
+
+  // Ensure the resolved path is within the skills directory
+  if (!resolvedPath.startsWith(normalizedRoot + path.sep) && resolvedPath !== normalizedRoot) {
+    return null;
+  }
+
+  return resolvedPath;
+}
+
+function loadIndexJson() {
+  const indexPath = path.join(SKILLS_ROOT, 'index.json');
+
+  if (!fs.existsSync(indexPath)) {
+    return { index: null, errors: ['index.json が見つかりません'] };
+  }
+
+  try {
+    const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
+    return { index, errors: [] };
+  } catch (e) {
+    return { index: null, errors: [`index.json のパースに失敗: ${e.message}`] };
+  }
 }
 
 // Validate index.json structure
-function validateIndexJson() {
+function validateIndexJson(index) {
   const errors = [];
-  const indexPath = path.join(__dirname, 'index.json');
 
-  if (!fs.existsSync(indexPath)) {
-    errors.push('index.json が見つかりません');
-    return errors;
-  }
-
-  let index;
-  try {
-    index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
-  } catch (e) {
-    errors.push(`index.json のパースに失敗: ${e.message}`);
+  if (!index || typeof index !== 'object') {
+    errors.push('index.json: 期待される形式ではありません');
     return errors;
   }
 
@@ -62,7 +70,13 @@ function validateIndexJson() {
 
   // Validate each skill entry
   index.skills.forEach((skill, idx) => {
-    const prefix = `スキル[${idx}] (${skill.id || 'unknown'})`;
+    const skillId = skill && typeof skill === 'object' ? skill.id : null;
+    const prefix = `スキル[${idx}] (${skillId || 'unknown'})`;
+
+    if (!skill || typeof skill !== 'object') {
+      errors.push(`${prefix}: スキル定義が不正です`);
+      return;
+    }
 
     // Check required fields
     REQUIRED_FIELDS.forEach(field => {
@@ -70,6 +84,14 @@ function validateIndexJson() {
         errors.push(`${prefix}: 必須フィールド "${field}" がありません`);
       }
     });
+
+    if (skill.skill_path && typeof skill.skill_path !== 'string') {
+      errors.push(`${prefix}: skill_path は文字列である必要があります`);
+    }
+
+    if (skill.script && typeof skill.script !== 'string') {
+      errors.push(`${prefix}: script は文字列である必要があります`);
+    }
 
     // Validate contexts array
     if (skill.contexts && !Array.isArray(skill.contexts)) {
@@ -104,22 +126,10 @@ function validateIndexJson() {
 }
 
 // Validate that SKILL.md files exist
-function validateSkillFiles() {
+function validateSkillFiles(index) {
   const errors = [];
-  const indexPath = path.join(__dirname, 'index.json');
 
-  if (!fs.existsSync(indexPath)) {
-    return errors; // Already reported in validateIndexJson
-  }
-
-  let index;
-  try {
-    index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
-  } catch (e) {
-    return errors; // Already reported in validateIndexJson
-  }
-
-  if (!index.skills) {
+  if (!index || !Array.isArray(index.skills)) {
     return errors;
   }
 
@@ -127,7 +137,7 @@ function validateSkillFiles() {
     const prefix = `スキル "${skill.id}"`;
 
     // Check SKILL.md existence
-    if (skill.skill_path) {
+    if (typeof skill.skill_path === 'string') {
       const skillPath = safeResolvePath(skill.skill_path);
       if (!skillPath) {
         errors.push(`${prefix}: 不正なパスが検出されました (${skill.skill_path})`);
@@ -137,7 +147,7 @@ function validateSkillFiles() {
     }
 
     // Check script existence if specified
-    if (skill.script) {
+    if (typeof skill.script === 'string') {
       const scriptPath = safeResolvePath(skill.script);
       if (!scriptPath) {
         errors.push(`${prefix}: スクリプトに不正なパスが検出されました (${skill.script})`);
@@ -150,32 +160,44 @@ function validateSkillFiles() {
   return errors;
 }
 
+function parseFrontMatter(content) {
+  const frontMatterMatch = content.match(/^---\s*\r?\n([\s\S]*?)\r?\n---/);
+  if (!frontMatterMatch) {
+    return null;
+  }
+
+  const frontMatter = frontMatterMatch[1];
+  const data = {};
+
+  frontMatter.split(/\r?\n/).forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) {
+      return;
+    }
+
+    const fieldMatch = trimmed.match(/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
+    if (fieldMatch) {
+      data[fieldMatch[1]] = fieldMatch[2];
+    }
+  });
+
+  return data;
+}
+
 // Validate Front Matter in SKILL.md files
-function validateFrontMatter() {
+function validateFrontMatter(index) {
   const errors = [];
-  const indexPath = path.join(__dirname, 'index.json');
 
-  if (!fs.existsSync(indexPath)) {
-    return errors;
-  }
-
-  let index;
-  try {
-    index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
-  } catch (e) {
-    return errors;
-  }
-
-  if (!index.skills) {
+  if (!index || !Array.isArray(index.skills)) {
     return errors;
   }
 
   index.skills.forEach(skill => {
-    if (!skill.skill_path) {
+    if (!skill || typeof skill !== 'object' || typeof skill.skill_path !== 'string') {
       return;
     }
 
-    const prefix = `スキル "${skill.id}"`;
+    const prefix = `スキル "${skill.id || 'unknown'}"`;
     const skillPath = safeResolvePath(skill.skill_path);
 
     if (!skillPath) {
@@ -194,19 +216,21 @@ function validateFrontMatter() {
       return;
     }
 
-    // Extract Front Matter
-    const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!frontMatterMatch) {
+    const frontMatterData = parseFrontMatter(content);
+    if (!frontMatterData) {
       errors.push(`${prefix}: Front Matter の形式が不正です (${skill.skill_path})`);
       return;
     }
 
-    const frontMatter = frontMatterMatch[1];
+    if (Object.keys(frontMatterData).length === 0) {
+      errors.push(`${prefix}: Front Matter が空です (${skill.skill_path})`);
+      return;
+    }
 
-    // Check for required Front Matter fields (basic check)
+    // Check for required Front Matter fields
     const requiredFMFields = ['name', 'description'];
     requiredFMFields.forEach(field => {
-      if (!frontMatter.includes(`${field}:`)) {
+      if (!Object.prototype.hasOwnProperty.call(frontMatterData, field)) {
         errors.push(`${prefix}: Front Matter に "${field}" フィールドがありません (${skill.skill_path})`);
       }
     });
@@ -219,35 +243,26 @@ function validateFrontMatter() {
 function main() {
   console.log('🔍 Agent Skills をバリデーション中...\n');
 
-  const errors = [
-    ...validateIndexJson(),
-    ...validateSkillFiles(),
-    ...validateFrontMatter()
-  ];
+  const { index, errors: loadErrors } = loadIndexJson();
+  const errors = [...loadErrors];
+
+  if (index) {
+    errors.push(...validateIndexJson(index));
+    errors.push(...validateSkillFiles(index));
+    errors.push(...validateFrontMatter(index));
+  }
+
+  const skillCount = Array.isArray(index?.skills) ? index.skills.length : 0;
 
   if (errors.length === 0) {
     console.log('✅ 全てのスキルが有効です!');
-    console.log(`\n検証済みスキル数: ${getSkillCount()}`);
+    console.log(`\n検証済みスキル数: ${skillCount}`);
     process.exit(0);
   } else {
     console.error('❌ バリデーション失敗:\n');
     errors.forEach(err => console.error(`  - ${err}`));
     console.error(`\nエラー数: ${errors.length}`);
     process.exit(1);
-  }
-}
-
-// Helper: Get skill count
-function getSkillCount() {
-  const indexPath = path.join(__dirname, 'index.json');
-  if (!fs.existsSync(indexPath)) {
-    return 0;
-  }
-  try {
-    const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
-    return index.skills ? index.skills.length : 0;
-  } catch (e) {
-    return 0;
   }
 }
 

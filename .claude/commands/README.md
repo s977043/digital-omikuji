@@ -152,7 +152,7 @@ Git worktree を準備します。
    ```
 3. コマンドの実行内容を記述
 4. 本 README に索引を追加
-5. [.claude/CLAUDE.md](../.claude/CLAUDE.md) から参照（必要に応じて）
+5. [.claude/CLAUDE.md](../CLAUDE.md) から参照（必要に応じて）
 
 ---
 
