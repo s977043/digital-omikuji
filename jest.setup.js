@@ -61,13 +61,11 @@ jest.mock("expo-av", () => ({
             unloadAsync: jest.fn(),
             setVolumeAsync: jest.fn(),
             setIsMutedAsync: jest.fn(),
-            getStatusAsync: jest
-              .fn()
-              .mockResolvedValue({
-                isLoaded: true,
-                isPlaying: false,
-                positionMillis: 0,
-              }),
+            getStatusAsync: jest.fn().mockResolvedValue({
+              isLoaded: true,
+              isPlaying: false,
+              positionMillis: 0,
+            }),
           },
           status: { isLoaded: true, isPlaying: false, positionMillis: 0 },
         })
