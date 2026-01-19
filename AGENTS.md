@@ -276,4 +276,3 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
   - `docs/project/`: プロジェクト管理、メタ情報
   - `docs/design/`: デザインガイドライン
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。
-
