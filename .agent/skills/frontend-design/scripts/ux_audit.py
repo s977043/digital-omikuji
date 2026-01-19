@@ -106,7 +106,7 @@ class UXAuditor:
         try:
             with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
                 content = f.read()
-        except: return
+        except Exception: return
         
         self.files_checked += 1
         filename = os.path.basename(filepath)
@@ -305,7 +305,7 @@ class UXAuditor:
                 val = weight_map.get(val.lower(), val)
                 try:
                     weight_values.append(int(val))
-                except: pass
+                except Exception: pass
 
         # Check for adjacent weights (400/500, 500/600, etc.)
         for i in range(len(weight_values) - 1):
