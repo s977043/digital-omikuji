@@ -15,6 +15,28 @@ const path = require('path');
 // Required fields for each skill in index.json
 const REQUIRED_FIELDS = ['id', 'name', 'description', 'skill_path', 'contexts', 'tags', 'last_updated'];
 
+// Base directory for skills (project root)
+const PROJECT_ROOT = path.join(__dirname, '..', '..');
+
+/**
+ * Safely resolve a path relative to project root and validate it's within allowed directory
+ * @param {string} relativePath - Path from index.json
+ * @returns {string|null} - Resolved path if valid, null if path traversal detected
+ */
+function safeResolvePath(relativePath) {
+  // Resolve and normalize the path
+  const resolvedPath = path.resolve(PROJECT_ROOT, relativePath);
+  const normalizedPath = path.normalize(resolvedPath);
+  const normalizedRoot = path.normalize(PROJECT_ROOT);
+
+  // Ensure the resolved path is within project root
+  if (!normalizedPath.startsWith(normalizedRoot + path.sep) && normalizedPath !== normalizedRoot) {
+    return null; // Path traversal attempt detected
+  }
+
+  return normalizedPath;
+}
+
 // Validate index.json structure
 function validateIndexJson() {
   const errors = [];
@@ -106,16 +128,20 @@ function validateSkillFiles() {
 
     // Check SKILL.md existence
     if (skill.skill_path) {
-      const skillPath = path.join(__dirname, '..', '..', skill.skill_path);
-      if (!fs.existsSync(skillPath)) {
+      const skillPath = safeResolvePath(skill.skill_path);
+      if (!skillPath) {
+        errors.push(`${prefix}: 不正なパスが検出されました (${skill.skill_path})`);
+      } else if (!fs.existsSync(skillPath)) {
         errors.push(`${prefix}: SKILL.md が見つかりません (${skill.skill_path})`);
       }
     }
 
     // Check script existence if specified
     if (skill.script) {
-      const scriptPath = path.join(__dirname, '..', '..', skill.script);
-      if (!fs.existsSync(scriptPath)) {
+      const scriptPath = safeResolvePath(skill.script);
+      if (!scriptPath) {
+        errors.push(`${prefix}: スクリプトに不正なパスが検出されました (${skill.script})`);
+      } else if (!fs.existsSync(scriptPath)) {
         errors.push(`${prefix}: スクリプトファイルが見つかりません (${skill.script})`);
       }
     }
@@ -150,7 +176,11 @@ function validateFrontMatter() {
     }
 
     const prefix = `スキル "${skill.id}"`;
-    const skillPath = path.join(__dirname, '..', '..', skill.skill_path);
+    const skillPath = safeResolvePath(skill.skill_path);
+
+    if (!skillPath) {
+      return; // Path traversal detected, already reported in validateSkillFiles
+    }
 
     if (!fs.existsSync(skillPath)) {
       return; // Already reported in validateSkillFiles
