@@ -221,6 +221,23 @@
         "cli"
       ],
       "last_updated": "2026-01-18"
+    },
+    {
+      "id": "antigravity-pr-review-fix",
+      "name": "Antigravity PR Review Fix",
+      "description": "PR URL/差分/レビューコメントを受け取り、レビュー指摘の整理→最小修正→テスト→PR更新/報告までを一連で進めるスキル。",
+      "skill_path": "skills/antigravity-pr-review-fix/SKILL.md",
+      "contexts": [
+        "Antigravity"
+      ],
+      "tags": [
+        "antigravity",
+        "review",
+        "fix",
+        "pr",
+        "workflow"
+      ],
+      "last_updated": "2026-01-19"
     }
   ]
 }
