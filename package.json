@@ -18,7 +18,8 @@
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --fix",
     "lint:md": "markdownlint .",
-    "lint:md:fix": "markdownlint . --fix"
+    "lint:md:fix": "markdownlint . --fix",
+    "validate:skills": "node .agent/skills/validate-skills.js"
   },
   "dependencies": {
     "@expo-google-fonts/shippori-mincho": "^0.4.1",
