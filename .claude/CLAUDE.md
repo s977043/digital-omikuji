@@ -11,7 +11,7 @@
 ## Claude-specific
 
 - **Permissions**: `.claude/settings.json` (See for allowed/denied commands)
-- **Hooks**: `.claude/hooks/` (Auto-format on edit)
+- **Hooks**: `.claude/hooks/` (Auto-format on edit, safety guard before Bash)
 - **Steering docs**: `.agent/steering/`
 
 ## Custom Commands
