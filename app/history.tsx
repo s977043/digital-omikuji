@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, ImageBackground, Platform } from "react-native";
-import { router, useFocusEffect, Stack } from "expo-router";
-import { StatusBar } from "expo-status-bar";
-import { MotiView } from "moti";
+import { View, Text, TouchableOpacity, Alert, Platform } from "react-native";
+import { router, useFocusEffect } from "expo-router";
 import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
+import { VersionDisplay } from "../components/VersionDisplay";
 import { HistoryList } from "../components/HistoryList";
 import { useTranslation } from "react-i18next";
 
@@ -11,15 +10,6 @@ export default function HistoryScreen() {
   const { t } = useTranslation();
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showConfirm, setShowConfirm] = useState(false);
-
-  const handleBack = () => {
-    if (router.canGoBack()) {
-      router.back();
-      return;
-    }
-    router.replace("/");
-  };
 
   const loadHistory = useCallback(async () => {
     setIsLoading(true);
@@ -28,131 +18,78 @@ export default function HistoryScreen() {
     setIsLoading(false);
   }, []);
 
+  // 画面がフォーカスされるたびに履歴を再読み込み
   useFocusEffect(
     useCallback(() => {
       loadHistory();
     }, [loadHistory])
   );
 
-  const confirmClearHistory = () => {
-    if (history.length === 0) return;
-    setShowConfirm(true);
-  };
+  const handleBack = useCallback(() => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.replace("/");
+    }
+  }, []);
 
   const handleClearHistory = async () => {
-    await clearHistory();
-    setHistory([]);
-    setShowConfirm(false);
+    if (Platform.OS === "web") {
+      // Web では window.confirm を使用
+      const confirmed = window.confirm("本当に全ての履歴を削除しますか？");
+      if (confirmed) {
+        await clearHistory();
+        setHistory([]);
+      }
+    } else {
+      // ネイティブでは Alert.alert を使用
+      Alert.alert("履歴の削除", "本当に全ての履歴を削除しますか？", [
+        { text: "キャンセル", style: "cancel" },
+        {
+          text: "削除",
+          style: "destructive",
+          onPress: async () => {
+            await clearHistory();
+            setHistory([]);
+          },
+        },
+      ]);
+    }
   };
 
   return (
-    <View className="flex-1 bg-[#2d1e12]">
-      <Stack.Screen
-        options={{
-          headerShown: false,
-          presentation: "card",
-        }}
-      />
-      <StatusBar style="light" />
-
-      {/* --- Notebook Header (Cover) --- */}
-      <View
-        className="pt-10 pb-4 px-6 bg-[#3d2b1f] z-10 border-b-2 border-[#1a110a] shadow-xl"
-        style={{
-          paddingTop: Platform.OS === "android" ? 32 : undefined,
-        }}
-      >
-        <View className="flex-row items-center justify-between">
-          <TouchableOpacity
-            onPress={handleBack}
-            className="flex-row items-center px-4 py-2 rounded-lg bg-black/20 border border-white/10 active:bg-black/40"
-            accessibilityLabel={t("common.back")}
-            accessibilityRole="button"
-          >
-            <Text className="text-stone-200 font-shippori-bold leading-none">
-              {t("common.back")}
-            </Text>
+    <View className="flex-1 bg-slate-900 p-4">
+      {/* ヘッダー */}
+      <View className="flex-row justify-between items-center mb-6 pt-10 z-50">
+        <TouchableOpacity
+          onPress={handleBack}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          className="py-2 pr-4"
+          accessibilityLabel={t("common.back")}
+          accessibilityRole="button"
+        >
+          <Text className="text-white text-lg">{t("common.back")}</Text>
+        </TouchableOpacity>
+        <Text className="text-white text-2xl font-shippori-bold">履歴</Text>
+        {history.length > 0 && (
+          <TouchableOpacity onPress={handleClearHistory}>
+            <Text className="text-red-400 text-sm">全て削除</Text>
           </TouchableOpacity>
-
-          <View className="items-center">
-            <Text className="text-stone-100 font-shippori-bold text-2xl tracking-[0.3em] drop-shadow-sm">
-              {t("history.title")}
-            </Text>
-          </View>
-
-          <View className="w-[84px] items-end">
-            {history.length > 0 && (
-              <TouchableOpacity
-                onPress={confirmClearHistory}
-                className="flex-1 py-3 bg-red-800 rounded-sm active:bg-red-700 shadow-sm"
-                accessibilityLabel={t("history.deleteAll")}
-                accessibilityRole="button"
-              >
-                <Text className="text-white font-shippori-bold text-center leading-none">
-                  {t("history.deleteAll")}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
+        )}
+        {history.length === 0 && <View className="w-12" />}
       </View>
 
-      {/* --- Diary Pages --- */}
-      <View className="flex-1 relative bg-[#fdfaf5]">
-        <ImageBackground
-          source={require("../assets/diary_paper.png")}
-          className="absolute inset-0"
-          style={{ opacity: 0.7 }}
-          resizeMode="repeat"
-        />
-        <View className="flex-1 px-5">
-          {isLoading ? (
-            <View className="flex-1 items-center justify-center">
-              <Text className="text-stone-500 font-shippori">{t("common.loading")}</Text>
-            </View>
-          ) : (
-            <HistoryList history={history} />
-          )}
+      {/* リスト */}
+      {isLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-white/60">読み込み中...</Text>
         </View>
-      </View>
-
-      {/* --- Confirmation Modal --- */}
-      {showConfirm && (
-        <View className="absolute inset-0 bg-black/80 z-[100] items-center justify-center px-8">
-          <MotiView
-            from={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#fdfaf5] p-8 rounded-sm border-2 border-stone-300 w-full max-w-sm"
-          >
-            <Text className="text-stone-900 font-shippori-bold text-xl mb-4 text-center tracking-widest">
-              {t("history.deleteConfirmTitle")}
-            </Text>
-            <Text className="text-stone-800 font-shippori text-base mb-8 text-center leading-relaxed">
-              {t("history.deleteConfirmMessage")}
-            </Text>
-            <View className="flex-row justify-between gap-4">
-              <TouchableOpacity
-                onPress={() => setShowConfirm(false)}
-                className="flex-1 py-3 bg-stone-300 rounded-sm active:bg-stone-400"
-                accessibilityLabel={t("common.cancel")}
-                accessibilityRole="button"
-              >
-                <Text className="text-stone-900 font-shippori-bold text-center leading-none">
-                  {t("common.cancel")}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={handleClearHistory}
-                className="flex-1 py-3 bg-red-900 rounded-sm active:bg-red-800 shadow-sm"
-              >
-                <Text className="text-white font-shippori-bold text-center leading-none">
-                  {t("history.deleteAll")}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </MotiView>
-        </View>
+      ) : (
+        <HistoryList history={history} />
       )}
+
+      {/* デプロイバージョン表示 */}
+      <VersionDisplay />
     </View>
   );
 }

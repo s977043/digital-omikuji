@@ -6,16 +6,12 @@ import {
   getHistory,
   getLastDrawDate,
   HistoryEntry,
-  getLastResultAction,
-  ResultAction,
-  setLastResultAction as setLastResultActionStorage,
 } from "../utils/HistoryStorage";
 
 export const useOmikujiLogic = () => {
   const [fortune, setFortune] = useState<OmikujiResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [hasDrawnToday, setHasDrawnToday] = useState(false);
-  const [lastResultAction, setLastResultAction] = useState<ResultAction | null>(null);
 
   const loadHistory = useCallback(async () => {
     const data = await getHistory();
@@ -44,10 +40,6 @@ export const useOmikujiLogic = () => {
     } else {
       setHasDrawnToday(false);
     }
-
-    // Load last result action
-    const action = await getLastResultAction();
-    setLastResultAction(action);
   }, []);
 
   // 初期読み込み
@@ -71,17 +63,10 @@ export const useOmikujiLogic = () => {
 
     // 履歴に追加して再読み込み
     await addHistoryEntry(result);
-    // アクション状態を明示的にクリア（UI側でのボタン表示のため）
-    await setLastResultActionStorage(null); // utilsからインポートが必要だが名前が重複するため注意
-    setLastResultAction(null);
-
     await loadHistory();
 
-    // アクション状態を更新（リセット確認）
-    await checkDailyStatus();
-
     return result;
-  }, [hasDrawnToday, fortune, loadHistory, checkDailyStatus]);
+  }, [hasDrawnToday, fortune, loadHistory]);
 
   const resetFortune = useCallback(() => {
     // hasDrawnToday が true の場合は fortune を保持して再表示可能にする
@@ -106,8 +91,6 @@ export const useOmikujiLogic = () => {
     drawFortune,
     resetFortune,
     loadHistory,
-    checkDailyStatus,
     debugResetDailyLimit,
-    lastResultAction,
   };
 };

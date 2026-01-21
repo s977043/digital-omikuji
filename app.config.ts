@@ -4,10 +4,7 @@ import { ExpoConfig, ConfigContext } from "expo/config";
 const PRIVACY_POLICY_URL = "https://digital-omikuji.vercel.app/privacy-policy";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  // NODE_ENVがproductionの場合はデフォルトでproductionとして扱う
-  const appVariant =
-    process.env.APP_VARIANT ||
-    (process.env.NODE_ENV === "production" ? "production" : "development");
+  const appVariant = process.env.APP_VARIANT || "development";
 
   let name = "おみくじ (Dev)";
   let bundleIdentifier = "jp.co.digitalomikuji.dev";
@@ -55,7 +52,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       output: "static",
       favicon: "./assets/icon.png",
     },
-    plugins: ["expo-router", "expo-localization", "./plugins/withWorklets"],
+    plugins: ["expo-router", "expo-localization"],
     extra: {
       ...config.extra,
       appVariant,

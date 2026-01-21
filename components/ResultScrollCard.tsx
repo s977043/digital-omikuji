@@ -13,7 +13,6 @@ import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
 import { buildShareText } from "../utils/buildShareText";
-import { setLastResultAction } from "../utils/HistoryStorage";
 import { useTranslation } from "react-i18next";
 import { DETAIL_KEYS } from "../data/omikujiData";
 
@@ -49,16 +48,12 @@ interface ResultScrollCardProps {
   fortune: OmikujiResult;
   onReset: () => void;
   reducedMotion?: boolean;
-  hasSelectedAction?: boolean; // 結ぶ/持ち帰るが選択済みかどうか
-  onActionSelected?: () => void;
 }
 
 export const ResultScrollCard = ({
   fortune,
   onReset,
   reducedMotion = false,
-  hasSelectedAction = false,
-  onActionSelected,
 }: ResultScrollCardProps) => {
   const animationRef = useRef<View>(null);
   const cardRef = useRef<View>(null);
@@ -76,7 +71,7 @@ export const ResultScrollCard = ({
     };
   }, []);
 
-  const handleTie = useCallback(async () => {
+  const handleTie = useCallback(() => {
     // ボタン連打防止
     if (exitAnimation) return;
 
@@ -85,25 +80,16 @@ export const ResultScrollCard = ({
     }
     setExitAnimation("tie");
 
-    // UIタイマーを先に開始（Optimistic UI）
-    tieTimerRef.current = setTimeout(() => {
-      setShowTiedComplete(true);
-    }, ANIMATION_TIMING.TIE_CARD_FLY);
-
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
     }
 
-    // Storage保存は裏で実行（ただし失敗時は補償が必要かもしれないが、このアプリでは許容）
-    await setLastResultAction("tie");
+    tieTimerRef.current = setTimeout(() => {
+      setShowTiedComplete(true);
+    }, ANIMATION_TIMING.TIE_CARD_FLY);
+  }, [exitAnimation, reducedMotion, t]);
 
-    // 親コンポーネントに通知
-    if (onActionSelected) {
-      onActionSelected();
-    }
-  }, [exitAnimation, reducedMotion, t, onActionSelected]);
-
-  const handleKeep = useCallback(async () => {
+  const handleKeep = useCallback(() => {
     // ボタン連打防止
     if (exitAnimation) return;
 
@@ -112,20 +98,12 @@ export const ResultScrollCard = ({
     }
     setExitAnimation("keep");
 
-    // UIタイマーを先に開始
-    keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.KEEP_TRANSITION);
-
     if (Platform.OS === "android") {
       ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
     }
 
-    await setLastResultAction("keep");
-
-    // 親コンポーネントに通知
-    if (onActionSelected) {
-      onActionSelected();
-    }
-  }, [exitAnimation, reducedMotion, t, onReset, onActionSelected]);
+    keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.KEEP_TRANSITION);
+  }, [exitAnimation, reducedMotion, t, onReset]);
 
   // Get translated fortune title and message
   const fortuneTitle = t(`fortune.levels.${fortune.level}`);
@@ -209,7 +187,7 @@ export const ResultScrollCard = ({
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-black/80 w-full h-full absolute inset-0 z-50">
+    <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8 w-full h-full absolute inset-0 z-50">
       {/* 結ばれたおみくじ完了画面 */}
       {showTiedComplete && (
         <MotiView
@@ -219,11 +197,7 @@ export const ResultScrollCard = ({
           className="items-center justify-center"
         >
           {/* 木の枝と結ばれたおみくじ */}
-          <View
-            className="items-center"
-            accessibilityElementsHidden={true}
-            importantForAccessibility="no-hide-descendants"
-          >
+          <View className="items-center">
             <Text className="text-6xl mb-2">🌸</Text>
             <View className="flex-row items-start">
               <Text className="text-4xl">🌿</Text>
@@ -248,30 +222,22 @@ export const ResultScrollCard = ({
             from={{ opacity: 0, translateY: 20 }}
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ type: "timing", duration: 500, delay: 300 }}
-            className="mt-12 items-center"
+            className="mt-8 items-center"
           >
-            <Text
-              className="text-white text-2xl font-shippori-bold text-center leading-relaxed"
-              style={{ letterSpacing: 1 }}
-            >
+            <Text className="text-white text-xl font-shippori-bold text-center tracking-widest">
               {t("fortune.tiedTitle")}
             </Text>
-            <Text
-              className="text-white/70 text-base font-shippori text-center mt-3"
-              style={{ letterSpacing: 0.5 }}
-            >
+            <Text className="text-white/70 text-sm font-shippori text-center mt-2">
               {t("fortune.tiedMessage")}
             </Text>
             {/* 閉じるリンク */}
             <TouchableOpacity
               onPress={onReset}
-              className="mt-10 px-8 py-4 bg-white/20 rounded-full border border-white/40 items-center min-h-[48px] justify-center"
+              className="mt-8 px-6 py-3 bg-white/20 rounded-full border border-white/40"
               accessibilityLabel={t("common.close")}
               accessibilityRole="button"
             >
-              <Text className="text-white font-bold text-base text-center">
-                {t("common.close")}
-              </Text>
+              <Text className="text-white font-bold text-base">{t("common.close")}</Text>
             </TouchableOpacity>
           </MotiView>
         </MotiView>
@@ -310,9 +276,7 @@ export const ResultScrollCard = ({
                 ? { type: "timing", duration: ANIMATION_TIMING.TIE_TRANSITION }
                 : { type: "spring", damping: 18, stiffness: 90 }
           }
-          className="w-full max-w-md bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10 m-4 shrink h-[85vh] sm:h-auto"
-          // @ts-ignore: vh unit is valid for web but not typed in React Native ViewStyle
-          style={{ maxHeight: Platform.OS === "web" ? "85vh" : "85%" }}
+          className="w-full max-w-md h-[85%] bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10"
           ref={animationRef}
         >
           <View ref={cardRef} className="flex-1 bg-[#FDF5E6]">
@@ -386,45 +350,24 @@ export const ResultScrollCard = ({
           <View className="p-4 bg-[#FDF5E6]/95 border-t border-amber-100 flex-row gap-4">
             <TouchableOpacity
               onPress={handleShare}
-              className={`${hasSelectedAction ? "flex-1" : ""} py-3 bg-slate-100 rounded-full items-center border border-slate-200 px-6`}
-              accessibilityRole="button"
-              accessibilityLabel="シェア"
+              className="flex-1 py-3 bg-slate-100 rounded-full items-center border border-slate-200"
             >
               <Text className="text-slate-800 font-bold">{t("common.share")}</Text>
             </TouchableOpacity>
 
-            {!hasSelectedAction && (
-              <>
-                <TouchableOpacity
-                  onPress={handleTie}
-                  className="flex-1 py-3 bg-white border border-amber-200 rounded-full items-center"
-                  accessibilityRole="button"
-                  accessibilityLabel="結ぶ"
-                >
-                  <Text className="text-amber-700 font-bold">{t("fortune.tie")}</Text>
-                </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleTie}
+              className="flex-1 py-3 bg-white border border-amber-200 rounded-full items-center"
+            >
+              <Text className="text-amber-700 font-bold">{t("fortune.tie")}</Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={handleKeep}
-                  className="flex-1 py-3 bg-amber-600 rounded-full items-center shadow-sm"
-                  accessibilityRole="button"
-                  accessibilityLabel="持ち帰る"
-                >
-                  <Text className="text-white font-bold">{t("fortune.keep")}</Text>
-                </TouchableOpacity>
-              </>
-            )}
-
-            {hasSelectedAction && (
-              <TouchableOpacity
-                onPress={onReset}
-                className="flex-1 py-3 bg-slate-800 rounded-full items-center shadow-sm"
-                accessibilityRole="button"
-                accessibilityLabel="閉じる"
-              >
-                <Text className="text-white font-bold">閉じる</Text>
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              onPress={handleKeep}
+              className="flex-1 py-3 bg-amber-600 rounded-full items-center shadow-sm"
+            >
+              <Text className="text-white font-bold">{t("fortune.keep")}</Text>
+            </TouchableOpacity>
           </View>
         </MotiView>
       )}

@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 20
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -55,3 +55,4 @@ jobs:
       - name: Deploy Project Artifacts to Vercel (Preview)
         if: github.ref != 'refs/heads/main'
         run: vercel deploy --prebuilt --token=$VERCEL_TOKEN
+
