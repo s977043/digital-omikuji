@@ -1,16 +1,23 @@
 appId: jp.co.digitalomikuji.dev
 ---
 - launchApp
+- waitForAnimationToEnd:
+    timeout: 3000
 
 # 1. 起動確認 (IDLE state)
-- assertVisible: "スマホを振っておみくじを引こう"
+# Wait for i18n initialization before checking text
+- extendedWaitUntil:
+    visible: "スマホを振っておみくじを引こう"
+    timeout: 10000
 
 # 2. 履歴画面に遷移して戻る (Quick check)
 - tapOn: "履歴"
 - assertVisible: "履歴"
 - assertVisible: "戻る"
 - tapOn: "戻る"
-- assertVisible: "スマホを振っておみくじを引こう"
+- extendedWaitUntil:
+    visible: "スマホを振っておみくじを引こう"
+    timeout: 5000
 
 # 3. おみくじを引く (Use Debug button for stability)
 # Note: Maestro can simulate shake, but debug button is more reliable for "logic" verification if available.
