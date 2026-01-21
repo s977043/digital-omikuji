@@ -37,26 +37,6 @@ const SHAKING_DURATION_MS = 1500;
 // DRAWING_DURATION_MS was increased from 1200ms to 3500ms to give users enough time
 // to perceive the full drawing animation and keep it in sync with sound/haptic effects.
 const DRAWING_DURATION_MS = 3500;
-const _REVEALING_DURATION_MS = 2000;
-
-// アニメーション定数
-const _SHAKE_ANIMATION = {
-  TRANSLATE_X: 15,
-  ROTATE_Z_DEG: 10,
-  SCALE_FROM: 0.9,
-  SCALE_TO: 1.1,
-  DURATION: 50,
-  TEXT_PULSE_DURATION: 500,
-};
-
-const _REVEAL_ANIMATION = {
-  BOX_SPRING_DAMPING: 15,
-  STICK_SPRING_DAMPING: 12,
-  STICK_SPRING_STIFFNESS: 100,
-  STICK_APPEAR_DELAY: 300,
-  SPARKLE_APPEAR_DELAY: 600,
-  SPARKLE_DURATION: 500,
-};
 
 const DRAW_BUTTON_STYLE =
   Platform.OS === "web"
@@ -95,7 +75,6 @@ export default function OmikujiApp() {
   const { t } = useTranslation();
   const [appState, setAppState] = useState<AppState>("IDLE");
   const [data, setData] = useState({ x: 0, y: 0, z: 0 });
-  const [_isSensorAvailable, setIsSensorAvailable] = useState<boolean | null>(null);
   const subscription = useRef<Subscription | null>(null);
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const {
@@ -163,13 +142,11 @@ export default function OmikujiApp() {
       // Web版ではセンサーAPIが不安定なため、プラットフォームチェックを追加
       if (Platform.OS === "web") {
         // Web版ではセンサー無効として扱い、ボタンUIを表示
-        setIsSensorAvailable(false);
         return;
       }
 
       try {
         const available = await Accelerometer.isAvailableAsync();
-        setIsSensorAvailable(available);
 
         if (available) {
           Accelerometer.setUpdateInterval(100);
@@ -177,7 +154,6 @@ export default function OmikujiApp() {
         }
       } catch (error) {
         console.warn("Accelerometer initialization failed:", error);
-        setIsSensorAvailable(false);
       }
     }
 

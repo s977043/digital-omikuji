@@ -219,7 +219,11 @@ export const ResultScrollCard = ({
           className="items-center justify-center"
         >
           {/* 木の枝と結ばれたおみくじ */}
-          <View className="items-center" accessibilityElementsHidden={true} importantForAccessibility="no-hide-descendants">
+          <View
+            className="items-center"
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+          >
             <Text className="text-6xl mb-2">🌸</Text>
             <View className="flex-row items-start">
               <Text className="text-4xl">🌿</Text>

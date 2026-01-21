@@ -150,6 +150,7 @@ describe("IndexScreen", () => {
     // Assuming icon changes or label changes. Let's assume label toggles.
     // If not sure about icon, check logic. But for now, let's assume it toggles state.
     // Since we mocked SoundManager, we can verify calling setMute.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { soundManager } = require("../../utils/SoundManager");
     expect(soundManager.setMute).toHaveBeenCalledWith(true);
 
