@@ -93,6 +93,7 @@ export const HistoryList = ({ history }: HistoryListProps) => {
           source={require("../assets/empty_history.png")}
           className="w-32 h-32 mb-4 opacity-60"
           resizeMode="contain"
+          accessibilityLabel="履歴がありません"
         />
         <Text className="text-stone-400 font-shippori text-center">{t("history.empty")}</Text>
       </View>

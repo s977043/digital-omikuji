@@ -219,7 +219,7 @@ export const ResultScrollCard = ({
           className="items-center justify-center"
         >
           {/* 木の枝と結ばれたおみくじ */}
-          <View className="items-center">
+          <View className="items-center" accessibilityElementsHidden={true} importantForAccessibility="no-hide-descendants">
             <Text className="text-6xl mb-2">🌸</Text>
             <View className="flex-row items-start">
               <Text className="text-4xl">🌿</Text>
@@ -261,7 +261,7 @@ export const ResultScrollCard = ({
             {/* 閉じるリンク */}
             <TouchableOpacity
               onPress={onReset}
-              className="mt-10 px-8 py-3 bg-white/20 rounded-full border border-white/40 items-center"
+              className="mt-10 px-8 py-4 bg-white/20 rounded-full border border-white/40 items-center min-h-[48px] justify-center"
               accessibilityLabel={t("common.close")}
               accessibilityRole="button"
             >
@@ -306,7 +306,7 @@ export const ResultScrollCard = ({
                 ? { type: "timing", duration: ANIMATION_TIMING.TIE_TRANSITION }
                 : { type: "spring", damping: 18, stiffness: 90 }
           }
-          className="w-full max-w-md bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10 m-4 shrink"
+          className="w-full max-w-md bg-[#FDF5E6] rounded-sm overflow-hidden flex-col shadow-2xl relative z-10 m-4 shrink h-[85vh] sm:h-auto"
           // @ts-ignore: vh unit is valid for web but not typed in React Native ViewStyle
           style={{ maxHeight: Platform.OS === "web" ? "85vh" : "85%" }}
           ref={animationRef}

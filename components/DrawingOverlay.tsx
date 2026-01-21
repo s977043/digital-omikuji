@@ -174,6 +174,7 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
               }}
               resizeMode="contain"
               accessibilityIgnoresInvertColors
+              accessibilityLabel="おみくじの棒"
             />
           </MotiView>
 
@@ -206,6 +207,7 @@ export const DrawingOverlay = ({ reducedMotion = false }: DrawingOverlayProps) =
                 style={{ width: CYLINDER_SIZE, height: CYLINDER_SIZE }}
                 resizeMode="contain"
                 accessibilityIgnoresInvertColors
+                accessibilityLabel="おみくじの筒"
               />
             </View>
 
