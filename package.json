@@ -78,10 +78,5 @@
     "tailwindcss": "3.4.19",
     "typescript": "^5.9.3"
   },
-  "pnpm": {
-    "overrides": {
-      "tslib": "2.6.2"
-    }
-  },
   "private": true
 }
