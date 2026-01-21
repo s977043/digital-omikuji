@@ -1,62 +1,151 @@
-# Hotfixワークフロー
+---
+title: "ホットフィックスワークフロー"
+description: "緊急バグ修正の手順"
+version: "1.0"
+last_updated: "2026-01-19"
+---
 
-## 概要
+# ホットフィックスワークフロー
 
-本番環境の緊急修正フロー
+本番環境で緊急のバグが発見された場合の対応手順です。
 
-## 前提条件
+## 1. ホットフィックスブランチ作成
 
-- 本番環境で重大なバグが発生
-- [AGENTS.md](../../AGENTS.md) セクション6を確認
-
-## フロー
-
-### 1. hotfixブランチ作成
+`main` ブランチから分岐:
 
 ```bash
 git checkout main
 git pull origin main
-git checkout -b hotfix/{summary}
+git checkout -b hotfix/fix-shake-sensitivity
 ```
 
-### 2. 修正とテスト
+命名規則: `hotfix/fix-<issue-description>`
 
+## 2. 修正実装
+
+### 2.1 最小限の修正
+- 影響範囲を最小限に抑える
+- バグ修正にフォーカス（新機能追加はしない）
+- 必要なテストケースを追加
+
+### 2.2 動作確認
 ```bash
-# 最小限の修正を実施
-# テストを追加
-pnpm test
+pnpm test          # テスト実行
+pnpm build         # ビルド確認
+pnpm start         # ローカル動作確認
 ```
 
-### 3. main へPR
+## 3. PR作成
 
+### 3.1 mainへのPR
 ```bash
-gh pr create --base main --title "Hotfix: {summary}" --body "$(cat <<'EOF'
+git add .
+git commit -m "fix: シェイク感度の閾値を調整"
+git push -u origin hotfix/fix-shake-sensitivity
+```
+
+GitHub でPRを作成:
+- **Base**: `main`
+- **Head**: `hotfix/fix-shake-sensitivity`
+- **タイトル**: `hotfix: <バグ内容>`
+- **ラベル**: `hotfix`, `priority: high`
+
+### 3.2 PR本文
+```markdown
 ## 問題
 
-{本番環境で発生した問題}
+本番環境でシェイクが反応しづらい問題が報告されました。
+
+## 原因
+
+加速度センサーの閾値が高すぎた（15 → 適正値は10）
 
 ## 修正内容
 
-{修正の詳細}
+- `utils/ShakeDetector.ts` の閾値を15から10に変更
+- テストケースを追加
 
-## テスト結果
+## 影響範囲
 
-[テスト結果を貼付]
-EOF
-)"
+- シェイク検出ロジックのみ
+- 他機能への影響なし
+
+## 動作確認
+
+- [x] iPhone実機で動作確認
+- [x] Android実機で動作確認
+- [x] テスト追加・合格
 ```
 
-### 4. マージ後の develop への反映
+### 3.3 レビュー・マージ
+- 最速でレビュー依頼
+- CI通過後すぐにマージ（Merge Commit）
 
+## 4. デプロイ
+
+### 4.1 本番デプロイ
 ```bash
-# cherry-pick または follow-up PR で develop に反映
+git checkout main
+git pull origin main
+# 自動デプロイ or 手動デプロイ
+```
+
+### 4.2 動作確認
+本番環境で修正が反映されたことを確認
+
+## 5. developへの反映
+
+### 5.1 cherry-pickで反映
+```bash
 git checkout develop
-git cherry-pick {commit-hash}
+git pull origin develop
+git cherry-pick <hotfix-commit-hash>
 git push origin develop
 ```
 
-## 注意事項
+または `develop` へのPRを作成
 
-- hotfixは最小限の変更に留める
-- 必ずテストを追加
-- develop への反映を忘れない
+### 5.2 バージョン更新
+`main` で `package.json` のバージョンをパッチアップ:
+
+```bash
+git checkout main
+# package.json: 1.2.0 → 1.2.1
+git add package.json
+git commit -m "chore: bump version to 1.2.1"
+git push origin main
+git tag -a v1.2.1 -m "Hotfix v1.2.1"
+git push origin v1.2.1
+
+# developにもマージ
+git checkout develop
+git merge main
+git push origin develop
+```
+
+## 6. 事後対応
+
+### 6.1 インシデントレポート作成（任意）
+`docs/incidents/YYYYMMDD_<issue>.md` を作成:
+
+- 発生日時
+- 問題の詳細
+- 影響範囲
+- 根本原因
+- 修正内容
+- 再発防止策
+
+### 6.2 再発防止策の検討
+- テストカバレッジの見直し
+- QAプロセスの改善
+- モニタリング強化
+
+### 6.3 リリースノート更新
+必要に応じてリリースノートにホットフィックス内容を追記
+
+---
+
+## 参考リンク
+
+- [AGENTS.md](../../AGENTS.md) - 開発ガイド
+- [release.md](./release.md) - 通常リリース手順

@@ -1,63 +1,150 @@
+---
+title: "新機能開発ワークフロー"
+description: "新機能を開発する際の標準手順（SDD準拠）"
+version: "1.0"
+last_updated: "2026-01-19"
+---
+
 # 新機能開発ワークフロー
 
-## 概要
+Digital Omikujiで新機能を開発する際の標準手順です。SDD（仕様駆動開発）に準拠しています。
 
-SDD（仕様駆動開発）に従った新機能開発の標準フロー。
+## 1. 準備フェーズ
 
-## 前提条件
+### 1.1 Issue確認
+- GitHub Issuesで機能要件を確認
+- 不明点はPO/PMに質問して明確化
 
-- [AGENTS.md](../../AGENTS.md) を読了していること
-- [.agent/skills/sdd-core/SKILL.md](../skills/sdd-core/SKILL.md) を理解していること
+### 1.2 ブランチ作成
+```bash
+git checkout develop
+git pull origin develop
+git checkout -b feature/<feature-name>
+```
 
-## フロー
+命名規則: `feature/add-fortune-result-sharing` など、動詞+名詞形式
 
-### Phase 0: 理解
+## 2. SDDフェーズ
 
-1. リポジトリ全体を読み、影響範囲を特定
-2. 関連するSteering Documentsを列挙
-3. **コード変更禁止**
+### 2.1 仕様書作成
+`docs/working/YYYYMMDD_<feature-name>/requirements.md` を作成
 
-### Phase 1: Working Documents作成（Gate A）
+**記載内容**:
+- 機能の目的
+- ユーザーストーリー
+- 受け入れ基準
+- 非機能要件（パフォーマンス、セキュリティなど）
 
-1. 作業用ディレクトリ作成: `docs/working/{YYYYMMDD}_{feature}/`
-2. 必須ファイル生成:
-   - `requirements.md` - 要件定義
-   - `design.md` - 設計ドキュメント
-   - `tasklist.md` - タスク分解
-   - `testing.md` - テスト計画
+参考: [.agent/skills/sdd-core/SKILL.md](../skills/sdd-core/SKILL.md)
 
-**Gate A**: 承認が得られるまで次のフェーズに進まない
+### 2.2 設計書作成
+`docs/working/YYYYMMDD_<feature-name>/design.md` を作成
 
-### Phase 2: テスト作成（Gate B）
+**記載内容**:
+- コンポーネント構成
+- データフロー
+- API設計（必要な場合）
+- 状態管理の方針
 
-1. テストを先に作成（TDD）
-2. `testing.md`との対応関係を明示
-3. テストを実行して結果を記録
+### 2.3 タスク分解
+`docs/working/YYYYMMDD_<feature-name>/tasklist.md` を作成
 
-**Gate B**: テストなしの実装は禁止
+実装タスクを小さな単位（1-2時間以内）に分解:
+- [ ] コンポーネントA実装
+- [ ] hooks/useFeatureX実装
+- [ ] 単体テスト作成
+- [ ] 統合テスト作成
 
-### Phase 3: 実装
+### 2.4 Gate 1: 仕様レビュー
+- レビュワー（人間またはAI）に仕様を確認依頼
+- 承認されたら実装フェーズへ
 
-1. `tasklist.md`のタスク単位で実装
-2. 受け入れ基準（AC）を満たす最小限の変更
-3. **仕様に書かれていない機能追加・最適化は禁止**
+## 3. 実装フェーズ
 
-### Phase 4: 検証・完了（Gate C）
+### 3.1 テストケース作成（TDD）
+`__tests__/` または `*.test.tsx` にテストを先に書く
 
-1. 全テストを実行
-2. E2E検証（必要に応じて）
-3. `completion-report.md`を作成
+```typescript
+describe('FortuneSharing', () => {
+  it('should generate shareable image', async () => {
+    // テストコード
+  });
+});
+```
 
-**Gate C**: 完了報告後、人間の確認を待つ
+Red -> Green -> Refactor サイクル
 
-## 実行コマンド
+### 3.2 実装
+- コンポーネント、hooks、utilsを実装
+- [AGENTS.md](../../AGENTS.md) のコーディング規約に従う
+- NativeWind v4でスタイリング
 
-- テスト: `pnpm test`
-- Lint: `pnpm lint`
-- ビルド: `pnpm build`
-- PR作成: `/pr`コマンド
+### 3.3 ローカル動作確認
+```bash
+pnpm start        # Expo開発サーバー起動
+pnpm test         # テスト実行
+pnpm lint         # Lint実行
+```
 
-## 関連ワークフロー
+### 3.4 Gate 2: コードレビュー
+セルフレビュー:
+- `pnpm lint` でエラーなし
+- `pnpm test` で全テスト通過
+- 不要なconsole.log削除
+- コメントアウトコード削除
 
-- CIエラー発生時: [fix_ci_errors.md](./fix_ci_errors.md)
-- PRレビュー対応: [respond_to_pr_review.md](./respond_to_pr_review.md)
+AIエージェントレビュー（任意）:
+- Copilot: `copilot review`
+- Gemini: `gemini review`
+- Codex: `codex review`
+
+## 4. PR・統合フェーズ
+
+### 4.1 PR作成
+```bash
+git add .
+git commit -m "feat: <要約>"
+git push -u origin feature/<feature-name>
+```
+
+GitHubでPRを作成:
+- タイトル: `feat: <機能名>`
+- 本文: `/pr` コマンドまたは手動で記載
+  - 目的
+  - 変更内容
+  - 動作確認結果
+  - スクリーンショット（UI変更の場合）
+
+### 4.2 CI通過確認
+GitHub Actionsが Greenになるまで待つ:
+- Lint
+- Test
+- Build
+
+失敗した場合は [fix_ci_errors.md](./fix_ci_errors.md) を参照
+
+### 4.3 レビュー対応
+レビューコメントへの対応: [respond_to_pr_review.md](./respond_to_pr_review.md) を参照
+
+### 4.4 マージ
+- Squash Mergeまたは Merge Commit で `develop` に統合
+- ブランチ削除
+
+## 5. 完了報告
+
+`docs/working/YYYYMMDD_<feature-name>/completion-report.md` を作成（任意）
+
+**記載内容**:
+- 実装内容のサマリ
+- テスト結果
+- 残課題（あれば）
+- 次のステップ
+
+---
+
+## 参考リンク
+
+- [AGENTS.md](../../AGENTS.md) - 開発ガイド
+- [.agent/steering/sdd-workflow.md](../steering/sdd-workflow.md) - SDDワークフロー詳細
+- [fix_ci_errors.md](./fix_ci_errors.md) - CIエラー対応
+- [respond_to_pr_review.md](./respond_to_pr_review.md) - PRレビュー対応

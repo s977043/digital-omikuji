@@ -1,119 +1,67 @@
 ---
-title: "開発フロー・AI連携ガイドライン"
-description: "本プロジェクトにおける開発プロセス、コード品質基準、AIエージェントの役割分担を定義します。"
-version: 2.0
-last_updated: "2025-12-31"
+title: "開発OS導入ガイド"
+description: "AIエージェント運用を開発OSとして導入するための設計と運用手順"
+version: "1.0"
+last_updated: "2026-01-20"
 target_audience: ["developer", "ai_agent"]
 ---
 
-# 開発フロー・AI 連携ガイドライン
+# 開発OS導入ガイド
 
-## 技術スタック
+## 目的
 
-- **Framework**: Expo (React Native)
-- **Language**: TypeScript
-- **Styling**: NativeWind (Tailwind CSS)
-- **Routing**: Expo Router
-- **State Management**: React Hooks (useState, useReducer, useContext)
-- **Testing**: Jest, React Native Testing Library
-- **Package Manager**: pnpm
+設定の寄せ集めではなく、運用ルール + 自動化 + 安全装置をまとめて「開発OS」として運用する。
+個人設定とプロジェクト設定を分離し、チームの再現性を確保する。
 
-## 開発フロー
+## 3レイヤ構成
 
-### 基本プロセス
+- **個人レイヤ (Developer Machine)**: `~/.claude/` など。快適化のみ。チーム必須ルールは置かない。
+- **プロジェクトレイヤ (Repository)**: `AGENTS.md`, `.agent/`, `.claude/`, `.codex/`。前提・禁止事項・標準フローを固定化。
+- **ガバナンスレイヤ (CI / PR)**: `.github/workflows/`, `.github/PULL_REQUEST_TEMPLATE.md`。最終的な強制力を担保。
 
-1. **Issue 確認**: 実装すべき機能やバグ修正の内容を把握。
-2. **Branch 作成**: `feature/xxx` や `fix/xxx` ブランチを作成。
-3. **実装 & テスト**: コードの実装とテストコードの記述（TDD 推奨）。
-4. **Lint & Type Check**: `pnpm lint` および `tsc` で静的解析を通す。
-5. **PR 作成**: GitHub で Pull Request を作成し、レビューを依頼。
+## 具体的な配置
 
-### コード品質基準
+- **共通ルール**: `AGENTS.md` (SSOT)
+- **Claude**: `CLAUDE.md`, `.claude/settings.json`, `.claude/hooks/`, `.claude/commands/`
+- **Codex**: `.codex/`, `.codex/config.toml`
+- **エージェント定義/スキル**: `.agent/agents/`, `.agent/skills/`
+- **運用フロー**: `.agent/workflows/`, `docs/AI_AGENTS_ROLES.md`
 
-- **TypeScript**: `strict: true` 準拠。`any` 型は原則禁止。
-- **Lint**: ESLint のルールに従う。
-- **Test**: 主要なロジックと UI コンポーネントにはテストを書く。
-- **Style**: NativeWind クラスを使用し、インラインスタイルは避ける（動的な値を除く）。
+## Hooks の扱い
 
-## 実装ガイドライン
+### 自動化（快適性）
 
-### コンポーネント設計 (React Native)
+- `PostToolUse` で format/lint/test を補助
+- 例: `.claude/hooks/format.sh`
 
-```typescript
-import { View, Text, Pressable } from "react-native";
-import { styled } from "nativewind";
+### 安全装置（ブレーキ）
 
-interface ButtonProps {
-  label: string;
-  onPress: () => void;
-}
+- `PreToolUse` で危険コマンドや権限要求をブロック
+- 例: `.claude/hooks/safety.sh`
+- Hook は補助。最終的な強制力は CI/PR に置く
 
-export const PrimaryButton: React.FC<ButtonProps> = ({ label, onPress }) => {
-  return (
-    <Pressable
-      onPress={onPress}
-      className="bg-blue-500 p-4 rounded-lg active:opacity-80"
-    >
-      <Text className="text-white text-center font-bold">{label}</Text>
-    </Pressable>
-  );
-};
-```
+## Subagent 運用
 
-### カスタムフック設計
+- **plan → implement → review → security** を基本フローに固定
+- 役割分担の詳細は `docs/AI_AGENTS_ROLES.md` を参照
+- 複数領域に跨る場合は `orchestrator` で調整する
 
-```typescript
-export const useOmikuji = () => {
-  const [result, setResult] = useState<string | null>(null);
+## MCP は最小構成
 
-  const draw = useCallback(() => {
-    // ロジック実装
-    const newResult = determineFortune();
-    setResult(newResult);
-  }, []);
+- 必須のものだけ有効化
+- 追加は選択式でドキュメント化
 
-  return { result, draw };
-};
-```
+## 導入ステップ（推奨順）
 
-### テスト設計 (Jest / RNTL)
+1. **快適化Hooks**: format/lint/test を自動化
+2. **プロジェクトルール整備**: SSOT を明確化
+3. **Subagent の工程化**: 役割分担の固定
+4. **安全装置Hooks**: 破壊的操作のブロック
+5. **MCP最小化**: 必要最小限で運用
 
-```typescript
-import { render, fireEvent, screen } from "@testing-library/react-native";
-import { PrimaryButton } from "./PrimaryButton";
+## 導入済み判定
 
-test("ボタンが表示され、タップできる", () => {
-  const onPressMock = jest.fn();
-  render(<PrimaryButton label="テスト" onPress={onPressMock} />);
-
-  const button = screen.getByText("テスト");
-  expect(button).toBeTruthy();
-
-  fireEvent.press(button);
-  expect(onPressMock).toHaveBeenCalled();
-});
-```
-
-## AI エージェントの活用
-
-### 役割分担
-
-- **GitHub Copilot**:
-  - コーディング時のリアルタイム補完
-  - 基本的な関数やコンポーネントの生成
-  - テストコードの自動生成
-
-- **Docs Agent / Maintainer Agent**:
-  - `.agent/` 配下の設定に基づくドキュメント管理やリファクタリング提案
-
-### プロンプトエンジニアリングのヒント
-
-- "Expo Router を使っています" と明示する。
-- "NativeWind でのスタイリングをお願い" と指定する。
-- モバイルアプリ特有の制約（画面サイズ、プラットフォーム差分）を意識した指示を出す。
-
-## トラブルシューティング
-
-- **ビルドエラー**: `npx expo start -c` でキャッシュをパージしてみる。
-- **依存関係エラー**: `node_modules` を削除して `pnpm install` を再実行。
-- **Web/iOS/Android の差異**: `Platform.OS` を使ってプラットフォームごとの分岐を行うか、ファイル拡張子 (`.ios.tsx`, `.android.tsx`) で分ける。
+- PR で format/lint/型の指摘が減っている
+- エージェントが毎回同じ前提で動く
+- 破壊的操作や秘密情報アクセスが Hook/CI で止まる
+- 役割分担が固定化されレビュー品質が安定する

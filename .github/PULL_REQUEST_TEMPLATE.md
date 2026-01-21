@@ -1,29 +1,41 @@
-## Description
+## 目的
 
-Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change.
+（この変更で何を達成したいか）
 
 Fixes # (issue)
 
-## Type of change
+## 変更点
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] Documentation update
+- 
 
-## How Has This Been Tested?
+## 動作確認（テストログを必ず添付）
 
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
+- 実行コマンド:
+  - `pnpm test`
+- ログ:
 
-- [ ] Test A
-- [ ] Test B
+```text
+（ここにログを貼る）
+```
 
-## Checklist:
+## 影響範囲 / リスク
 
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+- 
+
+## UI 変更（必要な場合）
+
+- スクリーンショット / 動画:
+
+## レビュー依頼（必須）
+
+- [ ] Copilot
+- [ ] Gemini
+- [ ] Codex
+
+## チェックリスト
+
+- [ ] 自己レビュー済み
+- [ ] 変更は最小差分で、無関係な修正を含まない
+- [ ] テストを追加・更新した（必要な場合）
+- [ ] `pnpm test` が通っている
+- [ ] ドキュメントを更新した（必要な場合）

@@ -49,20 +49,31 @@ jest.mock("expo-sensors", () => ({
   },
 }));
 
-// Mock expo-audio (used by SoundManager)
-jest.mock("expo-audio", () => ({
-  createAudioPlayer: jest.fn(() => ({
-    play: jest.fn(),
-    pause: jest.fn(),
-    seekTo: jest.fn(),
-    setVolume: jest.fn(),
-    setMuted: jest.fn(),
-    remove: jest.fn(),
-    replace: jest.fn(),
-  })),
-  setAudioModeAsync: jest.fn(),
+// Mock expo-av
+jest.mock("expo-av", () => ({
+  Audio: {
+    Sound: {
+      createAsync: jest.fn(() =>
+        Promise.resolve({
+          sound: {
+            playAsync: jest.fn(),
+            replayAsync: jest.fn(),
+            unloadAsync: jest.fn(),
+            setVolumeAsync: jest.fn(),
+            setIsMutedAsync: jest.fn(),
+            getStatusAsync: jest.fn().mockResolvedValue({
+              isLoaded: true,
+              isPlaying: false,
+              positionMillis: 0,
+            }),
+          },
+          status: { isLoaded: true, isPlaying: false, positionMillis: 0 },
+        })
+      ),
+    },
+    setAudioModeAsync: jest.fn(),
+  },
 }));
-
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock")
