@@ -3,11 +3,23 @@ name: River Reviewer
 on:
   pull_request:
     branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner (ubuntu-slim is 15 min limit)"
+        type: choice
+        options: [ubuntu-slim, ubuntu-latest]
+        default: ubuntu-slim
+
+env:
+  RUNNER_LABEL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'ubuntu-slim' }}
+  TIMEOUT_MINUTES: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'ubuntu-latest') && '360' || '15' }}
 
 jobs:
   review:
     name: AI Code Review
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.RUNNER_LABEL }}
+    timeout-minutes: ${{ fromJSON(env.TIMEOUT_MINUTES) }}
     permissions:
       contents: read
       pull-requests: write

@@ -3,16 +3,28 @@ name: Deploy to Vercel
 on:
   push:
     branches: [ main, develop ]
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner (ubuntu-slim is 15 min limit)"
+        type: choice
+        options: [ubuntu-slim, ubuntu-latest]
+        default: ubuntu-latest
 
 # Prevent concurrent deployments to avoid rate limiting
 concurrency:
   group: vercel-deploy-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RUNNER_LABEL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'ubuntu-latest' }}
+  TIMEOUT_MINUTES: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'ubuntu-slim') && '15' || '360' }}
+
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.runner != 'ubuntu-slim' }}
+    runs-on: ${{ env.RUNNER_LABEL }}
+    timeout-minutes: ${{ fromJSON(env.TIMEOUT_MINUTES) }}
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
@@ -55,4 +67,3 @@ jobs:
       - name: Deploy Project Artifacts to Vercel (Preview)
         if: github.ref != 'refs/heads/main'
         run: vercel deploy --prebuilt --token=$VERCEL_TOKEN
-

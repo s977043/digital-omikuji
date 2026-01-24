@@ -44,15 +44,27 @@ on:
       - "metro.config.js"
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner (ubuntu-slim is 15 min limit)"
+        type: choice
+        options: [ubuntu-slim, ubuntu-latest]
+        default: ubuntu-slim
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RUNNER_LABEL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'ubuntu-slim' }}
+  TIMEOUT_MINUTES: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'ubuntu-latest') && '360' || '15' }}
+
 jobs:
   ci:
     name: ${{ matrix.name }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.RUNNER_LABEL }}
+    timeout-minutes: ${{ fromJSON(env.TIMEOUT_MINUTES) }}
     strategy:
       fail-fast: false
       matrix:

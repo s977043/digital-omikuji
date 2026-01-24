@@ -33,6 +33,12 @@ on:
       - "pnpm-lock.yaml"
       - ".github/workflows/e2e-web.yml"
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner (ubuntu-slim is 15 min limit)"
+        type: choice
+        options: [ubuntu-slim, ubuntu-latest]
+        default: ubuntu-latest
 
 permissions:
   contents: read
@@ -41,11 +47,19 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  RUNNER_LABEL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'ubuntu-latest' }}
+  TIMEOUT_MINUTES: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'ubuntu-slim') && '15' || '360' }}
+
 jobs:
   test:
     name: Playwright Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    if: ${{ github.event_name != 'workflow_dispatch' || github.event.inputs.runner != 'ubuntu-slim' }}
+    runs-on: ${{ env.RUNNER_LABEL }}
+    timeout-minutes: ${{ fromJSON(env.TIMEOUT_MINUTES) }}
+    env:
+      RUNNER_LABEL: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'ubuntu-latest' }}
+      TIMEOUT_MINUTES: "360"
 
     steps:
       - uses: actions/checkout@v6
