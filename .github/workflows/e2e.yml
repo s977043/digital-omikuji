@@ -30,11 +30,11 @@ permissions:
   contents: read
 
 jobs:
-  # Android E2E - runs only on main PRs
+  # Android E2E - runs on main/develop PRs when labeled
   android:
     name: Android E2E
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || (github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'Android'))
+    if: github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))
     timeout-minutes: 25
 
     steps:
@@ -98,7 +98,7 @@ jobs:
         env:
           MAESTRO_DRIVER_STARTUP_TIMEOUT: 120000
 
-  # iOS E2E - runs only on main PRs
+  # iOS E2E - runs on main/develop PRs when labeled
   ios:
     name: iOS E2E
     runs-on: macos-latest
