@@ -1,0 +1,15 @@
+diff --git a/ios/JSI/EXJSIUtils.h b/ios/JSI/EXJSIUtils.h
+--- a/ios/JSI/EXJSIUtils.h
++++ b/ios/JSI/EXJSIUtils.h
+@@ -10,6 +10,12 @@
+ #import <ReactCommon/TurboModuleUtils.h>
+ #import <ExpoModulesCore/ObjectDeallocator.h>
+ 
++namespace facebook {
++namespace react {
++class CallInvoker;
++}
++}
++
+ namespace jsi = facebook::jsi;
+ namespace react = facebook::react;
