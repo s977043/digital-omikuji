@@ -118,10 +118,10 @@ GitHub Actionsが Greenになるまで待つ:
 - Test
 - Build
 
-失敗した場合は [fix_ci_errors.md](./fix_ci_errors.md) を参照
+失敗した場合は該当ジョブのログを確認し、修正後に再実行する
 
 ### 4.3 レビュー対応
-レビューコメントへの対応: [respond_to_pr_review.md](./respond_to_pr_review.md) を参照
+レビューコメントに順次対応し、必要なら追加コミットで反映する
 
 ### 4.4 マージ
 - Squash Mergeまたは Merge Commit で `develop` に統合
@@ -142,6 +142,4 @@ GitHub Actionsが Greenになるまで待つ:
 ## 参考リンク
 
 - [AGENTS.md](../../AGENTS.md) - 開発ガイド
-- [.agent/steering/sdd-workflow.md](../steering/sdd-workflow.md) - SDDワークフロー詳細
-- [fix_ci_errors.md](./fix_ci_errors.md) - CIエラー対応
-- [respond_to_pr_review.md](./respond_to_pr_review.md) - PRレビュー対応
+- [.agent/steering/development.md](../steering/development.md) - 開発運用ガイド
