@@ -4,6 +4,7 @@ index 407f57f..e26a36d 100644
 +++ b/ios/JSI/EXJSIUtils.h
 @@ -9,6 +9,14 @@
  #import <ReactCommon/TurboModuleUtils.h>
++#import <ReactCommon/CallbackWrapper.h>
  #import <ExpoModulesCore/ObjectDeallocator.h>
  
 +// [Digital Omikuji] Workaround: CallInvoker/CallbackWrapper forward declarations for iOS E2E builds.
