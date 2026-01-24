@@ -33,7 +33,7 @@ jobs:
   # Android E2E - runs on main/develop PRs when labeled
   android:
     name: Android E2E
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'Blacksmith')) && (vars.BLACKSMITH_LINUX_RUNNER || 'blacksmith') || 'ubuntu-latest' }}
     if: github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))
     timeout-minutes: 25
 
@@ -101,7 +101,7 @@ jobs:
   # iOS E2E - runs on main/develop PRs when labeled
   ios:
     name: iOS E2E
-    runs-on: macos-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'Blacksmith')) && (vars.BLACKSMITH_MACOS_RUNNER || 'blacksmith-macos') || 'macos-latest' }}
     if: github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'iOS'))
     timeout-minutes: 30
 

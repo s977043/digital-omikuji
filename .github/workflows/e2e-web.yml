@@ -17,6 +17,7 @@ on:
       - "pnpm-lock.yaml"
       - ".github/workflows/e2e-web.yml"
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
     branches: [main, develop]
     paths:
       - "app/**"
@@ -39,7 +40,7 @@ permissions:
 jobs:
   test:
     name: Playwright Tests
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'Blacksmith')) && (vars.BLACKSMITH_LINUX_RUNNER || 'blacksmith') || 'ubuntu-latest' }}
     timeout-minutes: 30
 
     steps:

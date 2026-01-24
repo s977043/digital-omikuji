@@ -23,6 +23,7 @@ on:
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
     branches: [main, develop]
     paths:
       - "app/**"
@@ -51,7 +52,7 @@ concurrency:
 jobs:
   ci:
     name: ${{ matrix.name }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'Blacksmith')) && (vars.BLACKSMITH_LINUX_RUNNER || 'blacksmith') || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
