@@ -44,11 +44,24 @@ on:
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # 依存関係のインストールを1回で行い、キャッシュを共有
   ci:
-    name: Type Check, Lint & Test
+    name: ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Type Check
+            command: pnpm exec tsc --noEmit
+          - name: ESLint
+            command: pnpm lint && pnpm lint:md
+          - name: Tests
+            command: pnpm test
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -65,15 +78,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
 
-      # 3つのチェックを順次実行（1回のインストールで済む）
-      - name: Type Check
-        run: pnpm exec tsc --noEmit
-
-      - name: ESLint
-        run: pnpm lint
-
-      - name: Markdown Lint
-        run: pnpm lint:md
-
-      - name: Run Tests
-        run: pnpm test
+      - name: Run
+        run: ${{ matrix.command }}
