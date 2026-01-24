@@ -6,11 +6,12 @@ index 407f57f..e26a36d 100644
  #import <ReactCommon/TurboModuleUtils.h>
  #import <ExpoModulesCore/ObjectDeallocator.h>
  
-+// [Digital Omikuji] Workaround: CallInvoker forward declaration for iOS E2E builds.
++// [Digital Omikuji] Workaround: CallInvoker/CallbackWrapper forward declarations for iOS E2E builds.
 +// TODO: remove when expo-modules-core includes this upstream.
 +namespace facebook {
 +namespace react {
 +class CallInvoker;
++class CallbackWrapper;
 +}
 +}
 +
