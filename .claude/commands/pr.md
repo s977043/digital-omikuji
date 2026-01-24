@@ -2,7 +2,7 @@
 description: 'Draft a PR description from current diff using the project template'
 ---
 
-現在の差分を分析し、以下のテンプレートに沿って PR 本文を生成してください：
+現在の差分を分析し、以下のテンプレートに沿って PR 本文を生成してください（日本語、テストログ添付）：
 
 ## 目的
 
@@ -14,11 +14,21 @@ description: 'Draft a PR description from current diff using the project templat
 
 ## 動作確認
 
-（どうテストしたか、確認コマンド）
+（実行コマンドとテストログ）
 
 ## 影響範囲 / リスク
 
 （破壊的変更、パフォーマンス、セキュリティ）
+
+## UI 変更（必要な場合）
+
+（スクリーンショットや動画）
+
+## レビュー依頼（必須）
+
+- Copilot
+- Gemini
+- Codex
 
 ## ロールバック手順
 

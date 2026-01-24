@@ -22,13 +22,6 @@ jest.mock("react-native-worklets", () => ({
   scheduleOnRN: (fn) => fn,
 }));
 
-jest.mock("react-native-worklets-core", () => ({
-  Worklets: {
-    createRunInContext: jest.fn(),
-    createContext: jest.fn(),
-  },
-}));
-
 require("react-native-reanimated").setUpTests();
 
 // Mock expo-haptics
@@ -64,8 +57,17 @@ jest.mock("expo-av", () => ({
         Promise.resolve({
           sound: {
             playAsync: jest.fn(),
+            replayAsync: jest.fn(),
             unloadAsync: jest.fn(),
+            setVolumeAsync: jest.fn(),
+            setIsMutedAsync: jest.fn(),
+            getStatusAsync: jest.fn().mockResolvedValue({
+              isLoaded: true,
+              isPlaying: false,
+              positionMillis: 0,
+            }),
           },
+          status: { isLoaded: true, isPlaying: false, positionMillis: 0 },
         })
       ),
     },
