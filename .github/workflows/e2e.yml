@@ -25,17 +25,46 @@ on:
       - "nativewind-env.d.ts"
       - ".github/workflows/e2e.yml"
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "Runner (auto uses job classification)"
+        type: choice
+        options: [auto, slim, latest]
+        default: auto
 
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
+  RUNNER_HEAVY: ubuntu-latest
+  USAGE_GUARD_THRESHOLD: "300"
+
 jobs:
+  usage-guard:
+    name: Usage Guard
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
+    steps:
+      - name: Get billing for GitHub Actions
+        id: billing
+        uses: keita-hino/get-billing-for-github-actions@v1
+        with:
+          github-token: ${{ secrets.ACCESS_TOKEN }}
+          account-type: user
+
   # Android E2E - runs on main/develop PRs when labeled
   android:
     name: Android E2E
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))
-    timeout-minutes: 25
+    needs: usage-guard
+    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD)
+    runs-on: ${{ env.RUNNER_HEAVY }}
 
     steps:
       - uses: actions/checkout@v6
@@ -102,8 +131,8 @@ jobs:
   ios:
     name: iOS E2E
     runs-on: macos-latest
-    if: github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'iOS'))
-    timeout-minutes: 30
+    needs: usage-guard
+    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'iOS'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD)
 
     steps:
       - uses: actions/checkout@v6
