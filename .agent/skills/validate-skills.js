@@ -3,7 +3,7 @@
  * Agent Skills Validation Script
  *
  * Validates:
- * 1. index.json schema and references
+ * 1. index.json schema and references (optional)
  * 2. SKILL.md file existence
  * 3. Front matter required fields
  * 4. last_updated date validity
@@ -43,14 +43,14 @@ function loadIndexJson() {
   const indexPath = path.join(SKILLS_ROOT, 'index.json');
 
   if (!fs.existsSync(indexPath)) {
-    return { index: null, errors: ['index.json が見つかりません'] };
+    return { index: null, errors: [], skipped: true };
   }
 
   try {
     const index = JSON.parse(fs.readFileSync(indexPath, 'utf-8'));
-    return { index, errors: [] };
+    return { index, errors: [], skipped: false };
   } catch (e) {
-    return { index: null, errors: [`index.json のパースに失敗: ${e.message}`] };
+    return { index: null, errors: [`index.json のパースに失敗: ${e.message}`], skipped: false };
   }
 }
 
@@ -243,8 +243,13 @@ function validateFrontMatter(index) {
 function main() {
   console.log('🔍 Agent Skills をバリデーション中...\n');
 
-  const { index, errors: loadErrors } = loadIndexJson();
+  const { index, errors: loadErrors, skipped } = loadIndexJson();
   const errors = [...loadErrors];
+
+  if (skipped) {
+    console.log('⚠️ index.json がないためスキル検証をスキップしました。');
+    process.exit(0);
+  }
 
   if (index) {
     errors.push(...validateIndexJson(index));

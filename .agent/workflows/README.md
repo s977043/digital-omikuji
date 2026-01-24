@@ -7,16 +7,28 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 ### 通常開発
 
 - **[new-feature-development.md](./new-feature-development.md)** - 新機能開発の標準手順（SDD準拠）
-- **[respond_to_pr_review.md](./respond_to_pr_review.md)** - PRレビューコメントへの対応手順
+- **[plan.md](./plan.md)** - タスク分解
+- **[create.md](./create.md)** - 新規作成
+- **[enhance.md](./enhance.md)** - 既存改善
+- **[test.md](./test.md)** - テスト実行
 
 ### トラブルシューティング
 
-- **[fix_ci_errors.md](./fix_ci_errors.md)** - CI/CDエラーの解決手順
+- **[debug.md](./debug.md)** - デバッグ手順
+- **[status.md](./status.md)** - 状態確認
 
 ### リリース・デプロイ
 
+- **[deploy.md](./deploy.md)** - デプロイ手順
 - **[release.md](./release.md)** - develop → main リリース手順
 - **[hotfix.md](./hotfix.md)** - 緊急バグ修正手順
+- **[preview.md](./preview.md)** - プレビュー操作
+
+### 企画・調整
+
+- **[brainstorm.md](./brainstorm.md)** - 仕様の発見と整理
+- **[orchestrate.md](./orchestrate.md)** - 複数エージェント調整
+- **[ui-ux-pro-max.md](./ui-ux-pro-max.md)** - UI/UX 企画
 
 ---
 
@@ -28,13 +40,8 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 1. [new-feature-development.md](./new-feature-development.md) を参照
 2. SDD（仕様駆動開発）に従って仕様書→実装→テスト
 
-**CIが失敗した場合:**
-1. [fix_ci_errors.md](./fix_ci_errors.md) を参照
-2. エラーメッセージを確認して修正
-
-**PRにレビューコメントがついた場合:**
-1. [respond_to_pr_review.md](./respond_to_pr_review.md) を参照
-2. コメントに対応してコミット
+**仕様やタスクを整理する場合:**
+1. [plan.md](./plan.md) または [brainstorm.md](./brainstorm.md) を参照
 
 **リリースする場合:**
 1. [release.md](./release.md) を参照
@@ -50,10 +57,11 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 
 エージェントは以下の判断基準でワークフローを選択:
 - 新機能実装タスク → `new-feature-development.md`
-- CIエラー発生 → `fix_ci_errors.md`
-- PRレビュー対応 → `respond_to_pr_review.md`
+- 仕様整理 → `plan.md` / `brainstorm.md`
 - リリース作業 → `release.md`
 - 本番バグ修正 → `hotfix.md`
+- デバッグ → `debug.md`
+- プレビュー確認 → `preview.md`
 
 ---
 

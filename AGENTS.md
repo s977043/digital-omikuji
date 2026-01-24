@@ -55,11 +55,6 @@ status: "active"
   - README → docs/guides/ の順で一次情報を読む
   - 既存の実装パターンを優先し、一般論で上書きしない
 
-- Expo SDK 52（Managed）, Expo Router v4。
-- スタイル: NativeWind v4（React Native コンポーネントに `className` を使用）。
-- アニメーション: Moti（Reanimated）。
-- 言語: TypeScript（strict）。
-
 ## 3. セットアップ & 共通コマンド（pnpm 前提）
 
 - 依存導入: `pnpm install`
@@ -179,13 +174,13 @@ status: "active"
 ### 構成
 
 - スキル定義: `.agent/skills/<skill-name>/SKILL.md`
-- スキル登録: `.agent/skills/index.json`（すべてのスキルをここでリスト化する）
+- スキル一覧: `.agent/skills/` 配下（`index.json` は未運用）
 
 ### 新規スキルの追加手順
 
 1. `.agent/skills/` 配下に新しいディレクトリを作成する。
 2. `SKILL.md` を作成し、スキルの説明と具体的な指示を記述する。
-3. `.agent/skills/index.json` に新しく作成したスキルの情報を追記する。
+3. 必要に応じて `.agent/skills/CHECKLIST.md` を参照し、バリデーションを実行する。
 4. PR 段階でエージェントに「新しいスキルを試して」と指示し、動作を確認する。
 
 ## 10. テスト環境 (Jest + Reanimated v4)

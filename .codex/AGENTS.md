@@ -23,7 +23,7 @@ CODEX_HOME=$(pwd)/.codex codex "your prompt"
 
 - 設定: `.codex/config.toml`（承認ポリシー / サンドボックス）
 - 環境変数: forward-limited (PATH, HOME, USER, SHELL, LANG, LC_ALL)
-- Agent Skills: `.agent/skills/` および `.agent/docs/CodexAgentSkills.md`
+- Agent Skills: `.agent/skills/`（概要は `.agent/ARCHITECTURE.md`）
 
 ## クイックリファレンス
 

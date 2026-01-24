@@ -76,7 +76,7 @@ When user's prompt is NOT in English:
 ### 📁 File Dependency Awareness
 
 **Before modifying ANY file:**
-1. Check `CODEBASE.md` → File Dependencies
+1. Check `AGENTS.md`（`CODEBASE.md` がある場合は併読）
 2. Identify dependent files
 3. Update ALL affected files together
 
@@ -144,34 +144,14 @@ When user's prompt is NOT in English:
 
 | Task Stage | Command | Purpose |
 |------------|---------|---------|
-| **Manual Audit** | `python scripts/checklist.py .` | Priority-based project audit |
-| **Pre-Deploy** | `python scripts/checklist.py . --url <URL>` | Full Suite + Performance + E2E |
-
-**Priority Execution Order:**
-1. **Security** → 2. **Lint** → 3. **Schema** → 4. **Tests** → 5. **UX** → 6. **Seo** → 7. **Lighthouse/E2E**
+| **Manual Audit** | `pnpm lint` / `pnpm test` | Quality check |
+| **Pre-Deploy** | `pnpm build` / `pnpm test:e2e:web`（必要時） | Build/E2E check |
 
 **Rules:**
-- **Completion:** A task is NOT finished until `checklist.py` returns success.
-- **Reporting:** If it fails, fix the **Critical** blockers first (Security/Lint).
+- 完了条件はプロジェクトのテスト/ビルドが成功していること
+- 追加の検証スクリプトがある場合のみ実行する
 
-
-**Available Scripts (12 total):**
-| Script | Skill | When to Use |
-|--------|-------|-------------|
-| `security_scan.py` | vulnerability-scanner | Always on deploy |
-| `dependency_analyzer.py` | vulnerability-scanner | Weekly / Deploy |
-| `lint_runner.py` | lint-and-validate | Every code change |
-| `test_runner.py` | testing-patterns | After logic change |
-| `schema_validator.py` | database-design | After DB change |
-| `ux_audit.py` | frontend-design | After UI change |
-| `accessibility_checker.py` | frontend-design | After UI change |
-| `seo_checker.py` | seo-fundamentals | After page change |
-| `bundle_analyzer.py` | performance-profiling | Before deploy |
-| `mobile_audit.py` | mobile-design | After mobile change |
-| `lighthouse_audit.py` | performance-profiling | Before deploy |
-| `playwright_runner.py` | webapp-testing | Before deploy |
-
-> 🔴 **Agents & Skills can invoke ANY script** via `python .agent/skills/<skill>/scripts/<script>.py`
+**Scripts:** `.agent/skills/<skill>/scripts/` にあるものを参照
 
 ### 🎭 Gemini Mode Mapping
 
@@ -235,14 +215,12 @@ When user's prompt is NOT in English:
 | `frontend-design` | Web UI patterns |
 | `mobile-design` | Mobile UI patterns |
 | `plan-writing` | {task-slug}.md format |
-| `threejs-mastery` | 2025 3D Web (R3F, WebGPU) |
 | `behavioral-modes` | Mode switching |
 
 ### Script Locations
 
 | Script | Path |
 |--------|------|
-| Full verify | `scripts/verify_all.py` |
 | Security scan | `.agent/skills/vulnerability-scanner/scripts/security_scan.py` |
 | UX audit | `.agent/skills/frontend-design/scripts/ux_audit.py` |
 | Mobile audit | `.agent/skills/mobile-design/scripts/mobile_audit.py` |

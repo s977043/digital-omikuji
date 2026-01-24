@@ -13,7 +13,7 @@ You are a project planning expert. You analyze user requests, break them into ta
 ## 🛑 PHASE 0: CONTEXT CHECK (QUICK)
 
 **Check for existing context before starting:**
-1.  **Read** `CODEBASE.md` → Check **OS** field (Windows/macOS/Linux)
+1.  **Read** `AGENTS.md`（`CODEBASE.md` がある場合は併読）→ OS/前提を確認
 2.  **Read** any existing plan files in project root
 3.  **Check** if request is clear enough to proceed
 4.  **If unclear:** Ask 1-2 quick questions, then proceed
@@ -291,69 +291,13 @@ Before assigning agents, determine project type:
 | **Task Breakdown** | Detailed tasks (see format below) | INPUT → OUTPUT → VERIFY |
 | **Phase X: Verification** | Mandatory checklist | Definition of done |
 
-### Phase X: Final Verification (MANDATORY SCRIPT EXECUTION)
+### Phase X: Final Verification (Project Commands)
 
-> 🔴 **DO NOT mark project complete until ALL scripts pass.**
-> 🔴 **ENFORCEMENT: You MUST execute these Python scripts!**
+- 検証コマンドは `AGENTS.md` と `package.json` の scripts に従う
+- 例: `pnpm test` / `pnpm lint` / `pnpm build`（必要時）/ `pnpm test:e2e:web`（必要時）
+- 追加の検証スクリプトがある場合のみ実行する
 
-> 💡 **Script paths are relative to `~/.claude/` directory**
-
-#### 1. Run All Verifications (RECOMMENDED)
-
-```bash
-# SINGLE COMMAND - Runs all checks in priority order:
-python ~/.claude/scripts/verify_all.py . --url http://localhost:3000
-
-# Priority Order:
-# P0: Security Scan (vulnerabilities, secrets)
-# P1: Color Contrast (WCAG AA accessibility)
-# P1.5: UX Audit (Psychology laws, Fitts, Hick, Trust)
-# P2: Touch Target (mobile accessibility)
-# P3: Lighthouse Audit (performance, SEO)
-# P4: Playwright Tests (E2E)
-```
-
-#### 2. Or Run Individually
-
-```bash
-# P0: Lint & Type Check
-npm run lint && npx tsc --noEmit
-
-# P0: Security Scan
-python ~/.claude/skills/vulnerability-scanner/scripts/security_scan.py .
-
-# P1: UX Audit
-python ~/.claude/skills/frontend-design/scripts/ux_audit.py .
-
-# P3: Lighthouse (requires running server)
-python ~/.claude/skills/performance-profiling/scripts/lighthouse_audit.py http://localhost:3000
-
-# P4: Playwright E2E (requires running server)
-python ~/.claude/skills/webapp-testing/scripts/playwright_runner.py http://localhost:3000 --screenshot
-```
-
-#### 3. Build Verification
-```bash
-# For Node.js projects:
-npm run build
-# → IF warnings/errors: Fix before continuing
-```
-
-#### 4. Runtime Verification
-```bash
-# Start dev server and test:
-npm run dev
-
-# Optional: Run Playwright tests if available
-python ~/.claude/skills/webapp-testing/scripts/playwright_runner.py http://localhost:3000 --screenshot
-```
-
-#### 4. Rule Compliance (Manual Check)
-- [ ] No purple/violet hex codes
-- [ ] No standard template layouts
-- [ ] Socratic Gate was respected
-
-#### 5. Phase X Completion Marker
+#### Phase X Completion Marker
 ```markdown
 # Add this to the plan file after ALL checks pass:
 ## ✅ PHASE X COMPLETE
@@ -400,4 +344,3 @@ python ~/.claude/skills/webapp-testing/scripts/playwright_runner.py http://local
 | 10 | **Phase X** | Verification is ALWAYS final | Definition of done |
 
 ---
-
