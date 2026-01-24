@@ -1,7 +1,8 @@
 diff --git a/ios/JSI/EXJSIUtils.h b/ios/JSI/EXJSIUtils.h
+index 407f57f..e26a36d 100644
 --- a/ios/JSI/EXJSIUtils.h
 +++ b/ios/JSI/EXJSIUtils.h
-@@ -10,6 +10,12 @@
+@@ -9,6 +9,12 @@
  #import <ReactCommon/TurboModuleUtils.h>
  #import <ExpoModulesCore/ObjectDeallocator.h>
  
@@ -13,3 +14,4 @@ diff --git a/ios/JSI/EXJSIUtils.h b/ios/JSI/EXJSIUtils.h
 +
  namespace jsi = facebook::jsi;
  namespace react = facebook::react;
+ 
