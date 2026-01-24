@@ -2,6 +2,7 @@ name: E2E Tests (Maestro)
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
     branches: [main, develop]
     paths:
       - "app/**"
@@ -33,7 +34,7 @@ jobs:
   android:
     name: Android E2E
     runs-on: ubuntu-latest
-    if: github.base_ref == 'main'
+    if: github.event_name == 'workflow_dispatch' || (github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'Android'))
     timeout-minutes: 25
 
     steps:
@@ -101,7 +102,7 @@ jobs:
   ios:
     name: iOS E2E
     runs-on: macos-latest
-    if: github.base_ref == 'main'
+    if: github.event_name == 'workflow_dispatch' || (github.base_ref == 'main' && contains(github.event.pull_request.labels.*.name, 'iOS'))
     timeout-minutes: 30
 
     steps:
