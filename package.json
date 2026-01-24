@@ -15,6 +15,7 @@
     "test": "jest",
     "test:e2e:web": "playwright test",
     "test:coverage": "jest --coverage",
+    "ci:check": "pnpm install --frozen-lockfile --prefer-offline && pnpm exec tsc --noEmit && pnpm lint && pnpm lint:md && pnpm test",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
     "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --fix",
     "lint:md": "markdownlint .",
@@ -79,5 +80,10 @@
     "tailwindcss": "3.4.19",
     "typescript": "^5.9.3"
   },
-  "private": true
+  "private": true,
+  "pnpm": {
+    "patchedDependencies": {
+      "expo-modules-core@3.0.29": "patches/expo-modules-core@3.0.29.patch"
+    }
+  }
 }
