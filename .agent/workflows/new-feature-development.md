@@ -88,10 +88,7 @@ pnpm lint         # Lint実行
 
 ### 3.4 Gate 2: コードレビュー
 セルフレビュー:
-- `pnpm lint` でエラーなし
-- `pnpm test` で全テスト通過
-- 不要なconsole.log削除
-- コメントアウトコード削除
+- `docs/guides/SELF_REVIEW_CHECKLIST.md` を実施
 
 AIエージェントレビュー（任意）:
 - Copilot: `copilot review`
