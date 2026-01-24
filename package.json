@@ -79,5 +79,10 @@
     "tailwindcss": "3.4.19",
     "typescript": "^5.9.3"
   },
-  "private": true
+  "private": true,
+  "pnpm": {
+    "patchedDependencies": {
+      "expo-modules-core@3.0.29": "patches/expo-modules-core@3.0.29.patch"
+    }
+  }
 }
