@@ -51,6 +51,7 @@ status: "active"
 - Build / CI parity:
   - pnpm build（必要なときだけ）
   - CI: .github/workflows/ を参照
+  - セルフレビュー: `docs/guides/SELF_REVIEW_CHECKLIST.md`
 - When unsure:
   - README → docs/guides/ の順で一次情報を読む
   - 既存の実装パターンを優先し、一般論で上書きしない

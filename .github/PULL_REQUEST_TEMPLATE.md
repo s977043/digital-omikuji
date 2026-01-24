@@ -31,6 +31,7 @@ Fixes # (issue)
 - [ ] Copilot
 - [ ] Gemini
 - [ ] Codex
+- [ ] セルフレビュー（`docs/guides/SELF_REVIEW_CHECKLIST.md`）
 
 ## チェックリスト
 
