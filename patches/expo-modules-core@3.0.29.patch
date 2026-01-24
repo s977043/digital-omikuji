@@ -1,0 +1,19 @@
+diff --git a/ios/JSI/EXJSIUtils.h b/ios/JSI/EXJSIUtils.h
+index 407f57f..e26a36d 100644
+--- a/ios/JSI/EXJSIUtils.h
++++ b/ios/JSI/EXJSIUtils.h
+@@ -9,6 +9,14 @@
+ #import <ReactCommon/TurboModuleUtils.h>
+ #import <ExpoModulesCore/ObjectDeallocator.h>
+ 
++// [Digital Omikuji] Workaround: CallInvoker forward declaration for iOS E2E builds.
++// TODO: remove when expo-modules-core includes this upstream.
++namespace facebook {
++namespace react {
++class CallInvoker;
++}
++}
++
+ namespace jsi = facebook::jsi;
+ namespace react = facebook::react;
+ 
