@@ -74,6 +74,13 @@ pnpm build
 
 生成された `dist` ディレクトリの内容を静的ホスティングとしてデプロイ可能です。`vercel.json` により、SPA（Single Page Application）としてのルーティングが適切に処理されます。
 
+## 🧪 ローカル動作確認（最小）
+
+- テスト: `pnpm test`
+- Webビルド: `pnpm build`（`dist/` が生成される）
+- Web起動: `pnpm web`（`http://localhost:19006` などで起動）
+- バージョン表示（任意）: コンソール出力と画面右下のバージョン表示を確認
+
 ## 🎨 デザイン & スタイリングガイド
 
 **NativeWind (Tailwind CSS)** を全面的に採用しています。
@@ -121,6 +128,12 @@ soundManager.playSound("shake");
 **Q: 実機でシェイクが反応しない**
 
 - **A**: `expo-sensors` の権限許可を確認してください。また、開発中は画面右下の「🐞 デバッグモード」ボタンで動作確認が可能です。
+
+### ローカル検証で詰まる場合
+
+- `pnpm test -- --clearCache`
+- `pnpm exec expo cache clean` → `pnpm build`
+- `lsof -i :19006` でプロセス確認 → `kill -9 <PID>`
 
 ## 🤝 開発フロー
 
