@@ -280,10 +280,9 @@ export const ResultScrollCard = ({
           ref={animationRef}
         >
           <View ref={cardRef} className="flex-1 bg-[#FDF5E6]">
-            {/* @ts-ignore - data-testid is for web capture selection */}
             <View
               nativeID="share-card"
-              {...(Platform.OS === "web" ? { "data-testid": "share-card" } : {})}
+              {...(Platform.OS === "web" ? ({ "data-testid": "share-card" } as any) : {})}
               className="flex-1"
             >
               {/* Scroll Header Decoration */}

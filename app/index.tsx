@@ -93,8 +93,9 @@ export default function OmikujiApp() {
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
 
-  // デバッグボタン用判定
-  const appVariant = Constants.expoConfig?.extra?.appVariant || "development";
+  // デバッグボタン用判定（__DEV__がtrueの場合のみdevelopmentをデフォルトに）
+  const appVariant =
+    Constants.expoConfig?.extra?.appVariant ?? (__DEV__ ? "development" : "production");
   const showDebug = appVariant === "development";
 
   const [isMuted, setIsMuted] = useState(false);

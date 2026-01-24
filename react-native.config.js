@@ -1,13 +1,7 @@
 module.exports = {
   dependencies: {
-    // Both worklets packages need to be disabled for RN 0.76+ compatibility
-    // They are only used by NativeWind for web builds (Babel plugin)
-    "react-native-worklets": {
-      platforms: {
-        android: null,
-        ios: null,
-      },
-    },
+    // worklets-core is disabled for RN 0.76+ compatibility (NativeWind web builds only)
+    // react-native-worklets is enabled for react-native-reanimated v4 native linking
     "react-native-worklets-core": {
       platforms: {
         android: null,
