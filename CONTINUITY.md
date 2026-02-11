@@ -1,0 +1,37 @@
+- Last updated（ISO日付）:
+  - 2026-02-11T01:12:00Z
+- Goal（成功条件を含む）:
+  - 既存3記事に「各記事ごとの詳細セルフレビュー」を追加する。
+  - 3テーマ横断の総合レビューを追加し、改善点を記事へ反映してコミット/PR記録まで完了する。
+- Spec（SDD：受け入れ条件 / 例 / 境界。未確定は UNCONFIRMED）:
+  - 受け入れ条件: 各記事に新規で「セルフレビュー（詳細）」節を追加し、主張/根拠/反例/実務適用を点検する。
+  - 受け入れ条件: 3記事を通した「テーマ横断レビュー」節を追加し、連続性と不足点を明示する。
+  - 受け入れ条件: レビュー結果を受けた改善（不足の補記）を各記事に反映する。
+  - 境界: ドキュメントのみ変更し、アプリ実装コード（app/components/hooks/utils）は変更しない。
+  - 例: article-01〜03 にレビュー節を追加し、cross-theme-review.md を追加する。
+- Test strategy（TDD：対象・レベル・コマンド・期待する証拠）:
+  - 対象: 新設見出しと改善反映の存在確認。
+  - Red: rg -n "セルフレビュー（詳細）|テーマ横断レビュー|改善反映" docs/guides/articles/*.md（失敗=未検出）
+  - Green: 同コマンド再実行で全ファイル検出（成功）
+  - コマンド: rg -n "セルフレビュー（詳細）|テーマ横断レビュー|改善反映" docs/guides/articles/*.md
+- Constraints / Assumptions:
+  - 指示言語に合わせ、記事・コミット・PR本文は日本語中心で記述する。
+  - 既存記事の主構成（第1〜第3部、AI下書き用プロンプト、人間レビュー観点）は維持する。
+- Key decisions（理由は1行）:
+  - 横断レビューは別ファイル化し、3記事との相互参照で可読性を確保する。
+  - セルフレビューは定型4観点（主張/根拠/反例/実務）で統一する。
+- State:
+  - Done:
+    - 3記事すべてに「セルフレビュー（詳細）」と「改善反映」を追記。
+    - `docs/guides/articles/cross-theme-review.md` を追加し、横断レビューと次改訂優先順位を記載。
+    - Red/Green確認として見出し検索コマンドを失敗→成功で実行済み。
+  - Now:
+    - 差分確認後、コミットとPR記録を実施する。
+  - Next:
+    - git commit 実行。
+    - make_pr ツールでタイトル/本文を登録。
+- Open questions（必要なら UNCONFIRMED）:
+  - UNCONFIRMED: 具体的な「インラインコメント」は提示されていないため、要求文ベースで改善を実施済み。
+- Working set（files / ids / commands / refs）:
+  - files: CONTINUITY.md, docs/guides/articles/article-01-review-decision-bottleneck.md, docs/guides/articles/article-02-context-debt.md, docs/guides/articles/article-03-agent-teams.md, docs/guides/articles/cross-theme-review.md
+  - commands: cat CONTINUITY.md, rg -n "セルフレビュー（詳細）|テーマ横断レビュー|改善反映" docs/guides/articles/*.md
