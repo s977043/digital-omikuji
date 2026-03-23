@@ -43,7 +43,7 @@
     "expo-splash-screen": "~31.0.13",
     "expo-status-bar": "~3.0.9",
     "html-to-image": "^1.11.13",
-    "i18next": "^25.8.14",
+    "i18next": "^25.10.4",
     "moti": "^0.30.0",
     "nativewind": "^4.2.2",
     "react": "19.2.4",
