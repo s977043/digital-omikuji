@@ -14,8 +14,14 @@ export function RitualProgressOverlay({
   reducedMotion = false,
 }: RitualProgressOverlayProps) {
   const tokens = getComponentTokens<{
+    backgroundColor: string;
     accentColor: string;
     ringColor: string;
+    haloColor: string;
+    haloBorderColor: string;
+    innerRingColor: string;
+    outerRingColor: string;
+    subtitleColor: string;
   }>("overlay.ritualProgress");
 
   return (
@@ -23,7 +29,7 @@ export function RitualProgressOverlay({
       style={{
         position: "absolute",
         inset: 0,
-        backgroundColor: "transparent",
+        backgroundColor: tokens.backgroundColor,
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: 24,
@@ -44,9 +50,9 @@ export function RitualProgressOverlay({
             borderRadius: 84,
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "rgba(220, 38, 38, 0.18)",
+            backgroundColor: tokens.haloColor,
             borderWidth: 1,
-            borderColor: "rgba(251, 191, 36, 0.40)",
+            borderColor: tokens.haloBorderColor,
             marginBottom: 28,
           }}
         >
@@ -69,7 +75,7 @@ export function RitualProgressOverlay({
               borderRadius: 54,
               borderTopWidth: 2,
               borderLeftWidth: 2,
-              borderColor: "rgba(255, 255, 255, 0.42)",
+              borderColor: tokens.innerRingColor,
             }}
           />
           <MotionView
@@ -91,7 +97,7 @@ export function RitualProgressOverlay({
               height: 136,
               borderRadius: 68,
               borderWidth: 1,
-              borderColor: "rgba(251, 191, 36, 0.22)",
+              borderColor: tokens.outerRingColor,
             }}
           />
         </View>
@@ -108,7 +114,7 @@ export function RitualProgressOverlay({
         </Text>
         <Text
           style={{
-            color: "rgba(255, 255, 255, 0.68)",
+            color: tokens.subtitleColor,
             fontSize: 14,
             marginTop: 10,
             textAlign: "center",

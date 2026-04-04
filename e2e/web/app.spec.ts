@@ -10,20 +10,28 @@ async function expectOverlayCapturesBackgroundPoint(
   point: { x: number; y: number },
   expectedLabel: string
 ) {
-  const backgroundOwnsInteractionPoint = await page.evaluate(
+  const overlayState = await page.evaluate(
     ({ x, y, label }) => {
       const topElement = document.elementFromPoint(x, y);
-      if (!topElement) {
-        return false;
-      }
-      const ariaLabel = topElement.getAttribute?.("aria-label") ?? "";
-      const textContent = topElement.textContent ?? "";
-      return ariaLabel.includes(label) || textContent.includes(label);
+      const overlayRoot =
+        topElement?.closest?.('[data-testid="experience-overlay"]') ??
+        topElement?.closest?.('[role="dialog"]') ??
+        null;
+      const ariaLabel = topElement?.getAttribute?.("aria-label") ?? "";
+      const textContent = topElement?.textContent ?? "";
+
+      return {
+        topElementExists: topElement != null,
+        insideOverlay: overlayRoot != null,
+        backgroundOwnsInteractionPoint: ariaLabel.includes(label) || textContent.includes(label),
+      };
     },
     { ...point, label: expectedLabel }
   );
 
-  expect(backgroundOwnsInteractionPoint).toBe(false);
+  expect(overlayState.topElementExists).toBe(true);
+  expect(overlayState.insideOverlay).toBe(true);
+  expect(overlayState.backgroundOwnsInteractionPoint).toBe(false);
 }
 
 test.describe("Digital Omikuji Web", () => {

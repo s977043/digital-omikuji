@@ -51,7 +51,7 @@ function resolveValue(value: TokenLeafValue): TokenLeafValue {
     return value;
   }
 
-  if (Array.isArray(value) || typeof value !== "object" || value === null) {
+  if (typeof value !== "object" || value === null) {
     return value;
   }
 

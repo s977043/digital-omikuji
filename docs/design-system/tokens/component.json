@@ -76,7 +76,12 @@
     "ritualProgress": {
       "backgroundColor": { "value": "{semantic.surface.experience.overlayStrong}" },
       "accentColor": { "value": "{semantic.surface.experience.accent}" },
-      "ringColor": { "value": "{semantic.text.primary}" }
+      "ringColor": { "value": "{semantic.text.primary}" },
+      "haloColor": { "value": "rgba(220, 38, 38, 0.18)" },
+      "haloBorderColor": { "value": "rgba(251, 191, 36, 0.40)" },
+      "innerRingColor": { "value": "rgba(255, 255, 255, 0.42)" },
+      "outerRingColor": { "value": "rgba(251, 191, 36, 0.22)" },
+      "subtitleColor": { "value": "{semantic.text.muted}" }
     }
   },
   "header": {

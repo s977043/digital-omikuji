@@ -6,8 +6,10 @@ import { DocumentScreenTemplate } from "../components/templates/DocumentScreenTe
 import { PageHeader } from "../components/design-system/PageHeader";
 import { Button } from "../components/design-system/Button";
 import { DocumentSection } from "../components/design-system/DocumentSection";
+import { getStringToken } from "../design-system";
 
 export default function PrivacyPolicyScreen() {
+  const footerColor = getStringToken("semantic.text.documentMuted");
   const header = (
     <PageHeader
       title="プライバシーポリシー"
@@ -24,7 +26,7 @@ export default function PrivacyPolicyScreen() {
     <DocumentScreenTemplate
       header={header}
       footer={
-        <Text style={{ color: "#9CA3AF", textAlign: "center", fontSize: 13 }}>
+        <Text style={{ color: footerColor, textAlign: "center", fontSize: 13 }}>
           Copyright 2025 Digital Omikuji. All rights reserved.
         </Text>
       }
