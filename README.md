@@ -1,6 +1,6 @@
 # 🎍 2026 年 新春デジタルおみくじ
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Expo](https://img.shields.io/badge/Framework-Expo%20SDK%2052-black) ![TypeScript](https://img.shields.io/badge/Language-TypeScript-007ACC)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Expo](https://img.shields.io/badge/Framework-Expo%20SDK%2054-black) ![TypeScript](https://img.shields.io/badge/Language-TypeScript-007ACC)
 
 ## 🚀 概要
 
@@ -20,7 +20,7 @@
 
 | Category       | Technology                            |
 | -------------- | ------------------------------------- |
-| **Framework**  | Expo SDK 52 (Expo Router v4)          |
+| **Framework**  | Expo SDK 54 / Expo Router             |
 | **Language**   | TypeScript                            |
 | **Styling**    | NativeWind v4 (Tailwind CSS)          |
 | **Animation**  | Moti / React Native Reanimated        |
@@ -118,6 +118,10 @@ npx eas build --profile production --platform ios
 ## 📝 ドキュメント
 
 - [DEVELOPER.md](./docs/guides/DEVELOPER.md): アーキテクチャと拡張方法
+- [DESIGN.md](./DESIGN.md): 実装ベースのデザイン判断 SSOT
+- [design-md-adoption.md](./docs/design-md-adoption.md): `DESIGN.md` の導入目的と運用方法
+- [design-system/](./docs/design-system/): token / component 契約と運用ガイド
+- [.agent/ai-design-agents/README.md](./.agent/ai-design-agents/README.md): UI / UX / Quality / Production 向け 11 体構成オーバーレイ
 - [design_guidelines.md](./docs/design/design_guidelines.md): デザイン指針（配色・フォント・アニメーション）
 - [phase1_roadmap.md](./docs/archive/phase1_roadmap.md): フェーズ1 改善計画と進捗状況（完了・アーカイブ）
 

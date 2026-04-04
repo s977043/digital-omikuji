@@ -4,6 +4,10 @@
 
 ## 📁 ペルソナ一覧
 
+### 専門レビュー・統制セット
+
+- **[.agent/ai-design-agents/README.md](../ai-design-agents/README.md)** - UI / UX / Frontend / Quality / Production 向け 11 体構成の専門エージェントひな形
+
 ### 計画・調整
 
 - **[project-planner.md](./project-planner.md)** - 計画立案・タスク分解
@@ -96,6 +100,7 @@ debuggerペルソナの指針に基づいて、クラッシュ原因を調査し
 ## 🔗 関連ドキュメント
 
 - **[AGENTS.md](../../AGENTS.md)** - 共通開発ガイド（SSOT）
+- **[.agent/ai-design-agents/README.md](../ai-design-agents/README.md)** - 11 体構成の専門レビュー・統制ひな形
 - **[.agent/skills/](../skills/)** - 再利用可能なスキル集
 - **[.agent/steering/](../steering/)** - プロジェクト方針・プロセス定義
 - **[.agent/workflows/](../workflows/)** - 開発ワークフロー集
