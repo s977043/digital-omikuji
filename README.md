@@ -118,11 +118,9 @@ npx eas build --profile production --platform ios
 ## 📝 ドキュメント
 
 - [DEVELOPER.md](./docs/guides/DEVELOPER.md): アーキテクチャと拡張方法
-- [DESIGN.md](./DESIGN.md): 実装ベースのデザイン判断 SSOT
-- [design-md-adoption.md](./docs/design-md-adoption.md): `DESIGN.md` の導入目的と運用方法
-- [design-system/](./docs/design-system/): token / component 契約と運用ガイド
-- [.agent/ai-design-agents/README.md](./.agent/ai-design-agents/README.md): UI / UX / Quality / Production 向け 11 体構成オーバーレイ
 - [design_guidelines.md](./docs/design/design_guidelines.md): デザイン指針（配色・フォント・アニメーション）
+- [design-samples/](./docs/design/design-samples/): デザイン検討用のサンプル素材
+- [.agent/ai-design-agents/README.md](./.agent/ai-design-agents/README.md): UI / UX / Quality / Production 向け 11 体構成オーバーレイ
 - [phase1_roadmap.md](./docs/archive/phase1_roadmap.md): フェーズ1 改善計画と進捗状況（完了・アーカイブ）
 
 ## 🤝 コントリビューション

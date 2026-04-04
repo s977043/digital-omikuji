@@ -90,7 +90,7 @@
 
 - 既存の `.agent/` 構成に合わせて、ひな形は `.agent/ai-design-agents/` 配下に配置
 - スキルファイル名は既存慣習に合わせて `SKILL.md` を採用
-- 実運用では `AGENTS.md` と `DESIGN.md` を優先し、このひな形は専門観点の補助として使う
+- 実運用では `AGENTS.md` と `docs/design/design_guidelines.md` を優先し、このひな形は専門観点の補助として使う
 - スキル追加や更新時は `skills/CHECKLIST.md` と `pnpm validate:skills` を使う
 
 ## 推奨導入順
@@ -118,7 +118,7 @@
 ## 関連ドキュメント
 
 - [AGENTS.md](../../AGENTS.md)
-- [DESIGN.md](../../DESIGN.md)
+- [design_guidelines.md](../../docs/design/design_guidelines.md)
 - [agents/README.md](./agents/README.md)
 - [skills/README.md](./skills/README.md)
 - [skills/CHECKLIST.md](./skills/CHECKLIST.md)
