@@ -54,6 +54,7 @@ status: "active"
   - セルフレビュー: `docs/guides/SELF_REVIEW_CHECKLIST.md`
 - When unsure:
   - README → DESIGN.md → docs/design-system/ → docs/guides/ の順で一次情報を読む
+  - README → DESIGN.md → docs/design-system/ → docs/design/design_guidelines.md → docs/guides/ の順で一次情報を読む
   - 既存の実装パターンを優先し、一般論で上書きしない
 
 ## 3. セットアップ & 共通コマンド（pnpm 前提）
@@ -165,6 +166,7 @@ status: "active"
 - **Agent Skills**: `.agent/skills/` に AI エージェントの知識を拡張する `SKILL.md` を配置する。
 - **AI Design Agents Overlay**: `.agent/ai-design-agents/` に UI / UX / Frontend / Design System / Accessibility / QA / Performance / Content / Architecture / Quality / Production の 11 体構成ひな形を配置する。既存 `.agent/agents/` を置き換えるものではなく、専門レビュー用の補助レイヤーとして扱う。
 - UI 実装や UI レビューでは、上記に加えて `DESIGN.md` を入口として読み、詳細な token / component 契約は `docs/design-system/` を参照する。
+- UI 実装や UI レビューでは、`DESIGN.md` を入口として読み、詳細な token / component 契約は `docs/design-system/`、ムードと表現の補助線は `docs/design/design_guidelines.md` を参照する。
 
 ## Browser Automation (agent-browser)
 
@@ -290,4 +292,6 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
   - `docs/design/`: デザインガイドライン
 - ルートの `DESIGN.md`: UI 世界観と読む順番を案内する入口ドキュメント
 - `docs/design-system/`: token / component 契約の SSOT
+- `docs/design/design_guidelines.md`: 実装ベースのデザイン判断 SSOT
+- `docs/design/design_guidelines.md`: ムード・配色・余白などの実装補助ガイド
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。

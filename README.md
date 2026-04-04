@@ -125,6 +125,7 @@ UI まわりの判断に入るときは、まず [DESIGN.md](./DESIGN.md) から
 - [design-system/](./docs/design-system/): token / component 契約の SSOT と運用ガイド
 - [.agent/ai-design-agents/README.md](./.agent/ai-design-agents/README.md): エージェント運用向けの補助資料
 - [design_guidelines.md](./docs/design/design_guidelines.md): ムードと参考表現の補助ガイド
+- [design-samples/](./docs/design/design-samples/): デザイン検討用のサンプル素材
 - [phase1_roadmap.md](./docs/archive/phase1_roadmap.md): フェーズ1 改善計画と進捗状況（完了・アーカイブ）
 
 ## 🤝 コントリビューション

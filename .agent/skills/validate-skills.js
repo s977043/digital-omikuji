@@ -213,40 +213,6 @@ function relativeToRoot(rootDir, filePath) {
   return path.relative(rootDir, filePath).replace(/\\/g, '/');
 }
 
-function validateDiscoveredSkillFiles(rootDir, skillPaths, label) {
-  const errors = [];
-
-  skillPaths.forEach(skillPath => {
-    const relPath = relativeToRoot(rootDir, skillPath) || skillPath;
-    const prefix = `${label} "${relPath}"`;
-    const content = fs.readFileSync(skillPath, 'utf-8');
-
-    if (!content.startsWith('---')) {
-      errors.push(`${prefix}: Front Matter がありません`);
-      return;
-    }
-
-    const frontMatterData = parseFrontMatter(content);
-    if (!frontMatterData) {
-      errors.push(`${prefix}: Front Matter の形式が不正です`);
-      return;
-    }
-
-    if (Object.keys(frontMatterData).length === 0) {
-      errors.push(`${prefix}: Front Matter が空です`);
-      return;
-    }
-
-    ['name', 'description'].forEach(field => {
-      if (!Object.prototype.hasOwnProperty.call(frontMatterData, field)) {
-        errors.push(`${prefix}: Front Matter に "${field}" フィールドがありません`);
-      }
-    });
-  });
-
-  return errors;
-}
-
 function getIndexedSkillPathSet(index) {
   const indexedPaths = new Set();
 
@@ -268,6 +234,48 @@ function getIndexedSkillPathSet(index) {
   return indexedPaths;
 }
 
+function validateFrontMatterContent(content, prefix, suffix = '') {
+  const errors = [];
+  const detailSuffix = suffix ? ` ${suffix}` : '';
+
+  if (!content.startsWith('---')) {
+    errors.push(`${prefix}: Front Matter がありません${detailSuffix}`);
+    return errors;
+  }
+
+  const frontMatterData = parseFrontMatter(content);
+  if (!frontMatterData) {
+    errors.push(`${prefix}: Front Matter の形式が不正です${detailSuffix}`);
+    return errors;
+  }
+
+  if (Object.keys(frontMatterData).length === 0) {
+    errors.push(`${prefix}: Front Matter が空です${detailSuffix}`);
+    return errors;
+  }
+
+  ['name', 'description'].forEach(field => {
+    if (!Object.prototype.hasOwnProperty.call(frontMatterData, field)) {
+      errors.push(`${prefix}: Front Matter に "${field}" フィールドがありません${detailSuffix}`);
+    }
+  });
+
+  return errors;
+}
+
+function validateDiscoveredSkillFiles(rootDir, skillPaths, label) {
+  const errors = [];
+
+  skillPaths.forEach(skillPath => {
+    const relPath = relativeToRoot(rootDir, skillPath) || skillPath;
+    const prefix = `${label} "${relPath}"`;
+    const content = fs.readFileSync(skillPath, 'utf-8');
+
+    errors.push(...validateFrontMatterContent(content, prefix));
+  });
+
+  return errors;
+}
 // Validate Front Matter in SKILL.md files
 function validateFrontMatter(index) {
   const errors = [];
@@ -293,31 +301,7 @@ function validateFrontMatter(index) {
     }
 
     const content = fs.readFileSync(skillPath, 'utf-8');
-
-    // Check for Front Matter (basic check - starts with ---)
-    if (!content.startsWith('---')) {
-      errors.push(`${prefix}: Front Matter がありません (${skill.skill_path})`);
-      return;
-    }
-
-    const frontMatterData = parseFrontMatter(content);
-    if (!frontMatterData) {
-      errors.push(`${prefix}: Front Matter の形式が不正です (${skill.skill_path})`);
-      return;
-    }
-
-    if (Object.keys(frontMatterData).length === 0) {
-      errors.push(`${prefix}: Front Matter が空です (${skill.skill_path})`);
-      return;
-    }
-
-    // Check for required Front Matter fields
-    const requiredFMFields = ['name', 'description'];
-    requiredFMFields.forEach(field => {
-      if (!Object.prototype.hasOwnProperty.call(frontMatterData, field)) {
-        errors.push(`${prefix}: Front Matter に "${field}" フィールドがありません (${skill.skill_path})`);
-      }
-    });
+    errors.push(...validateFrontMatterContent(content, prefix, `(${skill.skill_path})`));
   });
 
   return errors;
