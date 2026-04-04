@@ -37,17 +37,21 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 ### 開発者向け
 
 **新機能を開発する場合:**
+
 1. [new-feature-development.md](./new-feature-development.md) を参照
 2. SDD（仕様駆動開発）に従って仕様書→実装→テスト
 
 **仕様やタスクを整理する場合:**
+
 1. [plan.md](./plan.md) または [brainstorm.md](./brainstorm.md) を参照
 
 **リリースする場合:**
+
 1. [release.md](./release.md) を参照
 2. develop → main へマージしてタグ付け
 
 **本番で緊急バグが発生した場合:**
+
 1. [hotfix.md](./hotfix.md) を参照
 2. main から hotfix ブランチを作成して即座に修正
 
@@ -56,6 +60,7 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 ワークフローは [AGENTS.md](../../AGENTS.md) から参照され、各エージェントが自律的に適切なワークフローを選択します。
 
 エージェントは以下の判断基準でワークフローを選択:
+
 - 新機能実装タスク → `new-feature-development.md`
 - 仕様整理 → `plan.md` / `brainstorm.md`
 - リリース作業 → `release.md`
@@ -71,6 +76,7 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 
 1. このディレクトリに `.md` ファイルを作成
 2. Front Matter にメタデータを記載:
+
    ```yaml
    ---
    title: "ワークフロー名"
@@ -79,6 +85,7 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
    last_updated: "YYYY-MM-DD"
    ---
    ```
+
 3. 本 README に索引を追加
 4. 必要に応じて [AGENTS.md](../../AGENTS.md) から参照
 
@@ -87,5 +94,7 @@ Digital Omikujiプロジェクトの各種開発ワークフローをまとめ�
 ## 🔗 関連ドキュメント
 
 - **[AGENTS.md](../../AGENTS.md)** - 開発ガイド（SSOT）
+- **[.agent/ai-design-agents/README.md](../ai-design-agents/README.md)** - 11体構成オーバーレイの全体像
+- **[.agent/ai-design-agents/usage-guide.md](../ai-design-agents/usage-guide.md)** - 11体構成オーバーレイの使い分け
 - **[.agent/steering/](../steering/)** - プロジェクト方針・プロセス定義
 - **[.agent/skills/](../skills/)** - Agent Skills（再利用可能なスキル集）

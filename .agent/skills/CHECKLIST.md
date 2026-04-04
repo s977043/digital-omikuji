@@ -2,6 +2,8 @@
 
 新しいスキルを追加する際は、以下を確認してください。
 
+`.agent/ai-design-agents/skills/` 配下の overlay スキルを追加・更新する場合は、あわせて `.agent/ai-design-agents/skills/CHECKLIST.md` も参照してください。
+
 ## 必須項目
 
 ### 1. ディレクトリとファイルの作成
@@ -35,7 +37,7 @@
 
 ## バリデーション
 
-スキルを追加したら、バリデーションスクリプトを実行してください:
+スキルを追加したら、バリデーションスクリプトを実行してください。現在の validator は `.agent/skills/` と `.agent/ai-design-agents/skills/` の両方を確認します:
 
 ```bash
 pnpm validate:skills
