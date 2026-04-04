@@ -7,7 +7,8 @@
 ## 基本方針
 
 - SSOT は `AGENTS.md`
-- UI 判断の正本は `docs/design/design_guidelines.md`
+- UI 判断の正本は `DESIGN.md` と `docs/design-system/`
+- ムードと参考表現は `docs/design/design_guidelines.md` を補助線として使う
 - `.agent/ai-design-agents/` は専門観点を補強するオーバーレイとして使う
 
 ## 最初の 1 手
@@ -15,7 +16,7 @@
 - 画面レビューから始めるなら `ui-manager` と `ux-manager`
 - 実装レビューから始めるなら `frontend-manager` と `design-system-manager`
 - リリース前確認から始めるなら `qa-ui-test-manager` と `quality-manager`
-- 迷ったら `README.md` → `AGENTS.md` → `docs/design/design_guidelines.md` → `.agent/ai-design-agents/README.md` の順で読む
+- 迷ったら `README.md` → `AGENTS.md` → `DESIGN.md` → `docs/design-system/` → `docs/design/design_guidelines.md` → `.agent/ai-design-agents/README.md` の順で読む
 
 ## 最初に使う 4 体
 
@@ -96,9 +97,11 @@
 ## このリポジトリでの読み順
 
 1. `AGENTS.md`
-2. `docs/design/design_guidelines.md`
-3. `.agent/ai-design-agents/README.md`
-4. `.agent/ai-design-agents/agents/README.md`
-5. `.agent/ai-design-agents/skills/README.md`
-6. 対象エージェントの `agent.md`
-7. 対象スキルの `SKILL.md`
+2. `DESIGN.md`
+3. `docs/design-system/`
+4. `docs/design/design_guidelines.md`
+5. `.agent/ai-design-agents/README.md`
+6. `.agent/ai-design-agents/agents/README.md`
+7. `.agent/ai-design-agents/skills/README.md`
+8. 対象エージェントの `agent.md`
+9. 対象スキルの `SKILL.md`

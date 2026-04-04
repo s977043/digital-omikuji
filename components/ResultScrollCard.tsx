@@ -8,7 +8,7 @@ import {
   Share,
   ToastAndroid,
 } from "react-native";
-import { MotiView } from "moti";
+import { MotionView } from "./design-system/MotionView";
 import { OmikujiResult } from "../types/omikuji";
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
@@ -190,14 +190,19 @@ export const ResultScrollCard = ({
     <View className="flex-1 items-center justify-center bg-black/80 px-4 py-8 w-full h-full absolute inset-0 z-50">
       {/* 結ばれたおみくじ完了画面 */}
       {showTiedComplete && (
-        <MotiView
+        <MotionView
           from={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: "spring", damping: 15 }}
           className="items-center justify-center"
         >
           {/* 木の枝と結ばれたおみくじ */}
-          <View className="items-center">
+          <View
+            className="items-center"
+            accessible={false}
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no-hide-descendants"
+          >
             <Text className="text-6xl mb-2">🌸</Text>
             <View className="flex-row items-start">
               <Text className="text-4xl">🌿</Text>
@@ -218,7 +223,7 @@ export const ResultScrollCard = ({
             <Text className="text-6xl mt-2">🌸</Text>
           </View>
           {/* メッセージ */}
-          <MotiView
+          <MotionView
             from={{ opacity: 0, translateY: 20 }}
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ type: "timing", duration: 500, delay: 300 }}
@@ -239,12 +244,12 @@ export const ResultScrollCard = ({
             >
               <Text className="text-white font-bold text-base">{t("common.close")}</Text>
             </TouchableOpacity>
-          </MotiView>
-        </MotiView>
+          </MotionView>
+        </MotionView>
       )}
 
       {!showTiedComplete && (
-        <MotiView
+        <MotionView
           from={{ opacity: 0, scale: 0.9, translateY: 20 }}
           animate={
             exitAnimation === "tie"
@@ -319,7 +324,7 @@ export const ResultScrollCard = ({
                     ── 運勢詳細 ──
                   </Text>
 
-                  <MotiView
+                  <MotionView
                     from={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 500 }}
@@ -335,7 +340,7 @@ export const ResultScrollCard = ({
                         </Text>
                       </View>
                     ))}
-                  </MotiView>
+                  </MotionView>
                 </View>
               </ScrollView>
 
@@ -368,7 +373,7 @@ export const ResultScrollCard = ({
               <Text className="text-white font-bold">{t("fortune.keep")}</Text>
             </TouchableOpacity>
           </View>
-        </MotiView>
+        </MotionView>
       )}
     </View>
   );

@@ -13,8 +13,11 @@ digital-omikuji/
 │   └── index.tsx          # メイン画面 (おみくじ体験のコア)
 ├── components/            # プレゼンテーションコンポーネント
 │   └── FortuneDisplay.tsx # 結果表示 UI (Motiによるアニメーション含む・画像シェア機能付き)
-├── constants/             # アプリ設定・固定データ
-│   └── OmikujiData.ts    # おみくじの運勢データ定義
+├── data/                  # アプリ設定・固定データ
+│   └── omikujiData.ts    # おみくじの運勢データ定義
+├── docs/
+│   ├── design/            # ムード・参考表現の補助資料
+│   └── design-system/     # token / component 契約と運用ガイド
 ├── hooks/                 # ビジネスロジック (Custom Hooks)
 │   └── useOmikujiLogic.ts # 抽選アルゴリズムの分離
 ├── utils/                 # 汎用ユーティリティ
@@ -86,21 +89,28 @@ pnpm build
 **NativeWind (Tailwind CSS)** を全面的に採用しています。
 
 - 原則として `className` プロパティを使用する。
-- 複雑なアニメーションには `Moti` (`<MotiView />`) を使用する。
-- カラーパレットは `tailwind.config.js` で管理する（必要であれば拡張）。
+- 複雑なアニメーションには `components/design-system/MotionView` を使用する（ネイティブでは `MotiView` を包む）。
+- フォントの Tailwind 拡張は `tailwind.config.js`、見た目契約は `docs/design-system/` を優先して管理する。
+- UI 実装の入口は `DESIGN.md`、token / component 契約は `docs/design-system/` を参照する。
 
 ### 色のカスタマイズ
 
-おみくじの結果に応じた色は `constants/OmikujiData.ts` で定義されています。
+おみくじの結果に応じた色は `data/omikujiData.ts` で定義されています。
 
 ```typescript
-export const FORTUNES = [
+export const ACQUIRED_FORTUNES = [
   {
-    result: "大吉",
-    color: "#ef4444", // red-500
+    level: "daikichi",
     weight: 5,
+    image: require("../assets/omikuji_cylinder.png"),
+    color: "#FFD700",
   },
-  // ...
+  {
+    level: "kyo",
+    weight: 10,
+    image: require("../assets/omikuji_cylinder.png"),
+    color: "#808080",
+  },
 ];
 ```
 

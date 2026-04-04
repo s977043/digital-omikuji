@@ -110,17 +110,22 @@ npx eas build --profile production --platform ios
 
 - `/app`: アプリのページルーティング (Expo Router)
 - `/components`: 再利用可能な UI コンポーネント
-- `/constants`: おみくじデータ定義などの定数
+- `/data`: おみくじデータ定義などの固定データ
 - `/hooks`: 抽選ロジックなどのカスタムフック
 - `/utils`: サウンド管理などのユーティリティ
 - `/assets`: 画像・静的リソース
 
 ## 📝 ドキュメント
 
+UI まわりの判断に入るときは、まず [DESIGN.md](./DESIGN.md) から読み始めてください。
+
 - [DEVELOPER.md](./docs/guides/DEVELOPER.md): アーキテクチャと拡張方法
-- [design_guidelines.md](./docs/design/design_guidelines.md): デザイン指針（配色・フォント・アニメーション）
+- [DESIGN.md](./DESIGN.md): UI 世界観と読む順番を案内する入口ドキュメント
+- [design-md-adoption.md](./docs/design-md-adoption.md): `DESIGN.md` の導入目的と運用方法
+- [design-system/](./docs/design-system/): token / component 契約の SSOT と運用ガイド
+- [.agent/ai-design-agents/README.md](./.agent/ai-design-agents/README.md): エージェント運用向けの補助資料
+- [design_guidelines.md](./docs/design/design_guidelines.md): ムードと参考表現の補助ガイド
 - [design-samples/](./docs/design/design-samples/): デザイン検討用のサンプル素材
-- [.agent/ai-design-agents/README.md](./.agent/ai-design-agents/README.md): UI / UX / Quality / Production 向け 11 体構成オーバーレイ
 - [phase1_roadmap.md](./docs/archive/phase1_roadmap.md): フェーズ1 改善計画と進捗状況（完了・アーカイブ）
 
 ## 🤝 コントリビューション

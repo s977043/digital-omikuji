@@ -9,6 +9,7 @@ export default defineConfig({
   reporter: "html",
   use: {
     baseURL: "http://localhost:3000",
+    locale: "ja-JP",
     trace: "on-first-retry",
   },
 
@@ -28,9 +29,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "npx expo export -p web && npx serve dist -p 3000",
+    command: "pnpm build && pnpm exec serve -s dist -p 3000",
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
+    timeout: 240 * 1000,
   },
 });

@@ -30,11 +30,9 @@ describe("DrawingOverlay", () => {
     expect(getByLabelText("運命を紐解いています")).toBeTruthy();
   });
 
-  it('blocks touch events (pointerEvents="auto")', () => {
+  it("renders the blocking overlay container", () => {
     const { getByLabelText } = render(<DrawingOverlay />);
     const container = getByLabelText("運命を紐解いています");
-    // In React Native, pointerEvents prop isn't directly testable via RNTL,
-    // but we ensure the component renders without error.
     expect(container).toBeTruthy();
   });
 });

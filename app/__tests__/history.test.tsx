@@ -5,14 +5,22 @@ import HistoryScreen from "../history";
 import { getHistory, clearHistory } from "../../utils/HistoryStorage";
 
 // Mocks
-jest.mock("expo-router", () => ({
-  router: { back: jest.fn() },
-  useFocusEffect: (callback: () => void) => {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, react-hooks/exhaustive-deps
-    const { useEffect } = require("react");
-    useEffect(callback, [callback]);
-  },
-}));
+jest.mock("expo-router", () => {
+  const router = {
+    back: jest.fn(),
+    canGoBack: jest.fn(),
+    replace: jest.fn(),
+  };
+
+  return {
+    router,
+    useFocusEffect: (callback: () => void) => {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports, react-hooks/exhaustive-deps
+      const { useEffect } = require("react");
+      useEffect(callback, [callback]);
+    },
+  };
+});
 
 jest.mock("moti", () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -56,6 +64,14 @@ jest.mock("../../components/VersionDisplay", () => ({
   __esModule: true,
 }));
 
+const { router: mockRouter } = jest.requireMock("expo-router") as {
+  router: {
+    back: jest.Mock;
+    canGoBack: jest.Mock;
+    replace: jest.Mock;
+  };
+};
+
 const mockHistoryData = [
   {
     id: "1",
@@ -71,6 +87,7 @@ describe("HistoryScreen", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (getHistory as jest.Mock).mockResolvedValue([]);
+    mockRouter.canGoBack.mockReturnValue(false);
     jest.spyOn(Alert, "alert");
   });
 
@@ -79,6 +96,7 @@ describe("HistoryScreen", () => {
 
     await waitFor(
       () => {
+        expect(getByText("運勢手帳")).toBeTruthy();
         expect(getByText("まだ履歴がありません")).toBeTruthy();
       },
       { timeout: 5000 }
@@ -123,5 +141,29 @@ describe("HistoryScreen", () => {
     await waitFor(() => {
       expect(clearHistory).toHaveBeenCalled();
     });
+  });
+
+  it("uses router.back when navigation history exists", async () => {
+    mockRouter.canGoBack.mockReturnValue(true);
+    const { getByText } = render(<HistoryScreen />);
+
+    await waitFor(() => expect(getByText("運勢手帳")).toBeTruthy());
+
+    fireEvent.press(getByText("← 戻る"));
+
+    expect(mockRouter.back).toHaveBeenCalledTimes(1);
+    expect(mockRouter.replace).not.toHaveBeenCalled();
+  });
+
+  it("falls back to home when opened directly", async () => {
+    mockRouter.canGoBack.mockReturnValue(false);
+    const { getByText } = render(<HistoryScreen />);
+
+    await waitFor(() => expect(getByText("運勢手帳")).toBeTruthy());
+
+    fireEvent.press(getByText("← 戻る"));
+
+    expect(mockRouter.back).not.toHaveBeenCalled();
+    expect(mockRouter.replace).toHaveBeenCalledWith("/");
   });
 });

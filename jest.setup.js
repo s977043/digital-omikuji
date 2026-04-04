@@ -50,30 +50,34 @@ jest.mock("expo-sensors", () => ({
 }));
 
 // Mock expo-av
-jest.mock("expo-av", () => ({
-  Audio: {
-    Sound: {
-      createAsync: jest.fn(() =>
-        Promise.resolve({
-          sound: {
-            playAsync: jest.fn(),
-            replayAsync: jest.fn(),
-            unloadAsync: jest.fn(),
-            setVolumeAsync: jest.fn(),
-            setIsMutedAsync: jest.fn(),
-            getStatusAsync: jest.fn().mockResolvedValue({
-              isLoaded: true,
-              isPlaying: false,
-              positionMillis: 0,
-            }),
-          },
-          status: { isLoaded: true, isPlaying: false, positionMillis: 0 },
-        })
-      ),
+jest.mock(
+  "expo-av",
+  () => ({
+    Audio: {
+      Sound: {
+        createAsync: jest.fn(() =>
+          Promise.resolve({
+            sound: {
+              playAsync: jest.fn(),
+              replayAsync: jest.fn(),
+              unloadAsync: jest.fn(),
+              setVolumeAsync: jest.fn(),
+              setIsMutedAsync: jest.fn(),
+              getStatusAsync: jest.fn().mockResolvedValue({
+                isLoaded: true,
+                isPlaying: false,
+                positionMillis: 0,
+              }),
+            },
+            status: { isLoaded: true, isPlaying: false, positionMillis: 0 },
+          })
+        ),
+      },
+      setAudioModeAsync: jest.fn(),
     },
-    setAudioModeAsync: jest.fn(),
-  },
-}));
+  }),
+  { virtual: true }
+);
 // Mock AsyncStorage
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock")

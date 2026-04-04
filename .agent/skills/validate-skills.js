@@ -276,7 +276,6 @@ function validateDiscoveredSkillFiles(rootDir, skillPaths, label) {
 
   return errors;
 }
-
 // Validate Front Matter in SKILL.md files
 function validateFrontMatter(index) {
   const errors = [];

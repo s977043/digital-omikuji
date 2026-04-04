@@ -2,6 +2,7 @@
 
 > **Single source:** [AGENTS.md](./AGENTS.md) を読み、共通ルールと完了条件に従ってください。
 > 本ファイルは Gemini 向けの薄いラッパーですが、ユーザーの「自律化」要望を反映した設定を含みます。
+> UI 実装や UI レビューでは [DESIGN.md](./DESIGN.md) を入口として読み、詳細な token / component 契約は `docs/design-system/` に従ってください。
 
 ## User Optimization: High Autonomy Mode
 
