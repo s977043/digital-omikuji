@@ -1,0 +1,115 @@
+{
+  "button": {
+    "primaryRitual": {
+      "backgroundColor": { "value": "{semantic.surface.experience.accent}" },
+      "pressedBackgroundColor": { "value": "{semantic.surface.experience.accentPressed}" },
+      "borderColor": { "value": "{semantic.text.accent}" },
+      "textColor": { "value": "{semantic.text.inverse}" },
+      "paddingHorizontal": { "value": "{primitive.dimension.32}" },
+      "paddingVertical": { "value": "{primitive.dimension.16}" },
+      "minHeight": { "value": "{primitive.dimension.56}" },
+      "borderWidth": { "value": 3 },
+      "radius": { "value": "{primitive.radius.pill}" },
+      "textSize": { "value": "{primitive.typography.size.h3}" }
+    },
+    "secondaryQuiet": {
+      "backgroundColor": { "value": "{semantic.surface.experience.quiet}" },
+      "pressedBackgroundColor": { "value": "rgba(30, 41, 59, 0.96)" },
+      "borderColor": { "value": "{semantic.border.glass}" },
+      "textColor": { "value": "{semantic.text.primary}" },
+      "paddingHorizontal": { "value": "{primitive.dimension.24}" },
+      "paddingVertical": { "value": "{primitive.dimension.12}" },
+      "minHeight": { "value": "{primitive.dimension.48}" },
+      "borderWidth": { "value": 1 },
+      "radius": { "value": "{primitive.radius.pill}" },
+      "textSize": { "value": "{primitive.typography.size.body}" }
+    },
+    "utilityWarm": {
+      "backgroundColor": { "value": "{semantic.surface.experience.warm}" },
+      "pressedBackgroundColor": { "value": "{semantic.surface.experience.warmPressed}" },
+      "borderColor": { "value": "rgba(255, 255, 255, 0.85)" },
+      "textColor": { "value": "{semantic.text.inverse}" },
+      "paddingHorizontal": { "value": "{primitive.dimension.20}" },
+      "paddingVertical": { "value": "{primitive.dimension.12}" },
+      "minHeight": { "value": "{primitive.dimension.48}" },
+      "borderWidth": { "value": 1 },
+      "radius": { "value": "{primitive.radius.pill}" },
+      "textSize": { "value": "{primitive.typography.size.small}" }
+    },
+    "textLink": {
+      "backgroundColor": { "value": "transparent" },
+      "pressedBackgroundColor": { "value": "transparent" },
+      "borderColor": { "value": "transparent" },
+      "textColor": { "value": "{semantic.text.danger}" },
+      "paddingHorizontal": { "value": "{primitive.dimension.0}" },
+      "paddingVertical": { "value": "{primitive.dimension.8}" },
+      "minHeight": { "value": "{primitive.dimension.40}" },
+      "borderWidth": { "value": 0 },
+      "radius": { "value": "{primitive.radius.sm}" },
+      "textSize": { "value": "{primitive.typography.size.small}" }
+    }
+  },
+  "surface": {
+    "glassCard": {
+      "backgroundColor": { "value": "{semantic.surface.experience.glass}" },
+      "borderColor": { "value": "{semantic.border.glass}" },
+      "padding": { "value": "{primitive.dimension.20}" },
+      "radius": { "value": "{primitive.radius.lg}" }
+    },
+    "paperCard": {
+      "backgroundColor": { "value": "{semantic.surface.document.panel}" },
+      "borderColor": { "value": "{semantic.border.paper}" },
+      "padding": { "value": "{primitive.dimension.20}" },
+      "radius": { "value": "{primitive.radius.md}" }
+    },
+    "documentPanel": {
+      "backgroundColor": { "value": "{semantic.surface.document.canvas}" },
+      "borderColor": { "value": "rgba(17, 24, 39, 0.08)" },
+      "padding": { "value": "{primitive.dimension.24}" },
+      "radius": { "value": "{primitive.radius.lg}" }
+    }
+  },
+  "overlay": {
+    "sceneScrim": {
+      "backgroundColor": { "value": "{semantic.surface.experience.overlay}" }
+    },
+    "ritualProgress": {
+      "backgroundColor": { "value": "{semantic.surface.experience.overlayStrong}" },
+      "accentColor": { "value": "{semantic.surface.experience.accent}" },
+      "ringColor": { "value": "{semantic.text.primary}" }
+    }
+  },
+  "header": {
+    "experienceHeader": {
+      "titleColor": { "value": "{semantic.text.primary}" },
+      "subtitleColor": { "value": "{semantic.text.muted}" }
+    },
+    "pageHeader": {
+      "titleColor": { "value": "{semantic.text.primary}" },
+      "documentTitleColor": { "value": "{semantic.text.document}" },
+      "subtitleColor": { "value": "{semantic.text.muted}" },
+      "documentSubtitleColor": { "value": "{semantic.text.documentMuted}" }
+    }
+  },
+  "result": {
+    "paperResult": {
+      "titleColor": { "value": "{semantic.text.document}" },
+      "bodyColor": { "value": "{semantic.text.documentMuted}" },
+      "trimColor": { "value": "{primitive.color.amber.700}" },
+      "accentColor": { "value": "{primitive.color.amber.400}" }
+    }
+  },
+  "history": {
+    "item": {
+      "metaColor": { "value": "{semantic.text.muted}" },
+      "bodyColor": { "value": "rgba(255, 255, 255, 0.82)" }
+    }
+  },
+  "document": {
+    "section": {
+      "titleColor": { "value": "{semantic.text.document}" },
+      "bodyColor": { "value": "{semantic.text.documentMuted}" },
+      "mutedSurface": { "value": "{semantic.surface.document.muted}" }
+    }
+  }
+}

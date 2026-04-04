@@ -16,7 +16,7 @@ status: "active"
 
 - Stack:
   - Expo SDK 54 (Managed) / TypeScript
-  - Expo Router v4
+  - Expo Router
   - NativeWind v4
   - Moti (Reanimated)
 - Layout:
@@ -25,7 +25,7 @@ status: "active"
   - hooks/: 抽選ロジックなどのフック
   - utils/: サウンド管理などのユーティリティ
   - assets/: 静的リソース
-  - docs/: 詳細ドキュメント（guides/project/designなどに分類）
+  - docs/: 詳細ドキュメント（guides/project/design/design-system などに分類）
 - Entrypoints:
   - app/: 画面の起点
   - hooks/: くじ抽選・状態管理の起点
@@ -53,7 +53,7 @@ status: "active"
   - CI: .github/workflows/ を参照
   - セルフレビュー: `docs/guides/SELF_REVIEW_CHECKLIST.md`
 - When unsure:
-  - README → docs/guides/ の順で一次情報を読む
+  - README → DESIGN.md → docs/design-system/ → docs/guides/ の順で一次情報を読む
   - 既存の実装パターンを優先し、一般論で上書きしない
 
 ## 3. セットアップ & 共通コマンド（pnpm 前提）
@@ -163,6 +163,8 @@ status: "active"
 - **Antigravity**: `.antigravity/mission.md`（自律実行向けミッション定義）。
 - `.agent/` 配下はエージェント設定と Skill 用の補助ファイルを格納する。
 - **Agent Skills**: `.agent/skills/` に AI エージェントの知識を拡張する `SKILL.md` を配置する。
+- **AI Design Agents Overlay**: `.agent/ai-design-agents/` に UI / UX / Frontend / Design System / Accessibility / QA / Performance / Content / Architecture / Quality / Production の 11 体構成ひな形を配置する。既存 `.agent/agents/` を置き換えるものではなく、専門レビュー用の補助レイヤーとして扱う。
+- UI 実装や UI レビューでは、上記に加えて `DESIGN.md` を入口として読み、詳細な token / component 契約は `docs/design-system/` を参照する。
 
 ## Browser Automation (agent-browser)
 
@@ -176,13 +178,22 @@ status: "active"
 
 - スキル定義: `.agent/skills/<skill-name>/SKILL.md`
 - スキル一覧: `.agent/skills/` 配下（`index.json` は未運用）
+- 専門レビュー用スキル群: `.agent/ai-design-agents/skills/<skill-name>/SKILL.md`
+
+### 11体構成オーバーレイの扱い
+
+- `.agent/ai-design-agents/` は、既存の汎用スキルやペルソナに対して、UI / UX / 品質 / 運用のレビュー観点を補うためのひな形として扱う
+- 新画面追加や UI 改善では `ui-manager`, `ux-manager`, `frontend-manager`, `design-system-manager` を優先して使う
+- リリース前確認では `qa-ui-test-manager`, `quality-manager`, `performance-manager`, `production-manager` を組み合わせる
+- 詳細な使い分けは `.agent/ai-design-agents/usage-guide.md` を参照する
 
 ### 新規スキルの追加手順
 
-1. `.agent/skills/` 配下に新しいディレクトリを作成する。
+1. 汎用スキルは `.agent/skills/`、11体構成オーバーレイ用スキルは `.agent/ai-design-agents/skills/` 配下に新しいディレクトリを作成する。
 2. `SKILL.md` を作成し、スキルの説明と具体的な指示を記述する。
-3. 必要に応じて `.agent/skills/CHECKLIST.md` を参照し、バリデーションを実行する。
-4. PR 段階でエージェントに「新しいスキルを試して」と指示し、動作を確認する。
+3. `.agent/skills/CHECKLIST.md` または `.agent/ai-design-agents/skills/CHECKLIST.md` を必ず参照する。
+4. `pnpm validate:skills` を実行し、必要なら Markdownlint も通す。
+5. PR 段階でエージェントに「新しいスキルを試して」と指示し、動作を確認する。
 
 ## 10. テスト環境 (Jest + Reanimated v4)
 
@@ -277,4 +288,6 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
   - `docs/guides/`: 開発者およびユーザー向けガイド
   - `docs/project/`: プロジェクト管理、メタ情報
   - `docs/design/`: デザインガイドライン
+- ルートの `DESIGN.md`: UI 世界観と読む順番を案内する入口ドキュメント
+- `docs/design-system/`: token / component 契約の SSOT
 - スクリーンショットやビルド成果物は必要に応じて PR に添付する。

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, FlatList, Image } from "react-native";
-import { MotiView } from "moti";
+import { MotionView } from "./design-system/MotionView";
 import { HistoryEntry } from "../utils/HistoryStorage";
 import { useTranslation } from "react-i18next";
 
@@ -30,7 +30,7 @@ const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => 
     : String(fortuneMessages);
 
   return (
-    <MotiView
+    <MotionView
       from={{ opacity: 0, translateX: -20 }}
       animate={{ opacity: 1, translateX: 0 }}
       transition={{ delay: index * 50 }}
@@ -43,7 +43,7 @@ const HistoryItem = ({ item, index }: { item: HistoryEntry; index: number }) => 
         <Text className="text-white/60 text-xs">{formatDate(item.createdAt)}</Text>
       </View>
       <Text className="text-white/80 mt-2 font-shippori text-sm">{fortuneMessage}</Text>
-    </MotiView>
+    </MotionView>
   );
 };
 
@@ -57,6 +57,7 @@ export const HistoryList = ({ history }: HistoryListProps) => {
           source={require("../assets/empty_history.png")}
           className="w-32 h-32 mb-4 opacity-60"
           resizeMode="contain"
+          accessible={false}
         />
         <Text className="text-white/60 text-center">{t("history.empty")}</Text>
       </View>

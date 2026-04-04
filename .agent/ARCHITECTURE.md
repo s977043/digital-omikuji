@@ -10,6 +10,7 @@ Antigravity Kit is a modular system consisting of:
 - **16 Specialist Agents** - Role-based AI personas
 - **40 Skills** - Domain-specific knowledge modules
 - **11 Workflows** - Slash command procedures
+- **1 Domain Overlay** - `ai-design-agents/` による UI / UX / Quality / Production の 11 体構成ひな形
 
 ---
 
@@ -20,10 +21,23 @@ Antigravity Kit is a modular system consisting of:
 ├── ARCHITECTURE.md          # This file
 ├── agents/                  # 16 Specialist Agents
 ├── skills/                  # 40 Skills
+├── ai-design-agents/        # Domain-specific review and governance scaffold
 ├── workflows/               # 11 Slash Commands
 ├── rules/                   # Global Rules
 └── .shared/                 # Shared Resources
 ```
+
+---
+
+## 🧩 Domain Overlay
+
+`ai-design-agents/` は、既存の汎用エージェント群とは別に、UI / UX / Frontend / Design System / Accessibility / QA / Performance / Content / Architecture / Quality / Production を専門観点で扱う 11 体構成のレビューひな形です。
+
+- `agents/`: 各マネージャーの役割、system prompt、rules、output contract
+- `skills/`: 主要レビュー単位
+- `standards/`: 判断基準の骨組み
+- `templates/`: 出力テンプレート
+- `examples/`: サンプル出力
 
 ---
 

@@ -17,6 +17,7 @@ const REQUIRED_FIELDS = ['id', 'name', 'description', 'skill_path', 'contexts', 
 
 // Base directory for skills (.agent/skills)
 const SKILLS_ROOT = __dirname;
+const OVERLAY_SKILLS_ROOT = path.resolve(SKILLS_ROOT, '..', 'ai-design-agents', 'skills');
 
 /**
  * Safely resolve a path relative to skills root and validate it's within allowed directory
@@ -184,6 +185,89 @@ function parseFrontMatter(content) {
   return data;
 }
 
+function walkSkillFiles(rootDir) {
+  if (!fs.existsSync(rootDir)) {
+    return [];
+  }
+
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  const files = [];
+
+  entries.forEach(entry => {
+    const fullPath = path.join(rootDir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...walkSkillFiles(fullPath));
+      return;
+    }
+
+    if (entry.isFile() && entry.name === 'SKILL.md') {
+      files.push(fullPath);
+    }
+  });
+
+  return files;
+}
+
+function relativeToRoot(rootDir, filePath) {
+  return path.relative(rootDir, filePath).replace(/\\/g, '/');
+}
+
+function validateDiscoveredSkillFiles(rootDir, skillPaths, label) {
+  const errors = [];
+
+  skillPaths.forEach(skillPath => {
+    const relPath = relativeToRoot(rootDir, skillPath) || skillPath;
+    const prefix = `${label} "${relPath}"`;
+    const content = fs.readFileSync(skillPath, 'utf-8');
+
+    if (!content.startsWith('---')) {
+      errors.push(`${prefix}: Front Matter がありません`);
+      return;
+    }
+
+    const frontMatterData = parseFrontMatter(content);
+    if (!frontMatterData) {
+      errors.push(`${prefix}: Front Matter の形式が不正です`);
+      return;
+    }
+
+    if (Object.keys(frontMatterData).length === 0) {
+      errors.push(`${prefix}: Front Matter が空です`);
+      return;
+    }
+
+    ['name', 'description'].forEach(field => {
+      if (!Object.prototype.hasOwnProperty.call(frontMatterData, field)) {
+        errors.push(`${prefix}: Front Matter に "${field}" フィールドがありません`);
+      }
+    });
+  });
+
+  return errors;
+}
+
+function getIndexedSkillPathSet(index) {
+  const indexedPaths = new Set();
+
+  if (!index || !Array.isArray(index.skills)) {
+    return indexedPaths;
+  }
+
+  index.skills.forEach(skill => {
+    if (!skill || typeof skill.skill_path !== 'string') {
+      return;
+    }
+
+    const resolvedPath = safeResolvePath(skill.skill_path);
+    if (resolvedPath) {
+      indexedPaths.add(path.resolve(resolvedPath));
+    }
+  });
+
+  return indexedPaths;
+}
+
 // Validate Front Matter in SKILL.md files
 function validateFrontMatter(index) {
   const errors = [];
@@ -245,11 +329,11 @@ function main() {
 
   const { index, errors: loadErrors, skipped } = loadIndexJson();
   const errors = [...loadErrors];
-
-  if (skipped) {
-    console.log('⚠️ index.json がないためスキル検証をスキップしました。');
-    process.exit(0);
-  }
+  const indexedSkillPaths = getIndexedSkillPathSet(index);
+  const discoveredCoreSkillFiles = walkSkillFiles(SKILLS_ROOT).filter(skillPath => {
+    return !indexedSkillPaths.has(path.resolve(skillPath));
+  });
+  const discoveredOverlaySkillFiles = walkSkillFiles(OVERLAY_SKILLS_ROOT);
 
   if (index) {
     errors.push(...validateIndexJson(index));
@@ -257,11 +341,19 @@ function main() {
     errors.push(...validateFrontMatter(index));
   }
 
+  errors.push(...validateDiscoveredSkillFiles(SKILLS_ROOT, discoveredCoreSkillFiles, 'core skill'));
+  errors.push(...validateDiscoveredSkillFiles(OVERLAY_SKILLS_ROOT, discoveredOverlaySkillFiles, 'overlay skill'));
+
   const skillCount = Array.isArray(index?.skills) ? index.skills.length : 0;
+  const discoveredSkillCount = discoveredCoreSkillFiles.length + discoveredOverlaySkillFiles.length;
 
   if (errors.length === 0) {
     console.log('✅ 全てのスキルが有効です!');
-    console.log(`\n検証済みスキル数: ${skillCount}`);
+    if (skipped) {
+      console.log('ℹ️ index.json は未検出のため、SKILL.md の自動検出ベースで検証しました。');
+    }
+    console.log(`\nindex.json 登録スキル数: ${skillCount}`);
+    console.log(`自動検出スキル数: ${discoveredSkillCount}`);
     process.exit(0);
   } else {
     console.error('❌ バリデーション失敗:\n');

@@ -1,35 +1,75 @@
 import React from "react";
-import { render, fireEvent, waitFor, act } from "@testing-library/react-native";
+import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 import IndexScreen from "../index";
 
-// Mocks
+const mockDrawFortune = jest.fn();
+const mockResetFortune = jest.fn();
+
 jest.mock("expo-router", () => ({
-  Link: "Link",
-  Stack: { Screen: () => null },
   router: { push: jest.fn() },
 }));
 
-// react-i18next mock removed - index.tsx no longer uses i18n
-
-// Mock useOmikujiLogic
 jest.mock("../../hooks/useOmikujiLogic", () => ({
   useOmikujiLogic: () => ({
-    fortune: null,
+    fortune: {
+      id: "fortune-id",
+      level: "daikichi",
+      messageIndex: 0,
+      image: { uri: "test.png" },
+      color: "#FFD700",
+      createdAt: 1234567890,
+    },
     history: [],
-    drawFortune: jest.fn(),
-    resetFortune: jest.fn(),
+    drawFortune: mockDrawFortune,
+    resetFortune: mockResetFortune,
     loadHistory: jest.fn(),
     hasDrawnToday: false,
   }),
 }));
 
-// Mock components to avoid native issues
-jest.mock("../../components/FortuneDisplay", () => ({
-  FortuneDisplay: () => <></>,
-}));
 jest.mock("../../components/VersionDisplay", () => ({
   VersionDisplay: () => <></>,
 }));
+
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { returnObjects?: boolean }) => {
+      const translations: Record<string, string | string[]> = {
+        "common.share": "シェア",
+        "common.close": "閉じる",
+        "fortune.shareTitle": "おみくじをシェア",
+        "fortune.tie": "結ぶ",
+        "fortune.keep": "持ち帰る",
+        "fortune.toastTie": "運勢を結びました",
+        "fortune.toastKeep": "運勢を持ち帰りました",
+        "fortune.tiedTitle": "おみくじを結びました",
+        "fortune.tiedMessage": "願いが届きますように...",
+        "fortune.levels.daikichi": "大吉",
+        "fortune.messages.daikichi": ["最高の運気です。新しいことに挑戦するチャンス！"],
+        "fortune.detailLabels.wish": "願望",
+        "fortune.detailLabels.waitingPerson": "待人",
+        "fortune.detailLabels.lostItem": "失物",
+        "fortune.detailLabels.business": "商売",
+        "fortune.detailLabels.study": "学問",
+        "fortune.detailLabels.health": "健康",
+        "fortune.detailLabels.love": "恋愛",
+        "fortune.details.daikichi.wish": "思うがままに叶うでしょう。",
+        "fortune.details.daikichi.waitingPerson": "音信あり。すぐに来ます。",
+        "fortune.details.daikichi.lostItem": "出ます。高い所を探してみて。",
+        "fortune.details.daikichi.business": "利益あり。進んで吉。",
+        "fortune.details.daikichi.study": "安心して勉学に励みなさい。",
+        "fortune.details.daikichi.health": "絶好調。何をしても体がついてきます。",
+        "fortune.details.daikichi.love": "運命の出会いの予感。積極的に。",
+      };
+      const value = translations[key];
+      if (options?.returnObjects && Array.isArray(value)) {
+        return value;
+      }
+      return value || key;
+    },
+  }),
+}));
+
 jest.mock("moti", () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
@@ -38,7 +78,6 @@ jest.mock("moti", () => {
   };
 });
 
-// Mock SoundManager
 jest.mock("../../utils/SoundManager", () => ({
   soundManager: {
     initialize: jest.fn(),
@@ -49,7 +88,6 @@ jest.mock("../../utils/SoundManager", () => ({
   },
 }));
 
-// Mock expo-sensors to force button display (unavailable)
 jest.mock("expo-sensors", () => ({
   Accelerometer: {
     isAvailableAsync: jest.fn().mockResolvedValue(false),
@@ -58,12 +96,8 @@ jest.mock("expo-sensors", () => ({
   },
 }));
 
-// Mock expo-haptics
-jest.mock("expo-haptics", () => ({
-  ImpactFeedbackStyle: { Medium: "medium", Light: "light", Heavy: "heavy" },
-  NotificationFeedbackType: { Success: "success" },
-  impactAsync: jest.fn(),
-  notificationAsync: jest.fn(),
+jest.mock("react-native-view-shot", () => ({
+  captureRef: jest.fn(),
 }));
 
 describe("IndexScreen", () => {
@@ -76,77 +110,65 @@ describe("IndexScreen", () => {
     jest.useRealTimers();
   });
 
-  it.skip("renders correctly and handles flow", async () => {
-    const { getByText, queryByText } = render(<IndexScreen />);
+  it("初期表示で主導線と補助導線が見える", async () => {
+    const { getByText } = render(<IndexScreen />);
 
-    // Initial state
     await waitFor(() => {
-      expect(getByText("令和八年 丙午 デジタルおみくじ")).toBeTruthy();
-      // Button should be visible due to sensor unavailable mock
+      expect(getByText("新春デジタルおみくじ")).toBeTruthy();
       expect(getByText("おみくじを引く")).toBeTruthy();
-    });
-
-    // Press Play
-    await act(async () => {
-      fireEvent.press(getByText("おみくじを引く"));
-    });
-
-    // Should enter SHAKING state
-    // Text changes to "念を込めて..." (implied by SHAKING UI in source)
-    await waitFor(() => {
-      expect(getByText("念を込めて...")).toBeTruthy();
-    });
-
-    // Fast forward timers for SHAKING -> DRAWING
-    act(() => {
-      jest.advanceTimersByTime(2000); // SHAKING_DURATION_MS = 1500
-    });
-
-    // Should start DRAWING
-    await waitFor(() => {
-      // Assuming DrawingOverlay is rendered. We can check if "念を込めて..." is gone or some other element is present.
-      expect(queryByText("念を込めて...")).toBeNull();
-    });
-
-    // Fast forward timers for DRAWING -> REVEALING
-    act(() => {
-      jest.advanceTimersByTime(1500); // DRAWING_DURATION_MS = 1200
-    });
-
-    // Should start REVEALING
-    await waitFor(() => {
-      expect(getByText("2026\n奉\n納")).toBeTruthy();
-    });
-
-    // Wait for REVEALING -> RESULT
-    act(() => {
-      jest.advanceTimersByTime(2500); // REVEALING_DURATION_MS = 2000
-    });
-
-    await waitFor(() => {
-      expect(queryByText("おみくじを引く")).toBeNull();
+      expect(getByText("履歴")).toBeTruthy();
+      expect(getByText("ON")).toBeTruthy();
     });
   });
 
-  it("handles mute toggle and history navigation", async () => {
+  it("ミュート切り替えと履歴遷移ができる", async () => {
     const { getByText } = render(<IndexScreen />);
 
-    // Initial state: not muted -> shows "ON" (sound is on) or "OFF" (mute is off)?
-    // Logic in index.tsx: {isMuted ? "OFF" : "ON"} <- Wait, let's verify logic.
-    // Usually "ON" means Sound ON. "OFF" means Sound OFF (Muted).
-    // If isMuted is false (default), it shows "ON".
     await waitFor(() => expect(getByText("ON")).toBeTruthy());
 
     fireEvent.press(getByText("ON"));
-    // Should toggle to muted icon or state
-    // Text becomes "OFF"
     expect(getByText("OFF")).toBeTruthy();
-    // Assuming update happens.
 
-    // Navigation
     fireEvent.press(getByText("履歴"));
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { router } = require("expo-router");
     expect(router.push).toHaveBeenCalledWith("/history");
+  });
+
+  it("抽選フローが待機から結果表示まで進む", async () => {
+    const { getByText, queryByText } = render(<IndexScreen />);
+
+    await waitFor(() => expect(getByText("おみくじを引く")).toBeTruthy());
+
+    fireEvent.press(getByText("おみくじを引く"));
+
+    await waitFor(() => {
+      expect(getByText("念を込めて...")).toBeTruthy();
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(1600);
+    });
+
+    await waitFor(() => {
+      expect(getByText("運命を紐解いています...")).toBeTruthy();
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(3500);
+    });
+
+    await waitFor(() => {
+      expect(getByText("新春\n奉納")).toBeTruthy();
+    });
+
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
+
+    await waitFor(() => {
+      expect(getByText("大吉")).toBeTruthy();
+      expect(queryByText("念を込めて...")).toBeNull();
+    });
   });
 });

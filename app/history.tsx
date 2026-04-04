@@ -1,10 +1,14 @@
-import React, { useState, useCallback } from "react";
-import { View, Text, TouchableOpacity, Alert, Platform } from "react-native";
+import React, { useCallback, useState } from "react";
+import { Alert, Platform, Text, View } from "react-native";
 import { router, useFocusEffect } from "expo-router";
-import { getHistory, clearHistory, HistoryEntry } from "../utils/HistoryStorage";
-import { VersionDisplay } from "../components/VersionDisplay";
-import { HistoryList } from "../components/HistoryList";
 import { useTranslation } from "react-i18next";
+import { HistoryEntry, clearHistory, getHistory } from "../utils/HistoryStorage";
+import { navigateBackOrReplace } from "../utils/navigation";
+import { VersionDisplay } from "../components/VersionDisplay";
+import { HistoryScreenTemplate } from "../components/templates/HistoryScreenTemplate";
+import { PageHeader } from "../components/design-system/PageHeader";
+import { Button } from "../components/design-system/Button";
+import { HistoryListPattern } from "../components/patterns/HistoryListPattern";
 
 export default function HistoryScreen() {
   const { t } = useTranslation();
@@ -18,7 +22,6 @@ export default function HistoryScreen() {
     setIsLoading(false);
   }, []);
 
-  // 画面がフォーカスされるたびに履歴を再読み込み
   useFocusEffect(
     useCallback(() => {
       loadHistory();
@@ -26,70 +29,63 @@ export default function HistoryScreen() {
   );
 
   const handleBack = useCallback(() => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace("/");
-    }
+    navigateBackOrReplace(router);
   }, []);
 
-  const handleClearHistory = async () => {
+  const handleClearHistory = useCallback(async () => {
+    const title = t("history.deleteConfirmTitle");
+    const message = t("history.deleteConfirmMessage");
+
     if (Platform.OS === "web") {
-      // Web では window.confirm を使用
-      const confirmed = window.confirm("本当に全ての履歴を削除しますか？");
+      const confirmed = window.confirm(message);
       if (confirmed) {
         await clearHistory();
         setHistory([]);
       }
-    } else {
-      // ネイティブでは Alert.alert を使用
-      Alert.alert("履歴の削除", "本当に全ての履歴を削除しますか？", [
-        { text: "キャンセル", style: "cancel" },
-        {
-          text: "削除",
-          style: "destructive",
-          onPress: async () => {
-            await clearHistory();
-            setHistory([]);
-          },
-        },
-      ]);
+      return;
     }
-  };
+
+    Alert.alert(title, message, [
+      { text: t("common.cancel"), style: "cancel" },
+      {
+        text: t("common.delete"),
+        style: "destructive",
+        onPress: async () => {
+          await clearHistory();
+          setHistory([]);
+        },
+      },
+    ]);
+  }, [t]);
+
+  const header = (
+    <PageHeader
+      title={t("history.title")}
+      subtitle="これまで授かった運勢を静かに振り返れます"
+      tone="experience"
+      actionPlacement="stacked"
+      leadingAction={<Button label={t("common.back")} onPress={handleBack} variant="textLink" />}
+      trailingAction={
+        history.length > 0 ? (
+          <Button label={t("history.deleteAll")} onPress={handleClearHistory} variant="textLink" />
+        ) : undefined
+      }
+    />
+  );
 
   return (
-    <View className="flex-1 bg-slate-900 p-4">
-      {/* ヘッダー */}
-      <View className="flex-row justify-between items-center mb-6 pt-10 z-50">
-        <TouchableOpacity
-          onPress={handleBack}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-          className="py-2 pr-4"
-          accessibilityLabel={t("common.back")}
-          accessibilityRole="button"
-        >
-          <Text className="text-white text-lg">{t("common.back")}</Text>
-        </TouchableOpacity>
-        <Text className="text-white text-2xl font-shippori-bold">履歴</Text>
-        {history.length > 0 && (
-          <TouchableOpacity onPress={handleClearHistory}>
-            <Text className="text-red-400 text-sm">全て削除</Text>
-          </TouchableOpacity>
-        )}
-        {history.length === 0 && <View className="w-12" />}
-      </View>
-
-      {/* リスト */}
-      {isLoading ? (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-white/60">読み込み中...</Text>
-        </View>
-      ) : (
-        <HistoryList history={history} />
-      )}
-
-      {/* デプロイバージョン表示 */}
-      <VersionDisplay />
-    </View>
+    <HistoryScreenTemplate
+      header={header}
+      content={
+        isLoading ? (
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Text style={{ color: "rgba(255,255,255,0.72)", fontSize: 16 }}>読み込み中...</Text>
+          </View>
+        ) : (
+          <HistoryListPattern history={history} />
+        )
+      }
+      footer={<VersionDisplay />}
+    />
   );
 }

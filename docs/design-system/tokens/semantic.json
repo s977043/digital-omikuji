@@ -1,0 +1,52 @@
+{
+  "surface": {
+    "experience": {
+      "canvas": { "value": "{primitive.color.indigo.950}" },
+      "overlay": { "value": "rgba(0, 0, 0, 0.56)" },
+      "overlayStrong": { "value": "rgba(0, 0, 0, 0.82)" },
+      "glass": { "value": "rgba(255, 255, 255, 0.10)" },
+      "glassStrong": { "value": "rgba(255, 255, 255, 0.14)" },
+      "accent": { "value": "{primitive.color.red.600}" },
+      "accentPressed": { "value": "{primitive.color.red.700}" },
+      "warm": { "value": "{primitive.color.amber.500}" },
+      "warmPressed": { "value": "{primitive.color.amber.700}" },
+      "quiet": { "value": "rgba(15, 23, 42, 0.88)" }
+    },
+    "document": {
+      "canvas": { "value": "{primitive.color.white}" },
+      "panel": { "value": "{primitive.color.paper.50}" },
+      "muted": { "value": "{primitive.color.paper.100}" }
+    }
+  },
+  "text": {
+    "primary": { "value": "{primitive.color.white}" },
+    "muted": { "value": "rgba(255, 255, 255, 0.72)" },
+    "inverse": { "value": "{primitive.color.white}" },
+    "accent": { "value": "{primitive.color.amber.300}" },
+    "document": { "value": "{primitive.color.gray.900}" },
+    "documentMuted": { "value": "{primitive.color.gray.600}" },
+    "danger": { "value": "{primitive.color.red.600}" }
+  },
+  "border": {
+    "soft": { "value": "rgba(255, 255, 255, 0.18)" },
+    "glass": { "value": "rgba(255, 255, 255, 0.24)" },
+    "paper": { "value": "rgba(180, 83, 9, 0.22)" },
+    "focus": { "value": "{primitive.color.amber.400}" }
+  },
+  "feedback": {
+    "success": { "value": "{primitive.color.amber.500}" },
+    "warning": { "value": "{primitive.color.amber.400}" },
+    "danger": { "value": "{primitive.color.red.600}" }
+  },
+  "fortune": {
+    "level": {
+      "daikichi": { "value": "{primitive.color.fortune.daikichi}" },
+      "chukichi": { "value": "{primitive.color.fortune.chukichi}" },
+      "shokichi": { "value": "{primitive.color.fortune.shokichi}" },
+      "kichi": { "value": "{primitive.color.fortune.kichi}" },
+      "suekichi": { "value": "{primitive.color.fortune.suekichi}" },
+      "kyo": { "value": "{primitive.color.fortune.kyo}" },
+      "daikyo": { "value": "{primitive.color.fortune.daikyo}" }
+    }
+  }
+}

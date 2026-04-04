@@ -1,6 +1,6 @@
 import React from "react";
 import { OmikujiResult } from "../types/omikuji";
-import { ResultScrollCard } from "./ResultScrollCard";
+import { ResultPattern } from "./patterns/ResultPattern";
 
 interface FortuneDisplayProps {
   fortune: OmikujiResult;
@@ -13,5 +13,5 @@ export default function FortuneDisplay({
   onReset,
   reducedMotion = false,
 }: FortuneDisplayProps) {
-  return <ResultScrollCard fortune={fortune} onReset={onReset} reducedMotion={reducedMotion} />;
+  return <ResultPattern fortune={fortune} onReset={onReset} reducedMotion={reducedMotion} />;
 }
