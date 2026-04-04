@@ -7,18 +7,6 @@ import { PageHeader } from "../components/design-system/PageHeader";
 import { Button } from "../components/design-system/Button";
 import { DocumentSection } from "../components/design-system/DocumentSection";
 
-function DocumentSubSection({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <DocumentSection title={title} subtle>
-      {typeof children === "string" ? (
-        <Text style={{ color: "#4B5563", lineHeight: 26, fontSize: 16 }}>{children}</Text>
-      ) : (
-        children
-      )}
-    </DocumentSection>
-  );
-}
-
 export default function PrivacyPolicyScreen() {
   const header = (
     <PageHeader
@@ -50,18 +38,18 @@ export default function PrivacyPolicyScreen() {
       </DocumentSection>
 
       <DocumentSection title="収集する情報">
-        <DocumentSubSection title="1. デバイスセンサー情報">
+        <DocumentSection title="1. デバイスセンサー情報" subtle>
           本アプリは、おみくじを引く動作を検出するために、お使いのデバイスの加速度センサーにアクセスします。センサーデータは一時的にのみ使用され、保存・送信されることはありません。
-        </DocumentSubSection>
-        <DocumentSubSection title="2. ローカルストレージ">
+        </DocumentSection>
+        <DocumentSection title="2. ローカルストレージ" subtle>
           おみくじ履歴（運勢、メッセージ、日時）をお使いのデバイス内にのみ保存します。アプリ内の「全削除」機能またはアンインストールにより削除できます。
-        </DocumentSubSection>
-        <DocumentSubSection title="3. ハプティックフィードバック">
+        </DocumentSection>
+        <DocumentSection title="3. ハプティックフィードバック" subtle>
           おみくじを引く際の触覚フィードバックのためにデバイスの振動機能を使用します。データ収集はありません。
-        </DocumentSubSection>
-        <DocumentSubSection title="4. 音声再生">
+        </DocumentSection>
+        <DocumentSection title="4. 音声再生" subtle>
           効果音を再生するためにオーディオ機能を使用します。アプリ内のミュートボタンで音声をオフにできます。
-        </DocumentSubSection>
+        </DocumentSection>
       </DocumentSection>
 
       <DocumentSection title="収集しない情報">
