@@ -1,0 +1,142 @@
+{
+  "color": {
+    "indigo": {
+      "950": { "value": "#08111F" },
+      "900": { "value": "#0F172A" },
+      "800": { "value": "#1E293B" }
+    },
+    "black": { "value": "#000000" },
+    "white": { "value": "#FFFFFF" },
+    "red": {
+      "700": { "value": "#B91C1C" },
+      "600": { "value": "#DC2626" }
+    },
+    "amber": {
+      "300": { "value": "#FCD34D" },
+      "400": { "value": "#FBBF24" },
+      "500": { "value": "#F59E0B" },
+      "700": { "value": "#B45309" }
+    },
+    "slate": {
+      "300": { "value": "#CBD5E1" },
+      "500": { "value": "#64748B" },
+      "600": { "value": "#475569" },
+      "700": { "value": "#334155" },
+      "800": { "value": "#1F2937" }
+    },
+    "gray": {
+      "500": { "value": "#6B7280" },
+      "600": { "value": "#4B5563" },
+      "700": { "value": "#374151" },
+      "900": { "value": "#111827" }
+    },
+    "paper": {
+      "50": { "value": "#FDF5E6" },
+      "100": { "value": "#F6E9CB" }
+    },
+    "fortune": {
+      "daikichi": { "value": "#FFD700" },
+      "chukichi": { "value": "#FF8C00" },
+      "shokichi": { "value": "#32CD32" },
+      "kichi": { "value": "#4169E1" },
+      "suekichi": { "value": "#9370DB" },
+      "kyo": { "value": "#808080" },
+      "daikyo": { "value": "#2F4F4F" }
+    }
+  },
+  "dimension": {
+    "0": { "value": 0 },
+    "4": { "value": 4 },
+    "8": { "value": 8 },
+    "12": { "value": 12 },
+    "16": { "value": 16 },
+    "20": { "value": 20 },
+    "24": { "value": 24 },
+    "32": { "value": 32 },
+    "40": { "value": 40 },
+    "48": { "value": 48 },
+    "56": { "value": 56 },
+    "64": { "value": 64 },
+    "72": { "value": 72 },
+    "96": { "value": 96 },
+    "120": { "value": 120 },
+    "160": { "value": 160 },
+    "180": { "value": 180 }
+  },
+  "radius": {
+    "sm": { "value": 6 },
+    "md": { "value": 12 },
+    "lg": { "value": 20 },
+    "xl": { "value": 28 },
+    "pill": { "value": 999 }
+  },
+  "typography": {
+    "family": {
+      "ritual": { "value": "ShipporiMincho_700Bold" },
+      "ritualBody": { "value": "ShipporiMincho_400Regular" },
+      "system": { "value": "System" },
+      "mono": { "value": "Courier" }
+    },
+    "size": {
+      "hero": { "value": 36 },
+      "display": { "value": 56 },
+      "h1": { "value": 30 },
+      "h2": { "value": 24 },
+      "h3": { "value": 20 },
+      "body": { "value": 16 },
+      "small": { "value": 14 },
+      "caption": { "value": 12 }
+    },
+    "lineHeight": {
+      "tight": { "value": 1.2 },
+      "normal": { "value": 1.5 },
+      "relaxed": { "value": 1.7 }
+    },
+    "tracking": {
+      "normal": { "value": 0 },
+      "wide": { "value": 1.2 },
+      "wider": { "value": 2.4 }
+    }
+  },
+  "motion": {
+    "duration": {
+      "fast": { "value": 180 },
+      "normal": { "value": 400 },
+      "slow": { "value": 900 }
+    },
+    "spring": {
+      "gentle": {
+        "value": {
+          "damping": 15,
+          "stiffness": 100
+        }
+      },
+      "ritual": {
+        "value": {
+          "damping": 12,
+          "stiffness": 90
+        }
+      }
+    }
+  },
+  "elevation": {
+    "card": {
+      "value": {
+        "shadowColor": "#000000",
+        "shadowOffset": { "width": 0, "height": 10 },
+        "shadowOpacity": 0.22,
+        "shadowRadius": 20,
+        "elevation": 8
+      }
+    },
+    "ritualCta": {
+      "value": {
+        "shadowColor": "#B45309",
+        "shadowOffset": { "width": 0, "height": 6 },
+        "shadowOpacity": 0.45,
+        "shadowRadius": 14,
+        "elevation": 10
+      }
+    }
+  }
+}

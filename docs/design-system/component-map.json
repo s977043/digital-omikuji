@@ -1,0 +1,82 @@
+[
+  {
+    "designName": "Ritual Progress Overlay",
+    "implementationName": "RitualProgressOverlay",
+    "layer": "component",
+    "tokens": ["component.overlay.ritualProgress"],
+    "variants": [],
+    "slots": ["label"],
+    "replaces": ["components/DrawingOverlay.tsx"],
+    "status": "active"
+  },
+  {
+    "designName": "Paper Result",
+    "implementationName": "PaperResultCard",
+    "layer": "component",
+    "tokens": ["component.surface.paperCard", "component.result.paperResult"],
+    "variants": ["fortuneLevel"],
+    "slots": ["title", "message", "details", "actions"],
+    "replaces": ["components/ResultScrollCard.tsx", "components/FortuneDisplay.tsx"],
+    "status": "active"
+  },
+  {
+    "designName": "Glass History Item",
+    "implementationName": "HistoryItemCard",
+    "layer": "component",
+    "tokens": ["component.surface.glassCard", "component.history.item"],
+    "variants": ["empty", "default"],
+    "slots": ["title", "meta", "message"],
+    "replaces": ["components/HistoryList.tsx"],
+    "status": "active"
+  },
+  {
+    "designName": "Page Header",
+    "implementationName": "PageHeader",
+    "layer": "component",
+    "tokens": ["component.header.pageHeader"],
+    "variants": ["experience", "document"],
+    "slots": ["title", "subtitle", "leadingAction", "trailingAction"],
+    "replaces": [],
+    "status": "active"
+  },
+  {
+    "designName": "Document Section",
+    "implementationName": "DocumentSection",
+    "layer": "component",
+    "tokens": ["component.surface.documentPanel", "component.document.section"],
+    "variants": ["default", "subtle"],
+    "slots": ["title", "body", "children"],
+    "replaces": [],
+    "status": "active"
+  },
+  {
+    "designName": "Experience Screen Template",
+    "implementationName": "ExperienceScreenTemplate",
+    "layer": "template",
+    "tokens": ["semantic.surface.experience.canvas", "component.overlay.sceneScrim"],
+    "variants": ["idle", "shaking", "drawing", "revealing", "result"],
+    "slots": ["topBar", "content", "bottomLeftAction", "bottomRightAction", "footer"],
+    "replaces": ["app/index.tsx"],
+    "status": "active"
+  },
+  {
+    "designName": "History Screen Template",
+    "implementationName": "HistoryScreenTemplate",
+    "layer": "template",
+    "tokens": ["semantic.surface.experience.canvas"],
+    "variants": ["default"],
+    "slots": ["header", "content", "footer"],
+    "replaces": ["app/history.tsx"],
+    "status": "active"
+  },
+  {
+    "designName": "Document Screen Template",
+    "implementationName": "DocumentScreenTemplate",
+    "layer": "template",
+    "tokens": ["semantic.surface.document.canvas", "component.surface.documentPanel"],
+    "variants": ["default"],
+    "slots": ["header", "content", "footer"],
+    "replaces": ["app/privacy-policy.tsx"],
+    "status": "active"
+  }
+]

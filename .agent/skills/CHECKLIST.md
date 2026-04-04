@@ -2,27 +2,17 @@
 
 新しいスキルを追加する際は、以下を確認してください。
 
+`.agent/ai-design-agents/skills/` 配下の overlay スキルを追加・更新する場合は、あわせて `.agent/ai-design-agents/skills/CHECKLIST.md` も参照してください。
+
 ## 必須項目
 
-### 1. index.json へのエントリ追加
-
-- [ ] `skills` 配列に新しいエントリを追加
-- [ ] 必須フィールドをすべて記載
-  - [ ] `id`: 一意のスキルID（kebab-case）
-  - [ ] `name`: スキル名
-  - [ ] `description`: スキルの説明
-  - [ ] `skill_path`: SKILL.md へのパス（`<skill-name>/SKILL.md`）
-  - [ ] `contexts`: 対象エージェントの配列（`["Codex", "Gemini", "Antigravity", "Claude", "Copilot"]` から選択）
-  - [ ] `tags`: タグの配列
-  - [ ] `last_updated`: 最終更新日（YYYY-MM-DD形式）
-
-### 2. ディレクトリとファイルの作成
+### 1. ディレクトリとファイルの作成
 
 - [ ] `<skill-name>/` ディレクトリを作成
 - [ ] `SKILL.md` ファイルを作成
 - [ ] スクリプトがある場合は `run.js` または適切なファイル名で作成
 
-### 3. SKILL.md の Front Matter
+### 2. SKILL.md の Front Matter
 
 - [ ] Front Matter を記載（`---` で囲む）
 - [ ] 必須フィールド:
@@ -31,7 +21,7 @@
   - [ ] `version`: バージョン（任意）
   - [ ] `priority`: 優先度（任意: `highest`, `high`, `medium`, `low`）
 
-### 4. SKILL.md の内容
+### 3. SKILL.md の内容
 
 - [ ] スキルの目的を明記
 - [ ] 使用方法を記載
@@ -47,7 +37,7 @@
 
 ## バリデーション
 
-スキルを追加したら、必ずバリデーションスクリプトを実行してください:
+スキルを追加したら、バリデーションスクリプトを実行してください。現在の validator は `.agent/skills/` と `.agent/ai-design-agents/skills/` の両方を確認します:
 
 ```bash
 pnpm validate:skills
@@ -88,6 +78,5 @@ gemini --skill <skill-id>
 
 ## 参考
 
-- [既存スキル一覧](./index.json)
-- [SDD Core スキル](./sdd-core/SKILL.md) - スキル作成の参考例
 - [AGENTS.md](../../AGENTS.md) - エージェント統合開発ガイド
+- [.agent/ARCHITECTURE.md](../ARCHITECTURE.md) - エージェント/スキル構成の概要

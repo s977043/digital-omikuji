@@ -6,7 +6,7 @@ import { OmikujiResult } from "../../types/omikuji";
 
 // Mock react-native-view-shot
 jest.mock("react-native-view-shot", () => ({
-  captureRef: jest.fn(),
+  captureRef: jest.fn(() => Promise.resolve("file://omikuji.png")),
 }));
 
 // Mock react-i18next with translation data

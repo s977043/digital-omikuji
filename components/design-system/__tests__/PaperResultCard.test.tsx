@@ -1,0 +1,106 @@
+import React from "react";
+import { Share } from "react-native";
+import { fireEvent, render, waitFor } from "@testing-library/react-native";
+import { PaperResultCard } from "../PaperResultCard";
+import { OmikujiResult } from "../../../types/omikuji";
+
+jest.mock("react-native-view-shot", () => ({
+  captureRef: jest.fn(() => Promise.reject(new Error("capture failed"))),
+}));
+
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { returnObjects?: boolean }) => {
+      const translations: Record<string, string | string[]> = {
+        "common.share": "シェア",
+        "common.close": "閉じる",
+        "fortune.shareTitle": "おみくじをシェア",
+        "fortune.tie": "結ぶ",
+        "fortune.keep": "持ち帰る",
+        "fortune.toastTie": "運勢を結びました",
+        "fortune.toastKeep": "運勢を持ち帰りました",
+        "fortune.tiedTitle": "結びました",
+        "fortune.tiedMessage": "ありがとうございました",
+        "fortune.levels.daikichi": "大吉",
+        "fortune.messages.daikichi": ["最高の運気です。新しいことに挑戦するチャンス！"],
+        "fortune.detailLabels.wish": "願望",
+        "fortune.detailLabels.waitingPerson": "待人",
+        "fortune.detailLabels.lostItem": "失物",
+        "fortune.detailLabels.business": "商売",
+        "fortune.detailLabels.study": "学問",
+        "fortune.detailLabels.health": "健康",
+        "fortune.detailLabels.love": "恋愛",
+        "fortune.details.daikichi.wish": "思うがままに叶うでしょう。",
+        "fortune.details.daikichi.waitingPerson": "音信あり。すぐに来ます。",
+        "fortune.details.daikichi.lostItem": "出ます。高い所を探してみて。",
+        "fortune.details.daikichi.business": "利益あり。進んで吉。",
+        "fortune.details.daikichi.study": "安心して勉学に励みなさい。",
+        "fortune.details.daikichi.health": "絶好調。何をしても体がついてきます。",
+        "fortune.details.daikichi.love": "運命の出会いの予感。積極的に。",
+      };
+
+      const value = translations[key];
+      if (options?.returnObjects && Array.isArray(value)) {
+        return value;
+      }
+      return value || key;
+    },
+  }),
+}));
+
+jest.mock("expo-haptics", () => ({
+  notificationAsync: jest.fn(),
+  NotificationFeedbackType: {
+    Success: "success",
+  },
+}));
+
+jest.mock("../MotionView", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { View } = require("react-native");
+  return {
+    MotionView: View,
+  };
+});
+
+jest.spyOn(Share, "share").mockImplementation(() => Promise.resolve({ action: "sharedAction" }));
+
+describe("PaperResultCard", () => {
+  const mockFortune: OmikujiResult = {
+    id: "test-id",
+    level: "daikichi",
+    messageIndex: 0,
+    image: { uri: "test.png" },
+    color: "#FFD700",
+    createdAt: 1234567890,
+  };
+
+  let consoleErrorSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
+  });
+
+  it("falls back to text sharing when image capture fails", async () => {
+    const { getByText } = render(
+      <PaperResultCard fortune={mockFortune} onReset={jest.fn()} reducedMotion />
+    );
+
+    fireEvent.press(getByText("シェア"));
+
+    await waitFor(() => {
+      expect(Share.share).toHaveBeenCalledTimes(1);
+      expect(Share.share).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: expect.stringContaining("大吉"),
+        }),
+        expect.any(Object)
+      );
+    });
+  });
+});

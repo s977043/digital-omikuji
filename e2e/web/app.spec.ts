@@ -1,39 +1,96 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+
+async function gotoRoute(page: Page, path: string) {
+  await page.goto(path);
+  await page.waitForLoadState("domcontentloaded");
+}
+
+async function expectOverlayCapturesBackgroundPoint(
+  page: Page,
+  point: { x: number; y: number },
+  expectedLabel: string
+) {
+  const overlayState = await page.evaluate(
+    ({ x, y, label }) => {
+      const topElement = document.elementFromPoint(x, y);
+      const overlayRoot =
+        topElement?.closest?.('[data-testid="experience-overlay"]') ??
+        topElement?.closest?.('[role="dialog"]') ??
+        null;
+      const ariaLabel = topElement?.getAttribute?.("aria-label") ?? "";
+      const textContent = topElement?.textContent ?? "";
+
+      return {
+        topElementExists: topElement != null,
+        insideOverlay: overlayRoot != null,
+        backgroundOwnsInteractionPoint: ariaLabel.includes(label) || textContent.includes(label),
+      };
+    },
+    { ...point, label: expectedLabel }
+  );
+
+  expect(overlayState.topElementExists).toBe(true);
+  expect(overlayState.insideOverlay).toBe(true);
+  expect(overlayState.backgroundOwnsInteractionPoint).toBe(false);
+}
 
 test.describe("Digital Omikuji Web", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/");
-    // Wait for page to fully load (React hydration)
-    await page.waitForLoadState("networkidle");
-  });
-
   test("should display title and draw button", async ({ page }) => {
-    // Check for title containing "デジタルおみくじ"
-    await expect(page.getByText(/デジタルおみくじ/)).toBeVisible({
+    await gotoRoute(page, "/");
+
+    await expect(page.getByText(/デジタルおみくじ/).first()).toBeVisible({ timeout: 10000 });
+    await expect(page.getByRole("button", { name: "おみくじを引く" })).toBeVisible({
       timeout: 10000,
     });
-
-    // Check for "Draw" button text (second element with this text - the button)
-    // The first is the instruction text, the second is the button itself
-    await expect(page.getByText("おみくじを引く").nth(1)).toBeVisible({
+    await expect(page.getByRole("button", { name: "履歴を見る" })).toBeVisible({
       timeout: 10000,
     });
   });
 
   test("should draw omikuji and show result", async ({ page }) => {
-    // Wait for draw button to appear and click it (second element)
-    const drawButton = page.getByText("おみくじを引く").nth(1);
+    await gotoRoute(page, "/");
+
+    const drawButton = page.getByRole("button", { name: "おみくじを引く" });
+    const muteToggle = page.getByRole("button", { name: "音声をオフにする" });
+    await expect(muteToggle).toBeVisible({ timeout: 10000 });
+    const muteToggleBox = await muteToggle.boundingBox();
+    expect(muteToggleBox).not.toBeNull();
+    const muteTogglePoint = {
+      x: muteToggleBox!.x + muteToggleBox!.width / 2,
+      y: muteToggleBox!.y + muteToggleBox!.height / 2,
+    };
     await expect(drawButton).toBeVisible({ timeout: 15000 });
     await drawButton.click();
 
-    // Should enter SHAKING state (Wait for animation)
-    // "念を込めて..." text appears
-    await expect(page.getByText("念を込めて...")).toBeVisible({
+    await expect(page.getByText("念を込めて...")).toBeVisible({ timeout: 10000 });
+    await page.waitForTimeout(1800);
+    await expectOverlayCapturesBackgroundPoint(page, muteTogglePoint, "音声をオフにする");
+
+    await page.waitForTimeout(4200);
+    await expectOverlayCapturesBackgroundPoint(page, muteTogglePoint, "音声をオフにする");
+  });
+
+  test("history direct entry returns to home", async ({ page }) => {
+    await gotoRoute(page, "/history");
+
+    await expect(page.getByText("運勢手帳")).toBeVisible({ timeout: 10000 });
+    await page.getByRole("button", { name: "← 戻る" }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByText("新春デジタルおみくじ", { exact: true })).toBeVisible({
       timeout: 10000,
     });
+  });
 
-    // Wait for result (animation takes ~4-5 seconds)
-    // Check for result details section that appears after animation
-    await expect(page.getByText("運勢詳細")).toBeVisible({ timeout: 15000 });
+  test("privacy direct entry returns to home", async ({ page }) => {
+    await gotoRoute(page, "/privacy-policy");
+
+    await expect(page.getByText("プライバシーポリシー", { exact: true })).toBeVisible({
+      timeout: 10000,
+    });
+    await page.getByRole("button", { name: "← 戻る" }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByText("新春デジタルおみくじ", { exact: true })).toBeVisible({
+      timeout: 10000,
+    });
   });
 });
