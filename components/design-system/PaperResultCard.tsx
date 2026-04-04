@@ -143,7 +143,11 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
 
       let imageUri: string | undefined;
       if (cardRef.current && Platform.OS !== "web") {
-        imageUri = await captureRef(cardRef, { format: "png", quality: 0.8 });
+        try {
+          imageUri = await captureRef(cardRef, { format: "png", quality: 0.8 });
+        } catch (captureError) {
+          console.error("Image capture failed", captureError);
+        }
       }
 
       await Share.share(
