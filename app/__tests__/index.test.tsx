@@ -110,7 +110,7 @@ describe("IndexScreen", () => {
     expect(getByText("OFF")).toBeTruthy();
 
     fireEvent.press(getByText("履歴"));
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
+
     const { router } = require("expo-router");
     expect(router.push).toHaveBeenCalledWith("/history");
   });

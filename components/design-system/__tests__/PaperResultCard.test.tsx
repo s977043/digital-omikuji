@@ -49,7 +49,6 @@ jest.mock("react-i18next", () => ({
 }));
 
 jest.mock("../MotionView", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
   return {
     MotionView: View,

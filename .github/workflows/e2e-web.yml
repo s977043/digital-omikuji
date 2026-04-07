@@ -55,7 +55,7 @@ env:
 jobs:
   usage-guard:
     name: Usage Guard
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       usable-minutes: ${{ steps.billing.outputs.usable-minutes }}

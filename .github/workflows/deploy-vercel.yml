@@ -2,7 +2,7 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   workflow_dispatch:
     inputs:
       runner:
@@ -24,7 +24,7 @@ env:
 jobs:
   usage-guard:
     name: Usage Guard
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
@@ -55,7 +55,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v5
-
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest

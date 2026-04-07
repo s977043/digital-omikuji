@@ -58,13 +58,13 @@ concurrency:
 
 env:
   RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_LIGHT: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'latest') && 'ubuntu-latest' || 'ubuntu-slim' }}
+  RUNNER_LIGHT: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'latest') && 'ubuntu-latest' || 'ubuntu-latest' }}
   USAGE_GUARD_THRESHOLD: "300"
 
 jobs:
   usage-guard:
     name: Usage Guard
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       usable-minutes: ${{ steps.billing.outputs.usable-minutes }}

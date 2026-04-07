@@ -259,13 +259,13 @@ await waitFor(() => {
 
 ### トラブルシューティング
 
-| エラー | 原因 | 解決策 |
-| ------ | ---- | ------ |
-| `WorkletsError: Native part doesn't seem initialized` | worklets モック不足 | `jest.setup.js` で worklets を Reanimated より先にモック |
-| `SyntaxError: Cannot use import statement outside a module` | ESM 変換漏れ | `transformIgnorePatterns` にパッケージを追加 |
-| テストが不安定 (flaky) | 非同期状態更新の競合 | `act()` を分離し `waitFor()` を使用 |
-| `Git command failed: stdout maxBuffer length exceeded` | diff が大きすぎる (River Reviewer) | `river-reviewer/src/lib/git.mjs` の `maxBuffer` を拡大 |
-| CIで `River Reviewer` が失敗する | サブモジュールの更新漏れ | サブモジュールをプッシュし、親リポジトリで参照を更新 |
+| エラー                                                      | 原因                               | 解決策                                                   |
+| ----------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------- |
+| `WorkletsError: Native part doesn't seem initialized`       | worklets モック不足                | `jest.setup.js` で worklets を Reanimated より先にモック |
+| `SyntaxError: Cannot use import statement outside a module` | ESM 変換漏れ                       | `transformIgnorePatterns` にパッケージを追加             |
+| テストが不安定 (flaky)                                      | 非同期状態更新の競合               | `act()` を分離し `waitFor()` を使用                      |
+| `Git command failed: stdout maxBuffer length exceeded`      | diff が大きすぎる (River Reviewer) | `river-reviewer/src/lib/git.mjs` の `maxBuffer` を拡大   |
+| CIで `River Reviewer` が失敗する                            | サブモジュールの更新漏れ           | サブモジュールをプッシュし、親リポジトリで参照を更新     |
 
 ## 11. サブモジュール (river-reviewer)
 
