@@ -70,14 +70,6 @@ jest.mock("react-i18next", () => ({
   }),
 }));
 
-jest.mock("moti", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { View } = require("react-native");
-  return {
-    MotiView: View,
-  };
-});
-
 jest.mock("../../utils/SoundManager", () => ({
   soundManager: {
     initialize: jest.fn(),
@@ -86,18 +78,6 @@ jest.mock("../../utils/SoundManager", () => ({
     setMute: jest.fn(),
     unloadAll: jest.fn(),
   },
-}));
-
-jest.mock("expo-sensors", () => ({
-  Accelerometer: {
-    isAvailableAsync: jest.fn().mockResolvedValue(false),
-    setUpdateInterval: jest.fn(),
-    addListener: jest.fn(),
-  },
-}));
-
-jest.mock("react-native-view-shot", () => ({
-  captureRef: jest.fn(),
 }));
 
 describe("IndexScreen", () => {

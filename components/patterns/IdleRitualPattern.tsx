@@ -2,6 +2,7 @@ import React from "react";
 import { Image, Text, useWindowDimensions, View } from "react-native";
 import { Button } from "../design-system/Button";
 import { getStringToken } from "../../design-system";
+import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 interface IdleRitualPatternProps {
   hasDrawnToday: boolean;
@@ -11,7 +12,7 @@ interface IdleRitualPatternProps {
 
 export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleRitualPatternProps) {
   const { height } = useWindowDimensions();
-  const isCompactHeight = height < 720;
+  const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
   const circleSize = isCompactHeight ? 168 : 220;
   const imageSize = isCompactHeight ? 148 : 196;
   const titleFontSize = hasDrawnToday ? (isCompactHeight ? 22 : 26) : isCompactHeight ? 26 : 30;

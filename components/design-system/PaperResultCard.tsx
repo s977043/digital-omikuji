@@ -14,10 +14,12 @@ import { useTranslation } from "react-i18next";
 import { DETAIL_KEYS } from "../../data/omikujiData";
 import { OmikujiResult } from "../../types/omikuji";
 import { buildShareText } from "../../utils/buildShareText";
+import { getFortuneText } from "../../utils/getFortuneText";
 import { Button } from "./Button";
 import { MotionView } from "./MotionView";
 import { SurfaceCard } from "./SurfaceCard";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 const ANIMATION_TIMING = {
   tie: 1200,
@@ -46,7 +48,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
     accentColor: string;
   }>("result.paperResult");
   const fortuneColor = getStringToken(`semantic.fortune.level.${fortune.level}`);
-  const isCompactHeight = height < 720;
+  const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
   const actionButtonStyle = {
     minHeight: isCompactHeight ? 48 : 56,
     paddingVertical: isCompactHeight ? 10 : 12,
@@ -59,13 +61,11 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
     };
   }, []);
 
-  const fortuneTitle = t(`fortune.levels.${fortune.level}`);
-  const fortuneMessages = t(`fortune.messages.${fortune.level}`, {
-    returnObjects: true,
-  });
-  const fortuneMessage = Array.isArray(fortuneMessages)
-    ? fortuneMessages[fortune.messageIndex] || fortuneMessages[0]
-    : String(fortuneMessages);
+  const { title: fortuneTitle, message: fortuneMessage } = getFortuneText(
+    t,
+    fortune.level,
+    fortune.messageIndex
+  );
 
   const handleTie = useCallback(() => {
     if (exitAnimation) return;
@@ -102,7 +102,6 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
   const handleShare = async () => {
     try {
       const message = buildShareText({
-        level: fortune.level,
         title: fortuneTitle,
         description: fortuneMessage,
       });

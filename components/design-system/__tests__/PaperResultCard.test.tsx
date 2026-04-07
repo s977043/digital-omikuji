@@ -48,13 +48,6 @@ jest.mock("react-i18next", () => ({
   }),
 }));
 
-jest.mock("expo-haptics", () => ({
-  notificationAsync: jest.fn(),
-  NotificationFeedbackType: {
-    Success: "success",
-  },
-}));
-
 jest.mock("../MotionView", () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
