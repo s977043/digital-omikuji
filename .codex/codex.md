@@ -5,7 +5,7 @@
 ## Codex-specific settings
 
 - Config: See `.codex/config.toml` for approval policy and sandbox mode
-- Detailed instructions: See `.codex/AGENTS.md`
+- Detailed instructions: See `AGENTS.md`
 - Agent Skills: See `.agent/ARCHITECTURE.md`
 
 ## Quick reference (from AGENTS.md)
