@@ -10,12 +10,8 @@
       "skill_path": "agent-browser/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "agent-browser"
-      ],
+      "contexts": ["development"],
+      "tags": ["agent-browser"],
       "last_updated": "2026-01-17"
     },
     {
@@ -25,12 +21,8 @@
       "skill_path": "api-patterns/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "api-patterns"
-      ],
+      "contexts": ["development"],
+      "tags": ["api-patterns"],
       "last_updated": "2026-01-20"
     },
     {
@@ -40,12 +32,8 @@
       "skill_path": "app-builder/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "app-builder"
-      ],
+      "contexts": ["development"],
+      "tags": ["app-builder"],
       "last_updated": "2026-01-20"
     },
     {
@@ -55,12 +43,8 @@
       "skill_path": "architecture/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "architecture"
-      ],
+      "contexts": ["development"],
+      "tags": ["architecture"],
       "last_updated": "2026-01-20"
     },
     {
@@ -70,12 +54,8 @@
       "skill_path": "bash-linux/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "bash-linux"
-      ],
+      "contexts": ["development"],
+      "tags": ["bash-linux"],
       "last_updated": "2026-01-20"
     },
     {
@@ -85,12 +65,8 @@
       "skill_path": "behavioral-modes/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "behavioral-modes"
-      ],
+      "contexts": ["development"],
+      "tags": ["behavioral-modes"],
       "last_updated": "2026-01-20"
     },
     {
@@ -100,12 +76,8 @@
       "skill_path": "brainstorming/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "brainstorming"
-      ],
+      "contexts": ["development"],
+      "tags": ["brainstorming"],
       "last_updated": "2026-01-20"
     },
     {
@@ -115,12 +87,8 @@
       "skill_path": "clean-code/SKILL.md",
       "version": "2.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "clean-code"
-      ],
+      "contexts": ["development"],
+      "tags": ["clean-code"],
       "last_updated": "2026-01-20"
     },
     {
@@ -130,12 +98,8 @@
       "skill_path": "code-review-checklist/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "code-review-checklist"
-      ],
+      "contexts": ["development"],
+      "tags": ["code-review-checklist"],
       "last_updated": "2026-01-24"
     },
     {
@@ -145,12 +109,8 @@
       "skill_path": "database-design/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "database-design"
-      ],
+      "contexts": ["development"],
+      "tags": ["database-design"],
       "last_updated": "2026-01-20"
     },
     {
@@ -160,12 +120,8 @@
       "skill_path": "deployment-procedures/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "deployment-procedures"
-      ],
+      "contexts": ["development"],
+      "tags": ["deployment-procedures"],
       "last_updated": "2026-01-20"
     },
     {
@@ -175,12 +131,8 @@
       "skill_path": "docker-expert/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "docker-expert"
-      ],
+      "contexts": ["development"],
+      "tags": ["docker-expert"],
       "last_updated": "2026-01-20"
     },
     {
@@ -190,12 +142,8 @@
       "skill_path": "documentation-templates/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "documentation-templates"
-      ],
+      "contexts": ["development"],
+      "tags": ["documentation-templates"],
       "last_updated": "2026-01-20"
     },
     {
@@ -205,12 +153,8 @@
       "skill_path": "frontend-design/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "frontend-design"
-      ],
+      "contexts": ["development"],
+      "tags": ["frontend-design"],
       "last_updated": "2026-01-20"
     },
     {
@@ -220,12 +164,8 @@
       "skill_path": "game-development/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "game-development"
-      ],
+      "contexts": ["development"],
+      "tags": ["game-development"],
       "last_updated": "2026-01-20"
     },
     {
@@ -235,12 +175,8 @@
       "skill_path": "geo-fundamentals/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "geo-fundamentals"
-      ],
+      "contexts": ["development"],
+      "tags": ["geo-fundamentals"],
       "last_updated": "2026-01-20"
     },
     {
@@ -250,12 +186,8 @@
       "skill_path": "i18n-localization/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "i18n-localization"
-      ],
+      "contexts": ["development"],
+      "tags": ["i18n-localization"],
       "last_updated": "2026-01-20"
     },
     {
@@ -265,12 +197,8 @@
       "skill_path": "lint-and-validate/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "lint-and-validate"
-      ],
+      "contexts": ["development"],
+      "tags": ["lint-and-validate"],
       "last_updated": "2026-01-20"
     },
     {
@@ -280,12 +208,8 @@
       "skill_path": "mcp-builder/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "mcp-builder"
-      ],
+      "contexts": ["development"],
+      "tags": ["mcp-builder"],
       "last_updated": "2026-01-20"
     },
     {
@@ -295,12 +219,8 @@
       "skill_path": "mobile-design/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "mobile-design"
-      ],
+      "contexts": ["development"],
+      "tags": ["mobile-design"],
       "last_updated": "2026-01-20"
     },
     {
@@ -310,12 +230,8 @@
       "skill_path": "nestjs-expert/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "nestjs-expert"
-      ],
+      "contexts": ["development"],
+      "tags": ["nestjs-expert"],
       "last_updated": "2026-01-20"
     },
     {
@@ -325,12 +241,8 @@
       "skill_path": "nextjs-best-practices/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "nextjs-best-practices"
-      ],
+      "contexts": ["development"],
+      "tags": ["nextjs-best-practices"],
       "last_updated": "2026-01-20"
     },
     {
@@ -340,12 +252,8 @@
       "skill_path": "nodejs-best-practices/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "nodejs-best-practices"
-      ],
+      "contexts": ["development"],
+      "tags": ["nodejs-best-practices"],
       "last_updated": "2026-01-20"
     },
     {
@@ -355,12 +263,8 @@
       "skill_path": "parallel-agents/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "parallel-agents"
-      ],
+      "contexts": ["development"],
+      "tags": ["parallel-agents"],
       "last_updated": "2026-04-08"
     },
     {
@@ -370,12 +274,8 @@
       "skill_path": "performance-profiling/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "performance-profiling"
-      ],
+      "contexts": ["development"],
+      "tags": ["performance-profiling"],
       "last_updated": "2026-01-20"
     },
     {
@@ -385,12 +285,8 @@
       "skill_path": "plan-writing/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "plan-writing"
-      ],
+      "contexts": ["development"],
+      "tags": ["plan-writing"],
       "last_updated": "2026-01-20"
     },
     {
@@ -400,12 +296,8 @@
       "skill_path": "powershell-windows/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "powershell-windows"
-      ],
+      "contexts": ["development"],
+      "tags": ["powershell-windows"],
       "last_updated": "2026-01-20"
     },
     {
@@ -415,12 +307,8 @@
       "skill_path": "prisma-expert/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "prisma-expert"
-      ],
+      "contexts": ["development"],
+      "tags": ["prisma-expert"],
       "last_updated": "2026-01-20"
     },
     {
@@ -430,12 +318,8 @@
       "skill_path": "python-patterns/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "python-patterns"
-      ],
+      "contexts": ["development"],
+      "tags": ["python-patterns"],
       "last_updated": "2026-01-20"
     },
     {
@@ -445,12 +329,8 @@
       "skill_path": "react-patterns/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "react-patterns"
-      ],
+      "contexts": ["development"],
+      "tags": ["react-patterns"],
       "last_updated": "2026-01-20"
     },
     {
@@ -460,12 +340,8 @@
       "skill_path": "red-team-tactics/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "red-team-tactics"
-      ],
+      "contexts": ["development"],
+      "tags": ["red-team-tactics"],
       "last_updated": "2026-01-20"
     },
     {
@@ -475,12 +351,8 @@
       "skill_path": "seo-fundamentals/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "seo-fundamentals"
-      ],
+      "contexts": ["development"],
+      "tags": ["seo-fundamentals"],
       "last_updated": "2026-01-20"
     },
     {
@@ -490,12 +362,8 @@
       "skill_path": "server-management/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "server-management"
-      ],
+      "contexts": ["development"],
+      "tags": ["server-management"],
       "last_updated": "2026-01-20"
     },
     {
@@ -505,12 +373,8 @@
       "skill_path": "solo-product-planning/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "solo-product-planning"
-      ],
+      "contexts": ["development"],
+      "tags": ["solo-product-planning"],
       "last_updated": "2026-01-17"
     },
     {
@@ -520,12 +384,8 @@
       "skill_path": "systematic-debugging/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "systematic-debugging"
-      ],
+      "contexts": ["development"],
+      "tags": ["systematic-debugging"],
       "last_updated": "2026-01-20"
     },
     {
@@ -535,12 +395,8 @@
       "skill_path": "tailwind-patterns/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "tailwind-patterns"
-      ],
+      "contexts": ["development"],
+      "tags": ["tailwind-patterns"],
       "last_updated": "2026-01-20"
     },
     {
@@ -550,12 +406,8 @@
       "skill_path": "tdd-workflow/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "tdd-workflow"
-      ],
+      "contexts": ["development"],
+      "tags": ["tdd-workflow"],
       "last_updated": "2026-01-20"
     },
     {
@@ -565,27 +417,19 @@
       "skill_path": "testing-patterns/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "testing-patterns"
-      ],
+      "contexts": ["development"],
+      "tags": ["testing-patterns"],
       "last_updated": "2026-01-20"
     },
     {
       "id": "typescript-expert",
       "name": "typescript-expert",
-      "description": ">-",
+      "description": "TypeScript advanced patterns, type system mastery, generics, utility types, and strict-mode best practices.",
       "skill_path": "typescript-expert/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "typescript-expert"
-      ],
+      "contexts": ["development"],
+      "tags": ["typescript-expert"],
       "last_updated": "2026-01-20"
     },
     {
@@ -595,12 +439,8 @@
       "skill_path": "ui-ux-pro-max/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "ui-ux-pro-max"
-      ],
+      "contexts": ["development"],
+      "tags": ["ui-ux-pro-max"],
       "last_updated": "2026-01-20"
     },
     {
@@ -610,12 +450,8 @@
       "skill_path": "vulnerability-scanner/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "vulnerability-scanner"
-      ],
+      "contexts": ["development"],
+      "tags": ["vulnerability-scanner"],
       "last_updated": "2026-01-20"
     },
     {
@@ -625,12 +461,8 @@
       "skill_path": "webapp-testing/SKILL.md",
       "version": "1.0",
       "priority": "medium",
-      "contexts": [
-        "development"
-      ],
-      "tags": [
-        "webapp-testing"
-      ],
+      "contexts": ["development"],
+      "tags": ["webapp-testing"],
       "last_updated": "2026-01-20"
     }
   ]
