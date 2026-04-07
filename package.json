@@ -16,8 +16,8 @@
     "test:e2e:web": "playwright test",
     "test:coverage": "jest --coverage",
     "ci:check": "pnpm install --frozen-lockfile --prefer-offline && pnpm exec tsc --noEmit && pnpm lint && pnpm lint:md && pnpm test",
-    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint .",
-    "lint:fix": "ESLINT_USE_FLAT_CONFIG=false eslint . --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "lint:md": "markdownlint .",
     "lint:md:fix": "markdownlint . --fix",
     "validate:skills": "node .agent/skills/validate-skills.js"

@@ -15,7 +15,6 @@ jest.mock("expo-router", () => {
   return {
     router,
     useFocusEffect: (callback: () => void) => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports, react-hooks/exhaustive-deps
       const { useEffect } = require("react");
       useEffect(callback, [callback]);
     },

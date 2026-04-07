@@ -15,7 +15,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
-      - ".eslintrc.js"
+      - "eslint.config.js"
       - ".prettierrc"
       - "jest.config.js"
       - "babel.config.js"
@@ -37,7 +37,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
-      - ".eslintrc.js"
+      - "eslint.config.js"
       - ".prettierrc"
       - "jest.config.js"
       - "babel.config.js"
@@ -45,26 +45,18 @@ on:
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_LIGHT: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'latest') && 'ubuntu-latest' || 'ubuntu-slim' }}
   USAGE_GUARD_THRESHOLD: "300"
 
 jobs:
   usage-guard:
     name: Usage Guard
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
@@ -78,7 +70,7 @@ jobs:
 
   ci:
     name: ${{ matrix.name }}
-    runs-on: ${{ env.RUNNER_LIGHT }}
+    runs-on: ubuntu-latest
     timeout-minutes: 12
     strategy:
       fail-fast: false

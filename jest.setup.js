@@ -1,5 +1,32 @@
 import "@testing-library/jest-native/extend-expect";
 
+// Jest 30 blocks require() inside lazy getters set up by expo/src/winter.
+// Pre-define all globals that expo/src/winter would lazily install, so the
+// getters never fire. Node 20+ already provides most of these natively.
+for (const name of [
+  "TextDecoder",
+  "TextDecoderStream",
+  "TextEncoderStream",
+  "URL",
+  "URLSearchParams",
+  "structuredClone",
+]) {
+  const current = globalThis[name];
+  if (current) {
+    Object.defineProperty(globalThis, name, {
+      value: current,
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
+  }
+}
+Object.defineProperty(globalThis, "__ExpoImportMetaRegistry", {
+  value: { url: null },
+  writable: true,
+  configurable: true,
+});
+
 // Mock react-native-worklets for Reanimated v4 compatibility
 // Reanimated v4 requires worklets for its threading model, but in Jest (Node.js environment)
 // native worklet execution is not available. These mocks provide necessary stubs.
@@ -90,7 +117,6 @@ jest.mock("expo-crypto", () => ({
 
 // Mock moti (Reanimated animation wrapper)
 jest.mock("moti", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require("react-native");
   return { MotiView: View };
 });
