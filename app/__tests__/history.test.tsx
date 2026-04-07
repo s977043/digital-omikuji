@@ -22,15 +22,7 @@ jest.mock("expo-router", () => {
   };
 });
 
-jest.mock("moti", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { View } = require("react-native");
-  return {
-    MotiView: View,
-  };
-});
-
-// Mock react-i18next
+// Mock react-i18next (override global mock with specific translations)
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, options?: { returnObjects?: boolean }) => {

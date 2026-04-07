@@ -27,3 +27,7 @@ worktree-*/
 # Coverage
 coverage/
 .env.docker
+
+# Temporary artifacts
+pr_body.md
+pr*.json

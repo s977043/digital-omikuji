@@ -78,12 +78,34 @@ jest.mock(
   }),
   { virtual: true }
 );
-// Mock AsyncStorage
+// Mock AsyncStorage (v3 changed export path)
 jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest/async-storage-mock")
+  require("@react-native-async-storage/async-storage/jest")
 );
 
 // Mock expo-crypto
 jest.mock("expo-crypto", () => ({
   randomUUID: jest.fn(() => global.crypto.randomUUID()),
+}));
+
+// Mock moti (Reanimated animation wrapper)
+jest.mock("moti", () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const { View } = require("react-native");
+  return { MotiView: View };
+});
+
+// Mock react-i18next (default: return key as value; tests can override)
+jest.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key, options) => {
+      if (options?.returnObjects) return key;
+      return key;
+    },
+  }),
+}));
+
+// Mock react-native-view-shot
+jest.mock("react-native-view-shot", () => ({
+  captureRef: jest.fn(),
 }));
