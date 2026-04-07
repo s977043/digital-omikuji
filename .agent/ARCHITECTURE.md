@@ -176,6 +176,18 @@ Domain-specific knowledge modules. Skills are loaded on-demand based on task con
 | `performance-profiling`   | Web Vitals, optimization  |
 | `systematic-debugging`    | Troubleshooting           |
 
+### Browser & Automation
+
+| Skill           | Description                              |
+| --------------- | ---------------------------------------- |
+| `agent-browser` | Browser automation via agent-browser CLI |
+
+### Product Planning
+
+| Skill                   | Description                          |
+| ----------------------- | ------------------------------------ |
+| `solo-product-planning` | Solo product planning with one-pager |
+
 ---
 
 ## 🔄 Workflows (14)
@@ -189,10 +201,13 @@ Slash command procedures. Invoke with `/command`.
 | `/debug`         | Debug issues             |
 | `/deploy`        | Deploy application       |
 | `/enhance`       | Improve existing code    |
+| `/hotfix`        | Hotfix workflow          |
+| `/new-feature`   | New feature development  |
 | `/orchestrate`   | Multi-agent coordination |
 | `/plan`          | Task breakdown           |
 | `/preview`       | Preview changes          |
 | `/status`        | Check project status     |
+| `/release`       | Release workflow         |
 | `/test`          | Run tests                |
 | `/ui-ux-pro-max` | Design with 50 styles    |
 
