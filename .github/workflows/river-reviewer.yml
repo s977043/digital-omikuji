@@ -12,8 +12,6 @@ on:
         default: auto
 
 env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_LIGHT: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'latest') && 'ubuntu-latest' || 'ubuntu-latest' }}
   USAGE_GUARD_THRESHOLD: "300"
 
 jobs:
@@ -33,7 +31,7 @@ jobs:
 
   review:
     name: AI Code Review
-    runs-on: ${{ env.RUNNER_LIGHT }}
+    runs-on: ubuntu-latest
     timeout-minutes: 12
     permissions:
       contents: read

@@ -11,9 +11,10 @@ for (const name of [
   "URLSearchParams",
   "structuredClone",
 ]) {
-  if (globalThis[name]) {
+  const current = globalThis[name];
+  if (current) {
     Object.defineProperty(globalThis, name, {
-      value: globalThis[name],
+      value: current,
       writable: true,
       configurable: true,
       enumerable: true,

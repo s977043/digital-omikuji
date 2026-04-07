@@ -17,7 +17,13 @@ module.exports = [
     },
   },
   {
-    files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "jest.setup.js", "jest.config.js"],
+    files: [
+      "**/*.test.{ts,tsx}",
+      "**/*.spec.{ts,tsx}",
+      "jest.setup.js",
+      "jest.config.js",
+      "eslint.config.js",
+    ],
     languageOptions: {
       globals: { ...globals.jest, ...globals.node },
     },

@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
   RUNNER_HEAVY: ubuntu-latest
   USAGE_GUARD_THRESHOLD: "300"
 
