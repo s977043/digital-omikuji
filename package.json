@@ -71,6 +71,7 @@
     "eslint-config-expo": "^55.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^17.4.0",
     "jest": "^30.3.0",
     "jest-expo": "~55.0.14",
     "markdownlint-cli": "^0.48.0",
