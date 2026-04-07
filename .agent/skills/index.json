@@ -1,7 +1,7 @@
 {
   "$schema": "agent-skills-index-v1",
-  "description": "Digital Omikuji プロジェクトのエージェントスキルインデックス",
-  "generated": "2026-04-08",
+  "description": "Digital Omikuji エージェントスキルインデックス",
+  "generated": "2026-04-07",
   "skills": [
     {
       "id": "agent-browser",
@@ -16,7 +16,7 @@
       "tags": [
         "agent-browser"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-17"
     },
     {
       "id": "api-patterns",
@@ -31,7 +31,7 @@
       "tags": [
         "api-patterns"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "app-builder",
@@ -46,7 +46,7 @@
       "tags": [
         "app-builder"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "architecture",
@@ -61,7 +61,7 @@
       "tags": [
         "architecture"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "bash-linux",
@@ -76,7 +76,7 @@
       "tags": [
         "bash-linux"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "behavioral-modes",
@@ -91,7 +91,7 @@
       "tags": [
         "behavioral-modes"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "brainstorming",
@@ -106,7 +106,7 @@
       "tags": [
         "brainstorming"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "clean-code",
@@ -114,14 +114,14 @@
       "description": "Pragmatic coding standards - concise, direct, no over-engineering, no unnecessary comments",
       "skill_path": "clean-code/SKILL.md",
       "version": "2.0",
-      "priority": "highest",
+      "priority": "medium",
       "contexts": [
         "development"
       ],
       "tags": [
         "clean-code"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "code-review-checklist",
@@ -136,7 +136,7 @@
       "tags": [
         "code-review-checklist"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-24"
     },
     {
       "id": "database-design",
@@ -151,7 +151,7 @@
       "tags": [
         "database-design"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "deployment-procedures",
@@ -166,7 +166,7 @@
       "tags": [
         "deployment-procedures"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "docker-expert",
@@ -181,7 +181,7 @@
       "tags": [
         "docker-expert"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "documentation-templates",
@@ -196,7 +196,7 @@
       "tags": [
         "documentation-templates"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "frontend-design",
@@ -211,7 +211,7 @@
       "tags": [
         "frontend-design"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "game-development",
@@ -226,7 +226,7 @@
       "tags": [
         "game-development"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "geo-fundamentals",
@@ -241,7 +241,7 @@
       "tags": [
         "geo-fundamentals"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "i18n-localization",
@@ -256,7 +256,7 @@
       "tags": [
         "i18n-localization"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "lint-and-validate",
@@ -271,7 +271,7 @@
       "tags": [
         "lint-and-validate"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "mcp-builder",
@@ -286,7 +286,7 @@
       "tags": [
         "mcp-builder"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "mobile-design",
@@ -301,7 +301,7 @@
       "tags": [
         "mobile-design"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "nestjs-expert",
@@ -316,7 +316,7 @@
       "tags": [
         "nestjs-expert"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "nextjs-best-practices",
@@ -331,7 +331,7 @@
       "tags": [
         "nextjs-best-practices"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "nodejs-best-practices",
@@ -346,7 +346,7 @@
       "tags": [
         "nodejs-best-practices"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "parallel-agents",
@@ -361,7 +361,7 @@
       "tags": [
         "parallel-agents"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-04-08"
     },
     {
       "id": "performance-profiling",
@@ -376,7 +376,7 @@
       "tags": [
         "performance-profiling"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "plan-writing",
@@ -391,7 +391,7 @@
       "tags": [
         "plan-writing"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "powershell-windows",
@@ -406,7 +406,7 @@
       "tags": [
         "powershell-windows"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "prisma-expert",
@@ -421,7 +421,7 @@
       "tags": [
         "prisma-expert"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "python-patterns",
@@ -436,7 +436,7 @@
       "tags": [
         "python-patterns"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "react-patterns",
@@ -451,7 +451,7 @@
       "tags": [
         "react-patterns"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "red-team-tactics",
@@ -466,7 +466,7 @@
       "tags": [
         "red-team-tactics"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "seo-fundamentals",
@@ -481,7 +481,7 @@
       "tags": [
         "seo-fundamentals"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "server-management",
@@ -496,7 +496,7 @@
       "tags": [
         "server-management"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "solo-product-planning",
@@ -511,7 +511,7 @@
       "tags": [
         "solo-product-planning"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-17"
     },
     {
       "id": "systematic-debugging",
@@ -526,7 +526,7 @@
       "tags": [
         "systematic-debugging"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "tailwind-patterns",
@@ -541,7 +541,7 @@
       "tags": [
         "tailwind-patterns"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "tdd-workflow",
@@ -556,7 +556,7 @@
       "tags": [
         "tdd-workflow"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "testing-patterns",
@@ -571,7 +571,7 @@
       "tags": [
         "testing-patterns"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "typescript-expert",
@@ -586,7 +586,7 @@
       "tags": [
         "typescript-expert"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "ui-ux-pro-max",
@@ -601,7 +601,7 @@
       "tags": [
         "ui-ux-pro-max"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "vulnerability-scanner",
@@ -616,7 +616,7 @@
       "tags": [
         "vulnerability-scanner"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     },
     {
       "id": "webapp-testing",
@@ -631,7 +631,7 @@
       "tags": [
         "webapp-testing"
       ],
-      "last_updated": "2026-01-01"
+      "last_updated": "2026-01-20"
     }
   ]
 }

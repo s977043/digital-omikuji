@@ -69,9 +69,41 @@ gemini --skill <skill-id>
 
 スキルを参照するプロンプトを送信して動作確認。
 
+## index.jsonの更新
+
+スキルの追加・削除・メタデータ変更後は`index.json`を更新してください。
+
+```bash
+# 全スキルからindex.jsonを再生成
+node -e "
+const fs = require('fs');
+const path = require('path');
+const dir = '.agent/skills';
+const dirs = fs.readdirSync(dir, {withFileTypes:true}).filter(d=>d.isDirectory()).map(d=>d.name).sort();
+const skills = [];
+for (const d of dirs) {
+  const p = path.join(dir, d, 'SKILL.md');
+  if (!fs.existsSync(p)) continue;
+  const c = fs.readFileSync(p,'utf-8');
+  const fm = c.match(/^---\n([\s\S]*?)\n---/);
+  if (!fm) continue;
+  const g = k => { const m = fm[1].match(new RegExp('^'+k+':\\\\s*[\"\\']?(.+?)[\"\\']?\\\\s*$','m')); return m?m[1].trim():''; };
+  const a = k => { const m = fm[1].match(new RegExp('^'+k+':\\\\s*\\\\[(.*)\\\\]','m')); return m?m[1].split(',').map(s=>s.trim().replace(/^\"|\"$/g,'')).filter(Boolean):[]; };
+  const pri = g('priority'); const lu = g('last_updated');
+  skills.push({id:d, name:g('name')||d, description:g('description')||'', skill_path:d+'/SKILL.md', version:g('version')||'1.0', priority:['highest','high','medium','low'].includes(pri)?pri:'medium', contexts:a('contexts').length?a('contexts'):['development'], tags:a('tags').length?a('tags'):[d], last_updated:/^\d{4}-\d{2}-\d{2}$/.test(lu)?lu:new Date().toISOString().split('T')[0]});
+}
+fs.writeFileSync(path.join(dir,'index.json'), JSON.stringify({'\$schema':'agent-skills-index-v1', description:'Digital Omikuji エージェントスキルインデックス', generated:new Date().toISOString().split('T')[0], skills}, null, 2)+'\n');
+console.log('Generated: '+skills.length+' skills');
+"
+
+# バリデーション実行
+pnpm validate:skills
+```
+
 ## チェックリスト完了後
 
 - [ ] バリデーションスクリプトが成功することを確認
+- [ ] `index.json`が更新されていることを確認
 - [ ] 動作確認が完了
 - [ ] PR を作成してレビューを依頼
 - [ ] マージ後、他のエージェントでも動作することを確認
