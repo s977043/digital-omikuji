@@ -21,9 +21,10 @@ status: "active"
 
 - Stack:
   - Expo SDK 54（Managed）/ TypeScript
+  - React 19 / React Native 0.84
   - Expo Router
   - NativeWind v4
-  - Moti（Reanimated）
+  - Moti（Reanimated v4）
 - Layout:
   - `app/`: 画面・ルーティング
   - `components/`: 再利用UI

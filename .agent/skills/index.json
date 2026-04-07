@@ -1,0 +1,637 @@
+{
+  "$schema": "agent-skills-index-v1",
+  "description": "Digital Omikuji プロジェクトのエージェントスキルインデックス",
+  "generated": "2026-04-08",
+  "skills": [
+    {
+      "id": "agent-browser",
+      "name": "agent-browser",
+      "description": "Vercel製 CLI「agent-browser」でブラウザ操作を自動化する手順。open/goto・snapshot(-i)・ref優先のclick/fill・wait・screenshot・closeが中心。いつ使うかと失敗時の定石を含む。",
+      "skill_path": "agent-browser/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "agent-browser"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "api-patterns",
+      "name": "api-patterns",
+      "description": "API design principles and decision-making. REST vs GraphQL vs tRPC selection, response formats, versioning, pagination.",
+      "skill_path": "api-patterns/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "api-patterns"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "app-builder",
+      "name": "app-builder",
+      "description": "Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordinates agents.",
+      "skill_path": "app-builder/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "app-builder"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "architecture",
+      "name": "architecture",
+      "description": "Architectural decision-making framework. Requirements analysis, trade-off evaluation, ADR documentation. Use when making architecture decisions or analyzing system design.",
+      "skill_path": "architecture/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "architecture"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "bash-linux",
+      "name": "bash-linux",
+      "description": "Bash/Linux terminal patterns. Critical commands, piping, error handling, scripting. Use when working on macOS or Linux systems.",
+      "skill_path": "bash-linux/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "bash-linux"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "behavioral-modes",
+      "name": "behavioral-modes",
+      "description": "AI operational modes (brainstorm, implement, debug, review, teach, ship, orchestrate). Use to adapt behavior based on task type.",
+      "skill_path": "behavioral-modes/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "behavioral-modes"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "brainstorming",
+      "name": "brainstorming",
+      "description": "Socratic questioning protocol + user communication. MANDATORY for complex requests, new features, or unclear requirements. Includes progress reporting and error handling.",
+      "skill_path": "brainstorming/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "brainstorming"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "clean-code",
+      "name": "clean-code",
+      "description": "Pragmatic coding standards - concise, direct, no over-engineering, no unnecessary comments",
+      "skill_path": "clean-code/SKILL.md",
+      "version": "2.0",
+      "priority": "highest",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "clean-code"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "code-review-checklist",
+      "name": "code-review-checklist",
+      "description": "Code review guidelines covering code quality, security, and best practices.",
+      "skill_path": "code-review-checklist/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "code-review-checklist"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "database-design",
+      "name": "database-design",
+      "description": "Database design principles and decision-making. Schema design, indexing strategy, ORM selection, serverless databases.",
+      "skill_path": "database-design/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "database-design"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "deployment-procedures",
+      "name": "deployment-procedures",
+      "description": "Production deployment principles and decision-making. Safe deployment workflows, rollback strategies, and verification. Teaches thinking, not scripts.",
+      "skill_path": "deployment-procedures/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "deployment-procedures"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "docker-expert",
+      "name": "docker-expert",
+      "description": "Docker containerization expert with deep knowledge of multi-stage builds, image optimization, container security, Docker Compose orchestration, and production deployment patterns. Use PROACTIVELY for Dockerfile optimization, container issues, image size problems, security hardening, networking, and orchestration challenges.",
+      "skill_path": "docker-expert/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "docker-expert"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "documentation-templates",
+      "name": "documentation-templates",
+      "description": "Documentation templates and structure guidelines. README, API docs, code comments, and AI-friendly documentation.",
+      "skill_path": "documentation-templates/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "documentation-templates"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "frontend-design",
+      "name": "frontend-design",
+      "description": "Design thinking and decision-making for web UI. Use when designing components, layouts, color schemes, typography, or creating aesthetic interfaces. Teaches principles, not fixed values.",
+      "skill_path": "frontend-design/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "frontend-design"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "game-development",
+      "name": "game-development",
+      "description": "Game development orchestrator. Routes to platform-specific skills based on project needs.",
+      "skill_path": "game-development/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "game-development"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "geo-fundamentals",
+      "name": "geo-fundamentals",
+      "description": "Generative Engine Optimization for AI search engines (ChatGPT, Claude, Perplexity).",
+      "skill_path": "geo-fundamentals/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "geo-fundamentals"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "i18n-localization",
+      "name": "i18n-localization",
+      "description": "Internationalization and localization patterns. Detecting hardcoded strings, managing translations, locale files, RTL support.",
+      "skill_path": "i18n-localization/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "i18n-localization"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "lint-and-validate",
+      "name": "lint-and-validate",
+      "description": "Automatic quality control, linting, and static analysis procedures. Use after every code modification to ensure syntax correctness and project standards. Triggers onKeywords: lint, format, check, validate, types, static analysis.",
+      "skill_path": "lint-and-validate/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "lint-and-validate"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "mcp-builder",
+      "name": "mcp-builder",
+      "description": "MCP (Model Context Protocol) server building principles. Tool design, resource patterns, best practices.",
+      "skill_path": "mcp-builder/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "mcp-builder"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "mobile-design",
+      "name": "mobile-design",
+      "description": "Mobile-first design thinking and decision-making for iOS and Android apps. Touch interaction, performance patterns, platform conventions. Teaches principles, not fixed values. Use when building React Native, Flutter, or native mobile apps.",
+      "skill_path": "mobile-design/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "mobile-design"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "nestjs-expert",
+      "name": "nestjs-expert",
+      "description": "Nest.js framework expert specializing in module architecture, dependency injection, middleware, guards, interceptors, testing with Jest/Supertest, TypeORM/Mongoose integration, and Passport.js authentication. Use PROACTIVELY for any Nest.js application issues including architecture decisions, testing strategies, performance optimization, or debugging complex dependency injection problems. If a specialized expert is a better fit, I will recommend switching and stop.",
+      "skill_path": "nestjs-expert/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "nestjs-expert"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "nextjs-best-practices",
+      "name": "nextjs-best-practices",
+      "description": "Next.js App Router principles. Server Components, data fetching, routing patterns.",
+      "skill_path": "nextjs-best-practices/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "nextjs-best-practices"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "nodejs-best-practices",
+      "name": "nodejs-best-practices",
+      "description": "Node.js development principles and decision-making. Framework selection, async patterns, security, and architecture. Teaches thinking, not copying.",
+      "skill_path": "nodejs-best-practices/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "nodejs-best-practices"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "parallel-agents",
+      "name": "parallel-agents",
+      "description": "Multi-agent orchestration patterns. Use when multiple independent tasks can run with different domain expertise or when comprehensive analysis requires multiple perspectives.",
+      "skill_path": "parallel-agents/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "parallel-agents"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "performance-profiling",
+      "name": "performance-profiling",
+      "description": "Performance profiling principles. Measurement, analysis, and optimization techniques.",
+      "skill_path": "performance-profiling/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "performance-profiling"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "plan-writing",
+      "name": "plan-writing",
+      "description": "Structured task planning with clear breakdowns, dependencies, and verification criteria. Use when implementing features, refactoring, or any multi-step work.",
+      "skill_path": "plan-writing/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "plan-writing"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "powershell-windows",
+      "name": "powershell-windows",
+      "description": "PowerShell Windows patterns. Critical pitfalls, operator syntax, error handling.",
+      "skill_path": "powershell-windows/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "powershell-windows"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "prisma-expert",
+      "name": "prisma-expert",
+      "description": "Prisma ORM expert for schema design, migrations, query optimization, relations modeling, and database operations. Use PROACTIVELY for Prisma schema issues, migration problems, query performance, relation design, or database connection issues.",
+      "skill_path": "prisma-expert/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "prisma-expert"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "python-patterns",
+      "name": "python-patterns",
+      "description": "Python development principles and decision-making. Framework selection, async patterns, type hints, project structure. Teaches thinking, not copying.",
+      "skill_path": "python-patterns/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "python-patterns"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "react-patterns",
+      "name": "react-patterns",
+      "description": "Modern React patterns and principles. Hooks, composition, performance, TypeScript best practices.",
+      "skill_path": "react-patterns/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "react-patterns"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "red-team-tactics",
+      "name": "red-team-tactics",
+      "description": "Red team tactics principles based on MITRE ATT&CK. Attack phases, detection evasion, reporting.",
+      "skill_path": "red-team-tactics/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "red-team-tactics"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "seo-fundamentals",
+      "name": "seo-fundamentals",
+      "description": "SEO fundamentals, E-E-A-T, Core Web Vitals, and Google algorithm principles.",
+      "skill_path": "seo-fundamentals/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "seo-fundamentals"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "server-management",
+      "name": "server-management",
+      "description": "Server management principles and decision-making. Process management, monitoring strategy, and scaling decisions. Teaches thinking, not commands.",
+      "skill_path": "server-management/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "server-management"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "solo-product-planning",
+      "name": "solo-product-planning",
+      "description": "個人開発の企画を「概要→体験→検証→画面→類似」の順で1枚に整理し、勢い実装で迷子になるのを防ぐ。JTBD/Time to Wow、最大リスク仮説、最小実験、成功指標まで落とし込む。個人開発、企画、要件定義、ユーザーフロー、MVP、検証、プロトタイプ、競合調査の依頼で使う。",
+      "skill_path": "solo-product-planning/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "solo-product-planning"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "systematic-debugging",
+      "name": "systematic-debugging",
+      "description": "4-phase systematic debugging methodology with root cause analysis and evidence-based verification. Use when debugging complex issues.",
+      "skill_path": "systematic-debugging/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "systematic-debugging"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "tailwind-patterns",
+      "name": "tailwind-patterns",
+      "description": "Tailwind CSS v4 principles. CSS-first configuration, container queries, modern patterns, design token architecture.",
+      "skill_path": "tailwind-patterns/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "tailwind-patterns"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "tdd-workflow",
+      "name": "tdd-workflow",
+      "description": "Test-Driven Development workflow principles. RED-GREEN-REFACTOR cycle.",
+      "skill_path": "tdd-workflow/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "tdd-workflow"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "testing-patterns",
+      "name": "testing-patterns",
+      "description": "Testing patterns and principles. Unit, integration, mocking strategies.",
+      "skill_path": "testing-patterns/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "testing-patterns"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "typescript-expert",
+      "name": "typescript-expert",
+      "description": ">-",
+      "skill_path": "typescript-expert/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "typescript-expert"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "ui-ux-pro-max",
+      "name": "ui-ux-pro-max",
+      "description": "UI/UX design intelligence. 50 styles, 21 palettes, 50 font pairings, 20 charts, 9 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient. Integrations: shadcn/ui MCP for component search and examples.",
+      "skill_path": "ui-ux-pro-max/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "ui-ux-pro-max"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "vulnerability-scanner",
+      "name": "vulnerability-scanner",
+      "description": "Advanced vulnerability analysis principles. OWASP 2025, Supply Chain Security, attack surface mapping, risk prioritization.",
+      "skill_path": "vulnerability-scanner/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "vulnerability-scanner"
+      ],
+      "last_updated": "2026-01-01"
+    },
+    {
+      "id": "webapp-testing",
+      "name": "webapp-testing",
+      "description": "Web application testing principles. E2E, Playwright, deep audit strategies.",
+      "skill_path": "webapp-testing/SKILL.md",
+      "version": "1.0",
+      "priority": "medium",
+      "contexts": [
+        "development"
+      ],
+      "tags": [
+        "webapp-testing"
+      ],
+      "last_updated": "2026-01-01"
+    }
+  ]
+}
