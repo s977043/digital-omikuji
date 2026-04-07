@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Platform } from "react-native";
 import { Accelerometer } from "expo-sensors";
 
@@ -15,20 +15,25 @@ interface UseShakeDetectionOptions {
 }
 
 export function useShakeDetection({ enabled, threshold, onShake }: UseShakeDetectionOptions) {
-  const [data, setData] = useState({ x: 0, y: 0, z: 0 });
-  const subscription = useRef<Subscription | null>(null);
   const onShakeRef = useRef(onShake);
   onShakeRef.current = onShake;
 
   useEffect(() => {
-    if (Platform.OS === "web") return;
+    if (Platform.OS === "web" || !enabled) return;
+
+    let subscription: Subscription | null = null;
 
     async function setupSensor() {
       try {
         const available = await Accelerometer.isAvailableAsync();
         if (available) {
           Accelerometer.setUpdateInterval(ACCELEROMETER_UPDATE_INTERVAL_MS);
-          subscription.current = Accelerometer.addListener(setData);
+          subscription = Accelerometer.addListener((data) => {
+            const totalForce = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
+            if (totalForce > threshold) {
+              onShakeRef.current();
+            }
+          });
         }
       } catch (error) {
         console.warn("Accelerometer initialization failed:", error);
@@ -38,15 +43,7 @@ export function useShakeDetection({ enabled, threshold, onShake }: UseShakeDetec
     setupSensor();
 
     return () => {
-      subscription.current?.remove();
+      subscription?.remove();
     };
-  }, []);
-
-  useEffect(() => {
-    if (!enabled) return;
-    const totalForce = Math.sqrt(data.x ** 2 + data.y ** 2 + data.z ** 2);
-    if (totalForce > threshold) {
-      onShakeRef.current();
-    }
-  }, [enabled, data, threshold]);
+  }, [enabled, threshold]);
 }
