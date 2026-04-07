@@ -4,12 +4,6 @@ on:
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
 
 env:
   USAGE_GUARD_THRESHOLD: "300"

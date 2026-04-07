@@ -4,12 +4,6 @@ on:
   push:
     branches: [main, develop]
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
 
 # Prevent concurrent deployments to avoid rate limiting
 concurrency:
@@ -17,7 +11,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  RUNNER_HEAVY: ubuntu-latest
   USAGE_GUARD_THRESHOLD: "300"
 
 jobs:
@@ -38,7 +31,7 @@ jobs:
   deploy:
     needs: usage-guard
     if: ${{ needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD) }}
-    runs-on: ${{ env.RUNNER_HEAVY }}
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

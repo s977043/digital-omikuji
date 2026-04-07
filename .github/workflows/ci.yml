@@ -45,12 +45,6 @@ on:
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
