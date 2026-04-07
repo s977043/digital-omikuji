@@ -73,6 +73,7 @@ jest.mock("expo-sensors", () => ({
     addListener: jest.fn(),
     setUpdateInterval: jest.fn(),
     removeAllListeners: jest.fn(),
+    isAvailableAsync: jest.fn(() => Promise.resolve(true)),
   },
 }));
 
