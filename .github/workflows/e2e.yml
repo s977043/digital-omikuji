@@ -33,30 +33,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  USAGE_GUARD_THRESHOLD: "300"
-
 jobs:
-  usage-guard:
-    name: Usage Guard
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
-    steps:
-      - name: Get billing for GitHub Actions
-        id: billing
-        uses: keita-hino/get-billing-for-github-actions@v1
-        with:
-          github-token: ${{ secrets.ACCESS_TOKEN }}
-          account-type: user
-
   # Android E2E - runs on main/develop PRs when labeled
   android:
     name: Android E2E
-    needs: usage-guard
-    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD)
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.pull_request.labels.*.name, 'Android')
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v6
@@ -83,7 +68,16 @@ jobs:
           distribution: "zulu"
           java-version: "17"
 
+      - name: Cache Expo Prebuild (Android)
+        uses: actions/cache@v5
+        id: prebuild-android-cache
+        with:
+          path: android
+          key: prebuild-android-${{ hashFiles('app.json', 'app.config.ts', 'package.json', 'plugins/**') }}
+          restore-keys: prebuild-android-
+
       - name: Expo Prebuild (Android)
+        if: steps.prebuild-android-cache.outputs.cache-hit != 'true'
         run: npx expo prebuild --platform android
 
       - name: Cache Gradle
@@ -92,7 +86,8 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle') }}
+            android/.gradle
+          key: gradle-${{ hashFiles('android/gradle/wrapper/gradle-wrapper.properties', 'android/build.gradle', 'android/app/build.gradle') }}
           restore-keys: gradle-
 
       - name: Build Android Debug APK
@@ -122,9 +117,11 @@ jobs:
   # iOS E2E - runs on main/develop PRs when labeled
   ios:
     name: iOS E2E
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.pull_request.labels.*.name, 'iOS')
     runs-on: macos-latest
-    needs: usage-guard
-    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'iOS'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD)
+    timeout-minutes: 30
 
     steps:
       - uses: actions/checkout@v6
@@ -145,10 +142,20 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
+      - name: Cache Expo Prebuild (iOS)
+        uses: actions/cache@v5
+        id: prebuild-ios-cache
+        with:
+          path: ios
+          key: prebuild-ios-${{ hashFiles('app.json', 'app.config.ts', 'package.json', 'plugins/**') }}
+          restore-keys: prebuild-ios-
+
       - name: Expo Prebuild
+        if: steps.prebuild-ios-cache.outputs.cache-hit != 'true'
         run: npx expo prebuild --platform ios
 
       - name: Cache CocoaPods
+        if: steps.prebuild-ios-cache.outputs.cache-hit != 'true'
         uses: actions/cache@v5
         with:
           path: ios/Pods
@@ -156,7 +163,15 @@ jobs:
           restore-keys: pods-
 
       - name: Install CocoaPods
+        if: steps.prebuild-ios-cache.outputs.cache-hit != 'true'
         run: cd ios && pod install && cd ..
+
+      - name: Cache Derived Data
+        uses: actions/cache@v5
+        with:
+          path: build
+          key: derived-data-${{ runner.os }}-${{ hashFiles('ios/Podfile.lock', 'ios/**/*.pbxproj') }}
+          restore-keys: derived-data-${{ runner.os }}-
 
       - name: Build for Simulator
         run: |
