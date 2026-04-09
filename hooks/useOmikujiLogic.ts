@@ -5,14 +5,10 @@ import {
   addHistoryEntry,
   getHistory,
   getLastDrawDate,
+  getTodayString,
   clearHistory,
   HistoryEntry,
 } from "../utils/HistoryStorage";
-
-function getTodayString(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
 
 export const useOmikujiLogic = () => {
   const [fortune, setFortune] = useState<OmikujiResult | null>(null);

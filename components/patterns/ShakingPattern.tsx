@@ -8,6 +8,7 @@ interface ShakingPatternProps {
 }
 
 export function ShakingPattern({ reducedMotion = false }: ShakingPatternProps) {
+  const accentColor = getStringToken("semantic.text.accent");
   return (
     <MotionView
       from={{ translateX: -12, rotateZ: "-8deg", scale: 0.96 }}
@@ -28,7 +29,7 @@ export function ShakingPattern({ reducedMotion = false }: ShakingPatternProps) {
           marginTop: 28,
           backgroundColor: "rgba(0,0,0,0.45)",
           borderWidth: 1,
-          borderColor: "rgba(251, 191, 36, 0.46)",
+          borderColor: `${accentColor}75`,
           borderRadius: 999,
           paddingHorizontal: 24,
           paddingVertical: 10,
@@ -36,7 +37,7 @@ export function ShakingPattern({ reducedMotion = false }: ShakingPatternProps) {
       >
         <Text
           style={{
-            color: "#FBBF24",
+            color: accentColor,
             fontSize: 18,
             letterSpacing: 2.2,
             fontFamily: getStringToken("primitive.typography.family.ritual"),
