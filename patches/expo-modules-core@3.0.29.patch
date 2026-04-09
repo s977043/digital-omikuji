@@ -2,7 +2,7 @@ diff --git a/ios/JSI/EXJSIUtils.h b/ios/JSI/EXJSIUtils.h
 index 407f57f..e26a36d 100644
 --- a/ios/JSI/EXJSIUtils.h
 +++ b/ios/JSI/EXJSIUtils.h
-@@ -9,6 +9,16 @@
+@@ -9,6 +9,17 @@
  #import <ReactCommon/TurboModuleUtils.h>
 +#import <ReactCommon/CallbackWrapper.h>
  #import <ExpoModulesCore/ObjectDeallocator.h>

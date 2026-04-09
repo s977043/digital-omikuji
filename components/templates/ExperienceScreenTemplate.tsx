@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import {
-  findNodeHandle,
   ImageBackground,
   Platform,
   ScrollView,
@@ -67,13 +66,7 @@ export function ExperienceScreenTemplate({
     }
 
     const overlayCurrent = overlayContainerRef.current as unknown;
-    const overlayHandle = findNodeHandle(overlayContainerRef.current) as unknown;
-    const overlayElement =
-      overlayCurrent instanceof HTMLElement
-        ? overlayCurrent
-        : overlayHandle instanceof HTMLElement
-          ? overlayHandle
-          : null;
+    const overlayElement = overlayCurrent instanceof HTMLElement ? overlayCurrent : null;
 
     if (!overlayElement) {
       return;
