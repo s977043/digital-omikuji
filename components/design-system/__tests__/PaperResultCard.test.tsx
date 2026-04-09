@@ -78,6 +78,43 @@ describe("PaperResultCard", () => {
     consoleErrorSpy.mockRestore();
   });
 
+  it("handleTie sets exit animation and shows tied complete after timeout", async () => {
+    jest.useFakeTimers();
+    const { getByText, queryByText } = render(
+      <PaperResultCard fortune={mockFortune} onReset={jest.fn()} reducedMotion />
+    );
+
+    fireEvent.press(getByText("結ぶ"));
+
+    expect(queryByText("結びました")).toBeNull();
+
+    jest.advanceTimersByTime(1200);
+
+    await waitFor(() => {
+      expect(getByText("結びました")).toBeTruthy();
+    });
+
+    jest.useRealTimers();
+  });
+
+  it("handleKeep calls onReset after animation", () => {
+    jest.useFakeTimers();
+    const onReset = jest.fn();
+    const { getByText } = render(
+      <PaperResultCard fortune={mockFortune} onReset={onReset} reducedMotion />
+    );
+
+    fireEvent.press(getByText("持ち帰る"));
+
+    expect(onReset).not.toHaveBeenCalled();
+
+    jest.advanceTimersByTime(800);
+
+    expect(onReset).toHaveBeenCalled();
+
+    jest.useRealTimers();
+  });
+
   it("falls back to text sharing when image capture fails", async () => {
     const { getByText } = render(
       <PaperResultCard fortune={mockFortune} onReset={jest.fn()} reducedMotion />
