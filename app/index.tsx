@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { Text, useWindowDimensions, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import Constants from "expo-constants";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
@@ -31,6 +32,7 @@ const REDUCED_REVEALING_DURATION_MS = 350;
 const HAPTIC_INTERVAL_MS = 150;
 
 export default function OmikujiApp() {
+  const { t } = useTranslation();
   const { height: viewportHeight } = useWindowDimensions();
   const [appState, setAppState] = useState<AppState>("IDLE");
   const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -166,7 +168,16 @@ export default function OmikujiApp() {
       topBar={header}
       bottomLeftAction={appState === "IDLE" ? historyAction : undefined}
       bottomRightAction={appState === "IDLE" ? debugAction : undefined}
-      footer={appState === "IDLE" && !isCompactLayout ? <VersionDisplay /> : undefined}
+      footer={
+        appState === "IDLE" && !isCompactLayout ? (
+          <View style={{ alignItems: "center", gap: 4 }}>
+            <Text style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, textAlign: "center" }}>
+              {t("disclaimer.inline")}
+            </Text>
+            <VersionDisplay />
+          </View>
+        ) : undefined
+      }
       overlayLabel={
         appState === "DRAWING"
           ? "運命を紐解いています"
