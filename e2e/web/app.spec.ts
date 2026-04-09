@@ -18,8 +18,7 @@ test.describe("Digital Omikuji Web", () => {
     });
   });
 
-  // TODO: Web ビルドでおみくじ引き後のアニメーションが完了しない問題を調査 (see Issue)
-  test.skip("should draw omikuji and show result", async ({ page }) => {
+  test("should draw omikuji and show result", async ({ page }) => {
     await gotoRoute(page, "/");
 
     const drawButton = page.getByRole("button", { name: "おみくじを引く" });
@@ -28,7 +27,9 @@ test.describe("Digital Omikuji Web", () => {
 
     await expect(page.getByText("念を込めて...")).toBeVisible({ timeout: 10000 });
 
-    await expect(page.getByText(/大吉|吉|中吉|小吉|末吉|凶/)).toBeVisible({ timeout: 15000 });
+    await expect(page.getByText(/大吉|中吉|小吉|末吉|凶|吉/).first()).toBeVisible({
+      timeout: 15000,
+    });
   });
 
   test("history direct entry returns to home", async ({ page }) => {
