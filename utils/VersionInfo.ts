@@ -62,16 +62,3 @@ export const getVersionDisplay = (): string => {
   const version = getVersionInfo();
   return `v${version.packageVersion}`;
 };
-
-/**
- * 詳細バージョン情報を取得
- */
-export const getDetailedVersionInfo = (): string => {
-  const version = getVersionInfo();
-  const buildDate = new Date(version.buildTime).toLocaleString("ja-JP");
-  const parts = [`v${version.packageVersion}`, buildDate];
-  if (version.commitHash) {
-    parts.push(`(${version.commitHash.substring(0, 8)})`);
-  }
-  return parts.join(" ");
-};

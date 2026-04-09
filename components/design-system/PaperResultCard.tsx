@@ -11,6 +11,7 @@ import {
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
+import { triggerHaptic } from "../../utils/haptics";
 import { DETAIL_KEYS } from "../../data/omikujiData";
 import { OmikujiResult } from "../../types/omikuji";
 import { buildShareText } from "../../utils/buildShareText";
@@ -70,9 +71,11 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
   const handleTie = useCallback(() => {
     if (exitAnimation) return;
 
-    if (Platform.OS !== "web" && !reducedMotion) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
+    triggerHaptic(
+      { type: "notification", style: Haptics.NotificationFeedbackType.Success },
+      false,
+      reducedMotion
+    );
     setExitAnimation("tie");
 
     if (Platform.OS === "android") {
@@ -87,9 +90,11 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
   const handleKeep = useCallback(() => {
     if (exitAnimation) return;
 
-    if (Platform.OS !== "web" && !reducedMotion) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
+    triggerHaptic(
+      { type: "notification", style: Haptics.NotificationFeedbackType.Success },
+      false,
+      reducedMotion
+    );
     setExitAnimation("keep");
 
     if (Platform.OS === "android") {

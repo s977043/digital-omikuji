@@ -9,6 +9,11 @@ const MAX_HISTORY_ITEMS = 50;
 // Alias for clarity, but it is just OmikujiResult now
 export type HistoryEntry = OmikujiResult;
 
+export function getTodayString(): string {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+}
+
 /**
  * 履歴を取得する
  */
@@ -32,10 +37,7 @@ export async function addHistoryEntry(result: OmikujiResult): Promise<void> {
     const updatedHistory = [result, ...history].slice(0, MAX_HISTORY_ITEMS);
     await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
 
-    // Save last draw date (Local Time)
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-    await setLastDrawDate(today);
+    await setLastDrawDate(getTodayString());
   } catch (error) {
     console.error("Failed to save history:", error);
   }

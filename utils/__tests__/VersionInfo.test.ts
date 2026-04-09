@@ -1,4 +1,4 @@
-import { getVersionInfo, getVersionDisplay, getDetailedVersionInfo } from "../VersionInfo";
+import { getVersionInfo, getVersionDisplay } from "../VersionInfo";
 
 // expo-constants をモック
 jest.mock("expo-constants", () => ({
@@ -48,14 +48,6 @@ describe("VersionInfo", () => {
       const display = getVersionDisplay();
       // バージョン形式または vunknown
       expect(display).toMatch(/^v\d+\.\d+\.\d+$|^vunknown$/);
-    });
-  });
-
-  describe("getDetailedVersionInfo", () => {
-    it("should return a detailed version string", () => {
-      const detailed = getDetailedVersionInfo();
-      expect(detailed).toContain("v");
-      expect(detailed).toBeTruthy();
     });
   });
 });
