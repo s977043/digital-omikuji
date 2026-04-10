@@ -136,3 +136,12 @@ jest.mock("react-i18next", () => ({
 jest.mock("react-native-view-shot", () => ({
   captureRef: jest.fn(),
 }));
+
+// Mock @sentry/react-native (requires native setup not available in tests)
+jest.mock("@sentry/react-native", () => ({
+  init: jest.fn(),
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
+  setContext: jest.fn(),
+  wrap: (component) => component,
+}));
