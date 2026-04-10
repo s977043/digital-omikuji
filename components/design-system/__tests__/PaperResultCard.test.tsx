@@ -68,6 +68,25 @@ describe("PaperResultCard", () => {
     createdAt: 1234567890,
   };
 
+  const mockDetailEntries = [
+    { key: "wish", label: "願望", value: "思うがままに叶うでしょう。" },
+    { key: "waitingPerson", label: "待人", value: "音信あり。すぐに来ます。" },
+  ];
+
+  const renderCard = (overrides: Partial<React.ComponentProps<typeof PaperResultCard>> = {}) =>
+    render(
+      <PaperResultCard
+        fortune={mockFortune}
+        fortuneTitle="大吉"
+        fortuneMessage="最高の運気です。新しいことに挑戦するチャンス！"
+        detailEntries={mockDetailEntries}
+        shareText="シェアテキスト：大吉"
+        onReset={jest.fn()}
+        reducedMotion
+        {...overrides}
+      />
+    );
+
   let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
@@ -81,9 +100,7 @@ describe("PaperResultCard", () => {
 
   it("handleTie sets exit animation and shows tied complete after timeout", async () => {
     jest.useFakeTimers();
-    const { getByText, queryByText } = render(
-      <PaperResultCard fortune={mockFortune} onReset={jest.fn()} reducedMotion />
-    );
+    const { getByText, queryByText } = renderCard();
 
     fireEvent.press(getByText("結ぶ"));
 
@@ -101,9 +118,7 @@ describe("PaperResultCard", () => {
   it("handleKeep calls onReset after animation", () => {
     jest.useFakeTimers();
     const onReset = jest.fn();
-    const { getByText } = render(
-      <PaperResultCard fortune={mockFortune} onReset={onReset} reducedMotion />
-    );
+    const { getByText } = renderCard({ onReset });
 
     fireEvent.press(getByText("持ち帰る"));
 
@@ -117,9 +132,7 @@ describe("PaperResultCard", () => {
   });
 
   it("falls back to text sharing when image capture fails", async () => {
-    const { getByText } = render(
-      <PaperResultCard fortune={mockFortune} onReset={jest.fn()} reducedMotion />
-    );
+    const { getByText } = renderCard();
 
     fireEvent.press(getByText("シェア"));
 
