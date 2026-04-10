@@ -32,6 +32,7 @@ export const drawOmikuji = (): OmikujiResult => {
   // 5. Construct Result
   return {
     id: Crypto.randomUUID(),
+    type: "omikuji",
     level: selectedData.level,
     messageIndex,
     image: selectedData.image,

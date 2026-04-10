@@ -60,6 +60,7 @@ jest.spyOn(Share, "share").mockImplementation(() => Promise.resolve({ action: "s
 describe("PaperResultCard", () => {
   const mockFortune: OmikujiResult = {
     id: "test-id",
+    type: "omikuji",
     level: "daikichi",
     messageIndex: 0,
     image: { uri: "test.png" },
