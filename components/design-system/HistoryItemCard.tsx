@@ -1,8 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { useTranslation } from "react-i18next";
 import { HistoryEntry } from "../../utils/HistoryStorage";
-import { getFortuneText } from "../../utils/getFortuneText";
 import { getComponentTokens, getStringToken } from "../../design-system";
 import { SurfaceCard } from "./SurfaceCard";
 
@@ -19,22 +17,17 @@ function formatDate(timestamp: number): string {
 
 interface HistoryItemCardProps {
   item: HistoryEntry;
+  fortuneTitle: string;
+  fortuneMessage: string;
 }
 
-export function HistoryItemCard({ item }: HistoryItemCardProps) {
-  const { t } = useTranslation();
+export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryItemCardProps) {
   const tokens = getComponentTokens<{
     metaColor: string;
     bodyColor: string;
   }>("history.item");
   const ritualBodyFont = getStringToken("primitive.typography.family.ritualBody");
   const fortuneColor = getStringToken(`semantic.fortune.level.${item.level}`);
-
-  const { title: fortuneTitle, message: fortuneMessage } = getFortuneText(
-    t,
-    item.level,
-    item.messageIndex
-  );
 
   return (
     <SurfaceCard variant="glassCard">
