@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0] - 2026-04-11
+
+### Added
+
+- **娯楽免責の明示**: ホーム画面フッター・プライバシーポリシー・ストア説明文に「本アプリは娯楽目的」の注記を追加（#181）
+- **エラーハンドリング基盤**: `AppError` 型と `useErrorHandler` フックを新規導入。Sentry 連携とクロスプラットフォーム通知（Android Toast / iOS Alert / Web alert）を統一（#323）
+- **データモデル拡張性**: `BaseFortune` / `FortuneType` ディスクリミナントユニオンを導入し、将来の占い種別追加（タロット等）に備えた型基盤を整備（#322）
+- **E2E キャッシュ**: Expo Prebuild / Gradle / iOS Derived Data キャッシュを CI に追加。ビルド時間を大幅短縮（#147）
+
+### Changed
+
+- **状態管理の一元化**: `app/index.tsx` に散在していた AppState 遷移ロジックを `useAppStateMachine` カスタムフックに集約。211行 → 123行（#318）
+- **design-system の責務整理**: `HistoryItemCard` / `PaperResultCard` から `getFortuneText` / `buildShareText` の直接依存を削除。pattern 層で business logic を集約するよう変更（#321）
+- **コード品質改善**: 日付フォーマット重複の統合、`triggerHaptic()` への統一、未使用コード削除、トークン参照の整備
+- **ストア文言**: 「本格的な占いアプリ」→「デジタルエンタメアプリ」へ表現を刷新（#181）
+- **テストカバレッジ**: 75.75% → 82.2% に向上（目標 80% 達成）（#31）
+
+### Fixed
+
+- **Web クラッシュ**: React Native 0.84+ で Web 非サポートとなった `findNodeHandle` を除去。オーバーレイ表示時のクラッシュを解消（#309）
+- **CI パイプライン復旧**: `ACCESS_TOKEN` シークレット未設定により全ワークフローが失敗していた `usage-guard` ジョブを削除。ラベル制御 + タイムアウトで安全性を確保（#147）
+- **react-dom バージョン不一致**: 19.2.3 → 19.2.4 に統一し、Web ビルド時の React error #527 を解消
+- **パッチの hunk ヘッダー**: `expo-modules-core@3.0.29.patch` の行数ズレを修正し `pnpm install` の失敗を解消
+
+### Internal
+
+- **テスト 21 suites / 115 tests all passed**（+51件の新規テスト）
+- **Closed Issues**: #31, #147, #181, #309, #318, #321, #322, #323（8件）
+
 ## [1.1.0] - 2026-01-09
 
 ### Added
