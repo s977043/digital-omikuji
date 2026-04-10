@@ -1,5 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FortuneResult, OmikujiResult } from "../types/omikuji";
+import { captureException } from "./sentry";
+
+/**
+ * HistoryStorage 内部のエラーを Sentry に送信し、ログに記録する。
+ * ユーザー通知は行わない（silent error）。フォールバック値は呼び出し元で返す。
+ */
+function reportStorageError(operation: string, error: unknown): void {
+  console.error(`[HistoryStorage:${operation}]`, error);
+  if (error instanceof Error) {
+    captureException(error, { source: "HistoryStorage", operation });
+  }
+}
 
 const HISTORY_KEY = "omikuji_history_v2"; // Changed key to avoid conflict with old schema
 const LAST_DRAW_DATE_KEY = "omikuji_last_draw_date";
@@ -45,7 +57,7 @@ export async function getHistory(): Promise<HistoryEntry[]> {
       .map(migrateLegacyEntry)
       .filter((entry): entry is HistoryEntry => entry !== null);
   } catch (error) {
-    console.error("Failed to load history:", error);
+    reportStorageError("getHistory", error);
     return [];
   }
 }
@@ -62,7 +74,7 @@ export async function addHistoryEntry(result: FortuneResult): Promise<void> {
 
     await setLastDrawDate(getTodayString());
   } catch (error) {
-    console.error("Failed to save history:", error);
+    reportStorageError("addHistoryEntry", error);
   }
 }
 
@@ -74,7 +86,7 @@ export async function clearHistory(): Promise<void> {
     await AsyncStorage.removeItem(HISTORY_KEY);
     await AsyncStorage.removeItem(LAST_DRAW_DATE_KEY);
   } catch (error) {
-    console.error("Failed to clear history:", error);
+    reportStorageError("clearHistory", error);
   }
 }
 
@@ -85,7 +97,7 @@ export async function getLastDrawDate(): Promise<string | null> {
   try {
     return await AsyncStorage.getItem(LAST_DRAW_DATE_KEY);
   } catch (error) {
-    console.error("Failed to load last draw date:", error);
+    reportStorageError("getLastDrawDate", error);
     return null;
   }
 }
@@ -97,6 +109,6 @@ export async function setLastDrawDate(date: string): Promise<void> {
   try {
     await AsyncStorage.setItem(LAST_DRAW_DATE_KEY, date);
   } catch (error) {
-    console.error("Failed to save last draw date:", error);
+    reportStorageError("setLastDrawDate", error);
   }
 }
