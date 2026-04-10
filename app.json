@@ -1,65 +1,65 @@
 {
-    "expo": {
-        "name": "デジタルおみくじ",
-        "slug": "digital-omikuji",
-        "version": "1.1.0",
-        "orientation": "portrait",
-        "userInterfaceStyle": "light",
-        "icon": "./assets/icon.png",
-        "splash": {
-            "image": "./assets/splash.png",
-            "resizeMode": "contain",
-            "backgroundColor": "#dc2626"
-        },
-        "ios": {
-            "supportsTablet": true,
-            "bundleIdentifier": "com.s977043.digitalomikuji",
-            "icon": "./assets/icon.png",
-            "infoPlist": {
-                "CFBundleDisplayName": "デジタルおみくじ",
-                "NSPhotoLibraryUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへのアクセスが必要です",
-                "NSPhotoLibraryAddUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です",
-                "ITSAppUsesNonExemptEncryption": false
-            }
-        },
-        "android": {
-            "package": "com.s977043.digitalomikuji",
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/adaptive-icon.png",
-                "backgroundColor": "#dc2626"
-            },
-            "permissions": [
-                "android.permission.WRITE_EXTERNAL_STORAGE",
-                "android.permission.READ_EXTERNAL_STORAGE"
-            ]
-        },
-        "web": {
-            "bundler": "metro",
-            "output": "static",
-            "favicon": "./assets/favicon.png"
-        },
-        "plugins": [
-            "expo-router",
-            "expo-splash-screen",
-            [
-                "@sentry/react-native/expo",
-                {
-                    "organization": "mine-take",
-                    "project": "digital-omikuji",
-                    "url": "https://sentry.io/"
-                }
-            ]
-        ],
-        "extra": {
-            "eas": {
-                "projectId": "bb6d2a55-da96-4419-8ac9-f8133d4d9fc6"
-            }
-        },
-        "runtimeVersion": {
-            "policy": "appVersion"
-        },
-        "updates": {
-            "url": "https://u.expo.dev/bb6d2a55-da96-4419-8ac9-f8133d4d9fc6"
+  "expo": {
+    "name": "デジタルおみくじ",
+    "slug": "digital-omikuji",
+    "version": "1.2.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#dc2626"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.s977043.digitalomikuji",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "CFBundleDisplayName": "デジタルおみくじ",
+        "NSPhotoLibraryUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへのアクセスが必要です",
+        "NSPhotoLibraryAddUsageDescription": "おみくじ結果を画像として保存するために写真ライブラリへの書き込みアクセスが必要です",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.s977043.digitalomikuji",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#dc2626"
+      },
+      "permissions": [
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-splash-screen",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "mine-take",
+          "project": "digital-omikuji",
+          "url": "https://sentry.io/"
         }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bb6d2a55-da96-4419-8ac9-f8133d4d9fc6"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/bb6d2a55-da96-4419-8ac9-f8133d4d9fc6"
     }
+  }
 }
