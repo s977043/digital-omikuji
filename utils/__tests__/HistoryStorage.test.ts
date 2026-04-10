@@ -21,6 +21,7 @@ const LAST_DRAW_DATE_KEY = "omikuji_last_draw_date";
 const mockHistoryData: HistoryEntry[] = [
   {
     id: "1",
+    type: "omikuji",
     level: "daikichi",
     messageIndex: 0,
     image: { uri: "image" },
@@ -59,6 +60,7 @@ describe("HistoryStorage", () => {
     (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(mockHistoryData));
     const newEntry: HistoryEntry = {
       id: "2",
+      type: "omikuji",
       level: "kichi",
       messageIndex: 1,
       image: { uri: "image2" },

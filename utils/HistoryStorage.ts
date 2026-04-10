@@ -1,13 +1,30 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { OmikujiResult } from "../types/omikuji";
+import { FortuneResult, OmikujiResult } from "../types/omikuji";
 
 const HISTORY_KEY = "omikuji_history_v2"; // Changed key to avoid conflict with old schema
 const LAST_DRAW_DATE_KEY = "omikuji_last_draw_date";
 
 const MAX_HISTORY_ITEMS = 50;
 
-// Alias for clarity, but it is just OmikujiResult now
-export type HistoryEntry = OmikujiResult;
+/**
+ * 履歴エントリの型。
+ * 現状はおみくじのみだが、将来は他の占い種別（タロット等）も受け入れる。
+ */
+export type HistoryEntry = FortuneResult;
+
+/**
+ * レガシー履歴データ（type フィールドがない古いデータ）を
+ * 新しい BaseFortune 形式にマイグレートする。
+ */
+function migrateLegacyEntry(raw: unknown): HistoryEntry | null {
+  if (typeof raw !== "object" || raw === null) return null;
+  const entry = raw as Partial<OmikujiResult> & { type?: string };
+  if (!entry.id || !entry.level || typeof entry.createdAt !== "number") return null;
+  return {
+    ...entry,
+    type: entry.type === "omikuji" ? "omikuji" : "omikuji",
+  } as OmikujiResult;
+}
 
 export function getTodayString(): string {
   const now = new Date();
@@ -20,7 +37,13 @@ export function getTodayString(): string {
 export async function getHistory(): Promise<HistoryEntry[]> {
   try {
     const jsonValue = await AsyncStorage.getItem(HISTORY_KEY);
-    return jsonValue != null ? JSON.parse(jsonValue) : [];
+    if (jsonValue == null) return [];
+    const rawEntries = JSON.parse(jsonValue);
+    if (!Array.isArray(rawEntries)) return [];
+    // Legacy エントリ（type フィールドなし）もマイグレートして読み込む
+    return rawEntries
+      .map(migrateLegacyEntry)
+      .filter((entry): entry is HistoryEntry => entry !== null);
   } catch (error) {
     console.error("Failed to load history:", error);
     return [];
@@ -30,7 +53,7 @@ export async function getHistory(): Promise<HistoryEntry[]> {
 /**
  * 履歴に新しいエントリを追加する
  */
-export async function addHistoryEntry(result: OmikujiResult): Promise<void> {
+export async function addHistoryEntry(result: FortuneResult): Promise<void> {
   try {
     const history = await getHistory();
     // 最新のものが先頭に来るように追加し、50件に制限

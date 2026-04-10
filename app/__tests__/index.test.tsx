@@ -13,6 +13,7 @@ jest.mock("../../hooks/useOmikujiLogic", () => ({
   useOmikujiLogic: () => ({
     fortune: {
       id: "fortune-id",
+      type: "omikuji",
       level: "daikichi",
       messageIndex: 0,
       image: { uri: "test.png" },
