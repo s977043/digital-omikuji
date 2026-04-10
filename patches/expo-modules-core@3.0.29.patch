@@ -2,13 +2,14 @@ diff --git a/ios/JSI/EXJSIUtils.h b/ios/JSI/EXJSIUtils.h
 index 407f57f..e26a36d 100644
 --- a/ios/JSI/EXJSIUtils.h
 +++ b/ios/JSI/EXJSIUtils.h
-@@ -9,6 +9,16 @@
+@@ -9,6 +9,17 @@
  #import <ReactCommon/TurboModuleUtils.h>
 +#import <ReactCommon/CallbackWrapper.h>
  #import <ExpoModulesCore/ObjectDeallocator.h>
  
-+// [Digital Omikuji] Workaround: CallInvoker/CallbackWrapper forward declarations for iOS E2E builds.
-+// TODO: remove when expo-modules-core includes this upstream.
++// [Digital Omikuji] Workaround: CallInvoker/CallbackWrapper forward declarations for iOS builds.
++// Required because RN 0.82+ changed CallInvoker API and expo-modules-core@3.0.29 (SDK 54) is not yet updated.
++// TODO: Remove when upgrading to Expo SDK 55+ (check if expo-modules-core upstream includes this fix).
 +namespace facebook {
 +namespace react {
 +class CallInvoker;

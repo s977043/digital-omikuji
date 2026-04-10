@@ -7,8 +7,9 @@ import en from "./locales/en.json";
 // デバイスの言語設定を取得
 const deviceLanguage = getLocales()[0]?.languageCode ?? "ja";
 
+// eslint-disable-next-line import/no-named-as-default-member -- i18next公式パターン: default instanceの.use()メソッド呼び出し
 i18n
-  .use(initReactI18next) // passes i18n down to react-i18next
+  .use(initReactI18next)
   .init({
     resources: {
       ja: { translation: ja },

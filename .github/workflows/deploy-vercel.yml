@@ -2,44 +2,17 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
 
 # Prevent concurrent deployments to avoid rate limiting
 concurrency:
   group: vercel-deploy-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_HEAVY: ubuntu-latest
-  USAGE_GUARD_THRESHOLD: "300"
-
 jobs:
-  usage-guard:
-    name: Usage Guard
-    runs-on: ubuntu-slim
-    timeout-minutes: 5
-    outputs:
-      usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
-    steps:
-      - name: Get billing for GitHub Actions
-        id: billing
-        uses: keita-hino/get-billing-for-github-actions@v1
-        with:
-          github-token: ${{ secrets.ACCESS_TOKEN }}
-          account-type: user
-
   deploy:
-    needs: usage-guard
-    if: ${{ needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD) }}
-    runs-on: ${{ env.RUNNER_HEAVY }}
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -54,8 +27,7 @@ jobs:
           node-version: 20
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
+        uses: pnpm/action-setup@v5
 
       - name: Install Vercel CLI
         run: pnpm add -g vercel@latest

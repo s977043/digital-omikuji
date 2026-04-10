@@ -1,9 +1,0 @@
-node_modules
-.expo
-.agent
-.git
-.worktrees
-dist
-web-build
-river-reviewer
-scripts

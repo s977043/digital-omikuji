@@ -5,8 +5,8 @@
 ## プロジェクト概要
 
 - **アプリ名**: Digital Omikuji (2026年 新年おみくじアプリ)
-- **フレームワーク**: Expo SDK 52 (React Native)
-- **ルーティング**: Expo Router v4
+- **フレームワーク**: Expo SDK 54 (React Native)
+- **ルーティング**: Expo Router v6
 - **スタイリング**: NativeWind v4 (Tailwind CSS)
 - **アニメーション**: Moti (Reanimated)
 - **言語**: TypeScript (Strict Mode)

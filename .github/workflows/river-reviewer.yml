@@ -4,36 +4,11 @@ on:
   pull_request:
     branches: [main, develop]
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
-
-env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_LIGHT: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'latest') && 'ubuntu-latest' || 'ubuntu-slim' }}
-  USAGE_GUARD_THRESHOLD: "300"
 
 jobs:
-  usage-guard:
-    name: Usage Guard
-    runs-on: ubuntu-slim
-    timeout-minutes: 5
-    outputs:
-      usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
-    steps:
-      - name: Get billing for GitHub Actions
-        id: billing
-        uses: keita-hino/get-billing-for-github-actions@v1
-        with:
-          github-token: ${{ secrets.ACCESS_TOKEN }}
-          account-type: user
-
   review:
     name: AI Code Review
-    runs-on: ${{ env.RUNNER_LIGHT }}
+    runs-on: ubuntu-latest
     timeout-minutes: 12
     permissions:
       contents: read
@@ -51,7 +26,7 @@ jobs:
         uses: ./river-reviewer/runners/github-action
         with:
           phase: midstream
-          dry_run: 'false'
-          comment: 'true'
+          dry_run: "false"
+          comment: "true"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

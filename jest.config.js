@@ -20,7 +20,7 @@ module.exports = {
     "!**/jest.config.js",
     "!**/tailwind.config.js",
     "!**/react-native.config.js",
-    "!**/.eslintrc.js",
+    "!**/eslint.config.js",
     "!app/+html.tsx",
     "!app/_layout.tsx",
     "!app/+not-found.tsx",

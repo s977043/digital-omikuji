@@ -15,7 +15,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
-      - ".eslintrc.js"
+      - "eslint.config.js"
       - ".prettierrc"
       - "jest.config.js"
       - "babel.config.js"
@@ -37,7 +37,7 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - "tsconfig.json"
-      - ".eslintrc.js"
+      - "eslint.config.js"
       - ".prettierrc"
       - "jest.config.js"
       - "babel.config.js"
@@ -45,40 +45,15 @@ on:
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
   workflow_dispatch:
-    inputs:
-      runner:
-        description: "Runner (auto uses job classification)"
-        type: choice
-        options: [auto, slim, latest]
-        default: auto
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_LIGHT: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'latest') && 'ubuntu-latest' || 'ubuntu-slim' }}
-  USAGE_GUARD_THRESHOLD: "300"
-
 jobs:
-  usage-guard:
-    name: Usage Guard
-    runs-on: ubuntu-slim
-    timeout-minutes: 5
-    outputs:
-      usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
-    steps:
-      - name: Get billing for GitHub Actions
-        id: billing
-        uses: keita-hino/get-billing-for-github-actions@v1
-        with:
-          github-token: ${{ secrets.ACCESS_TOKEN }}
-          account-type: user
-
   ci:
     name: ${{ matrix.name }}
-    runs-on: ${{ env.RUNNER_LIGHT }}
+    runs-on: ubuntu-latest
     timeout-minutes: 12
     strategy:
       fail-fast: false
@@ -95,7 +70,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v5
 
       - name: Setup Node.js
         uses: actions/setup-node@v6

@@ -15,22 +15,13 @@ jest.mock("expo-router", () => {
   return {
     router,
     useFocusEffect: (callback: () => void) => {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports, react-hooks/exhaustive-deps
       const { useEffect } = require("react");
       useEffect(callback, [callback]);
     },
   };
 });
 
-jest.mock("moti", () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { View } = require("react-native");
-  return {
-    MotiView: View,
-  };
-});
-
-// Mock react-i18next
+// Mock react-i18next (override global mock with specific translations)
 jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, options?: { returnObjects?: boolean }) => {

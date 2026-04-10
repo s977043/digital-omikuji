@@ -1,5 +1,21 @@
 import { ImageSourcePropType } from "react-native";
 
+/**
+ * 占い種別の判別子。
+ * 新しい占い種別を追加する場合はここに追加し、対応する結果型を定義する。
+ */
+export type FortuneType = "omikuji";
+
+/**
+ * すべての占い結果の基底型。
+ * 共通フィールド（id, type, createdAt）を持ち、type で具象型を判別する。
+ */
+export interface BaseFortune {
+  id: string;
+  type: FortuneType;
+  createdAt: number;
+}
+
 export type FortuneLevel =
   | "daikichi"
   | "chukichi"
@@ -9,22 +25,29 @@ export type FortuneLevel =
   | "kyo"
   | "daikyo";
 
-// Translation keys for fortune levels (used with i18n)
-export const FORTUNE_LEVEL_KEYS: FortuneLevel[] = [
-  "daikichi",
-  "chukichi",
-  "shokichi",
-  "kichi",
-  "suekichi",
-  "kyo",
-  "daikyo",
-];
-
-export interface OmikujiResult {
-  id: string; // Unique ID for history
+/**
+ * おみくじの結果。
+ * BaseFortune を拡張し、おみくじ固有のフィールドを持つ。
+ */
+export interface OmikujiResult extends BaseFortune {
+  type: "omikuji";
   level: FortuneLevel;
   messageIndex: number; // Index of the message in fortune.messages.[level]
   image: ImageSourcePropType; // Main result illustration
   color: string; // Theme color
-  createdAt: number; // Timestamp
+}
+
+/**
+ * すべての占い結果を表すユニオン型。
+ * 将来、タロット等が追加される場合にここに追加する。
+ */
+export type FortuneResult = OmikujiResult;
+
+// --- Type guards ---
+
+/**
+ * 結果がおみくじ種別かを判定する型ガード。
+ */
+export function isOmikujiResult(result: FortuneResult): result is OmikujiResult {
+  return result.type === "omikuji";
 }

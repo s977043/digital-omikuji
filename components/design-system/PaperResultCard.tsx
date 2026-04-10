@@ -11,26 +11,44 @@ import {
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
 import { useTranslation } from "react-i18next";
-import { DETAIL_KEYS } from "../../data/omikujiData";
+import { triggerHaptic } from "../../utils/haptics";
 import { OmikujiResult } from "../../types/omikuji";
-import { buildShareText } from "../../utils/buildShareText";
 import { Button } from "./Button";
 import { MotionView } from "./MotionView";
 import { SurfaceCard } from "./SurfaceCard";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 const ANIMATION_TIMING = {
   tie: 1200,
   keep: 800,
 };
 
+export interface FortuneDetailEntry {
+  key: string;
+  label: string;
+  value: string;
+}
+
 interface PaperResultCardProps {
   fortune: OmikujiResult;
+  fortuneTitle: string;
+  fortuneMessage: string;
+  detailEntries: FortuneDetailEntry[];
+  shareText: string;
   onReset: () => void;
   reducedMotion?: boolean;
 }
 
-export function PaperResultCard({ fortune, onReset, reducedMotion = false }: PaperResultCardProps) {
+export function PaperResultCard({
+  fortune,
+  fortuneTitle,
+  fortuneMessage,
+  detailEntries,
+  shareText,
+  onReset,
+  reducedMotion = false,
+}: PaperResultCardProps) {
   const { height } = useWindowDimensions();
   const cardRef = useRef<View>(null);
   const tieTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,7 +64,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
     accentColor: string;
   }>("result.paperResult");
   const fortuneColor = getStringToken(`semantic.fortune.level.${fortune.level}`);
-  const isCompactHeight = height < 720;
+  const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
   const actionButtonStyle = {
     minHeight: isCompactHeight ? 48 : 56,
     paddingVertical: isCompactHeight ? 10 : 12,
@@ -59,20 +77,14 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
     };
   }, []);
 
-  const fortuneTitle = t(`fortune.levels.${fortune.level}`);
-  const fortuneMessages = t(`fortune.messages.${fortune.level}`, {
-    returnObjects: true,
-  });
-  const fortuneMessage = Array.isArray(fortuneMessages)
-    ? fortuneMessages[fortune.messageIndex] || fortuneMessages[0]
-    : String(fortuneMessages);
-
   const handleTie = useCallback(() => {
     if (exitAnimation) return;
 
-    if (Platform.OS !== "web" && !reducedMotion) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
+    triggerHaptic(
+      { type: "notification", style: Haptics.NotificationFeedbackType.Success },
+      false,
+      reducedMotion
+    );
     setExitAnimation("tie");
 
     if (Platform.OS === "android") {
@@ -87,9 +99,11 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
   const handleKeep = useCallback(() => {
     if (exitAnimation) return;
 
-    if (Platform.OS !== "web" && !reducedMotion) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    }
+    triggerHaptic(
+      { type: "notification", style: Haptics.NotificationFeedbackType.Success },
+      false,
+      reducedMotion
+    );
     setExitAnimation("keep");
 
     if (Platform.OS === "android") {
@@ -101,11 +115,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
 
   const handleShare = async () => {
     try {
-      const message = buildShareText({
-        level: fortune.level,
-        title: fortuneTitle,
-        description: fortuneMessage,
-      });
+      const message = shareText;
 
       if (Platform.OS === "web") {
         try {
@@ -341,9 +351,9 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
                   gap: isCompactHeight ? 10 : 14,
                 }}
               >
-                {DETAIL_KEYS.map((key) => (
+                {detailEntries.map((entry) => (
                   <View
-                    key={key}
+                    key={entry.key}
                     style={{
                       flexDirection: "row",
                       gap: 12,
@@ -357,10 +367,10 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
                         fontWeight: "700",
                       }}
                     >
-                      {t(`fortune.detailLabels.${key}`)}
+                      {entry.label}
                     </Text>
                     <Text style={{ flex: 1, color: resultTokens.bodyColor, lineHeight: 23 }}>
-                      {t(`fortune.details.${fortune.level}.${key}`)}
+                      {entry.value}
                     </Text>
                   </View>
                 ))}

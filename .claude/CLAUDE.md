@@ -1,29 +1,21 @@
-# Claude Code Project Guide (Digital Omikuji)
+# Claude Code技術設定（Digital Omikuji）
 
-> **Single source:** Rules are defined in [AGENTS.md](./AGENTS.md). This file contains only Claude-specific configurations.
+> 作業方針は[CLAUDE.md](../CLAUDE.md)、共通ルールは[AGENTS.md](../AGENTS.md)を参照。
 
-## Critical Rules (Summary)
+## 設定ファイル
 
-- **Security**: Do not access secrets (`.env`, `secrets/`).
-- **Workflow**: `pnpm test` must pass before PR.
-- **SSOT**: See `AGENTS.md` for tech stack, style guides, and definitions.
+- 権限: `.claude/settings.json`
+- Hook: `.claude/hooks/`（`format.sh`, `safety.sh`）
 
-## Claude-specific
+## カスタムコマンド
 
-- **Permissions**: `.claude/settings.json` (See for allowed/denied commands)
-- **Hooks**: `.claude/hooks/` (Auto-format on edit, safety guard before Bash)
-- **Steering docs**: `.agent/steering/`
+| コマンド    | 説明                                             |
+| ----------- | ------------------------------------------------ |
+| `/check`    | lint + testを実行し、失敗原因と修正案を提示      |
+| `/pr`       | 現在の差分からPR本文を日本語で自動生成           |
+| `/evidence` | テスト結果サマリーを確認                         |
+| `/plan`     | タスク計画と実装プランを生成                     |
+| `/review`   | 正確性・エッジケース・セキュリティ観点でレビュー |
+| `/wt`       | Git Worktreeの準備と管理                         |
 
-## Custom Commands
-
-- `/check` : Run quality checks (lint/test)
-- `/pr` : Draft PR description
-- `/help` : List these commands details (check `.claude/commands/`)
-
-## Quick reference (from AGENTS.md)
-
-- Package manager: `pnpm` (not npm)
-- Test: `pnpm test`
-- Build: `pnpm build`
-- Safety: No secrets access, no destructive commands without confirmation
-- Workflow: Small changes -> test -> PR
+詳細: `.claude/commands/`

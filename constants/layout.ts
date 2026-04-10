@@ -1,0 +1,1 @@
+export const COMPACT_HEIGHT_BREAKPOINT = 720;

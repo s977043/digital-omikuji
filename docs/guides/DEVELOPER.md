@@ -36,7 +36,7 @@ digital-omikuji/
 - **Unit Test**: `useOmikujiLogic` などのフック単体テスト
 - **Component Test**: `FortuneDisplay` などの UI テスト
 
-```bash
+````bash
 # 全テスト実行
 pnpm test
 
@@ -57,7 +57,7 @@ Expo Application Services (EAS) を使用したクラウドビルドフローを
 ```bash
 # ビルドコマンド例
 eas build --profile development --platform android
-```
+````
 
 ## 🌐 Web ビルド & デプロイ (Vercel)
 
@@ -71,7 +71,7 @@ Web 版は Vercel へのデプロイをサポートしています。
 
 ### ローカルでのビルド確認
 
-```bash
+````bash
 pnpm build
 ```text
 
@@ -112,30 +112,45 @@ export const ACQUIRED_FORTUNES = [
     color: "#808080",
   },
 ];
-```
+````
 
 ## 🔊 サウンド実装ガイド
 
-`SoundManager` クラス (`utils/SoundManager.ts`) が実装されています。
-現在は基盤のみの実装ですが、以下の手順で効果音を追加可能です。
+### 現在の構成
 
-1. **ファイル追加**: `assets/sounds/` に音声ファイルを配置。
-2. **ロード処理**: `app/_layout.tsx` または `index.tsx` で初期化時にロード。
-3. **再生**: 任意のタイミングで `soundManager.playSound('key')` を呼び出す。
+効果音は `SoundManager` クラス (`utils/SoundManager.ts`) + `useSoundEffects` フック (`hooks/useSoundEffects.ts`) で管理されています。
+
+**使用中の効果音:**
+
+| キー     | ファイル                   | 再生タイミング |
+| -------- | -------------------------- | -------------- |
+| `shake`  | `assets/sounds/shake.wav`  | シェイク開始時 |
+| `result` | `assets/sounds/result.wav` | 結果表示時     |
+
+**ミュート制御:** ヘッダーの `MuteToggle` (`components/design-system/MuteToggle.tsx`) でユーザーが ON/OFF を切り替え可能。
+
+### 新しい効果音の追加手順
+
+1. **ファイル追加**: `assets/sounds/` に `.wav` ファイルを配置。
+2. **フックに登録**: `hooks/useSoundEffects.ts` の `SOUNDS_TO_LOAD` 配列にエントリーを追加。
+3. **再生**: `playSound('key')` を任意のタイミングで呼び出す。
 
 ```typescript
-// 実装例
-await soundManager.loadSound("shake", require("../assets/sounds/shake.mp3"));
-soundManager.playSound("shake");
-```text
+// hooks/useSoundEffects.ts に追加
+const SOUNDS_TO_LOAD = [
+  { key: "shake", loader: () => require("../assets/sounds/shake.wav") },
+  { key: "result", loader: () => require("../assets/sounds/result.wav") },
+  { key: "new_sound", loader: () => require("../assets/sounds/new_sound.wav") }, // 追加
+];
+```
 
 ## 🔍 トラブルシューティング
 
-**Q: "Network response timed out" で接続できない (WSL2)**
+### Q: "Network response timed out" で接続できない (WSL2)
 
 - **A**: `npx expo start --tunnel` を使用するか、Windows のファイアウォール設定を確認してください。Docker 使用時は `docker compose exec app ...` 経由で行うのが確実です。
 
-**Q: 実機でシェイクが反応しない**
+### Q: 実機でシェイクが反応しない
 
 - **A**: `expo-sensors` の権限許可を確認してください。また、開発中は画面右下の「🐞 デバッグモード」ボタンで動作確認が可能です。
 

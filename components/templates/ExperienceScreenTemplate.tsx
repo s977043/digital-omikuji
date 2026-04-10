@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from "react";
 import {
-  findNodeHandle,
   ImageBackground,
   Platform,
   ScrollView,
@@ -9,6 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 type WebStyle = ViewStyle & {
   minHeight?: number | string;
@@ -56,7 +56,7 @@ export function ExperienceScreenTemplate({
   const canvasColor = getStringToken("semantic.surface.experience.canvas");
   const sceneOverlay = getComponentTokens<{ backgroundColor: string }>("overlay.sceneScrim");
   const hasBottomActions = bottomLeftAction || bottomRightAction;
-  const isCompactHeight = height < 720;
+  const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
   const isOverlayActive = overlay != null;
   const backgroundPointerEvents = isOverlayActive ? "none" : "auto";
 
@@ -66,13 +66,7 @@ export function ExperienceScreenTemplate({
     }
 
     const overlayCurrent = overlayContainerRef.current as unknown;
-    const overlayHandle = findNodeHandle(overlayContainerRef.current) as unknown;
-    const overlayElement =
-      overlayCurrent instanceof HTMLElement
-        ? overlayCurrent
-        : overlayHandle instanceof HTMLElement
-          ? overlayHandle
-          : null;
+    const overlayElement = overlayCurrent instanceof HTMLElement ? overlayCurrent : null;
 
     if (!overlayElement) {
       return;

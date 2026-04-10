@@ -67,6 +67,10 @@ export default function PrivacyPolicyScreen() {
         本アプリは、収集したデータを第三者に販売、貸与、または提供することはありません。
       </DocumentSection>
 
+      <DocumentSection title="免責事項">
+        本アプリは娯楽（エンターテインメント）として提供されています。表示される運勢やメッセージはランダムに生成されたもので、実際の占い・鑑定・予言ではありません。医療・法律・投資等の専門的判断の根拠として使用しないでください。
+      </DocumentSection>
+
       <DocumentSection title="お問い合わせ">
         本プライバシーポリシーに関するご質問は、GitHub リポジトリの Issue を通じてご連絡ください。
       </DocumentSection>
