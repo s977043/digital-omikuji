@@ -62,6 +62,19 @@ describe("PageHeader", () => {
       expect(getByText("LEFT")).toBeTruthy();
       expect(queryByText("RIGHT")).toBeNull();
     });
+
+    it("stacked レイアウトで leadingAction のみ指定 (trailingAction 省略の null 分岐)", () => {
+      const { getByText, queryByText } = render(
+        <PageHeader
+          title="stacked leading only"
+          actionPlacement="stacked"
+          leadingAction={<Text>戻る</Text>}
+        />
+      );
+      expect(getByText("stacked leading only")).toBeTruthy();
+      expect(getByText("戻る")).toBeTruthy();
+      expect(queryByText("全削除")).toBeNull();
+    });
   });
 
   describe("tone", () => {
