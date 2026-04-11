@@ -2,7 +2,7 @@ import { FortuneLevel } from "../types/omikuji";
 import { ImageSourcePropType } from "react-native";
 
 // Placeholder image for now
-const PLACEHOLDER_IMAGE = require("../assets/omikuji_cylinder.png");
+const PLACEHOLDER_IMAGE = require("../assets/omikuji_cylinder.webp");
 
 // Detail keys that correspond to translation keys in fortune.detailLabels and fortune.details
 export const DETAIL_KEYS = [

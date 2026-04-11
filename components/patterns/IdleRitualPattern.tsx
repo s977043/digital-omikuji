@@ -36,8 +36,8 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
         <Image
           source={
             hasDrawnToday
-              ? require("../../assets/omikuji_confirmed.png")
-              : require("../../assets/omikuji_cylinder.png")
+              ? require("../../assets/omikuji_confirmed.webp")
+              : require("../../assets/omikuji_cylinder.webp")
           }
           style={{ width: imageSize, height: imageSize, borderRadius: imageSize / 2 }}
           resizeMode="cover"
