@@ -1,11 +1,29 @@
 import React from "react";
-import { Platform, Text } from "react-native";
+import { Platform, Text, View } from "react-native";
 import { render } from "@testing-library/react-native";
 import { SurfaceCard } from "../SurfaceCard";
+import * as designSystem from "../../../design-system";
+
+function flattenStyle(style: unknown): Record<string, unknown> {
+  if (!style) return {};
+  if (Array.isArray(style)) {
+    return style.reduce<Record<string, unknown>>((acc, s) => ({ ...acc, ...flattenStyle(s) }), {});
+  }
+  return style as Record<string, unknown>;
+}
+
+function getRootStyle(root: ReturnType<typeof render>): Record<string, unknown> {
+  // SurfaceCard が描画する一番外側の View を取得
+  const rootView = root.UNSAFE_getAllByType(View).find((v) => v.props.style);
+  return flattenStyle(rootView?.props.style);
+}
 
 describe("SurfaceCard", () => {
+  const originalOS = Platform.OS;
+
   afterEach(() => {
-    (Platform as { OS: string }).OS = "ios";
+    (Platform as { OS: string }).OS = originalOS;
+    jest.restoreAllMocks();
   });
 
   it("renders children", () => {
@@ -36,7 +54,7 @@ describe("SurfaceCard", () => {
       expect(getByText("paper")).toBeTruthy();
     });
 
-    it("documentPanel をレンダリングできる (shadow なし)", () => {
+    it("documentPanel をレンダリングできる", () => {
       const { getByText } = render(
         <SurfaceCard variant="documentPanel">
           <Text>document</Text>
@@ -47,34 +65,58 @@ describe("SurfaceCard", () => {
   });
 
   describe("platform shadow", () => {
-    it("Platform.OS='web' で boxShadow に変換される", () => {
+    it("Platform.OS='web' + glassCard では boxShadow が style に含まれる", () => {
       (Platform as { OS: string }).OS = "web";
-      const { getByText } = render(
-        <SurfaceCard variant="paperCard">
+      const root = render(
+        <SurfaceCard variant="glassCard">
           <Text>web shadow</Text>
         </SurfaceCard>
       );
-      expect(getByText("web shadow")).toBeTruthy();
+      const style = getRootStyle(root);
+      expect(style).toHaveProperty("boxShadow");
     });
 
-    it("Platform.OS='ios' では raw shadow スタイルを使う", () => {
+    it("Platform.OS='ios' + glassCard では shadowColor 等が style に含まれる", () => {
       (Platform as { OS: string }).OS = "ios";
-      const { getByText } = render(
+      const root = render(
         <SurfaceCard variant="glassCard">
           <Text>ios shadow</Text>
         </SurfaceCard>
       );
-      expect(getByText("ios shadow")).toBeTruthy();
+      const style = getRootStyle(root);
+      expect(style).toHaveProperty("shadowColor");
+      expect(style).not.toHaveProperty("boxShadow");
     });
 
-    it("documentPanel variant は shadow を持たない", () => {
+    it("documentPanel variant は shadow を持たない (web でも boxShadow なし)", () => {
       (Platform as { OS: string }).OS = "web";
-      const { getByText } = render(
+      const root = render(
         <SurfaceCard variant="documentPanel">
           <Text>no shadow</Text>
         </SurfaceCard>
       );
-      expect(getByText("no shadow")).toBeTruthy();
+      const style = getRootStyle(root);
+      expect(style).not.toHaveProperty("boxShadow");
+      expect(style).not.toHaveProperty("shadowColor");
+    });
+
+    it("Platform.OS='web' で rawShadow フィールドが未定義でも `?? 0` fallback が効く", () => {
+      (Platform as { OS: string }).OS = "web";
+      const originalGetToken = designSystem.getToken;
+      jest.spyOn(designSystem, "getToken").mockImplementation((layer, path) => {
+        if (layer === "primitive" && path === "elevation.card") {
+          return {};
+        }
+        return originalGetToken(layer, path);
+      });
+
+      const root = render(
+        <SurfaceCard variant="paperCard">
+          <Text>fallback</Text>
+        </SurfaceCard>
+      );
+      const style = getRootStyle(root);
+      expect(style.boxShadow).toBe("0px 0px 0px rgba(0, 0, 0, 0)");
     });
   });
 

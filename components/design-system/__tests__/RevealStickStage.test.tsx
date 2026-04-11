@@ -10,8 +10,10 @@ jest.mock("../MotionView", () => {
 });
 
 describe("RevealStickStage", () => {
+  const originalOS = Platform.OS;
+
   afterEach(() => {
-    (Platform as { OS: string }).OS = "ios";
+    (Platform as { OS: string }).OS = originalOS;
   });
 
   it("奉納の文言が表示される", () => {
