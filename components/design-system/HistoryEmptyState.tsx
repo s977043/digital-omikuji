@@ -24,7 +24,7 @@ export function HistoryEmptyState() {
         }}
       >
         <Image
-          source={require("../../assets/empty_history.png")}
+          source={require("../../assets/empty_history.webp")}
           style={{ width: 92, height: 92, opacity: 0.8 }}
           resizeMode="contain"
           accessible={false}

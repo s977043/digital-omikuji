@@ -20,6 +20,7 @@
     "lint:fix": "eslint . --fix",
     "lint:md": "markdownlint .",
     "lint:md:fix": "markdownlint . --fix",
+    "optimize:images": "node scripts/optimize-images.js",
     "validate:skills": "node .agent/skills/validate-skills.js"
   },
   "dependencies": {
@@ -78,6 +79,7 @@
     "prettier": "^3.8.1",
     "react-test-renderer": "19.2.4",
     "serve": "^14.2.6",
+    "sharp": "^0.34.5",
     "tailwindcss": "3.4.19",
     "typescript": "^5.9.3"
   },
