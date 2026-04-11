@@ -50,16 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20
-          cache: "pnpm"
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
 
       # Playwright ブラウザのキャッシュ (package.jsonからバージョン取得で安定化)
       - name: Get Playwright version
