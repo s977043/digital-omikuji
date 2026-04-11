@@ -7,7 +7,7 @@ inputs:
     required: false
     default: "20"
   install-dependencies:
-    description: "Whether to run pnpm install --frozen-lockfile"
+    description: "Whether to run pnpm install --frozen-lockfile --prefer-offline"
     required: false
     default: "true"
 
