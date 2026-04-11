@@ -2,6 +2,8 @@ import React from "react";
 import { Text, View } from "react-native";
 import { HistoryEntry } from "../../utils/HistoryStorage";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { getFortuneLevelColor } from "../../design-system/fortuneTokens";
+import { isOmikujiResult } from "../../types/omikuji";
 import { SurfaceCard } from "./SurfaceCard";
 
 function formatDate(timestamp: number): string {
@@ -27,7 +29,8 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
     bodyColor: string;
   }>("history.item");
   const ritualBodyFont = getStringToken("primitive.typography.family.ritualBody");
-  const fortuneColor = getStringToken(`semantic.fortune.level.${item.level}`);
+  // 現状は omikuji 種別のみだが、将来の占い種別追加に備えて型ガードで分岐
+  const fortuneColor = isOmikujiResult(item) ? getFortuneLevelColor(item.level) : "#FFFFFF";
 
   return (
     <SurfaceCard variant="glassCard">

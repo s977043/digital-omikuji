@@ -17,6 +17,7 @@ import { Button } from "./Button";
 import { MotionView } from "./MotionView";
 import { SurfaceCard } from "./SurfaceCard";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { getFortuneLevelColor } from "../../design-system/fortuneTokens";
 import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 const ANIMATION_TIMING = {
@@ -63,7 +64,7 @@ export function PaperResultCard({
     trimColor: string;
     accentColor: string;
   }>("result.paperResult");
-  const fortuneColor = getStringToken(`semantic.fortune.level.${fortune.level}`);
+  const fortuneColor = getFortuneLevelColor(fortune.level);
   const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
   const actionButtonStyle = {
     minHeight: isCompactHeight ? 48 : 56,
