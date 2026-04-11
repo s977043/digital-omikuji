@@ -2,10 +2,16 @@
 /**
  * Image optimization script.
  *
- * - Converts code-referenced PNGs to WebP (quality 90) for smaller bundles
- * - Losslessly recompresses app.json-referenced PNGs (icon/splash/adaptive-icon/favicon)
- *   — these must stay PNG for Expo/App Store requirements
- * - Downscales favicon.png to 192x192 (1024x1024 is wasteful for a favicon)
+ * - Converts code-referenced PNGs to WebP (quality 90) for smaller bundles.
+ * - Losslessly recompresses Expo config-referenced PNGs.
+ *   These must stay PNG because Expo/App Store requires PNG for splash, icon,
+ *   adaptiveIcon, and web favicon. See app.config.ts for the actual references.
+ *
+ * IMPORTANT:
+ * The KEEP_PNG list must mirror the image references in `app.config.ts` and
+ * `app.json`. At the time of writing, `app.config.ts` splash uses
+ * `shrine_background.png`, and adaptiveIcon/web.favicon use `icon.png`.
+ * Update this list whenever the config changes.
  *
  * Usage: node scripts/optimize-images.js
  */
@@ -24,13 +30,20 @@ const TO_WEBP = [
   "empty_history.png",
 ];
 
-// Images referenced from app.json (icon / splash / adaptiveIcon / favicon).
-// Must stay PNG — losslessly recompress.
+// Images referenced from Expo config (app.config.ts / app.json).
+// Must stay PNG because Expo/stores require PNG for these slots.
+// Keep this list in sync with the config files.
 const KEEP_PNG = [
+  // app.config.ts: icon / adaptiveIcon.foregroundImage / web.favicon
   { file: "icon.png", resize: null },
+  // app.config.ts: splash.image (uses shrine_background.png — keep both PNG+WebP;
+  // PNG for the native splash, WebP for in-app ImageBackground runtime use)
+  { file: "shrine_background.png", resize: null },
+  // app.json: splash, adaptiveIcon fallback (unused by app.config.ts override but
+  // referenced in app.json for bookkeeping)
   { file: "splash.png", resize: null },
   { file: "adaptive-icon.png", resize: null },
-  { file: "favicon.png", resize: 192 }, // favicon doesn't need 1024x1024
+  { file: "favicon.png", resize: 192 },
 ];
 
 async function fileSizeKB(filePath) {
@@ -47,12 +60,24 @@ async function convertToWebp(fileName) {
   const dest = path.join(ASSETS_DIR, fileName.replace(/\.png$/, ".webp"));
   const beforeKB = await fileSizeKB(src);
 
+  // Idempotent: if the source PNG is gone but the WebP exists, it's already optimized.
+  if (beforeKB === null) {
+    const existingKB = await fileSizeKB(dest);
+    if (existingKB !== null) {
+      console.log(`  ${fileName} → ${path.basename(dest)}: already optimized (${existingKB} KB)`);
+      return;
+    }
+    throw new Error(`Input file is missing: ${src}`);
+  }
+
   await sharp(src).webp({ quality: 90, effort: 6 }).toFile(dest);
 
   const afterKB = await fileSizeKB(dest);
   const saving = beforeKB - afterKB;
   const percent = beforeKB ? Math.round((saving / beforeKB) * 100) : 0;
-  console.log(`  ${fileName} → ${path.basename(dest)}: ${beforeKB} KB → ${afterKB} KB (-${percent}%)`);
+  console.log(
+    `  ${fileName} → ${path.basename(dest)}: ${beforeKB} KB → ${afterKB} KB (-${percent}%)`
+  );
 }
 
 async function recompressPng({ file, resize }) {
@@ -63,10 +88,12 @@ async function recompressPng({ file, resize }) {
   if (resize) {
     pipeline = pipeline.resize(resize, resize, { fit: "contain" });
   }
-  // Lossless PNG recompression with maximum effort
-  const buffer = await pipeline
-    .png({ compressionLevel: 9, effort: 10, palette: true })
-    .toBuffer();
+  // Lossless PNG recompression with maximum effort.
+  // Intentionally avoids `palette: true` because palette quantization is lossy
+  // for photographic images (shrine_background, splash, etc.) and can degrade
+  // subtle gradients. compressionLevel:9 + effort:10 gives the best lossless
+  // result.
+  const buffer = await pipeline.png({ compressionLevel: 9, effort: 10 }).toBuffer();
 
   await fs.writeFile(src, buffer);
   const afterKB = await fileSizeKB(src);
