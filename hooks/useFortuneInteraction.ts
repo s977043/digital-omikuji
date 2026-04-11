@@ -45,6 +45,10 @@ export function useFortuneInteraction({
   const { t } = useTranslation();
   const tieTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const keepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // 二重実行ガードを useRef で実装。state ベースだと同期的な連続呼び出し
+  // （連打、プログラム的トリガー）に対して setState の非同期更新が間に合わず
+  // 副作用が複数回走る可能性があるため、ref で即座にロックする。
+  const lockedRef = useRef(false);
   const [exitAnimation, setExitAnimation] = useState<FortuneExitAnimation>(null);
   const [showTiedComplete, setShowTiedComplete] = useState(false);
 
@@ -56,7 +60,8 @@ export function useFortuneInteraction({
   }, []);
 
   const handleTie = useCallback(() => {
-    if (exitAnimation) return;
+    if (lockedRef.current) return;
+    lockedRef.current = true;
 
     triggerHaptic(
       { type: "notification", style: Haptics.NotificationFeedbackType.Success },
@@ -72,10 +77,11 @@ export function useFortuneInteraction({
     tieTimerRef.current = setTimeout(() => {
       setShowTiedComplete(true);
     }, FORTUNE_ANIMATION_TIMING.tie);
-  }, [exitAnimation, reducedMotion, t]);
+  }, [reducedMotion, t]);
 
   const handleKeep = useCallback(() => {
-    if (exitAnimation) return;
+    if (lockedRef.current) return;
+    lockedRef.current = true;
 
     triggerHaptic(
       { type: "notification", style: Haptics.NotificationFeedbackType.Success },
@@ -89,7 +95,7 @@ export function useFortuneInteraction({
     }
 
     keepTimerRef.current = setTimeout(onReset, FORTUNE_ANIMATION_TIMING.keep);
-  }, [exitAnimation, onReset, reducedMotion, t]);
+  }, [onReset, reducedMotion, t]);
 
   return {
     exitAnimation,

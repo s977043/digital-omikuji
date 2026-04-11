@@ -75,10 +75,12 @@ async function tryWebShare(
   backgroundColor: string | undefined
 ): Promise<boolean> {
   try {
-    const { toPng } = await import("html-to-image");
+    // 要素を先にチェックすることで、対象が存在しない/document が無い場合は
+    // 重い html-to-image モジュールの dynamic import を回避する
     const element = globalThis.document?.querySelector?.(webCardSelector) as HTMLElement | null;
     if (!element) return false;
 
+    const { toPng } = await import("html-to-image");
     const dataUrl = await toPng(element, {
       ...(backgroundColor ? { backgroundColor } : {}),
     });

@@ -22,7 +22,14 @@ export function TiedCompleteView({ onClose }: TiedCompleteViewProps) {
     <View
       style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 24 }}
     >
-      <Text style={{ fontSize: 64, marginBottom: 12 }}>🌸</Text>
+      <Text
+        accessible={false}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
+        style={{ fontSize: 64, marginBottom: 12 }}
+      >
+        🌸
+      </Text>
       <View
         accessible={false}
         accessibilityElementsHidden
