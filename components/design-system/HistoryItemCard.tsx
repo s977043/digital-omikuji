@@ -30,7 +30,10 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
   }>("history.item");
   const ritualBodyFont = getStringToken("primitive.typography.family.ritualBody");
   // 現状は omikuji 種別のみだが、将来の占い種別追加に備えて型ガードで分岐
-  const fortuneColor = isOmikujiResult(item) ? getFortuneLevelColor(item.level) : "#FFFFFF";
+  // omikuji 以外のフォールバック色は semantic トークンから取得（raw HEX は使わない）
+  const fortuneColor = isOmikujiResult(item)
+    ? getFortuneLevelColor(item.level)
+    : getStringToken("semantic.text.primary");
 
   return (
     <SurfaceCard variant="glassCard">
