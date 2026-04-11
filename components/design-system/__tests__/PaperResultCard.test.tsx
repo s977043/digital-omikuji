@@ -146,4 +146,16 @@ describe("PaperResultCard", () => {
       );
     });
   });
+
+  it("Share.share が例外を投げても outer catch で swallow し crash しない", async () => {
+    const shareSpy = jest.spyOn(Share, "share").mockRejectedValueOnce(new Error("share boom"));
+    const { getByText } = renderCard();
+
+    fireEvent.press(getByText("シェア"));
+
+    await waitFor(() => {
+      expect(shareSpy).toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalledWith("Sharing failed", expect.any(Error));
+    });
+  });
 });
