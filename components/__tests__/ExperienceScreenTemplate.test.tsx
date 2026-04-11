@@ -56,4 +56,55 @@ describe("ExperienceScreenTemplate", () => {
     expect(topBar?.props.accessibilityElementsHidden).toBe(false);
     expect(topBar?.props.importantForAccessibility).toBe("auto");
   });
+
+  it("renders children content", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate topBar={<Text>header</Text>}>
+        <Text>本文コンテンツ</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("本文コンテンツ")).toBeTruthy();
+  });
+
+  it("renders footer when provided", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate topBar={<Text>header</Text>} footer={<Text>フッター内容</Text>}>
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("フッター内容")).toBeTruthy();
+  });
+
+  it("renders bottomLeftAction and bottomRightAction", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate
+        topBar={<Text>header</Text>}
+        bottomLeftAction={<Text>左アクション</Text>}
+        bottomRightAction={<Text>右アクション</Text>}
+      >
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("左アクション")).toBeTruthy();
+    expect(getByText("右アクション")).toBeTruthy();
+  });
+
+  it("renders only bottomLeftAction without right one", () => {
+    const { getByText, queryByText } = render(
+      <ExperienceScreenTemplate topBar={<Text>header</Text>} bottomLeftAction={<Text>左のみ</Text>}>
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("左のみ")).toBeTruthy();
+    expect(queryByText("右のみ")).toBeNull();
+  });
+
+  it("renders without topBar", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate>
+        <Text>topBarなし</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("topBarなし")).toBeTruthy();
+  });
 });
