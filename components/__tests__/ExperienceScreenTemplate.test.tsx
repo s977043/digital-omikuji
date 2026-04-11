@@ -90,13 +90,30 @@ describe("ExperienceScreenTemplate", () => {
   });
 
   it("renders only bottomLeftAction without right one", () => {
-    const { getByText, queryByText } = render(
+    // 同じ identifier で「渡すケース」と「渡さないケース」を rerender で検証し、
+    // 差分として右アクションが描画されない（消える）ことを確認する
+    const RIGHT_LABEL = "右アクション専用ラベル";
+    const { queryByText, rerender } = render(
+      <ExperienceScreenTemplate
+        topBar={<Text>header</Text>}
+        bottomLeftAction={<Text>左のみ</Text>}
+        bottomRightAction={<Text>{RIGHT_LABEL}</Text>}
+      >
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    // 最初は両方描画される
+    expect(queryByText("左のみ")).toBeTruthy();
+    expect(queryByText(RIGHT_LABEL)).toBeTruthy();
+
+    // bottomRightAction を省略して再レンダリング
+    rerender(
       <ExperienceScreenTemplate topBar={<Text>header</Text>} bottomLeftAction={<Text>左のみ</Text>}>
         <Text>body</Text>
       </ExperienceScreenTemplate>
     );
-    expect(getByText("左のみ")).toBeTruthy();
-    expect(queryByText("右のみ")).toBeNull();
+    expect(queryByText("左のみ")).toBeTruthy();
+    expect(queryByText(RIGHT_LABEL)).toBeNull();
   });
 
   it("renders without topBar", () => {
