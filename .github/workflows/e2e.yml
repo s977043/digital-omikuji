@@ -39,16 +39,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  RUNNER_INPUT: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.runner || 'auto' }}
-  RUNNER_HEAVY: ubuntu-latest
-  USAGE_GUARD_THRESHOLD: "300"
-
 jobs:
   usage-guard:
     name: Usage Guard
     runs-on: ubuntu-slim
     timeout-minutes: 5
+    permissions: {}
     outputs:
       usable-minutes: ${{ steps.billing.outputs.usable-minutes }}
     steps:
@@ -63,8 +59,9 @@ jobs:
   android:
     name: Android E2E
     needs: usage-guard
-    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD)
-    runs-on: ${{ env.RUNNER_HEAVY }}
+    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'Android'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= 300
+    runs-on: ${{ (github.event_name == 'workflow_dispatch' && github.event.inputs.runner == 'slim') && 'ubuntu-slim' || 'ubuntu-latest' }}
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v6
@@ -76,6 +73,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
@@ -132,7 +130,8 @@ jobs:
     name: iOS E2E
     runs-on: macos-latest
     needs: usage-guard
-    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'iOS'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= fromJSON(env.USAGE_GUARD_THRESHOLD)
+    if: (github.event_name == 'workflow_dispatch' || ((github.base_ref == 'main' || github.base_ref == 'develop') && contains(github.event.pull_request.labels.*.name, 'iOS'))) && needs.usage-guard.result == 'success' && fromJSON(needs.usage-guard.outputs.usable-minutes) >= 300
+    timeout-minutes: 60
 
     steps:
       - uses: actions/checkout@v6
@@ -144,6 +143,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline
