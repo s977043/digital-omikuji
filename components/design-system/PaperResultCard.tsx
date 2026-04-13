@@ -1,29 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  Platform,
-  ScrollView,
-  Share,
-  Text,
-  ToastAndroid,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { captureRef } from "react-native-view-shot";
-import * as Haptics from "expo-haptics";
+import React, { useRef } from "react";
+import { Platform, ScrollView, Text, useWindowDimensions, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { triggerHaptic } from "../../utils/haptics";
+import { useFortuneInteraction } from "../../hooks/useFortuneInteraction";
 import { OmikujiResult } from "../../types/omikuji";
+import { executeShare } from "../../utils/shareUtils";
 import { Button } from "./Button";
 import { MotionView } from "./MotionView";
 import { SurfaceCard } from "./SurfaceCard";
+import { TiedCompleteView } from "./TiedCompleteView";
 import { getComponentTokens, getStringToken } from "../../design-system";
 import { getFortuneLevelColor } from "../../design-system/fortuneTokens";
 import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
-
-const ANIMATION_TIMING = {
-  tie: 1200,
-  keep: 800,
-};
 
 export interface FortuneDetailEntry {
   key: string;
@@ -50,13 +37,13 @@ export function PaperResultCard({
   onReset,
   reducedMotion = false,
 }: PaperResultCardProps) {
+  const { t } = useTranslation();
   const { height } = useWindowDimensions();
   const cardRef = useRef<View>(null);
-  const tieTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const keepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [exitAnimation, setExitAnimation] = useState<"tie" | "keep" | null>(null);
-  const [showTiedComplete, setShowTiedComplete] = useState(false);
-  const { t } = useTranslation();
+  const { exitAnimation, showTiedComplete, handleTie, handleKeep } = useFortuneInteraction({
+    reducedMotion,
+    onReset,
+  });
 
   const resultTokens = getComponentTokens<{
     titleColor: string;
@@ -71,178 +58,16 @@ export function PaperResultCard({
     paddingVertical: isCompactHeight ? 10 : 12,
   };
 
-  useEffect(() => {
-    return () => {
-      if (tieTimerRef.current) clearTimeout(tieTimerRef.current);
-      if (keepTimerRef.current) clearTimeout(keepTimerRef.current);
-    };
-  }, []);
-
-  const handleTie = useCallback(() => {
-    if (exitAnimation) return;
-
-    triggerHaptic(
-      { type: "notification", style: Haptics.NotificationFeedbackType.Success },
-      false,
-      reducedMotion
-    );
-    setExitAnimation("tie");
-
-    if (Platform.OS === "android") {
-      ToastAndroid.show(t("fortune.toastTie"), ToastAndroid.SHORT);
-    }
-
-    tieTimerRef.current = setTimeout(() => {
-      setShowTiedComplete(true);
-    }, ANIMATION_TIMING.tie);
-  }, [exitAnimation, reducedMotion, t]);
-
-  const handleKeep = useCallback(() => {
-    if (exitAnimation) return;
-
-    triggerHaptic(
-      { type: "notification", style: Haptics.NotificationFeedbackType.Success },
-      false,
-      reducedMotion
-    );
-    setExitAnimation("keep");
-
-    if (Platform.OS === "android") {
-      ToastAndroid.show(t("fortune.toastKeep"), ToastAndroid.SHORT);
-    }
-
-    keepTimerRef.current = setTimeout(onReset, ANIMATION_TIMING.keep);
-  }, [exitAnimation, onReset, reducedMotion, t]);
-
-  const handleShare = async () => {
-    try {
-      const message = shareText;
-
-      if (Platform.OS === "web") {
-        try {
-          const { toPng } = await import("html-to-image");
-          const element = globalThis.document?.querySelector?.(
-            '[data-testid="share-card"], [testID="share-card"]'
-          ) as HTMLElement | null;
-
-          if (element) {
-            const dataUrl = await toPng(element, {
-              backgroundColor: getStringToken("semantic.surface.document.panel"),
-            });
-            const response = await fetch(dataUrl);
-            const blob = await response.blob();
-            const file = new File([blob], "omikuji.png", { type: "image/png" });
-
-            if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-              await navigator.share({
-                files: [file],
-                title: t("fortune.shareTitle"),
-                text: message,
-              });
-            } else {
-              const link = document.createElement("a");
-              link.download = "omikuji.png";
-              link.href = dataUrl;
-              link.click();
-            }
-            return;
-          }
-        } catch (webShareError) {
-          console.error("Web sharing failed", webShareError);
-        }
-      }
-
-      let imageUri: string | undefined;
-      if (cardRef.current && Platform.OS !== "web") {
-        try {
-          imageUri = await captureRef(cardRef, { format: "png", quality: 0.8 });
-        } catch (captureError) {
-          console.error("Image capture failed", captureError);
-        }
-      }
-
-      await Share.share(
-        {
-          message,
-          ...(imageUri && Platform.OS === "ios" ? { url: imageUri } : {}),
-        },
-        {
-          ...(imageUri && Platform.OS === "android"
-            ? { dialogTitle: t("fortune.shareTitle") }
-            : {}),
-        }
-      );
-    } catch (error) {
-      console.error("Sharing failed", error);
-    }
-  };
+  const handleShare = () =>
+    executeShare({
+      shareText,
+      cardRef,
+      shareTitle: t("fortune.shareTitle"),
+      backgroundColor: getStringToken("semantic.surface.document.panel"),
+    });
 
   if (showTiedComplete) {
-    return (
-      <View
-        style={{ flex: 1, alignItems: "center", justifyContent: "center", paddingHorizontal: 24 }}
-      >
-        <Text style={{ fontSize: 64, marginBottom: 12 }}>🌸</Text>
-        <View
-          accessible={false}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-          style={{ flexDirection: "row", alignItems: "flex-start" }}
-        >
-          <Text style={{ fontSize: 40 }}>🌿</Text>
-          <View
-            style={{
-              backgroundColor: "rgba(255,255,255,0.92)",
-              paddingHorizontal: 12,
-              paddingVertical: 16,
-              marginHorizontal: 4,
-              borderRadius: 8,
-              borderWidth: 1,
-              borderColor: "#FDE68A",
-            }}
-          >
-            <Text
-              style={{
-                color: "#B91C1C",
-                fontSize: 13,
-                textAlign: "center",
-                fontFamily: getStringToken("primitive.typography.family.ritual"),
-              }}
-            >
-              {"御\n神\n籤"}
-            </Text>
-          </View>
-          <Text style={{ fontSize: 40 }}>🌿</Text>
-        </View>
-        <Text
-          style={{
-            color: "white",
-            fontSize: 22,
-            textAlign: "center",
-            marginTop: 24,
-            fontFamily: getStringToken("primitive.typography.family.ritual"),
-          }}
-        >
-          {t("fortune.tiedTitle")}
-        </Text>
-        <Text
-          style={{
-            color: "rgba(255,255,255,0.72)",
-            textAlign: "center",
-            marginTop: 10,
-            lineHeight: 24,
-          }}
-        >
-          {t("fortune.tiedMessage")}
-        </Text>
-        <Button
-          label={t("common.close")}
-          onPress={onReset}
-          variant="secondaryQuiet"
-          style={{ marginTop: 24, minWidth: 180 }}
-        />
-      </View>
-    );
+    return <TiedCompleteView onClose={onReset} />;
   }
 
   return (
