@@ -1,33 +1,34 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
+about: 不具合を報告する
+title: "[bug] "
 labels: bug
-assignees: ''
-
+assignees: ""
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## 概要
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '...'
-3. Scroll down to '...'
-4. See error
+不具合の内容を簡潔に書いてください。
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## 再現手順
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+1.
+2.
+3.
 
-**Environment (please complete the following information):**
- - OS: [e.g. iOS, Android]
- - Device: [e.g. iPhone 15, Pixel 7]
- - OS Version: [e.g. 17.0, 14]
- - App Version [e.g. 1.0.0]
+## 期待する動作
 
-**Additional context**
-Add any other context about the problem here.
+## 実際の動作
+
+## 環境
+
+- OS:
+- 端末 / ブラウザ:
+- OS / ブラウザバージョン:
+- アプリバージョン:
+
+## スクリーンショット / ログ
+
+必要に応じて添付してください。
+
+## 補足

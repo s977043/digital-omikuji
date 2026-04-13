@@ -1,0 +1,42 @@
+name: Actionlint
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - ".github/workflows/**"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
+    paths:
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  actionlint:
+    name: Lint GitHub Workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install actionlint
+        # インストールスクリプトをバイナリと同じタグ (v1.7.12) に固定して
+        # main ブランチ経由の供給網リスクを排除する。
+        run: |
+          mkdir -p "$RUNNER_TEMP/actionlint-bin"
+          curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash -o "$RUNNER_TEMP/download-actionlint.bash"
+          bash "$RUNNER_TEMP/download-actionlint.bash" 1.7.12 "$RUNNER_TEMP/actionlint-bin"
+          echo "$RUNNER_TEMP/actionlint-bin" >> "$GITHUB_PATH"
+
+      - name: Run actionlint
+        # shellcheck の info レベル警告は抑止（既存 workflow のスタイル差異を無視）
+        run: actionlint -color -shellcheck='-S warning'
