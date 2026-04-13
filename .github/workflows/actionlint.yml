@@ -29,9 +29,11 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Install actionlint
+        # インストールスクリプトをバイナリと同じタグ (v1.7.12) に固定して
+        # main ブランチ経由の供給網リスクを排除する。
         run: |
           mkdir -p "$RUNNER_TEMP/actionlint-bin"
-          curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash -o "$RUNNER_TEMP/download-actionlint.bash"
+          curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash -o "$RUNNER_TEMP/download-actionlint.bash"
           bash "$RUNNER_TEMP/download-actionlint.bash" 1.7.12 "$RUNNER_TEMP/actionlint-bin"
           echo "$RUNNER_TEMP/actionlint-bin" >> "$GITHUB_PATH"
 

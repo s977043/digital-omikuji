@@ -4,5 +4,5 @@ contact_links:
     url: https://github.com/s977043/digital-omikuji/security/advisories/new
     about: Report security vulnerabilities privately instead of opening a public issue.
   - name: Developer guide
-    url: https://github.com/s977043/digital-omikuji/blob/develop/docs/guides/DEVELOPER.md
+    url: https://github.com/s977043/digital-omikuji/blob/HEAD/docs/guides/DEVELOPER.md
     about: Check setup and development workflow notes before opening support issues.
