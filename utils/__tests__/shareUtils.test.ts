@@ -96,23 +96,22 @@ describe("executeShare", () => {
       globalThis.File = originalFile;
     });
 
-    it("falls back to native share when the web card element is not found", async () => {
+    it("does not call Share.share on web (RN Share API is unsupported)", async () => {
       globalThis.document = {
         querySelector: jest.fn().mockReturnValue(null),
       } as unknown as Document;
 
       await executeShare({ shareText: "share text" });
 
-      expect(shareSpy).toHaveBeenCalledWith({ message: "share text" }, {});
+      // Web では tryWebShare のみで完結し、Share.share にフォールバックしない
+      expect(shareSpy).not.toHaveBeenCalled();
     });
 
-    it("on web, falls back to Share.share when document is unavailable", async () => {
-      // globalThis.document が undefined の状況をシミュレート
+    it("returns without error when document is unavailable", async () => {
       globalThis.document = undefined as unknown as Document;
 
-      await executeShare({ shareText: "share text" });
-
-      expect(shareSpy).toHaveBeenCalledWith({ message: "share text" }, {});
+      await expect(executeShare({ shareText: "share text" })).resolves.toBeUndefined();
+      expect(shareSpy).not.toHaveBeenCalled();
     });
   });
 });

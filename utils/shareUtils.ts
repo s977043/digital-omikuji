@@ -43,12 +43,13 @@ export async function executeShare(options: ExecuteShareOptions): Promise<void> 
 
   try {
     if (Platform.OS === "web") {
-      const webShared = await tryWebShare(shareText, webCardSelector, shareTitle, backgroundColor);
-      if (webShared) return;
+      // Web では Share.share (React Native API) が使えないため、
+      // tryWebShare のみで完結する。失敗してもネイティブにフォールバックしない。
+      await tryWebShare(shareText, webCardSelector, shareTitle, backgroundColor);
+      return;
     }
 
-    const imageUri =
-      Platform.OS !== "web" && cardRef?.current ? await tryCaptureNative(cardRef) : undefined;
+    const imageUri = cardRef?.current ? await tryCaptureNative(cardRef) : undefined;
 
     await Share.share(
       {
@@ -103,6 +104,11 @@ async function tryWebShare(
     }
     return true;
   } catch (webShareError) {
+    // ユーザーが Web Share ダイアログをキャンセルした場合は AbortError が投げられるが、
+    // これは正常動作でありエラーログする必要はない。
+    if (webShareError instanceof DOMException && webShareError.name === "AbortError") {
+      return true; // ダイアログは表示されたのでシェア処理自体は成功扱い
+    }
     console.error("Web sharing failed", webShareError);
     return false;
   }
