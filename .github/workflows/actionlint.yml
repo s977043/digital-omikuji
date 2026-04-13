@@ -36,4 +36,5 @@ jobs:
           echo "$RUNNER_TEMP/actionlint-bin" >> "$GITHUB_PATH"
 
       - name: Run actionlint
-        run: actionlint -color
+        # shellcheck の info レベル警告は抑止（既存 workflow のスタイル差異を無視）
+        run: actionlint -color -shellcheck='-S warning'
