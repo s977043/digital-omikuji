@@ -76,15 +76,7 @@ function buildAnimStyle(values: AnimDict | undefined): Record<string, string | n
 }
 
 export const MotionView = forwardRef<View, MotionViewProps>(function MotionView(
-  {
-    animate,
-    from,
-    transition,
-    exit: _exit,
-    state: _state,
-    style,
-    ...rest
-  },
+  { animate, from, transition, exit: _exit, state: _state, style, ...rest },
   ref
 ) {
   // from が指定された場合、初回レンダーは from 値、次フレームで animate 値へ遷移させる。
@@ -109,10 +101,6 @@ export const MotionView = forwardRef<View, MotionViewProps>(function MotionView(
   } as Record<string, string | number>;
 
   return (
-    <View
-      ref={ref}
-      style={[style, animStyle as object, transitionStyle as object]}
-      {...rest}
-    />
+    <View ref={ref} style={[style, animStyle as object, transitionStyle as object]} {...rest} />
   );
 });
