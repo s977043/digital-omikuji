@@ -27,4 +27,20 @@ describe("MuteToggle", () => {
     fireEvent.press(getByText("ON"));
     expect(onToggle).toHaveBeenCalledTimes(1);
   });
+
+  it("isMuted=true の状態でもタップで onToggle が呼ばれる", () => {
+    const onToggle = jest.fn();
+    const { getByText } = render(<MuteToggle isMuted={true} onToggle={onToggle} />);
+    fireEvent.press(getByText("OFF"));
+    expect(onToggle).toHaveBeenCalledTimes(1);
+  });
+
+  it("accessibilityLabel が状態に応じて切り替わる", () => {
+    const { getByLabelText, rerender } = render(
+      <MuteToggle isMuted={false} onToggle={jest.fn()} />
+    );
+    expect(getByLabelText("音声をオフにする")).toBeTruthy();
+    rerender(<MuteToggle isMuted={true} onToggle={jest.fn()} />);
+    expect(getByLabelText("音声をオンにする")).toBeTruthy();
+  });
 });
