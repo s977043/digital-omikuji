@@ -146,6 +146,8 @@ export function PaperResultCard({
               showsVerticalScrollIndicator
             >
               <Text
+                accessibilityRole="header"
+                accessibilityLabel={`運勢は${fortuneTitle}`}
                 style={{
                   fontSize: isCompactHeight ? 42 : 54,
                   textAlign: "center",
@@ -156,6 +158,7 @@ export function PaperResultCard({
                 {fortuneTitle}
               </Text>
               <Text
+                accessibilityRole="text"
                 style={{
                   marginTop: isCompactHeight ? 8 : 10,
                   color: resultTokens.bodyColor,
@@ -173,13 +176,15 @@ export function PaperResultCard({
                   marginTop: isCompactHeight ? 14 : 20,
                   paddingTop: isCompactHeight ? 14 : 18,
                   borderTopWidth: 1,
-                  borderTopColor: "rgba(180, 83, 9, 0.18)",
+                  borderTopColor: getStringToken("semantic.border.paperDivider"),
                   gap: isCompactHeight ? 10 : 14,
                 }}
               >
                 {detailEntries.map((entry) => (
                   <View
                     key={entry.key}
+                    accessible
+                    accessibilityLabel={`${entry.label}。${entry.value}`}
                     style={{
                       flexDirection: "row",
                       gap: 12,
@@ -208,7 +213,7 @@ export function PaperResultCard({
                 padding: 16,
                 paddingVertical: isCompactHeight ? 12 : 16,
                 borderTopWidth: 1,
-                borderTopColor: "rgba(180, 83, 9, 0.18)",
+                borderTopColor: getStringToken("semantic.border.paperDivider"),
                 gap: isCompactHeight ? 8 : 10,
               }}
             >
