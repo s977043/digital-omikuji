@@ -70,6 +70,13 @@ class SoundManager {
         return;
       }
       try {
+        // 古い Sound オブジェクトを明示的にアンロードしてから再ロードする（リソースリーク防止）。
+        // unloadAsync 自体の失敗は致命的でないため握りつぶす。
+        try {
+          await sound.unloadAsync();
+        } catch {
+          /* noop */
+        }
         this.sounds.delete(key);
         const reloaded = await this.loadSound(key, source);
         if (reloaded) {
