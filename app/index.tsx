@@ -19,6 +19,7 @@ import { RevealStickStage } from "../components/design-system/RevealStickStage";
 import { Button } from "../components/design-system/Button";
 import { MuteToggle } from "../components/design-system/MuteToggle";
 import { PageHeader } from "../components/design-system/PageHeader";
+import { getStringToken } from "../design-system";
 
 const SHAKE_THRESHOLD = 1.8;
 
@@ -85,7 +86,13 @@ export default function OmikujiApp() {
       footer={
         appState === "IDLE" && !isCompactLayout ? (
           <View style={{ alignItems: "center", gap: 4 }}>
-            <Text style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, textAlign: "center" }}>
+            <Text
+              style={{
+                color: getStringToken("semantic.text.experience.hint"),
+                fontSize: 11,
+                textAlign: "center",
+              }}
+            >
               {t("disclaimer.inline")}
             </Text>
             <VersionDisplay />

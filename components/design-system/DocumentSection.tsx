@@ -32,6 +32,7 @@ export function DocumentSection({ title, children, subtle = false }: DocumentSec
           fontWeight: "700",
           marginBottom: 10,
         }}
+        accessibilityRole="header"
       >
         {title}
       </Text>

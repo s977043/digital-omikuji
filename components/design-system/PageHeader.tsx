@@ -86,7 +86,9 @@ export function PageHeader({
             <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
               {leadingAction}
               <View style={{ flexShrink: 1 }}>
-                <Text style={titleStyle}>{title}</Text>
+                <Text style={titleStyle} accessibilityRole="header">
+                  {title}
+                </Text>
                 {subtitle ? (
                   <Text style={{ color: subtitleColor, marginTop: 6, fontSize: 14 }}>
                     {subtitle}
