@@ -135,32 +135,35 @@ describe("SoundManager", () => {
     consoleSpy.mockRestore();
   });
 
-  it("warns if playing unloaded sound", async () => {
+  it("recovers from play error by reloading once", async () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
 
-    mockSound.getStatusAsync.mockResolvedValueOnce({ isLoaded: false });
-    const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
+    // 1 回目の replay は失敗、フォールバックで createAsync + replay が成功するパス
+    mockSound.replayAsync.mockRejectedValueOnce(new Error("Play error"));
 
     await soundManager.playSound("test");
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Cannot play sound test"),
-      expect.anything()
-    );
-    consoleSpy.mockRestore();
+    // 再ロード（createAsync）→ replay の順で呼ばれる
+    expect(Audio.Sound.createAsync).toHaveBeenCalledTimes(2);
+    expect(mockSound.replayAsync).toHaveBeenCalledTimes(2);
   });
 
-  it("handles play sound error", async () => {
+  it("logs error when both initial play and retry fail", async () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
 
-    mockSound.replayAsync.mockRejectedValueOnce(new Error("Play error"));
+    mockSound.replayAsync
+      .mockRejectedValueOnce(new Error("Play error"))
+      .mockRejectedValueOnce(new Error("Retry error"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
     await soundManager.playSound("test");
 
-    expect(consoleSpy).toHaveBeenCalledWith("Failed to play sound test:", expect.any(Error));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Failed to play sound test after retry:",
+      expect.any(Error)
+    );
     consoleSpy.mockRestore();
   });
 
