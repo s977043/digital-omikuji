@@ -39,18 +39,18 @@ export function TiedCompleteView({ onClose }: TiedCompleteViewProps) {
         <Text style={{ fontSize: 40 }}>🌿</Text>
         <View
           style={{
-            backgroundColor: "rgba(255,255,255,0.92)",
+            backgroundColor: getStringToken("semantic.surface.experience.tiedPaper"),
             paddingHorizontal: 12,
             paddingVertical: 16,
             marginHorizontal: 4,
             borderRadius: 8,
             borderWidth: 1,
-            borderColor: "#FDE68A",
+            borderColor: getStringToken("semantic.border.experience.tiedPaper"),
           }}
         >
           <Text
             style={{
-              color: "#B91C1C",
+              color: getStringToken("semantic.text.experience.tiedHeading"),
               fontSize: 13,
               textAlign: "center",
               fontFamily: ritualFontFamily,
@@ -62,6 +62,7 @@ export function TiedCompleteView({ onClose }: TiedCompleteViewProps) {
         <Text style={{ fontSize: 40 }}>🌿</Text>
       </View>
       <Text
+        accessibilityRole="header"
         style={{
           color: "white",
           fontSize: 22,
@@ -74,7 +75,7 @@ export function TiedCompleteView({ onClose }: TiedCompleteViewProps) {
       </Text>
       <Text
         style={{
-          color: "rgba(255,255,255,0.72)",
+          color: getStringToken("semantic.text.muted"),
           textAlign: "center",
           marginTop: 10,
           lineHeight: 24,

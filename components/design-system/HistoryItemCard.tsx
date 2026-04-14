@@ -35,8 +35,17 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
     ? getFortuneLevelColor(item.level)
     : getStringToken("semantic.text.primary");
 
+  const formattedDate = formatDate(item.createdAt);
+  // スクリーンリーダーでは「大吉。2026年4月11日 09:30。最高の運気です。」のように読み上げる
+  const combinedA11yLabel = `${fortuneTitle}。${formattedDate}。${fortuneMessage}`;
+
   return (
-    <SurfaceCard variant="glassCard">
+    <SurfaceCard
+      variant="glassCard"
+      accessible
+      accessibilityLabel={combinedA11yLabel}
+      accessibilityRole="summary"
+    >
       <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 16 }}>
         <Text
           style={{
@@ -48,7 +57,7 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
           {fortuneTitle}
         </Text>
         <Text style={{ color: tokens.metaColor, fontSize: 12, flexShrink: 1, textAlign: "right" }}>
-          {formatDate(item.createdAt)}
+          {formattedDate}
         </Text>
       </View>
       <Text
