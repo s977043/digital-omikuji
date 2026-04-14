@@ -38,6 +38,14 @@ function migrateLegacyEntry(raw: unknown): HistoryEntry | null {
   } as OmikujiResult;
 }
 
+/**
+ * 今日の日付を YYYY-MM-DD 形式で返す。
+ *
+ * この値は「1 日 1 回制限」の判定基準として使用される。
+ * デバイスのローカルタイムゾーンに依存する設計である点に注意:
+ * タイムゾーン変更・国境越えユーザーの挙動、将来 UTC 切替する場合の方針は
+ * `docs/guides/TIMEZONE_POLICY.md` を参照。
+ */
 export function getTodayString(): string {
   const now = new Date();
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
