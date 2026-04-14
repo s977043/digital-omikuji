@@ -173,7 +173,7 @@ export function PaperResultCard({
                   marginTop: isCompactHeight ? 14 : 20,
                   paddingTop: isCompactHeight ? 14 : 18,
                   borderTopWidth: 1,
-                  borderTopColor: "rgba(180, 83, 9, 0.18)",
+                  borderTopColor: getStringToken("semantic.border.paperDivider"),
                   gap: isCompactHeight ? 10 : 14,
                 }}
               >
@@ -208,7 +208,7 @@ export function PaperResultCard({
                 padding: 16,
                 paddingVertical: isCompactHeight ? 12 : 16,
                 borderTopWidth: 1,
-                borderTopColor: "rgba(180, 83, 9, 0.18)",
+                borderTopColor: getStringToken("semantic.border.paperDivider"),
                 gap: isCompactHeight ? 8 : 10,
               }}
             >
