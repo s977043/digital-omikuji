@@ -9,79 +9,79 @@
   },
   "home": {
     "title": "Happy New Year 2026",
-    "shakeToPlay": "Shake your phone\nto draw Omikuji",
+    "shakeToPlay": "Shake your phone\nto draw your fortune",
     "drawing": "Drawing your fortune...",
     "buttonPlay": "📱 Draw Omikuji",
     "debugPlay": "🐞 Test shake",
     "historyButton": "📜 Fortune Book"
   },
   "fortune": {
-    "shareTitle": "Share Omikuji",
-    "shareMessage": "🎍 New Year Omikuji 2026 🎍\n\nMy fortune is... ✨ {{title}} ✨\n\"{{description}}\"\n\n#Omikuji2026 #NewYear",
+    "shareTitle": "Share your Omikuji",
+    "shareMessage": "🎍 New Year Omikuji 2026 🎍\n\nMy fortune is… ✨ {{title}} ✨\n“{{description}}”\n\n#Omikuji2026 #NewYear",
     "tie": "Tie",
     "keep": "Keep",
-    "toastTie": "Fortune tied",
-    "toastKeep": "Fortune kept",
-    "tiedTitle": "Omikuji has been tied",
-    "tiedMessage": "May your wish come true...",
+    "toastTie": "Fortune tied to the shrine",
+    "toastKeep": "Fortune kept with you",
+    "tiedTitle": "Your Omikuji has been tied",
+    "tiedMessage": "May your wish find its way…",
     "levels": {
-      "daikichi": "Great Blessing",
-      "chukichi": "Middle Blessing",
-      "shokichi": "Small Blessing",
-      "kichi": "Blessing",
-      "suekichi": "Future Blessing",
-      "kyo": "Curse",
-      "daikyo": "Great Curse"
+      "daikichi": "Excellent Fortune",
+      "chukichi": "Good Fortune",
+      "shokichi": "Modest Fortune",
+      "kichi": "Fair Fortune",
+      "suekichi": "Future Fortune",
+      "kyo": "Misfortune",
+      "daikyo": "Great Misfortune"
     },
     "messages": {
       "daikichi": [
-        "The best fortune! It's your chance to try something new!",
-        "Your wishes will come true. Move forward without hesitation.",
-        "Someone you've been waiting for will come. Expect wonderful encounters.",
-        "Your financial luck is rising. You might receive unexpected income.",
-        "Good health fortune. You can be active and energetic."
+        "The brightest of fortunes — a perfect time to begin something new.",
+        "Your wishes will find their way. Step forward without hesitation.",
+        "The one you've been waiting for is near. Welcome the encounter.",
+        "Your financial fortune is rising. An unexpected windfall may appear.",
+        "Strong health flows through you. Move freely and with energy."
       ],
       "chukichi": [
-        "Your fortune is on the rise.",
-        "This is the time when your efforts bear fruit.",
-        "Good travel fortune. Why not take a short trip?",
-        "Signs of prosperous business.",
-        "Studying hard will bring good results."
+        "Your fortune rides a gentle rise.",
+        "A season when quiet effort bears fruit.",
+        "Travel is favored. Perhaps a short journey awaits.",
+        "Signs of prosperity in your work.",
+        "Dedicated study brings rewarding results."
       ],
       "shokichi": [
-        "Small happiness will come to you.",
-        "It's important to build up steadily without rushing.",
-        "Luck in conversations with friends.",
-        "Lost items may be found.",
-        "Stay healthy and things will go smoothly."
+        "A small happiness is drawing near.",
+        "Build patiently, without rushing.",
+        "Good fortune in conversations with friends.",
+        "Something lost may yet return to you.",
+        "Mind your health and all will flow smoothly."
       ],
       "kichi": [
-        "You can spend a peaceful day.",
-        "Maintaining the status quo will bring good fortune.",
-        "Consult with those around you when in trouble.",
-        "Moderate exercise will boost your luck.",
-        "Don't forget to be grateful."
+        "A day of quiet calm awaits you.",
+        "Keeping to the familiar brings good fortune.",
+        "When uncertain, turn to those around you.",
+        "A gentle walk or stretch will lift your luck.",
+        "Do not forget to give thanks."
       ],
       "suekichi": [
-        "Now is the time to endure. Fortune will open up eventually.",
-        "Haste makes waste. Be careful in your actions.",
-        "Good things will happen if you contact old friends.",
-        "Clean your room for a change of pace.",
-        "Small kindness will bring good fortune."
+        "A time to endure — your fortune will open in time.",
+        "Haste brings missteps. Act with care.",
+        "Reaching out to an old friend may bring a quiet blessing.",
+        "A tidy room invites a shift in spirit.",
+        "Small kindnesses draw good fortune to you."
       ],
       "kyo": [
-        "Don't push yourself. Watch and wait for now.",
-        "Be careful with your words.",
-        "Watch out for forgetting things.",
-        "Unexpected expenses may occur. Keep your wallet tight.",
-        "Fatigue tends to accumulate. Rest early."
+        "Do not push forward. Watch and wait.",
+        "Guard your words today.",
+        "Take care not to leave things behind.",
+        "Unexpected expenses may arise. Hold your purse close.",
+        "Fatigue builds quickly. Rest before it settles in."
       ],
       "daikyo": [
-        "The calm before the storm. Act with caution.",
-        "Keep your self-assertion modest. Listen to others.",
-        "Health first. Review your demanding schedule.",
-        "Value trust. Avoid misunderstandings.",
-        "It's darkest before dawn. Morning will surely come."
+        "The calm before the storm — tread with care.",
+        "Speak less, listen more today.",
+        "Health comes first. Rethink a demanding schedule.",
+        "Honor the trust of others. Avoid misunderstandings.",
+        "It is darkest before dawn — morning will surely come."
       ]
     },
     "detailLabels": {
@@ -95,76 +95,76 @@
     },
     "details": {
       "daikichi": {
-        "wish": "Your wishes will come true as you desire.",
-        "waitingPerson": "Good news! They will come soon.",
-        "lostItem": "It will be found. Try looking in high places.",
-        "business": "Profitable. Go ahead with confidence.",
-        "study": "Study with peace of mind.",
-        "health": "Excellent condition. Your body can handle anything.",
-        "love": "A fateful encounter awaits. Be proactive."
+        "wish": "It will come true just as you hope.",
+        "waitingPerson": "Good tidings — they will arrive soon.",
+        "lostItem": "It will return. Look in a high place.",
+        "business": "Profit is likely. Proceed with confidence.",
+        "study": "Study with a calm and settled mind.",
+        "health": "In fine form. Your body will carry you far.",
+        "love": "A meaningful encounter awaits. Be open."
       },
       "chukichi": {
-        "wish": "It will come true, but don't let your guard down.",
-        "waitingPerson": "They will come. Look forward to it.",
-        "lostItem": "Hard to find, but it will appear.",
-        "business": "Profitable, but watch your spending.",
-        "study": "Effort will bring results.",
-        "health": "Generally good. Don't overdo it.",
-        "love": "Good encounters may happen. Be natural."
+        "wish": "It will come true — but do not let your guard down.",
+        "waitingPerson": "They will come. Anticipate with joy.",
+        "lostItem": "Not easily found, yet it will appear.",
+        "business": "Profitable, but watch what you spend.",
+        "study": "Effort will meet its reward.",
+        "health": "Mostly well. Avoid overexertion.",
+        "love": "A good encounter may arrive. Be yourself."
       },
       "shokichi": {
-        "wish": "Small wishes may come true.",
-        "waitingPerson": "They will come. Wait for contact.",
-        "lostItem": "It's somewhere in your home.",
-        "business": "Good fortune if you work sincerely without rushing.",
-        "study": "Time to strengthen the basics.",
-        "health": "Take care of your health.",
-        "love": "Romance may develop from friendship."
+        "wish": "A modest wish may come true.",
+        "waitingPerson": "They will come. Await word from them.",
+        "lostItem": "It rests somewhere within your home.",
+        "business": "Sincerity without haste brings fortune.",
+        "study": "A time to strengthen the foundations.",
+        "health": "Take gentle care of yourself.",
+        "love": "Romance may grow from a friendship."
       },
       "kichi": {
-        "wish": "It will take time to come true.",
-        "waitingPerson": "Delayed, but they will come.",
-        "lostItem": "It might be outside.",
-        "business": "Maintain the status quo.",
-        "study": "Daily accumulation is important.",
-        "health": "No problem if you don't overdo it.",
-        "love": "Take it slowly."
+        "wish": "It will come true, but in its own time.",
+        "waitingPerson": "Delayed, yet they will arrive.",
+        "lostItem": "It may be found outdoors.",
+        "business": "Hold steady on your current course.",
+        "study": "Daily practice is what matters.",
+        "health": "Well enough, if you do not overdo it.",
+        "love": "Move slowly and without pressure."
       },
       "suekichi": {
-        "wish": "Difficult to achieve now.",
+        "wish": "Difficult to fulfill at present.",
         "waitingPerson": "They will be late.",
-        "lostItem": "Hard to find.",
-        "business": "Better not to pursue profits now.",
-        "study": "Time to be patient. It will bloom later.",
-        "health": "Fatigue accumulates easily. Rest well.",
-        "love": "Time for self-improvement."
+        "lostItem": "Hard to recover.",
+        "business": "Better not to chase profit for now.",
+        "study": "A season of patience — it will blossom later.",
+        "health": "Fatigue comes easily. Rest well.",
+        "love": "A time to grow within yourself."
       },
       "kyo": {
-        "wish": "Won't come true now.",
-        "waitingPerson": "Won't come.",
-        "lostItem": "Won't be found.",
-        "business": "Be careful not to incur losses.",
-        "study": "In a slump. Try changing your mood.",
-        "health": "Watch out for poor health. Act early.",
+        "wish": "It will not come true just yet.",
+        "waitingPerson": "They will not come.",
+        "lostItem": "It will not be found.",
+        "business": "Guard against losses.",
+        "study": "A slump. Change your setting, change your mood.",
+        "health": "Watch for signs of illness — act early.",
         "love": "Better to watch quietly for now."
       },
       "daikyo": {
-        "wish": "It might be best to give up.",
-        "waitingPerson": "Won't come. Don't expect.",
-        "lostItem": "Absolutely won't be found.",
-        "business": "Expect losses. Time to endure.",
-        "study": "Start from basics as if starting over.",
-        "health": "Health first. Absolutely no overwork.",
-        "love": "Prioritize yourself over romance now."
+        "wish": "It may be wisest to let it go.",
+        "waitingPerson": "They will not come. Do not expect them.",
+        "lostItem": "It will not be recovered.",
+        "business": "Expect losses. A season to endure.",
+        "study": "Begin again, as if from the start.",
+        "health": "Health above all. Do not push yourself.",
+        "love": "Place yourself before romance for now."
       }
     }
   },
   "disclaimer": {
-    "inline": "* This app is for entertainment purposes only. Not actual fortune-telling.",
+    "inline": "* This app is for entertainment only — not actual fortune-telling.",
     "title": "Terms of Use",
-    "entertainment": "This app is provided as entertainment. The fortunes and messages displayed are randomly generated and do not constitute actual fortune-telling, divination, or prophecy.",
-    "noAdvice": "Do not use as a basis for medical, legal, investment, or other professional decisions.",
-    "enjoy": "Please enjoy it as a bit of daily fun or a change of pace."
+    "entertainment": "This app is offered as entertainment. The fortunes and messages shown are randomly generated and do not constitute real fortune-telling, divination, or prophecy.",
+    "noAdvice": "Please do not rely on it as a basis for medical, legal, investment, or other professional decisions.",
+    "enjoy": "Enjoy it as a small delight in daily life, or as a quiet change of pace."
   },
   "history": {
     "title": "Fortune Book",
