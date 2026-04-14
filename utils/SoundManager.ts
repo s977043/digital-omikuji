@@ -2,6 +2,7 @@ import { Audio, AVPlaybackSource } from "expo-av";
 
 class SoundManager {
   private sounds: Map<string, Audio.Sound> = new Map();
+  private sources: Map<string, AVPlaybackSource> = new Map();
   private isReady: boolean = false;
   private volume: number = 1.0;
   private isMuted: boolean = false;
@@ -33,6 +34,7 @@ class SoundManager {
 
       if (status.isLoaded) {
         this.sounds.set(key, sound);
+        this.sources.set(key, source);
         return sound;
       } else {
         // Sound object created but not loaded; do not add to map
@@ -51,21 +53,33 @@ class SoundManager {
     }
     if (this.isMuted) return;
 
+    const sound = this.sounds.get(key);
+    if (!sound) {
+      console.warn(`Sound ${key} is not loaded (not in map).`);
+      return;
+    }
+
     try {
-      const sound = this.sounds.get(key);
-      if (!sound) {
-        console.warn(`Sound ${key} is not loaded (not in map).`);
+      await sound.replayAsync();
+    } catch (error) {
+      // 再生失敗時は一度だけ再ロード → replay を試みる。
+      // iOS のバックグラウンド復帰後など Sound オブジェクトが無効化されるケースを救済する。
+      const source = this.sources.get(key);
+      if (!source) {
+        console.error(`Failed to play sound ${key}:`, error);
         return;
       }
-
-      const status = await sound.getStatusAsync();
-      if (status.isLoaded) {
-        await sound.replayAsync();
-      } else {
-        console.warn(`Cannot play sound ${key}: it is in the map but not loaded. status:`, status);
+      try {
+        this.sounds.delete(key);
+        const reloaded = await this.loadSound(key, source);
+        if (reloaded) {
+          await reloaded.replayAsync();
+        } else {
+          console.error(`Failed to play sound ${key}:`, error);
+        }
+      } catch (retryError) {
+        console.error(`Failed to play sound ${key} after retry:`, retryError);
       }
-    } catch (error) {
-      console.error(`Failed to play sound ${key}:`, error);
     }
   }
 
@@ -103,6 +117,7 @@ class SoundManager {
       }
     }
     this.sounds.clear();
+    this.sources.clear();
   }
 }
 
