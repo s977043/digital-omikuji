@@ -46,4 +46,23 @@ describe("HistoryItemCard", () => {
     );
     expect(getByText(title)).toBeTruthy();
   });
+
+  it.each([
+    ["suekichi", "末吉"],
+    ["daikyo", "大凶"],
+    ["kichi", "吉"],
+    ["shokichi", "小吉"],
+  ] as const)("残りの全 level=%s も render できる", (level, title) => {
+    const { getByText } = render(
+      <HistoryItemCard item={{ ...baseItem, level }} fortuneTitle={title} fortuneMessage="本文" />
+    );
+    expect(getByText(title)).toBeTruthy();
+  });
+
+  it("fortuneMessage が空文字でもクラッシュせずレンダリングされる", () => {
+    const { getByText } = render(
+      <HistoryItemCard item={baseItem} fortuneTitle="大吉" fortuneMessage="" />
+    );
+    expect(getByText("大吉")).toBeTruthy();
+  });
 });
