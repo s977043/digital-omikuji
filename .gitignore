@@ -31,3 +31,11 @@ coverage/
 # Temporary artifacts
 pr_body.md
 pr*.json
+
+# Test / automation artifacts
+.playwright-mcp/
+test-results/
+playwright-report/
+
+# Claude Code runtime
+.claude/scheduled_tasks.lock
