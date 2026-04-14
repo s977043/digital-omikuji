@@ -8,11 +8,12 @@ interface RevealStickStageProps {
 }
 
 export function RevealStickStage({ reducedMotion = false }: RevealStickStageProps) {
+  const shadowColor = getStringToken("primitive.color.black");
   const containerShadowStyle =
     Platform.OS === "web"
       ? { boxShadow: "0px 12px 24px rgba(0, 0, 0, 0.25)" }
       : {
-          shadowColor: "#000000",
+          shadowColor,
           shadowOffset: { width: 0, height: 12 },
           shadowOpacity: 0.25,
           shadowRadius: 24,
@@ -23,12 +24,14 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
     Platform.OS === "web"
       ? { boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.18)" }
       : {
-          shadowColor: "#000000",
+          shadowColor,
           shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.18,
           shadowRadius: 16,
           elevation: 6,
         };
+
+  const revealHighlightColor = getStringToken("semantic.surface.experience.revealHighlight");
 
   return (
     <View
@@ -58,10 +61,10 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
           style={{
             width: 176,
             height: 208,
-            backgroundColor: "#7F1D1D",
+            backgroundColor: getStringToken("semantic.surface.experience.revealContainer"),
             borderRadius: 28,
             borderWidth: 4,
-            borderColor: "#D4A017",
+            borderColor: getStringToken("semantic.border.experience.revealContainer"),
             alignItems: "center",
             justifyContent: "center",
             ...containerShadowStyle,
@@ -72,7 +75,7 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
               width: 92,
               height: 8,
               borderRadius: 999,
-              backgroundColor: "rgba(251, 191, 36, 0.24)",
+              backgroundColor: revealHighlightColor,
               marginBottom: 10,
             }}
           />
@@ -81,7 +84,7 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
               width: 72,
               height: 8,
               borderRadius: 999,
-              backgroundColor: "rgba(251, 191, 36, 0.24)",
+              backgroundColor: revealHighlightColor,
             }}
           />
         </MotionView>
@@ -98,14 +101,14 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
             position: "absolute",
             width: 68,
             height: 196,
-            backgroundColor: "#FEF3C7",
+            backgroundColor: getStringToken("semantic.surface.experience.revealStick"),
             bottom: 44,
             borderTopLeftRadius: 18,
             borderTopRightRadius: 18,
             borderLeftWidth: 2,
             borderRightWidth: 2,
             borderTopWidth: 2,
-            borderColor: "#FDE68A",
+            borderColor: getStringToken("semantic.border.experience.revealStick"),
             alignItems: "center",
             justifyContent: "flex-start",
             paddingTop: 18,
@@ -114,7 +117,7 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
         >
           <Text
             style={{
-              color: "#B91C1C",
+              color: getStringToken("semantic.text.experience.revealStick"),
               fontSize: 15,
               lineHeight: 18,
               textAlign: "center",
@@ -139,7 +142,7 @@ export function RevealStickStage({ reducedMotion = false }: RevealStickStageProp
             width: 172,
             height: 172,
             borderRadius: 86,
-            backgroundColor: "rgba(251, 191, 36, 0.22)",
+            backgroundColor: getStringToken("semantic.surface.experience.revealHalo"),
           }}
         />
       </View>

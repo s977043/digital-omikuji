@@ -9,6 +9,7 @@ import { HistoryScreenTemplate } from "../components/templates/HistoryScreenTemp
 import { PageHeader } from "../components/design-system/PageHeader";
 import { Button } from "../components/design-system/Button";
 import { HistoryListPattern } from "../components/patterns/HistoryListPattern";
+import { getStringToken } from "../design-system";
 
 export default function HistoryScreen() {
   const { t } = useTranslation();
@@ -79,7 +80,9 @@ export default function HistoryScreen() {
       content={
         isLoading ? (
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ color: "rgba(255,255,255,0.72)", fontSize: 16 }}>読み込み中...</Text>
+            <Text style={{ color: getStringToken("semantic.text.muted"), fontSize: 16 }}>
+              読み込み中...
+            </Text>
           </View>
         ) : (
           <HistoryListPattern history={history} />
