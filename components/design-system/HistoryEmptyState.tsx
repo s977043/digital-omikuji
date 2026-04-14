@@ -17,9 +17,9 @@ export function HistoryEmptyState() {
           borderRadius: 80,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "rgba(255, 255, 255, 0.08)",
+          backgroundColor: getStringToken("semantic.surface.experience.historyPlaceholder"),
           borderWidth: 1,
-          borderColor: "rgba(255, 255, 255, 0.18)",
+          borderColor: getStringToken("semantic.border.soft"),
           marginBottom: 20,
         }}
       >
@@ -32,7 +32,7 @@ export function HistoryEmptyState() {
       </View>
       <Text
         style={{
-          color: "rgba(255, 255, 255, 0.74)",
+          color: getStringToken("semantic.text.muted"),
           fontSize: 18,
           fontFamily: getStringToken("primitive.typography.family.ritualBody"),
           textAlign: "center",
