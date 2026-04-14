@@ -62,6 +62,7 @@ export function TiedCompleteView({ onClose }: TiedCompleteViewProps) {
         <Text style={{ fontSize: 40 }}>🌿</Text>
       </View>
       <Text
+        accessibilityRole="header"
         style={{
           color: "white",
           fontSize: 22,

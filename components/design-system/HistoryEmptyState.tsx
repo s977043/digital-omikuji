@@ -38,6 +38,8 @@ export function HistoryEmptyState() {
           textAlign: "center",
           lineHeight: 28,
         }}
+        accessibilityRole="text"
+        accessibilityLabel={t("history.empty")}
       >
         {t("history.empty")}
       </Text>
