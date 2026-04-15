@@ -61,7 +61,7 @@
     "react-native-worklets-core": "^1.6.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.59.1",
     "@react-native-community/cli": "^20.1.2",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
