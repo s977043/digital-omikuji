@@ -24,6 +24,8 @@ type AnimDict = {
   translateY?: AnimValue;
   scale?: AnimValue;
   rotateZ?: AnimValue;
+  // Moti は `rotate` と `rotateZ` を同義として受ける。既存コード互換のため両方許容する。
+  rotate?: AnimValue;
 };
 
 type TransitionDict = {
@@ -63,13 +65,14 @@ function buildAnimStyle(values: AnimDict | undefined): Record<string, string | n
   const translateX = pickLastValue(values.translateX);
   const translateY = pickLastValue(values.translateY);
   const scale = pickLastValue(values.scale);
-  const rotateZ = pickLastValue(values.rotateZ);
+  // rotate / rotateZ を同義として扱う（rotateZ を優先）
+  const rotateValue = pickLastValue(values.rotateZ) ?? pickLastValue(values.rotate);
 
   const transforms: string[] = [];
   if (translateX !== undefined) transforms.push(`translateX(${toPxOrValue(translateX)})`);
   if (translateY !== undefined) transforms.push(`translateY(${toPxOrValue(translateY)})`);
   if (scale !== undefined) transforms.push(`scale(${scale})`);
-  if (rotateZ !== undefined) transforms.push(`rotate(${rotateZ})`);
+  if (rotateValue !== undefined) transforms.push(`rotate(${rotateValue})`);
   if (transforms.length > 0) style.transform = transforms.join(" ");
 
   return style;

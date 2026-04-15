@@ -64,4 +64,18 @@ describe("MotionView (web)", () => {
     expect(style.opacity).toBe(0);
     result.unmount();
   });
+
+  it("rotate を rotateZ の別名として受け付ける (Moti 互換)", () => {
+    const result = render(<MotionView animate={{ rotate: "180deg" }} />);
+    const style = getRootStyle(result);
+    expect(style.transform).toBe("rotate(180deg)");
+    result.unmount();
+  });
+
+  it("rotateZ が指定されている場合は rotate より優先する", () => {
+    const result = render(<MotionView animate={{ rotateZ: "90deg", rotate: "45deg" }} />);
+    const style = getRootStyle(result);
+    expect(style.transform).toBe("rotate(90deg)");
+    result.unmount();
+  });
 });
