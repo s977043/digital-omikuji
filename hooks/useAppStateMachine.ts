@@ -65,6 +65,10 @@ export function useAppStateMachine({
 
   const handleShakeStart = useCallback(async () => {
     if (appState !== "IDLE" || hasDrawnToday) return;
+    // useReducer の state 反映は非同期のため、appState ガードだけでは
+    // 同一フレーム内の多重呼び出し（連打・センサー + タップ同時発火）を防げない。
+    // 保留中タイマーの有無を同期的にチェックし、drawFortune の二重実行を防ぐ。
+    if (shakeTimerRef.current) return;
 
     triggerHaptic(
       { type: "impact", style: Haptics.ImpactFeedbackStyle.Medium },
@@ -76,6 +80,7 @@ export function useAppStateMachine({
     playSound("shake");
 
     shakeTimerRef.current = setTimeout(async () => {
+      shakeTimerRef.current = null;
       await drawFortune();
       dispatch({ type: "START_DRAWING" });
       triggerHaptic(
@@ -147,6 +152,7 @@ export function useAppStateMachine({
     return () => {
       if (shakeTimerRef.current) {
         clearTimeout(shakeTimerRef.current);
+        shakeTimerRef.current = null;
       }
     };
   }, []);
