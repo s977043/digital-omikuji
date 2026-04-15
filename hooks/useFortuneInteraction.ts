@@ -56,6 +56,10 @@ export function useFortuneInteraction({
     return () => {
       if (tieTimerRef.current) clearTimeout(tieTimerRef.current);
       if (keepTimerRef.current) clearTimeout(keepTimerRef.current);
+      // unmount 時にロックを解除。再マウント時に新規 ref で初期化されるため通常は
+      // 冗長だが、StrictMode 下の double-invoke や HMR で同一インスタンスが
+      // 再利用されるケースに備え明示的に false に戻す。
+      lockedRef.current = false;
     };
   }, []);
 

@@ -151,6 +151,27 @@ describe("useAppStateMachine", () => {
     expect(result.current.appState).toBe("IDLE");
   });
 
+  it("prevents double-fire of drawFortune on rapid handleShakeStart calls", async () => {
+    const opts = defaultOptions();
+    const { result } = renderHook(() => useAppStateMachine(opts));
+
+    // 同一フレーム内で連続呼び出し（連打・センサー + タップ同時発火を模擬）
+    await act(async () => {
+      await Promise.all([result.current.handleShakeStart(), result.current.handleShakeStart()]);
+    });
+
+    await act(async () => {
+      jest.advanceTimersByTime(1500);
+    });
+
+    // drawFortune は 1 回だけ呼ばれるべき
+    expect(opts.drawFortune).toHaveBeenCalledTimes(1);
+    expect(opts.playSound).toHaveBeenCalledWith("shake");
+    // shake 音も 1 回（START_SHAKE は IDLE→SHAKING のみ遷移するため）
+    const shakeCalls = (opts.playSound as jest.Mock).mock.calls.filter(([k]) => k === "shake");
+    expect(shakeCalls).toHaveLength(1);
+  });
+
   it("uses reduced durations when reducedMotion is true", async () => {
     const opts = { ...defaultOptions(), reducedMotion: true };
     const { result } = renderHook(() => useAppStateMachine(opts));

@@ -78,4 +78,45 @@ describe("MotionView (web)", () => {
     expect(style.transform).toBe("rotate(90deg)");
     result.unmount();
   });
+
+  it("transition.loop が true の場合は animation プロパティを使い keyframes を注入する", () => {
+    const result = render(
+      <MotionView
+        from={{ rotate: "0deg" }}
+        animate={{ rotate: "360deg" }}
+        transition={{ duration: 3800, loop: true }}
+      />
+    );
+    const style = getRootStyle(result);
+    // transition ではなく animation 系プロパティが付与される
+    expect(style.animationName).toMatch(/^mv-/);
+    expect(style.animationDuration).toBe("3800ms");
+    expect(style.animationIterationCount).toBe("infinite");
+    expect(style.animationDirection).toBe("normal");
+    // transform は animate 側（末尾）の値
+    expect(style.transform).toBe("rotate(360deg)");
+    result.unmount();
+  });
+
+  it("transition.repeatReverse が true の場合は animation-direction: alternate", () => {
+    const result = render(
+      <MotionView
+        from={{ scale: 1 }}
+        animate={{ scale: 1.18 }}
+        transition={{ duration: 850, loop: true, repeatReverse: true }}
+      />
+    );
+    const style = getRootStyle(result);
+    expect(style.animationDirection).toBe("alternate");
+    expect(style.animationDuration).toBe("850ms");
+    result.unmount();
+  });
+
+  it("loop が未指定の場合は従来の transition プロパティを使う", () => {
+    const result = render(<MotionView animate={{ opacity: 1 }} transition={{ duration: 300 }} />);
+    const style = getRootStyle(result);
+    expect(style.transitionDuration).toBe("300ms");
+    expect(style.animationName).toBeUndefined();
+    result.unmount();
+  });
 });
