@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FortuneResult, OmikujiResult } from "../types/omikuji";
+import type { ImageSourcePropType } from "react-native";
+import { FortuneResult, OmikujiResult, isFortuneLevel } from "../types/omikuji";
 import { captureException } from "./sentry";
 
 /**
@@ -27,15 +28,37 @@ export type HistoryEntry = FortuneResult;
 /**
  * レガシー履歴データ（type フィールドがない古いデータ）を
  * 新しい BaseFortune 形式にマイグレートする。
+ *
+ * 壊れた / 未知形式のペイロードは `null` を返し、呼び出し元で除外される。
+ * 以前は `as Partial<OmikujiResult>` で素通ししていたが、各フィールドを型
+ * ガードで検証してから明示的に OmikujiResult を組み立てる。
  */
 function migrateLegacyEntry(raw: unknown): HistoryEntry | null {
   if (typeof raw !== "object" || raw === null) return null;
-  const entry = raw as Partial<OmikujiResult> & { type?: string };
-  if (!entry.id || !entry.level || typeof entry.createdAt !== "number") return null;
-  return {
-    ...entry,
-    type: entry.type === "omikuji" ? "omikuji" : "omikuji",
-  } as OmikujiResult;
+  const r = raw as Record<string, unknown>;
+
+  // type は存在する場合のみ "omikuji" を許可（将来の占い種別は未対応）
+  if (r.type !== undefined && r.type !== "omikuji") return null;
+
+  if (typeof r.id !== "string" || r.id.length === 0) return null;
+  if (!isFortuneLevel(r.level)) return null;
+  if (typeof r.messageIndex !== "number" || !Number.isFinite(r.messageIndex)) return null;
+  if (typeof r.color !== "string") return null;
+  if (typeof r.createdAt !== "number" || !Number.isFinite(r.createdAt)) return null;
+  if (r.image == null) return null;
+
+  const result: OmikujiResult = {
+    id: r.id,
+    type: "omikuji",
+    level: r.level,
+    messageIndex: r.messageIndex,
+    // ImageSourcePropType は number | { uri: string } | array 等の union。
+    // 構造的検証は non-null のみ（各形式は RN 側 Image コンポーネントが扱う）
+    image: r.image as ImageSourcePropType,
+    color: r.color,
+    createdAt: r.createdAt,
+  };
+  return result;
 }
 
 /**

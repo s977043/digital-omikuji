@@ -32,6 +32,25 @@ test.describe("Digital Omikuji Web", () => {
     });
   });
 
+  test("result overlay is exposed as a modal dialog (focus trap attributes)", async ({ page }) => {
+    await gotoRoute(page, "/");
+
+    const drawButton = page.getByRole("button", { name: "おみくじを引く" });
+    await expect(drawButton).toBeVisible({ timeout: 15000 });
+    await drawButton.click();
+
+    // Wait for the result overlay (the only one with user-actionable focusables)
+    await expect(page.getByText(/大吉|中吉|小吉|末吉|凶|吉/).first()).toBeVisible({
+      timeout: 20000,
+    });
+
+    // ExperienceScreenTemplate should have tagged the overlay container as
+    // a modal dialog for assistive tech + keyboard focus management.
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog).toHaveAttribute("aria-modal", "true");
+  });
+
   test("history direct entry returns to home", async ({ page }) => {
     await gotoRoute(page, "/history");
 
