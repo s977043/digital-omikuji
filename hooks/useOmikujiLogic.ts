@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import Constants from "expo-constants";
 import { OmikujiResult } from "../types/omikuji";
 import { drawOmikuji } from "../utils/omikujiLogic";
 import {
@@ -58,6 +59,12 @@ export const useOmikujiLogic = () => {
   }, [hasDrawnToday]);
 
   const debugResetDailyLimit = useCallback(async () => {
+    // Defense-in-depth: no-op in production. __DEV__ is false in production builds;
+    // the appVariant check also blocks preview-style builds that somehow ship with __DEV__ true.
+    if (!__DEV__) return;
+    const variant = Constants.expoConfig?.extra?.appVariant;
+    if (variant === "production") return;
+
     await clearHistory();
     setHasDrawnToday(false);
     setFortune(null);

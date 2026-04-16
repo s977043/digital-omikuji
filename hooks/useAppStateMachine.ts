@@ -56,19 +56,20 @@ export function useAppStateMachine({
   hasFortune,
 }: UseAppStateMachineOptions) {
   const [appState, dispatch] = useReducer(appStateReducer, "IDLE");
-  const shakeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // 同一フレーム内の多重発火（連打・センサー + タップ同時発火）を同期的に防ぐ。
+  // useReducer の state 反映は非同期のため、appState ガードだけでは不十分。
+  const shakeStartedRef = useRef(false);
 
   const drawingDuration = reducedMotion ? REDUCED_DRAWING_DURATION_MS : DRAWING_DURATION_MS;
   const revealingDuration = reducedMotion ? REDUCED_REVEALING_DURATION_MS : REVEALING_DURATION_MS;
 
   // --- Actions ---
 
-  const handleShakeStart = useCallback(async () => {
+  const handleShakeStart = useCallback(() => {
     if (appState !== "IDLE" || hasDrawnToday) return;
-    // useReducer の state 反映は非同期のため、appState ガードだけでは
-    // 同一フレーム内の多重呼び出し（連打・センサー + タップ同時発火）を防げない。
-    // 保留中タイマーの有無を同期的にチェックし、drawFortune の二重実行を防ぐ。
-    if (shakeTimerRef.current) return;
+    if (shakeStartedRef.current) return;
+    shakeStartedRef.current = true;
 
     triggerHaptic(
       { type: "impact", style: Haptics.ImpactFeedbackStyle.Medium },
@@ -78,18 +79,7 @@ export function useAppStateMachine({
 
     dispatch({ type: "START_SHAKE" });
     playSound("shake");
-
-    shakeTimerRef.current = setTimeout(async () => {
-      shakeTimerRef.current = null;
-      await drawFortune();
-      dispatch({ type: "START_DRAWING" });
-      triggerHaptic(
-        { type: "impact", style: Haptics.ImpactFeedbackStyle.Light },
-        false,
-        reducedMotion
-      );
-    }, SHAKING_DURATION_MS);
-  }, [appState, drawFortune, hasDrawnToday, playSound, reducedMotion]);
+  }, [appState, hasDrawnToday, playSound, reducedMotion]);
 
   const handleResultView = useCallback(() => {
     if (hasFortune) {
@@ -103,6 +93,13 @@ export function useAppStateMachine({
   }, [resetFortune]);
 
   // --- Side effects driven by state ---
+
+  // Reset the double-fire guard whenever we return to IDLE (enables re-draw after RESET).
+  useEffect(() => {
+    if (appState === "IDLE") {
+      shakeStartedRef.current = false;
+    }
+  }, [appState]);
 
   // SHAKING: periodic haptic feedback
   useEffect(() => {
@@ -118,6 +115,28 @@ export function useAppStateMachine({
 
     return () => clearInterval(intervalId);
   }, [appState, reducedMotion]);
+
+  // SHAKING → DRAWING (timer owns the drawFortune side effect)
+  useEffect(() => {
+    if (appState !== "SHAKING") return;
+
+    let cancelled = false;
+    const timer = setTimeout(async () => {
+      await drawFortune();
+      if (cancelled) return;
+      dispatch({ type: "START_DRAWING" });
+      triggerHaptic(
+        { type: "impact", style: Haptics.ImpactFeedbackStyle.Light },
+        false,
+        reducedMotion
+      );
+    }, SHAKING_DURATION_MS);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+    };
+  }, [appState, drawFortune, reducedMotion]);
 
   // DRAWING → REVEALING (auto-advance)
   useEffect(() => {
@@ -146,16 +165,6 @@ export function useAppStateMachine({
 
     return () => clearTimeout(timer);
   }, [appState, playSound, revealingDuration]);
-
-  // Cleanup shake timer on unmount
-  useEffect(() => {
-    return () => {
-      if (shakeTimerRef.current) {
-        clearTimeout(shakeTimerRef.current);
-        shakeTimerRef.current = null;
-      }
-    };
-  }, []);
 
   return {
     appState,
