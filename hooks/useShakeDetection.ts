@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Platform } from "react-native";
 import { Accelerometer } from "expo-sensors";
+import { reportSilentError } from "../utils/errorReporter";
 
 const ACCELEROMETER_UPDATE_INTERVAL_MS = 100;
 
@@ -36,7 +37,12 @@ export function useShakeDetection({ enabled, threshold, onShake }: UseShakeDetec
           });
         }
       } catch (error) {
-        console.warn("Accelerometer initialization failed:", error);
+        reportSilentError("Accelerometer initialization failed:", error, {
+          source: "useShakeDetection",
+          operation: "setupSensor",
+          category: "recoverable",
+          severity: "warning",
+        });
       }
     }
 

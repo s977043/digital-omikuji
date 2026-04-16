@@ -143,5 +143,14 @@ jest.mock("@sentry/react-native", () => ({
   captureException: jest.fn(),
   captureMessage: jest.fn(),
   setContext: jest.fn(),
+  addBreadcrumb: jest.fn(),
+  withScope: jest.fn((cb) =>
+    cb({
+      setContext: jest.fn(),
+      setLevel: jest.fn(),
+      setTag: jest.fn(),
+      setExtra: jest.fn(),
+    })
+  ),
   wrap: (component) => component,
 }));

@@ -1,17 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FortuneResult } from "../types/omikuji";
 import { migrateLegacyEntry, getTodayString } from "../domain";
-import { captureException } from "./sentry";
+import { reportSilentError } from "./errorReporter";
 
 /**
  * HistoryStorage 内部のエラーを Sentry に送信し、ログに記録する。
  * ユーザー通知は行わない（silent error）。フォールバック値は呼び出し元で返す。
  */
 function reportStorageError(operation: string, error: unknown): void {
-  console.error(`[HistoryStorage:${operation}]`, error);
-  if (error instanceof Error) {
-    captureException(error, { source: "HistoryStorage", operation });
-  }
+  reportSilentError(`[HistoryStorage:${operation}]`, error, {
+    source: "HistoryStorage",
+    operation,
+  });
 }
 
 const HISTORY_KEY = "omikuji_history_v2"; // Changed key to avoid conflict with old schema

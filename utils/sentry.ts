@@ -31,13 +31,17 @@ export function initializeSentry(): void {
 }
 
 /**
- * Capture an exception manually.
+ * Capture an exception manually. Uses `withScope` so concurrent events do not
+ * overwrite each other's context (which was the case when using the global
+ * `Sentry.setContext`).
  */
 export function captureException(error: Error, context?: Record<string, unknown>): void {
-  if (context) {
-    Sentry.setContext("additional", context);
-  }
-  Sentry.captureException(error);
+  Sentry.withScope((scope) => {
+    if (context) {
+      scope.setContext("additional", context);
+    }
+    Sentry.captureException(error);
+  });
 }
 
 /**
@@ -45,6 +49,19 @@ export function captureException(error: Error, context?: Record<string, unknown>
  */
 export function captureMessage(message: string, level: Sentry.SeverityLevel = "info"): void {
   Sentry.captureMessage(message, level);
+}
+
+/**
+ * Add a breadcrumb that will be attached to subsequent Sentry events. Useful
+ * for surfacing the path that led up to a crash without firing a full event.
+ */
+export function addBreadcrumb(breadcrumb: {
+  category: string;
+  message: string;
+  level?: Sentry.SeverityLevel;
+  data?: Record<string, unknown>;
+}): void {
+  Sentry.addBreadcrumb(breadcrumb);
 }
 
 export { Sentry };

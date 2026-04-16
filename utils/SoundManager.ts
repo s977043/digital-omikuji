@@ -1,4 +1,5 @@
 import { Audio, AVPlaybackSource } from "expo-av";
+import { reportSilentError } from "./errorReporter";
 
 class SoundManager {
   private sounds: Map<string, Audio.Sound> = new Map();
@@ -16,7 +17,11 @@ class SoundManager {
       });
       this.isReady = true;
     } catch (error) {
-      console.error("Audio initialization failed:", error);
+      reportSilentError("Audio initialization failed:", error, {
+        source: "SoundManager",
+        operation: "initialize",
+        severity: "warning",
+      });
       this.isReady = false;
     }
   }
@@ -41,7 +46,12 @@ class SoundManager {
         return null;
       }
     } catch (error) {
-      console.error(`Failed to load sound ${key}:`, error);
+      reportSilentError(`Failed to load sound ${key}:`, error, {
+        source: "SoundManager",
+        operation: "loadSound",
+        severity: "warning",
+        metadata: { key },
+      });
       return null;
     }
   }
@@ -66,7 +76,12 @@ class SoundManager {
       // iOS のバックグラウンド復帰後など Sound オブジェクトが無効化されるケースを救済する。
       const source = this.sources.get(key);
       if (!source) {
-        console.error(`Failed to play sound ${key}:`, error);
+        reportSilentError(`Failed to play sound ${key}:`, error, {
+          source: "SoundManager",
+          operation: "playSound",
+          severity: "warning",
+          metadata: { key, stage: "no_source" },
+        });
         return;
       }
       try {
@@ -82,10 +97,20 @@ class SoundManager {
         if (reloaded) {
           await reloaded.replayAsync();
         } else {
-          console.error(`Failed to play sound ${key}:`, error);
+          reportSilentError(`Failed to play sound ${key}:`, error, {
+            source: "SoundManager",
+            operation: "playSound",
+            severity: "warning",
+            metadata: { key, stage: "reload_failed" },
+          });
         }
       } catch (retryError) {
-        console.error(`Failed to play sound ${key} after retry:`, retryError);
+        reportSilentError(`Failed to play sound ${key} after retry:`, retryError, {
+          source: "SoundManager",
+          operation: "playSound",
+          severity: "warning",
+          metadata: { key, stage: "retry_failed" },
+        });
       }
     }
   }
@@ -96,7 +121,11 @@ class SoundManager {
       try {
         await sound.setVolumeAsync(this.volume);
       } catch (e) {
-        console.error("Failed to set volume for a sound:", e);
+        reportSilentError("Failed to set volume for a sound:", e, {
+          source: "SoundManager",
+          operation: "setVolume",
+          severity: "warning",
+        });
       }
     }
   }
@@ -110,7 +139,11 @@ class SoundManager {
           await sound.setIsMutedAsync(mute);
         }
       } catch (e) {
-        console.error("Failed to set mute for a sound:", e);
+        reportSilentError("Failed to set mute for a sound:", e, {
+          source: "SoundManager",
+          operation: "setMute",
+          severity: "warning",
+        });
       }
     }
   }
@@ -120,7 +153,12 @@ class SoundManager {
       try {
         await sound.unloadAsync();
       } catch (error) {
-        console.error(`Failed to unload sound ${key}:`, error);
+        reportSilentError(`Failed to unload sound ${key}:`, error, {
+          source: "SoundManager",
+          operation: "unloadAll",
+          severity: "warning",
+          metadata: { key },
+        });
       }
     }
     this.sounds.clear();

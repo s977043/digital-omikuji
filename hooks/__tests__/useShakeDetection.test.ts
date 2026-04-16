@@ -98,15 +98,19 @@ describe("useShakeDetection", () => {
 
   it("handles accelerometer initialization failure gracefully", async () => {
     (Accelerometer.isAvailableAsync as jest.Mock).mockRejectedValue(new Error("sensor error"));
-    const warnSpy = jest.spyOn(console, "warn").mockImplementation();
+    const errorSpy = jest.spyOn(console, "error").mockImplementation();
     const onShake = jest.fn();
 
     renderHook(() => useShakeDetection({ enabled: true, threshold: 1.8, onShake }));
 
     await act(async () => {});
 
-    expect(warnSpy).toHaveBeenCalledWith("Accelerometer initialization failed:", expect.any(Error));
-    warnSpy.mockRestore();
+    // reportSilentError forwards to console.error with the original log message.
+    expect(errorSpy).toHaveBeenCalledWith(
+      "Accelerometer initialization failed:",
+      expect.any(Error)
+    );
+    errorSpy.mockRestore();
   });
 
   it("removes subscription on cleanup", async () => {
