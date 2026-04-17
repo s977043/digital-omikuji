@@ -9,6 +9,7 @@ module.exports = {
   collectCoverageFrom: [
     "app/**/*.{ts,tsx}",
     "components/**/*.{ts,tsx}",
+    "domain/**/*.{ts,tsx}",
     "hooks/**/*.{ts,tsx}",
     "utils/**/*.{ts,tsx}",
     "!**/*.d.ts",

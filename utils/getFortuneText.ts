@@ -1,16 +1,5 @@
-import { TFunction } from "i18next";
-import { FortuneLevel } from "../types/omikuji";
-
-export function getFortuneText(
-  t: TFunction,
-  level: FortuneLevel,
-  messageIndex: number
-): { title: string; message: string } {
-  const title = t(`fortune.levels.${level}`);
-  const messages = t(`fortune.messages.${level}`, { returnObjects: true });
-  const message = Array.isArray(messages)
-    ? messages[messageIndex] || messages[0]
-    : String(messages);
-
-  return { title, message };
-}
+/**
+ * @deprecated 本モジュールは後方互換のための薄い再エクスポート。
+ * 新規コードは `domain/getFortuneText` から直接 import すること。
+ */
+export { getFortuneText } from "../domain/getFortuneText";

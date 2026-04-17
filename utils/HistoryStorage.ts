@@ -1,7 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { ImageSourcePropType } from "react-native";
-import { FortuneResult, OmikujiResult, isFortuneLevel } from "../types/omikuji";
+import { FortuneResult } from "../types/omikuji";
+import { migrateLegacyEntry, getTodayString } from "../domain";
 import { captureException } from "./sentry";
+
+// Re-exported for backward compatibility; external callers now prefer the
+// `domain/` import path.
+export { getTodayString };
 
 /**
  * HistoryStorage 内部のエラーを Sentry に送信し、ログに記録する。
@@ -24,55 +28,6 @@ const MAX_HISTORY_ITEMS = 50;
  * 現状はおみくじのみだが、将来は他の占い種別（タロット等）も受け入れる。
  */
 export type HistoryEntry = FortuneResult;
-
-/**
- * レガシー履歴データ（type フィールドがない古いデータ）を
- * 新しい BaseFortune 形式にマイグレートする。
- *
- * 壊れた / 未知形式のペイロードは `null` を返し、呼び出し元で除外される。
- * 以前は `as Partial<OmikujiResult>` で素通ししていたが、各フィールドを型
- * ガードで検証してから明示的に OmikujiResult を組み立てる。
- */
-function migrateLegacyEntry(raw: unknown): HistoryEntry | null {
-  if (typeof raw !== "object" || raw === null) return null;
-  const r = raw as Record<string, unknown>;
-
-  // type は存在する場合のみ "omikuji" を許可（将来の占い種別は未対応）
-  if (r.type !== undefined && r.type !== "omikuji") return null;
-
-  if (typeof r.id !== "string" || r.id.length === 0) return null;
-  if (!isFortuneLevel(r.level)) return null;
-  if (typeof r.messageIndex !== "number" || !Number.isFinite(r.messageIndex)) return null;
-  if (typeof r.color !== "string") return null;
-  if (typeof r.createdAt !== "number" || !Number.isFinite(r.createdAt)) return null;
-  if (r.image == null) return null;
-
-  const result: OmikujiResult = {
-    id: r.id,
-    type: "omikuji",
-    level: r.level,
-    messageIndex: r.messageIndex,
-    // ImageSourcePropType は number | { uri: string } | array 等の union。
-    // 構造的検証は non-null のみ（各形式は RN 側 Image コンポーネントが扱う）
-    image: r.image as ImageSourcePropType,
-    color: r.color,
-    createdAt: r.createdAt,
-  };
-  return result;
-}
-
-/**
- * 今日の日付を YYYY-MM-DD 形式で返す。
- *
- * この値は「1 日 1 回制限」の判定基準として使用される。
- * デバイスのローカルタイムゾーンに依存する設計である点に注意:
- * タイムゾーン変更・国境越えユーザーの挙動、将来 UTC 切替する場合の方針は
- * `docs/guides/TIMEZONE_POLICY.md` を参照。
- */
-export function getTodayString(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
 
 /**
  * 履歴を取得する
