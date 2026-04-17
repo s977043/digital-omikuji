@@ -2,7 +2,7 @@ import React from "react";
 import { FlatList, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { HistoryEntry } from "../../utils/HistoryStorage";
-import { getFortuneText } from "../../utils/getFortuneText";
+import { getFortuneText } from "../../domain";
 import { HistoryEmptyState } from "../design-system/HistoryEmptyState";
 import { HistoryItemCard } from "../design-system/HistoryItemCard";
 

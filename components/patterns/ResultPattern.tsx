@@ -2,8 +2,7 @@ import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { OmikujiResult } from "../../types/omikuji";
 import { DETAIL_KEYS } from "../../data/omikujiData";
-import { buildShareText } from "../../utils/buildShareText";
-import { getFortuneText } from "../../utils/getFortuneText";
+import { buildShareText, getFortuneText } from "../../domain";
 import { FortuneDetailEntry, PaperResultCard } from "../design-system/PaperResultCard";
 
 interface ResultPatternProps {
