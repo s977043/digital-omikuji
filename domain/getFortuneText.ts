@@ -14,8 +14,11 @@ export function getFortuneText(
 ): { title: string; message: string } {
   const title = t(`fortune.levels.${level}`);
   const messages = t(`fortune.messages.${level}`, { returnObjects: true });
+  // Array case: prefer the requested index, fall back to the first message, then
+  // to empty string so the return type stays `string` even if i18n resources
+  // ship an empty array by mistake.
   const message = Array.isArray(messages)
-    ? messages[messageIndex] || messages[0]
+    ? ((messages[messageIndex] ?? messages[0] ?? "") as string)
     : String(messages);
 
   return { title, message };

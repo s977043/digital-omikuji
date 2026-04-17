@@ -18,14 +18,18 @@ export interface DrawOmikujiOptions {
   weights?: readonly OmikujiMasterData[];
 }
 
-function defaultIdGenerator(): string {
-  const webCrypto = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
-  if (webCrypto && typeof webCrypto.randomUUID === "function") {
-    return webCrypto.randomUUID();
-  }
-  // Extremely rare: environments without Web Crypto. Fortune IDs are not security-
-  // sensitive, so a time + random composite is acceptable as a last resort.
-  return `omi-${Date.now().toString(36)}-${Math.floor(Math.random() * 1e9).toString(36)}`;
+function makeFallbackIdGenerator(rng: () => number, clockNow: () => number): () => string {
+  return () => {
+    const webCrypto = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+    if (webCrypto && typeof webCrypto.randomUUID === "function") {
+      return webCrypto.randomUUID();
+    }
+    // Extremely rare: environments without Web Crypto. Fortune IDs are not security-
+    // sensitive, so a time + random composite is acceptable as a last resort.
+    // The composite uses the injected rng / clockNow so callers retain full determinism
+    // even on the fallback path.
+    return `omi-${clockNow().toString(36)}-${Math.floor(rng() * 1e9).toString(36)}`;
+  };
 }
 
 /**
@@ -38,8 +42,12 @@ function defaultIdGenerator(): string {
 export function drawOmikuji(options: DrawOmikujiOptions = {}): OmikujiResult {
   const rng = options.rng ?? Math.random;
   const clockNow = options.clockNow ?? Date.now;
-  const idGenerator = options.idGenerator ?? defaultIdGenerator;
+  const idGenerator = options.idGenerator ?? makeFallbackIdGenerator(rng, clockNow);
   const weights = options.weights ?? ACQUIRED_FORTUNES;
+
+  if (weights.length === 0) {
+    throw new Error("drawOmikuji: weights table cannot be empty.");
+  }
 
   const totalWeight = weights.reduce((sum, item) => sum + item.weight, 0);
   let randomValue = rng() * totalWeight;

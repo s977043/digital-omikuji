@@ -65,4 +65,37 @@ describe("drawOmikuji", () => {
     const b = drawOmikuji();
     expect(a.id).not.toBe(b.id);
   });
+
+  it("throws when the weights table is empty", () => {
+    expect(() =>
+      drawOmikuji({
+        rng: () => 0,
+        weights: [],
+        idGenerator: () => "id",
+        clockNow: () => 0,
+      })
+    ).toThrow(/weights table cannot be empty/);
+  });
+
+  it("default id generator uses injected rng / clockNow when crypto.randomUUID is unavailable", () => {
+    const originalCrypto = (globalThis as { crypto?: unknown }).crypto;
+    // Simulate a runtime without Web Crypto so the fallback branch is exercised.
+    Object.defineProperty(globalThis, "crypto", {
+      configurable: true,
+      value: {},
+    });
+    try {
+      const result = drawOmikuji({
+        rng: () => 0.5,
+        clockNow: () => 1000,
+      });
+      expect(result.id).toMatch(/^omi-/);
+      expect(result.createdAt).toBe(1000);
+    } finally {
+      Object.defineProperty(globalThis, "crypto", {
+        configurable: true,
+        value: originalCrypto,
+      });
+    }
+  });
 });

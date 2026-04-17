@@ -37,4 +37,14 @@ describe("getFortuneText", () => {
     });
     expect(getFortuneText(t, "kyo", 0).message).toBe("シングル");
   });
+
+  it("returns an empty message when the messages array is empty", () => {
+    const t = buildT({
+      "fortune.levels.daikichi": "大吉",
+      "fortune.messages.daikichi": [],
+    });
+    const result = getFortuneText(t, "daikichi", 0);
+    expect(result.title).toBe("大吉");
+    expect(result.message).toBe("");
+  });
 });
