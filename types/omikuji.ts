@@ -25,6 +25,23 @@ export type FortuneLevel =
   | "kyo"
   | "daikyo";
 
+const FORTUNE_LEVELS: readonly FortuneLevel[] = [
+  "daikichi",
+  "chukichi",
+  "shokichi",
+  "kichi",
+  "suekichi",
+  "kyo",
+  "daikyo",
+];
+
+/**
+ * 型ガード: 値が FortuneLevel union のいずれかであるかを判定する。
+ */
+export function isFortuneLevel(value: unknown): value is FortuneLevel {
+  return typeof value === "string" && (FORTUNE_LEVELS as readonly string[]).includes(value);
+}
+
 /**
  * おみくじの結果。
  * BaseFortune を拡張し、おみくじ固有のフィールドを持つ。

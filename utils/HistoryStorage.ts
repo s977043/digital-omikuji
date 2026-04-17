@@ -1,6 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FortuneResult, OmikujiResult } from "../types/omikuji";
+import { FortuneResult } from "../types/omikuji";
+import { migrateLegacyEntry, getTodayString } from "../domain";
 import { captureException } from "./sentry";
+
+// Re-exported for backward compatibility; external callers now prefer the
+// `domain/` import path.
+export { getTodayString };
 
 /**
  * HistoryStorage 内部のエラーを Sentry に送信し、ログに記録する。
@@ -23,33 +28,6 @@ const MAX_HISTORY_ITEMS = 50;
  * 現状はおみくじのみだが、将来は他の占い種別（タロット等）も受け入れる。
  */
 export type HistoryEntry = FortuneResult;
-
-/**
- * レガシー履歴データ（type フィールドがない古いデータ）を
- * 新しい BaseFortune 形式にマイグレートする。
- */
-function migrateLegacyEntry(raw: unknown): HistoryEntry | null {
-  if (typeof raw !== "object" || raw === null) return null;
-  const entry = raw as Partial<OmikujiResult> & { type?: string };
-  if (!entry.id || !entry.level || typeof entry.createdAt !== "number") return null;
-  return {
-    ...entry,
-    type: entry.type === "omikuji" ? "omikuji" : "omikuji",
-  } as OmikujiResult;
-}
-
-/**
- * 今日の日付を YYYY-MM-DD 形式で返す。
- *
- * この値は「1 日 1 回制限」の判定基準として使用される。
- * デバイスのローカルタイムゾーンに依存する設計である点に注意:
- * タイムゾーン変更・国境越えユーザーの挙動、将来 UTC 切替する場合の方針は
- * `docs/guides/TIMEZONE_POLICY.md` を参照。
- */
-export function getTodayString(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-}
 
 /**
  * 履歴を取得する
