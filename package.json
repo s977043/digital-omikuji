@@ -87,6 +87,10 @@
   "pnpm": {
     "patchedDependencies": {
       "expo-modules-core@3.0.29": "patches/expo-modules-core@3.0.29.patch"
+    },
+    "overrides": {
+      "undici": ">=6.25.0",
+      "picomatch": ">=3.0.2"
     }
   }
 }
