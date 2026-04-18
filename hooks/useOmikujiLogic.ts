@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { OmikujiResult } from "../types/omikuji";
-import { canDrawToday, drawOmikuji } from "../domain";
+import { canDrawToday, drawOmikuji, getTodayString } from "../domain";
 import {
   addHistoryEntry,
   getHistory,
@@ -25,7 +25,7 @@ export const useOmikujiLogic = () => {
       const [historyData, lastDate] = await Promise.all([getHistory(), getLastDrawDate()]);
       setHistory(historyData);
 
-      if (!canDrawToday(lastDate) && historyData.length > 0) {
+      if (!canDrawToday(lastDate, getTodayString()) && historyData.length > 0) {
         setHasDrawnToday(true);
         setFortune(historyData[0]);
       }

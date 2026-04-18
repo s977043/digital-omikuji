@@ -3,10 +3,6 @@ import { FortuneResult } from "../types/omikuji";
 import { migrateLegacyEntry, getTodayString } from "../domain";
 import { captureException } from "./sentry";
 
-// Re-exported for backward compatibility; external callers now prefer the
-// `domain/` import path.
-export { getTodayString };
-
 /**
  * HistoryStorage 内部のエラーを Sentry に送信し、ログに記録する。
  * ユーザー通知は行わない（silent error）。フォールバック値は呼び出し元で返す。
