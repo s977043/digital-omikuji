@@ -81,6 +81,44 @@ describe("HistoryStorage", () => {
     expect(savedData[1]).toEqual(mockHistoryData[0]);
   });
 
+  it("addHistoryEntry returns the updated history array", async () => {
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(mockHistoryData));
+    const newEntry: HistoryEntry = {
+      ...mockHistoryData[0],
+      id: "2",
+    };
+
+    const updated = await addHistoryEntry(newEntry);
+
+    expect(updated).toHaveLength(2);
+    expect(updated[0]).toEqual(newEntry);
+    expect(updated[1]).toEqual(mockHistoryData[0]);
+  });
+
+  it("addHistoryEntry skips AsyncStorage.getItem when currentHistory is provided", async () => {
+    const newEntry: HistoryEntry = {
+      ...mockHistoryData[0],
+      id: "injected",
+    };
+
+    const updated = await addHistoryEntry(newEntry, mockHistoryData);
+
+    expect(AsyncStorage.getItem).not.toHaveBeenCalled();
+    expect(updated).toHaveLength(2);
+    expect(updated[0]).toEqual(newEntry);
+  });
+
+  it("addHistoryEntry returns the provided currentHistory when setItem throws", async () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    (AsyncStorage.setItem as jest.Mock).mockRejectedValueOnce(new Error("disk full"));
+    const newEntry: HistoryEntry = { ...mockHistoryData[0], id: "3" };
+
+    const updated = await addHistoryEntry(newEntry, mockHistoryData);
+
+    expect(updated).toEqual(mockHistoryData);
+    consoleSpy.mockRestore();
+  });
+
   it("clearHistory clears storage", async () => {
     await clearHistory();
     expect(AsyncStorage.removeItem).toHaveBeenCalledWith(HISTORY_KEY);

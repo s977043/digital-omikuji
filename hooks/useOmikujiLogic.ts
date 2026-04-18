@@ -58,14 +58,17 @@ export const useOmikujiLogic = () => {
       setFortune(result);
       setHasDrawnToday(true);
 
-      await addHistoryEntry(result);
-      await loadHistory();
+      // 既に state に保持している history を渡すことで AsyncStorage からの
+      // 再読込 (JSON parse + migrate map) を省略する。書込み完了後の
+      // 履歴配列をそのまま state に反映する。
+      const updated = await addHistoryEntry(result, history);
+      setHistory(updated);
 
       return result;
     } finally {
       writingRef.current = false;
     }
-  }, [hasDrawnToday, fortune, loadHistory]);
+  }, [hasDrawnToday, fortune, history]);
 
   const resetFortune = useCallback(() => {
     if (!hasDrawnToday) {

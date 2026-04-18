@@ -45,18 +45,30 @@ export async function getHistory(): Promise<HistoryEntry[]> {
 }
 
 /**
- * 履歴に新しいエントリを追加する
+ * 履歴に新しいエントリを追加し、更新後の履歴配列を返す。
+ *
+ * `currentHistory` を渡すと AsyncStorage からの再読込を省略できる。
+ * 呼び出し元が既に state として履歴を保持している場合はそれを渡すことで、
+ * 同一データの JSON parse + migrate map を重複実行せずに済む。
+ * 省略時は従来通り内部で `getHistory()` を実行する。
+ *
+ * 失敗時は `currentHistory`（渡されていれば）または空配列を返す（silent error）。
  */
-export async function addHistoryEntry(result: FortuneResult): Promise<void> {
+export async function addHistoryEntry(
+  result: FortuneResult,
+  currentHistory?: HistoryEntry[]
+): Promise<HistoryEntry[]> {
   try {
-    const history = await getHistory();
+    const history = currentHistory ?? (await getHistory());
     // 最新のものが先頭に来るように追加し、50件に制限
     const updatedHistory = [result, ...history].slice(0, MAX_HISTORY_ITEMS);
     await AsyncStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
 
     await setLastDrawDate(getTodayString());
+    return updatedHistory;
   } catch (error) {
     reportStorageError("addHistoryEntry", error);
+    return currentHistory ?? [];
   }
 }
 
