@@ -27,6 +27,26 @@ export function initializeSentry(): void {
     tracesSampleRate: __DEV__ ? 1.0 : 0.2,
     // Ignore common network errors
     ignoreErrors: ["Network request failed", "TypeError: Network request failed"],
+    // プライバシー保護: デフォルト PII (IP / User-Agent / URL 等) を送らない
+    sendDefaultPii: false,
+    // console.error / console.warn のメッセージ本文には履歴 ID や運勢値が
+    // 紛れ得るため、breadcrumb としての送信を抑制する。Sentry 本体の
+    // captureException 経由は影響しない。
+    beforeBreadcrumb: (breadcrumb) => {
+      if (breadcrumb.category === "console") return null;
+      return breadcrumb;
+    },
+    // サーバーや user 情報は本アプリでは収集していないため、万一 SDK が
+    // 勝手に埋めた場合も確実にクリアする防御コード。
+    beforeSend: (event) => {
+      if (event.user) {
+        event.user = undefined;
+      }
+      if (event.request) {
+        event.request = undefined;
+      }
+      return event;
+    },
   });
 }
 
