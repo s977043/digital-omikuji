@@ -2,11 +2,12 @@
 import { initializeSentry, Sentry } from "../utils/sentry";
 
 import { SplashScreen, Stack } from "expo-router";
-import {
-  useFonts,
-  ShipporiMincho_400Regular,
-  ShipporiMincho_700Bold,
-} from "@expo-google-fonts/shippori-mincho";
+import { useFonts } from "expo-font";
+// バレル import を避け、利用する 2 ウェイトだけサブパス import で取得する。
+// バレル import すると Metro が同パッケージ配下の 500/600/800 等の TTF まで
+// バンドルに含めてしまい、Web 配信物に約 25MB の死荷重が発生する。
+import { ShipporiMincho_400Regular } from "@expo-google-fonts/shippori-mincho/400Regular";
+import { ShipporiMincho_700Bold } from "@expo-google-fonts/shippori-mincho/700Bold";
 import { useEffect } from "react";
 import { logVersionInfo } from "../utils/VersionInfo";
 import "../global.css";
