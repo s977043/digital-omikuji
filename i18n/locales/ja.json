@@ -172,5 +172,18 @@
     "deleteConfirmTitle": "履歴を削除",
     "deleteConfirmMessage": "本当にすべての履歴を削除しますか？",
     "empty": "まだ履歴がありません。\nおみくじを引いてみましょう！"
+  },
+  "settings": {
+    "title": "設定",
+    "subtitle": "操作と表示の感じ方を、自分に合わせて整えられます",
+    "openButton": "設定",
+    "shake": {
+      "label": "シェイクで引く",
+      "description": "オフにすると、画面のボタンをタップしたときだけおみくじを引きます"
+    },
+    "reducedMotion": {
+      "label": "アニメーションを抑える",
+      "description": "演出を簡略化します。OS の「視差効果を減らす」設定がオンの場合は、この設定に関わらず簡略化されます"
+    }
   }
 }

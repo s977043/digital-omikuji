@@ -6,6 +6,7 @@ import { router } from "expo-router";
 import { useOmikujiLogic } from "../hooks/useOmikujiLogic";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { useShakeDetection } from "../hooks/useShakeDetection";
+import { useAppSettings } from "../hooks/useAppSettings";
 import { useSoundEffects } from "../hooks/useSoundEffects";
 import { useAppStateMachine } from "../hooks/useAppStateMachine";
 import { COMPACT_HEIGHT_BREAKPOINT } from "../constants/layout";
@@ -27,7 +28,9 @@ export default function OmikujiApp() {
   const { t } = useTranslation();
   const { height: viewportHeight } = useWindowDimensions();
   const { fortune, drawFortune, resetFortune, hasDrawnToday } = useOmikujiLogic();
-  const reducedMotion = useReducedMotion();
+  const osReducedMotion = useReducedMotion();
+  const { settings: appSettings } = useAppSettings();
+  const reducedMotion = osReducedMotion || appSettings.forceReducedMotion;
   const { isMuted, toggleMute, playSound } = useSoundEffects();
 
   const { appState, handleShakeStart, handleResultView, handleReset } = useAppStateMachine({
@@ -45,7 +48,7 @@ export default function OmikujiApp() {
   const isCompactLayout = viewportHeight < COMPACT_HEIGHT_BREAKPOINT;
 
   useShakeDetection({
-    enabled: appState === "IDLE" && !hasDrawnToday,
+    enabled: appState === "IDLE" && !hasDrawnToday && appSettings.shakeEnabled,
     threshold: SHAKE_THRESHOLD,
     onShake: handleShakeStart,
   });
@@ -60,13 +63,22 @@ export default function OmikujiApp() {
   );
 
   const historyAction = (
-    <Button
-      label="履歴"
-      onPress={() => router.push("/history")}
-      variant="secondaryQuiet"
-      accessibilityLabel="履歴を見る"
-      accessibilityHint="これまでに引いたおみくじの履歴を表示します"
-    />
+    <View style={{ flexDirection: "row", gap: 8 }}>
+      <Button
+        label="履歴"
+        onPress={() => router.push("/history")}
+        variant="secondaryQuiet"
+        accessibilityLabel="履歴を見る"
+        accessibilityHint="これまでに引いたおみくじの履歴を表示します"
+      />
+      <Button
+        label={t("settings.openButton")}
+        onPress={() => router.push("/settings")}
+        variant="secondaryQuiet"
+        accessibilityLabel={t("settings.openButton")}
+        accessibilityHint="アプリの設定画面を開きます"
+      />
+    </View>
   );
 
   const debugAction = showDebug ? (
