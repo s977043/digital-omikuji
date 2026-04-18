@@ -23,6 +23,18 @@ export interface ExecuteShareOptions {
 const DEFAULT_WEB_CARD_SELECTOR = '[data-testid="share-card"], [testID="share-card"]';
 
 /**
+ * テスト容易性のため dynamic import を内部オブジェクトに切り出す。
+ * `jest.spyOn(internal, "captureWebImage")` で差し替え可能にする。
+ * production では `html-to-image` を遅延ロードし Web 初期バンドルに含めない。
+ */
+export const internal = {
+  async captureWebImage(element: HTMLElement, backgroundColor?: string): Promise<string> {
+    const { toPng } = await import("html-to-image");
+    return toPng(element, backgroundColor ? { backgroundColor } : {});
+  },
+};
+
+/**
  * プラットフォーム別にシェア処理を実行する。
  *
  * - **Web**: `html-to-image` で画面をキャプチャし、`navigator.share` または
@@ -88,10 +100,7 @@ async function tryWebShare(
     const element = globalThis.document?.querySelector?.(webCardSelector) as HTMLElement | null;
     if (!element) return false;
 
-    const { toPng } = await import("html-to-image");
-    const dataUrl = await toPng(element, {
-      ...(backgroundColor ? { backgroundColor } : {}),
-    });
+    const dataUrl = await internal.captureWebImage(element, backgroundColor);
 
     const response = await fetch(dataUrl);
     const blob = await response.blob();

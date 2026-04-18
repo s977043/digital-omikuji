@@ -1,6 +1,6 @@
 import { Platform, Share } from "react-native";
 import { captureRef } from "react-native-view-shot";
-import { executeShare } from "../shareUtils";
+import { executeShare, internal } from "../shareUtils";
 
 describe("executeShare", () => {
   let consoleErrorSpy: jest.SpyInstance;
@@ -112,6 +112,113 @@ describe("executeShare", () => {
 
       await expect(executeShare({ shareText: "share text" })).resolves.toBeUndefined();
       expect(shareSpy).not.toHaveBeenCalled();
+    });
+
+    describe("web success / fallback paths", () => {
+      const fakeElement = { _: "card" } as unknown as HTMLElement;
+
+      type NavigatorLike = {
+        share?: jest.Mock;
+        canShare?: jest.Mock;
+      };
+      let navigatorMock: NavigatorLike;
+      let clickSpy: jest.Mock;
+      let linkEl: { download: string; href: string; click: jest.Mock };
+
+      let captureSpy: jest.SpyInstance;
+
+      beforeEach(() => {
+        captureSpy = jest
+          .spyOn(internal, "captureWebImage")
+          .mockResolvedValue("data:image/png;base64,iVBORw0K");
+
+        clickSpy = jest.fn();
+        linkEl = { download: "", href: "", click: clickSpy };
+
+        globalThis.document = {
+          querySelector: jest.fn().mockReturnValue(fakeElement),
+          createElement: jest.fn().mockReturnValue(linkEl),
+        } as unknown as Document;
+
+        globalThis.fetch = jest.fn().mockResolvedValue({
+          blob: jest.fn().mockResolvedValue(new Blob(["x"], { type: "image/png" })),
+        }) as unknown as typeof fetch;
+
+        // File のフル実装は不要なので最低限の shim を用意する
+        (globalThis as unknown as { File: unknown }).File = class {
+          name: string;
+          type: string;
+          constructor(_parts: unknown[], name: string, opts: { type: string }) {
+            this.name = name;
+            this.type = opts.type;
+          }
+        };
+
+        navigatorMock = {};
+        Object.defineProperty(globalThis, "navigator", {
+          value: navigatorMock,
+          writable: true,
+          configurable: true,
+        });
+      });
+
+      it("calls navigator.share with files when canShare returns true", async () => {
+        navigatorMock.share = jest.fn().mockResolvedValue(undefined);
+        navigatorMock.canShare = jest.fn().mockReturnValue(true);
+
+        await executeShare({ shareText: "text", shareTitle: "title" });
+
+        expect(captureSpy).toHaveBeenCalledWith(fakeElement, undefined);
+        expect(navigatorMock.share).toHaveBeenCalledWith(
+          expect.objectContaining({
+            files: expect.any(Array),
+            title: "title",
+            text: "text",
+          })
+        );
+        expect(clickSpy).not.toHaveBeenCalled();
+      });
+
+      it("falls back to download link when canShare returns false", async () => {
+        navigatorMock.share = jest.fn();
+        navigatorMock.canShare = jest.fn().mockReturnValue(false);
+
+        await executeShare({ shareText: "text" });
+
+        expect(navigatorMock.share).not.toHaveBeenCalled();
+        expect(linkEl.download).toBe("omikuji.png");
+        expect(linkEl.href).toBe("data:image/png;base64,iVBORw0K");
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("falls back to download link when navigator.share is unavailable", async () => {
+        // navigator.share も canShare も未定義なブラウザ相当
+        await executeShare({ shareText: "text" });
+
+        expect(clickSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it("swallows AbortError silently when user cancels the share dialog", async () => {
+        const abortError = new DOMException("cancel", "AbortError");
+        navigatorMock.share = jest.fn().mockRejectedValue(abortError);
+        navigatorMock.canShare = jest.fn().mockReturnValue(true);
+
+        await expect(executeShare({ shareText: "text" })).resolves.toBeUndefined();
+
+        expect(navigatorMock.share).toHaveBeenCalled();
+        // AbortError は正常扱いなので console.error は呼ばれない
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+        expect(clickSpy).not.toHaveBeenCalled();
+      });
+
+      it("logs a warning through reportSilentError when share throws non-Abort error", async () => {
+        navigatorMock.share = jest.fn().mockRejectedValue(new Error("NotAllowed"));
+        navigatorMock.canShare = jest.fn().mockReturnValue(true);
+
+        await executeShare({ shareText: "text" });
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith("Web sharing failed", expect.any(Error));
+      });
     });
   });
 });
