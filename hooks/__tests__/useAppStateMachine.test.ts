@@ -172,6 +172,68 @@ describe("useAppStateMachine", () => {
     expect(shakeCalls).toHaveLength(1);
   });
 
+  it("allows re-draw after handleReset (shakeStarted guard is cleared)", async () => {
+    const opts = defaultOptions();
+    const { result, rerender } = renderHook(
+      (p: ReturnType<typeof defaultOptions>) => useAppStateMachine(p),
+      { initialProps: opts }
+    );
+
+    // Drive to RESULT
+    await act(async () => {
+      await result.current.handleShakeStart();
+    });
+    await act(async () => {
+      jest.advanceTimersByTime(1500);
+    });
+    act(() => jest.advanceTimersByTime(3500));
+    act(() => jest.advanceTimersByTime(2000));
+    expect(result.current.appState).toBe("RESULT");
+    expect(opts.drawFortune).toHaveBeenCalledTimes(1);
+
+    // Reset back to IDLE
+    act(() => {
+      result.current.handleReset();
+    });
+    expect(result.current.appState).toBe("IDLE");
+
+    // Simulate "next day" via prop change (hasDrawnToday false, hasFortune false)
+    rerender({ ...opts, hasDrawnToday: false, hasFortune: false });
+
+    // Second shake should fire cleanly
+    await act(async () => {
+      await result.current.handleShakeStart();
+    });
+    expect(result.current.appState).toBe("SHAKING");
+    await act(async () => {
+      jest.advanceTimersByTime(1500);
+    });
+    expect(result.current.appState).toBe("DRAWING");
+    expect(opts.drawFortune).toHaveBeenCalledTimes(2);
+  });
+
+  it("cancels pending drawFortune transition when unmounted during SHAKING", async () => {
+    const opts = defaultOptions();
+    const { result, unmount } = renderHook(() => useAppStateMachine(opts));
+
+    await act(async () => {
+      await result.current.handleShakeStart();
+    });
+    expect(result.current.appState).toBe("SHAKING");
+
+    // Unmount before the 1500ms timer fires
+    unmount();
+
+    // Advance timer; effect cleanup must have cleared it, so no unhandled dispatch
+    await act(async () => {
+      jest.advanceTimersByTime(1500);
+    });
+
+    // drawFortune should not have been called after unmount cleanup
+    // (The cancellation guard short-circuits before the dispatch / haptic.)
+    expect(opts.drawFortune).not.toHaveBeenCalled();
+  });
+
   it("uses reduced durations when reducedMotion is true", async () => {
     const opts = { ...defaultOptions(), reducedMotion: true };
     const { result } = renderHook(() => useAppStateMachine(opts));
