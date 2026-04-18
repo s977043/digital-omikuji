@@ -172,5 +172,18 @@
     "deleteConfirmTitle": "Delete History",
     "deleteConfirmMessage": "Are you sure you want to delete all history?",
     "empty": "No history yet.\nTry drawing an Omikuji!"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Tune how you interact with and see the experience.",
+    "openButton": "Settings",
+    "shake": {
+      "label": "Draw by shake",
+      "description": "When off, an Omikuji is drawn only by tapping the on-screen button."
+    },
+    "reducedMotion": {
+      "label": "Reduce motion",
+      "description": "Simplifies animations. If your OS \"Reduce Motion\" setting is enabled, motion is reduced regardless of this toggle."
+    }
   }
 }
