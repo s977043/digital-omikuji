@@ -67,7 +67,7 @@
     "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^30.0.0",
     "@types/react": "~19.2.14",
-    "eas-cli": "^18.5.0",
+    "eas-cli": "^18.7.0",
     "eslint": "^10.2.0",
     "eslint-config-expo": "^55.0.0",
     "eslint-config-prettier": "^10.1.8",
@@ -90,7 +90,14 @@
     },
     "overrides": {
       "undici": ">=6.25.0",
-      "picomatch": ">=3.0.2"
+      "picomatch": ">=3.0.2",
+      "node-forge": ">=1.4.0",
+      "tar": ">=7.5.11",
+      "@xmldom/xmldom": ">=0.8.12",
+      "minimatch": ">=5.1.8",
+      "diff": ">=8.0.3",
+      "yaml": ">=2.8.3",
+      "@tootallnate/once": ">=3.0.1"
     }
   }
 }
