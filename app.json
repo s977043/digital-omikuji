@@ -28,10 +28,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#dc2626"
       },
-      "permissions": [
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.READ_EXTERNAL_STORAGE"
-      ]
+      "permissions": []
     },
     "web": {
       "bundler": "metro",
