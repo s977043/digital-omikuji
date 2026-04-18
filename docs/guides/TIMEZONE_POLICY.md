@@ -9,9 +9,9 @@ Digital Omikuji は **デバイスのローカルタイムゾーン** を基準�
 
 ## 実装
 
-- 判定ロジック: `utils/HistoryStorage.ts` の `getTodayString()`
+- 判定ロジック: `domain/fortuneRules.ts` の `getTodayString()` / `canDrawToday()`
 - 返却形式: `YYYY-MM-DD`（例: `2026-01-01`）
-- 比較対象: `AsyncStorage` に保存された前回の引き取り日付キー `omikuji_last_draw_date`
+- 比較対象: `AsyncStorage` に保存された前回の引き取り日付キー `omikuji_last_draw_date`（`utils/HistoryStorage.ts` が読み書き）
 
 ## 設計理由
 
@@ -23,11 +23,11 @@ Digital Omikuji は **デバイスのローカルタイムゾーン** を基準�
 
 ### 想定内
 
-| ケース                                   | 挙動                                                                                                            |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| 同一デバイスで日付が変わる（深夜 0 時）  | ローカル日付が変わった時点で再引き可能                                                                          |
-| OS の日時を手動で翌日に進める            | 再引き可能（意図的に許容）                                                                                      |
-| OS の日時を手動で前日に戻す              | 同日扱い → 再引き不可（`last_draw_date > today` の辞書順比較は行わず、単純な文字列一致で判定）                  |
+| ケース                                  | 挙動                                                                                           |
+| --------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 同一デバイスで日付が変わる（深夜 0 時） | ローカル日付が変わった時点で再引き可能                                                         |
+| OS の日時を手動で翌日に進める           | 再引き可能（意図的に許容）                                                                     |
+| OS の日時を手動で前日に戻す             | 同日扱い → 再引き不可（`last_draw_date > today` の辞書順比較は行わず、単純な文字列一致で判定） |
 
 ### 国境越え・タイムゾーン変更時
 
@@ -51,5 +51,7 @@ UTC 化は仕様変更であり、リリースノートとユーザー向け FAQ
 
 ## 参考
 
-- `utils/HistoryStorage.ts`: 日付判定の実装
-- `hooks/useOmikujiLogic.ts`: `canDraw` 判定で `getTodayString()` を参照
+- `domain/fortuneRules.ts`: 日付判定の実装（`getTodayString` / `canDrawToday`）
+- `utils/HistoryStorage.ts`: AsyncStorage への `omikuji_last_draw_date` 読み書き
+- `hooks/useOmikujiLogic.ts`: `canDrawToday(lastDate, getTodayString())` で判定
+- [`DOMAIN_LAYER.md`](./DOMAIN_LAYER.md): ドメイン層全体の設計方針
