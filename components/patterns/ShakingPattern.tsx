@@ -19,6 +19,13 @@ export function ShakingPattern({ reducedMotion = false }: ShakingPatternProps) {
       }}
       transition={{ type: "timing", duration: 90, loop: true }}
       style={{ alignItems: "center" }}
+      // スクリーンリーダー向けの進捗フィードバック。SHAKING 中の数秒間に
+      // 状況が伝わらないと VoiceOver / TalkBack ユーザーが「固まった」と
+      // 誤認するため、progressbar role と live region でアナウンスする。
+      accessible
+      accessibilityRole="progressbar"
+      accessibilityLabel="念を込めてシェイクしています"
+      accessibilityLiveRegion="polite"
     >
       <Text style={{ fontSize: 92 }}>🫨</Text>
       <MotionView

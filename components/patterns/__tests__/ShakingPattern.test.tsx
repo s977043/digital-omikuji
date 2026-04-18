@@ -12,4 +12,11 @@ describe("ShakingPattern", () => {
     const { getByText } = render(<ShakingPattern reducedMotion />);
     expect(getByText("念を込めて...")).toBeTruthy();
   });
+
+  it("exposes a polite live region with progress role for screen readers", () => {
+    const { getByRole } = render(<ShakingPattern />);
+    const node = getByRole("progressbar");
+    expect(node.props.accessibilityLabel).toBe("念を込めてシェイクしています");
+    expect(node.props.accessibilityLiveRegion).toBe("polite");
+  });
 });
