@@ -18,9 +18,17 @@ digital-omikuji/
 ├── docs/
 │   ├── design/            # ムード・参考表現の補助資料
 │   └── design-system/     # token / component 契約と運用ガイド
+├── domain/                # 純粋ドメイン層 (React/Expo 非依存)
+│   ├── drawOmikuji.ts    # 加重ロット抽選 (RNG/Clock/ID 注入可能)
+│   ├── fortuneRules.ts   # 1 日 1 回制限と日付判定
+│   ├── getFortuneText.ts # i18n 経由の運勢文言取得
+│   ├── buildShareText.ts # X 共有用テキスト生成
+│   ├── historyMigration.ts # 旧形式履歴エントリのマイグレーション
+│   └── index.ts          # 公開 API (詳細は DOMAIN_LAYER.md)
 ├── hooks/                 # ビジネスロジック (Custom Hooks)
-│   └── useOmikujiLogic.ts # 抽選アルゴリズムの分離
-├── utils/                 # 汎用ユーティリティ
+│   └── useOmikujiLogic.ts # domain を組み合わせた画面ステート管理
+├── utils/                 # 副作用・プラットフォーム境界
+│   ├── HistoryStorage.ts # AsyncStorage 読み書き
 │   └── SoundManager.ts   # 音声再生管理 (Singleton Pattern)
 ├── assets/               # アセット
 │   ├── images/           # 画像リソース
