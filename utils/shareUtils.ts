@@ -1,6 +1,7 @@
 import { Platform, Share, View } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import type React from "react";
+import { reportSilentError } from "./errorReporter";
 
 /**
  * `executeShare` の呼び出しオプション。
@@ -61,7 +62,13 @@ export async function executeShare(options: ExecuteShareOptions): Promise<void> 
       }
     );
   } catch (error) {
-    console.error("Sharing failed", error);
+    reportSilentError("Sharing failed", error, {
+      source: "shareUtils",
+      operation: "executeShare",
+      category: "recoverable",
+      severity: "warning",
+      metadata: { platform: Platform.OS },
+    });
   }
 }
 
@@ -109,7 +116,12 @@ async function tryWebShare(
     if (webShareError instanceof DOMException && webShareError.name === "AbortError") {
       return true; // ダイアログは表示されたのでシェア処理自体は成功扱い
     }
-    console.error("Web sharing failed", webShareError);
+    reportSilentError("Web sharing failed", webShareError, {
+      source: "shareUtils",
+      operation: "tryWebShare",
+      category: "recoverable",
+      severity: "warning",
+    });
     return false;
   }
 }
@@ -124,7 +136,12 @@ async function tryCaptureNative(
   try {
     return await captureRef(cardRef, { format: "png", quality: 0.8 });
   } catch (captureError) {
-    console.error("Image capture failed", captureError);
+    reportSilentError("Image capture failed", captureError, {
+      source: "shareUtils",
+      operation: "tryCaptureNative",
+      category: "recoverable",
+      severity: "warning",
+    });
     return undefined;
   }
 }

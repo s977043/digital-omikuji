@@ -2,12 +2,25 @@ const mockInit = jest.fn();
 const mockCaptureException = jest.fn();
 const mockCaptureMessage = jest.fn();
 const mockSetContext = jest.fn();
+const mockAddBreadcrumb = jest.fn();
+const mockScopeSetContext = jest.fn();
+const mockScopeSetLevel = jest.fn();
+const mockWithScope = jest.fn((cb: (scope: unknown) => void) =>
+  cb({
+    setContext: mockScopeSetContext,
+    setLevel: mockScopeSetLevel,
+    setTag: jest.fn(),
+    setExtra: jest.fn(),
+  })
+);
 
 jest.mock("@sentry/react-native", () => ({
   init: mockInit,
   captureException: mockCaptureException,
   captureMessage: mockCaptureMessage,
   setContext: mockSetContext,
+  addBreadcrumb: mockAddBreadcrumb,
+  withScope: mockWithScope,
 }));
 
 jest.mock("expo-constants", () => ({
@@ -58,18 +71,22 @@ describe("sentry", () => {
     );
   });
 
-  it("captureException sends error to Sentry", () => {
+  it("captureException sends error to Sentry through a scoped callback", () => {
     process.env.EXPO_PUBLIC_SENTRY_DSN = "";
     const { captureException } = require("../sentry");
     const error = new Error("test error");
 
     captureException(error);
 
+    expect(mockWithScope).toHaveBeenCalledTimes(1);
     expect(mockCaptureException).toHaveBeenCalledWith(error);
+    // No context provided, so scope.setContext is untouched
+    expect(mockScopeSetContext).not.toHaveBeenCalled();
+    // Global setContext must not be used — it pollutes concurrent events
     expect(mockSetContext).not.toHaveBeenCalled();
   });
 
-  it("captureException sets context when provided", () => {
+  it("captureException sets scope context when provided (isolated per event)", () => {
     process.env.EXPO_PUBLIC_SENTRY_DSN = "";
     const { captureException } = require("../sentry");
     const error = new Error("test error");
@@ -77,8 +94,23 @@ describe("sentry", () => {
 
     captureException(error, context);
 
-    expect(mockSetContext).toHaveBeenCalledWith("additional", context);
+    expect(mockWithScope).toHaveBeenCalledTimes(1);
+    expect(mockScopeSetContext).toHaveBeenCalledWith("additional", context);
     expect(mockCaptureException).toHaveBeenCalledWith(error);
+    expect(mockSetContext).not.toHaveBeenCalled();
+  });
+
+  it("addBreadcrumb forwards to Sentry.addBreadcrumb", () => {
+    process.env.EXPO_PUBLIC_SENTRY_DSN = "";
+    const { addBreadcrumb } = require("../sentry");
+
+    addBreadcrumb({ category: "test", message: "hello", data: { foo: 1 } });
+
+    expect(mockAddBreadcrumb).toHaveBeenCalledWith({
+      category: "test",
+      message: "hello",
+      data: { foo: 1 },
+    });
   });
 
   it("captureMessage sends message to Sentry", () => {
