@@ -1,11 +1,11 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import Constants from "expo-constants";
 import { OmikujiResult } from "../types/omikuji";
-import { drawOmikuji } from "../utils/omikujiLogic";
+import { canDrawToday, drawOmikuji, getTodayString } from "../domain";
 import {
   addHistoryEntry,
   getHistory,
   getLastDrawDate,
-  getTodayString,
   clearHistory,
   HistoryEntry,
 } from "../utils/HistoryStorage";
@@ -14,6 +14,9 @@ export const useOmikujiLogic = () => {
   const [fortune, setFortune] = useState<OmikujiResult | null>(null);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [hasDrawnToday, setHasDrawnToday] = useState(false);
+  // drawFortune の多重起動（状態機械の effect 再実行や連打）で
+  // addHistoryEntry が二重に走るのを防ぐ書込みロック。
+  const writingRef = useRef(false);
 
   const loadHistory = useCallback(async () => {
     const data = await getHistory();
@@ -22,34 +25,50 @@ export const useOmikujiLogic = () => {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     async function initialize() {
       const [historyData, lastDate] = await Promise.all([getHistory(), getLastDrawDate()]);
+      if (cancelled) return;
       setHistory(historyData);
 
-      if (lastDate === getTodayString() && historyData.length > 0) {
+      if (!canDrawToday(lastDate, getTodayString()) && historyData.length > 0) {
         setHasDrawnToday(true);
         setFortune(historyData[0]);
       }
     }
 
     initialize();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const drawFortune = useCallback(async () => {
     if (hasDrawnToday) {
       return fortune;
     }
+    if (writingRef.current) {
+      // 既に書込み中：同一セッションでの二重発火を無視する
+      return fortune;
+    }
+    writingRef.current = true;
+    try {
+      const result = drawOmikuji();
 
-    const result = drawOmikuji();
+      setFortune(result);
+      setHasDrawnToday(true);
 
-    setFortune(result);
-    setHasDrawnToday(true);
+      // 既に state に保持している history を渡すことで AsyncStorage からの
+      // 再読込 (JSON parse + migrate map) を省略する。書込み完了後の
+      // 履歴配列をそのまま state に反映する。
+      const updated = await addHistoryEntry(result, history);
+      setHistory(updated);
 
-    await addHistoryEntry(result);
-    await loadHistory();
-
-    return result;
-  }, [hasDrawnToday, fortune, loadHistory]);
+      return result;
+    } finally {
+      writingRef.current = false;
+    }
+  }, [hasDrawnToday, fortune, history]);
 
   const resetFortune = useCallback(() => {
     if (!hasDrawnToday) {
@@ -58,6 +77,12 @@ export const useOmikujiLogic = () => {
   }, [hasDrawnToday]);
 
   const debugResetDailyLimit = useCallback(async () => {
+    // Defense-in-depth: no-op in production. __DEV__ is false in production builds;
+    // the appVariant check also blocks preview-style builds that somehow ship with __DEV__ true.
+    if (!__DEV__) return;
+    const variant = Constants.expoConfig?.extra?.appVariant;
+    if (variant === "production") return;
+
     await clearHistory();
     setHasDrawnToday(false);
     setFortune(null);

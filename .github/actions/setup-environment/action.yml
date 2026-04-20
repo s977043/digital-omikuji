@@ -1,0 +1,32 @@
+name: "Setup Node & pnpm environment"
+description: "Common setup for pnpm, Node.js, and project dependencies"
+
+inputs:
+  node-version:
+    description: "Node.js version to install"
+    required: false
+    # Node 22 LTS 以上を既定値に採用する。
+    # undici 6.25+ が Node の内部 webidl API (markAsUncloneable 等、Node 21+)
+    # に依存するため、Node 20 だと @sentry/cli の postinstall が落ちる。
+    default: "22"
+  install-dependencies:
+    description: "Whether to run pnpm install --frozen-lockfile --prefer-offline"
+    required: false
+    default: "true"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: "pnpm"
+
+    - name: Install dependencies
+      if: inputs.install-dependencies == 'true'
+      shell: bash
+      run: pnpm install --frozen-lockfile --prefer-offline

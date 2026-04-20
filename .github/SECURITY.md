@@ -4,7 +4,8 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.0.x   | :white_check_mark: |
+| 1.1.x   | :white_check_mark: |
+| 1.0.x   | Best effort        |
 
 ## Reporting a Vulnerability
 
@@ -45,6 +46,9 @@ If you discover a security vulnerability, please report it responsibly.
 This project follows security best practices including:
 
 - Regular dependency updates via Dependabot
+- Dependency Review for package changes
+- Secret scanning and push protection
+- GitHub Private Vulnerability Reporting
 - No storage of sensitive user data
 - Environment variables for sensitive configuration
 - Sentry for error monitoring (without PII collection)

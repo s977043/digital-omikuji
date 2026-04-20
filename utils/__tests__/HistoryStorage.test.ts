@@ -81,6 +81,44 @@ describe("HistoryStorage", () => {
     expect(savedData[1]).toEqual(mockHistoryData[0]);
   });
 
+  it("addHistoryEntry returns the updated history array", async () => {
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(mockHistoryData));
+    const newEntry: HistoryEntry = {
+      ...mockHistoryData[0],
+      id: "2",
+    };
+
+    const updated = await addHistoryEntry(newEntry);
+
+    expect(updated).toHaveLength(2);
+    expect(updated[0]).toEqual(newEntry);
+    expect(updated[1]).toEqual(mockHistoryData[0]);
+  });
+
+  it("addHistoryEntry skips AsyncStorage.getItem when currentHistory is provided", async () => {
+    const newEntry: HistoryEntry = {
+      ...mockHistoryData[0],
+      id: "injected",
+    };
+
+    const updated = await addHistoryEntry(newEntry, mockHistoryData);
+
+    expect(AsyncStorage.getItem).not.toHaveBeenCalled();
+    expect(updated).toHaveLength(2);
+    expect(updated[0]).toEqual(newEntry);
+  });
+
+  it("addHistoryEntry returns the provided currentHistory when setItem throws", async () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    (AsyncStorage.setItem as jest.Mock).mockRejectedValueOnce(new Error("disk full"));
+    const newEntry: HistoryEntry = { ...mockHistoryData[0], id: "3" };
+
+    const updated = await addHistoryEntry(newEntry, mockHistoryData);
+
+    expect(updated).toEqual(mockHistoryData);
+    consoleSpy.mockRestore();
+  });
+
   it("clearHistory clears storage", async () => {
     await clearHistory();
     expect(AsyncStorage.removeItem).toHaveBeenCalledWith(HISTORY_KEY);
@@ -113,6 +151,73 @@ describe("HistoryStorage", () => {
     // New entry is prepended and the oldest existing item is dropped.
     expect(savedData[1].id).toBe("existing-0");
     expect(savedData[49].id).toBe("existing-48");
+  });
+
+  it("drops entries whose payload fails shape validation", async () => {
+    // Corrupted mix: unknown level, non-numeric messageIndex, missing image,
+    // and one valid legacy entry that should survive.
+    const mixedPayload = [
+      {
+        id: "bad-1",
+        level: "not-a-level",
+        messageIndex: 0,
+        image: { uri: "x" },
+        color: "#000",
+        createdAt: 1,
+      },
+      {
+        id: "bad-2",
+        level: "daikichi",
+        messageIndex: "zero",
+        image: { uri: "x" },
+        color: "#000",
+        createdAt: 1,
+      },
+      { id: "bad-3", level: "daikichi", messageIndex: 0, color: "#000", createdAt: 1 }, // no image
+      { id: "bad-4", level: "daikichi", messageIndex: 0, image: { uri: "x" }, color: "#000" }, // no createdAt
+      {
+        id: "",
+        level: "daikichi",
+        messageIndex: 0,
+        image: { uri: "x" },
+        color: "#000",
+        createdAt: 1,
+      }, // empty id
+      {
+        id: "good",
+        level: "daikichi",
+        messageIndex: 0,
+        image: { uri: "x" },
+        color: "#000",
+        createdAt: 123,
+      },
+    ];
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(mixedPayload));
+
+    const result = await getHistory();
+
+    expect(result).toHaveLength(1);
+    expect(result[0].id).toBe("good");
+    expect(result[0].type).toBe("omikuji");
+  });
+
+  it("rejects entries with unknown fortune type", async () => {
+    const payload = [
+      {
+        id: "tarot-1",
+        type: "tarot",
+        level: "daikichi",
+        messageIndex: 0,
+        image: { uri: "x" },
+        color: "#000",
+        createdAt: 1,
+      },
+    ];
+    (AsyncStorage.getItem as jest.Mock).mockResolvedValue(JSON.stringify(payload));
+
+    const result = await getHistory();
+
+    expect(result).toEqual([]);
   });
 
   it("manages last draw date", async () => {

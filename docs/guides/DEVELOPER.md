@@ -18,9 +18,17 @@ digital-omikuji/
 ├── docs/
 │   ├── design/            # ムード・参考表現の補助資料
 │   └── design-system/     # token / component 契約と運用ガイド
+├── domain/                # 純粋ドメイン層 (React/Expo 非依存)
+│   ├── drawOmikuji.ts    # 加重ロット抽選 (RNG/Clock/ID 注入可能)
+│   ├── fortuneRules.ts   # 1 日 1 回制限と日付判定
+│   ├── getFortuneText.ts # i18n 経由の運勢文言取得
+│   ├── buildShareText.ts # X 共有用テキスト生成
+│   ├── historyMigration.ts # 旧形式履歴エントリのマイグレーション
+│   └── index.ts          # 公開 API (詳細は DOMAIN_LAYER.md)
 ├── hooks/                 # ビジネスロジック (Custom Hooks)
-│   └── useOmikujiLogic.ts # 抽選アルゴリズムの分離
-├── utils/                 # 汎用ユーティリティ
+│   └── useOmikujiLogic.ts # domain を組み合わせた画面ステート管理
+├── utils/                 # 副作用・プラットフォーム境界
+│   ├── HistoryStorage.ts # AsyncStorage 読み書き
 │   └── SoundManager.ts   # 音声再生管理 (Singleton Pattern)
 ├── assets/               # アセット
 │   ├── images/           # 画像リソース
@@ -102,13 +110,13 @@ export const ACQUIRED_FORTUNES = [
   {
     level: "daikichi",
     weight: 5,
-    image: require("../assets/omikuji_cylinder.png"),
+    image: require("../assets/omikuji_cylinder.webp"),
     color: "#FFD700",
   },
   {
     level: "kyo",
     weight: 10,
-    image: require("../assets/omikuji_cylinder.png"),
+    image: require("../assets/omikuji_cylinder.webp"),
     color: "#808080",
   },
 ];
@@ -143,6 +151,59 @@ const SOUNDS_TO_LOAD = [
   { key: "new_sound", loader: () => require("../assets/sounds/new_sound.wav") }, // 追加
 ];
 ```
+
+## 📳 触覚フィードバック実装ガイド
+
+### 現在の構成
+
+触覚フィードバック（ハプティクス）は `triggerHaptic()` ユーティリティ (`utils/haptics.ts`) で統一管理されています。直接 `Haptics.impactAsync` / `Haptics.notificationAsync` を呼ぶのではなく、必ず `triggerHaptic()` 経由で使用してください。
+
+**Platform 対応:**
+
+- **iOS / Android**: `expo-haptics` のネイティブ実装を呼び出します。
+- **Web**: 無条件でスキップされます（ハプティクス API が存在しないため）。
+- **`reducedMotion`**: ユーザーがモーション軽減設定を有効にしている場合、通常のフィードバックはスキップされます。`force: true` を指定した場合のみ実行されます。
+
+### 使用例
+
+```typescript
+import * as Haptics from "expo-haptics";
+import { triggerHaptic } from "../utils/haptics";
+
+// Impact feedback（衝撃）
+triggerHaptic(
+  { type: "impact", style: Haptics.ImpactFeedbackStyle.Medium },
+  false, // force: reducedMotion 時はスキップ
+  reducedMotion
+);
+
+// Notification feedback（通知）
+triggerHaptic(
+  { type: "notification", style: Haptics.NotificationFeedbackType.Success },
+  false,
+  reducedMotion
+);
+
+// 重要なフィードバックを reducedMotion でも強制実行
+triggerHaptic(
+  { type: "impact", style: Haptics.ImpactFeedbackStyle.Heavy },
+  true, // force: true で reducedMotion を上書き
+  reducedMotion
+);
+```
+
+### `impact` vs `notification` の使い分け
+
+| 種類           | 用途                             | 例                                     |
+| -------------- | -------------------------------- | -------------------------------------- |
+| `impact`       | ボタンタップ・動作開始・アニメ中 | シェイク中の連続フィードバック         |
+| `notification` | 成功・警告・エラーの明確な通知   | おみくじ結果表示時の確定フィードバック |
+
+### 新しいフィードバックの追加手順
+
+1. **直接呼び出しは禁止**: `Haptics.*Async()` を直接呼ばず、必ず `triggerHaptic()` を使用する。
+2. **reducedMotion の伝播**: `useReducedMotion()` フックで取得した値を引数に渡す。
+3. **force の使用は限定的に**: アクセシビリティ設定を尊重するため、`force: true` は結果表示等の重要なイベントのみに使用する。
 
 ## 🔍 トラブルシューティング
 

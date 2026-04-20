@@ -2,6 +2,8 @@ import React from "react";
 import { Text, View } from "react-native";
 import { HistoryEntry } from "../../utils/HistoryStorage";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { getFortuneLevelColor } from "../../design-system/fortuneTokens";
+import { isOmikujiResult } from "../../types/omikuji";
 import { SurfaceCard } from "./SurfaceCard";
 
 function formatDate(timestamp: number): string {
@@ -27,10 +29,23 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
     bodyColor: string;
   }>("history.item");
   const ritualBodyFont = getStringToken("primitive.typography.family.ritualBody");
-  const fortuneColor = getStringToken(`semantic.fortune.level.${item.level}`);
+  // 現状は omikuji 種別のみだが、将来の占い種別追加に備えて型ガードで分岐
+  // omikuji 以外のフォールバック色は semantic トークンから取得（raw HEX は使わない）
+  const fortuneColor = isOmikujiResult(item)
+    ? getFortuneLevelColor(item.level)
+    : getStringToken("semantic.text.primary");
+
+  const formattedDate = formatDate(item.createdAt);
+  // スクリーンリーダーでは「大吉。2026年4月11日 09:30。最高の運気です。」のように読み上げる
+  const combinedA11yLabel = `${fortuneTitle}。${formattedDate}。${fortuneMessage}`;
 
   return (
-    <SurfaceCard variant="glassCard">
+    <SurfaceCard
+      variant="glassCard"
+      accessible
+      accessibilityLabel={combinedA11yLabel}
+      accessibilityRole="summary"
+    >
       <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 16 }}>
         <Text
           style={{
@@ -42,7 +57,7 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
           {fortuneTitle}
         </Text>
         <Text style={{ color: tokens.metaColor, fontSize: 12, flexShrink: 1, textAlign: "right" }}>
-          {formatDate(item.createdAt)}
+          {formattedDate}
         </Text>
       </View>
       <Text

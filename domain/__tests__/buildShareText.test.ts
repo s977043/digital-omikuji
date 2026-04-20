@@ -1,11 +1,8 @@
 import { buildShareText } from "../buildShareText";
 
 describe("buildShareText", () => {
-  it("generates correct share text", () => {
-    const text = buildShareText({
-      title: "大吉",
-      description: "最高の運気です",
-    });
+  it("generates the expected share template", () => {
+    const text = buildShareText({ title: "大吉", description: "最高の運気です" });
 
     expect(text).toContain("2026年のエンジニア運勢は");
     expect(text).toContain("『大吉』");
@@ -18,11 +15,7 @@ describe("buildShareText", () => {
     );
   });
 
-  it("handles different fortune titles", () => {
-    const text = buildShareText({
-      title: "凶",
-      description: "注意が必要です",
-    });
-    expect(text).toContain("『凶』");
+  it("interpolates different titles", () => {
+    expect(buildShareText({ title: "凶", description: "注意が必要です" })).toContain("『凶』");
   });
 });

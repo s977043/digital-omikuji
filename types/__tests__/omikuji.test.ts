@@ -1,4 +1,4 @@
-import { isOmikujiResult, OmikujiResult, FortuneResult } from "../omikuji";
+import { isFortuneLevel, isOmikujiResult, OmikujiResult, FortuneResult } from "../omikuji";
 
 describe("omikuji type guards", () => {
   const omikujiResult: OmikujiResult = {
@@ -26,6 +26,22 @@ describe("omikuji type guards", () => {
         fail("Expected omikuji result");
       }
     });
+  });
+
+  describe("isFortuneLevel", () => {
+    it.each(["daikichi", "chukichi", "shokichi", "kichi", "suekichi", "kyo", "daikyo"])(
+      "returns true for known level %s",
+      (level) => {
+        expect(isFortuneLevel(level)).toBe(true);
+      }
+    );
+
+    it.each([null, undefined, 0, "", "super-kichi", "Daikichi", {}])(
+      "returns false for invalid input %p",
+      (value) => {
+        expect(isFortuneLevel(value)).toBe(false);
+      }
+    );
   });
 
   describe("OmikujiResult", () => {

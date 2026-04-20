@@ -56,4 +56,72 @@ describe("ExperienceScreenTemplate", () => {
     expect(topBar?.props.accessibilityElementsHidden).toBe(false);
     expect(topBar?.props.importantForAccessibility).toBe("auto");
   });
+
+  it("renders children content", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate topBar={<Text>header</Text>}>
+        <Text>本文コンテンツ</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("本文コンテンツ")).toBeTruthy();
+  });
+
+  it("renders footer when provided", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate topBar={<Text>header</Text>} footer={<Text>フッター内容</Text>}>
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("フッター内容")).toBeTruthy();
+  });
+
+  it("renders bottomLeftAction and bottomRightAction", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate
+        topBar={<Text>header</Text>}
+        bottomLeftAction={<Text>左アクション</Text>}
+        bottomRightAction={<Text>右アクション</Text>}
+      >
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("左アクション")).toBeTruthy();
+    expect(getByText("右アクション")).toBeTruthy();
+  });
+
+  it("renders only bottomLeftAction without right one", () => {
+    // 同じ identifier で「渡すケース」と「渡さないケース」を rerender で検証し、
+    // 差分として右アクションが描画されない（消える）ことを確認する
+    const RIGHT_LABEL = "右アクション専用ラベル";
+    const { queryByText, rerender } = render(
+      <ExperienceScreenTemplate
+        topBar={<Text>header</Text>}
+        bottomLeftAction={<Text>左のみ</Text>}
+        bottomRightAction={<Text>{RIGHT_LABEL}</Text>}
+      >
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    // 最初は両方描画される
+    expect(queryByText("左のみ")).toBeTruthy();
+    expect(queryByText(RIGHT_LABEL)).toBeTruthy();
+
+    // bottomRightAction を省略して再レンダリング
+    rerender(
+      <ExperienceScreenTemplate topBar={<Text>header</Text>} bottomLeftAction={<Text>左のみ</Text>}>
+        <Text>body</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(queryByText("左のみ")).toBeTruthy();
+    expect(queryByText(RIGHT_LABEL)).toBeNull();
+  });
+
+  it("renders without topBar", () => {
+    const { getByText } = render(
+      <ExperienceScreenTemplate>
+        <Text>topBarなし</Text>
+      </ExperienceScreenTemplate>
+    );
+    expect(getByText("topBarなし")).toBeTruthy();
+  });
 });
