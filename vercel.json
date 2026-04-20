@@ -1,87 +1,85 @@
 {
-    "git": {
-        "deploymentEnabled": false
+  "git": {
+    "deploymentEnabled": false
+  },
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist",
+  "installCommand": "pnpm install",
+  "framework": null,
+  "cleanUrls": true,
+  "regions": ["hnd1"],
+  "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/((?!_expo|assets|fonts|favicon\\.ico|.*\\..*).*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(assets|fonts|_expo)/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
-    "buildCommand": "pnpm build",
-    "outputDirectory": "dist",
-    "installCommand": "pnpm install",
-    "framework": null,
-    "cleanUrls": true,
-    "regions": [
-        "hnd1"
-    ],
-    "trailingSlash": false,
-    "rewrites": [
+    {
+      "source": "/(.*).:ext(png|jpg|jpeg|gif|webp|avif|svg|ico)",
+      "headers": [
         {
-            "source": "/((?!_expo|assets|fonts|favicon\\.ico|.*\\..*).*)",
-            "destination": "/index.html"
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
-    ],
-    "headers": [
+      ]
+    },
+    {
+      "source": "/(.*).:ext(mp3|wav|ogg|m4a)",
+      "headers": [
         {
-            "source": "/(assets|fonts|_expo)/:path*",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=31536000, immutable"
-                }
-            ]
-        },
-        {
-            "source": "/(.*).:ext(png|jpg|jpeg|gif|webp|avif|svg|ico)",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=31536000, immutable"
-                }
-            ]
-        },
-        {
-            "source": "/(.*).:ext(mp3|wav|ogg|m4a)",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=31536000, immutable"
-                }
-            ]
-        },
-        {
-            "source": "/(.*).:ext(html)",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=0, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/(.*)",
-            "headers": [
-                {
-                    "key": "X-Content-Type-Options",
-                    "value": "nosniff"
-                },
-                {
-                    "key": "X-Frame-Options",
-                    "value": "DENY"
-                },
-                {
-                    "key": "Referrer-Policy",
-                    "value": "strict-origin-when-cross-origin"
-                },
-                {
-                    "key": "Content-Security-Policy",
-                    "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https:; frame-ancestors 'none'"
-                },
-                {
-                    "key": "Permissions-Policy",
-                    "value": "accelerometer=(self), gyroscope=(self), magnetometer=(self)"
-                },
-                {
-                    "key": "Strict-Transport-Security",
-                    "value": "max-age=31536000; includeSubDomains; preload"
-                }
-            ]
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
-    ]
+      ]
+    },
+    {
+      "source": "/(.*).:ext(html)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self' https:; frame-ancestors 'none'"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "accelerometer=(self), gyroscope=(self), magnetometer=(self)"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        }
+      ]
+    }
+  ]
 }
