@@ -5,7 +5,10 @@ inputs:
   node-version:
     description: "Node.js version to install"
     required: false
-    default: "20"
+    # Node 22 LTS 以上を既定値に採用する。
+    # undici 6.25+ が Node の内部 webidl API (markAsUncloneable 等、Node 21+)
+    # に依存するため、Node 20 だと @sentry/cli の postinstall が落ちる。
+    default: "22"
   install-dependencies:
     description: "Whether to run pnpm install --frozen-lockfile --prefer-offline"
     required: false
