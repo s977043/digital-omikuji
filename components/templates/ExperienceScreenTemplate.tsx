@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { getComponentTokens, getStringToken } from "../../design-system";
 
 type WebStyle = ViewStyle & {
@@ -52,11 +53,16 @@ export function ExperienceScreenTemplate({
   children,
 }: ExperienceScreenTemplateProps) {
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const overlayContainerRef = useRef<View | null>(null);
   const canvasColor = getStringToken("semantic.surface.experience.canvas");
   const sceneOverlay = getComponentTokens<{ backgroundColor: string }>("overlay.sceneScrim");
   const hasBottomActions = bottomLeftAction || bottomRightAction;
   const isCompactHeight = height < 720;
+  const horizontalPadding = 20;
+  const topPadding = Math.max(insets.top + 12, isCompactHeight ? 28 : 48);
+  const bottomPadding = Math.max(insets.bottom + 12, isCompactHeight ? 20 : 28);
+  const bottomActionsPadding = Math.max(insets.bottom + 8, isCompactHeight ? 10 : 16);
   const isOverlayActive = overlay != null;
   const backgroundPointerEvents = isOverlayActive ? "none" : "auto";
 
@@ -161,8 +167,8 @@ export function ExperienceScreenTemplate({
             <View
               testID="experience-topbar"
               style={{
-                paddingHorizontal: 20,
-                paddingTop: isCompactHeight ? 28 : 48,
+                paddingHorizontal: horizontalPadding,
+                paddingTop: topPadding,
                 paddingBottom: isCompactHeight ? 16 : 20,
               }}
               pointerEvents={backgroundPointerEvents}
@@ -182,7 +188,7 @@ export function ExperienceScreenTemplate({
               flexGrow: 1,
               paddingHorizontal: 20,
               paddingTop: 0,
-              paddingBottom: isCompactHeight ? 20 : 28,
+              paddingBottom: bottomPadding,
             }}
             showsVerticalScrollIndicator={false}
             scrollEnabled={!isOverlayActive}
@@ -217,7 +223,7 @@ export function ExperienceScreenTemplate({
                   alignItems: "center",
                   flexWrap: "wrap",
                   gap: 12,
-                  marginTop: isCompactHeight ? 10 : 16,
+                  marginTop: bottomActionsPadding,
                 }}
               >
                 {bottomLeftAction ? (

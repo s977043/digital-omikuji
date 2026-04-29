@@ -8,6 +8,7 @@ import {
   ShipporiMincho_700Bold,
 } from "@expo-google-fonts/shippori-mincho";
 import { useEffect } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { logVersionInfo } from "../utils/VersionInfo";
 import "../global.css";
 import "../i18n";
@@ -35,9 +36,11 @@ function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-    </Stack>
+    <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+      </Stack>
+    </SafeAreaProvider>
   );
 }
 

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import * as Haptics from "expo-haptics";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
 import { DETAIL_KEYS } from "../../data/omikujiData";
 import { OmikujiResult } from "../../types/omikuji";
@@ -32,6 +33,7 @@ interface PaperResultCardProps {
 
 export function PaperResultCard({ fortune, onReset, reducedMotion = false }: PaperResultCardProps) {
   const { height } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const cardRef = useRef<View>(null);
   const tieTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const keepTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,6 +49,9 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
   }>("result.paperResult");
   const fortuneColor = getStringToken(`semantic.fortune.level.${fortune.level}`);
   const isCompactHeight = height < 720;
+  const shellPaddingTop = Math.max(insets.top + 8, isCompactHeight ? 12 : 24);
+  const shellPaddingBottom = Math.max(insets.bottom + 12, isCompactHeight ? 12 : 24);
+  const scrollPadding = isCompactHeight ? 16 : 20;
   const actionButtonStyle = {
     minHeight: isCompactHeight ? 48 : 56,
     paddingVertical: isCompactHeight ? 10 : 12,
@@ -241,7 +246,8 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
         inset: 0,
         backgroundColor: "transparent",
         paddingHorizontal: 16,
-        paddingVertical: isCompactHeight ? 12 : 24,
+        paddingTop: shellPaddingTop,
+        paddingBottom: shellPaddingBottom,
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -304,8 +310,8 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
             <ScrollView
               style={{ flexShrink: 1 }}
               contentContainerStyle={{
-                padding: isCompactHeight ? 16 : 20,
-                paddingBottom: isCompactHeight ? 16 : 24,
+                padding: scrollPadding,
+                paddingBottom: isCompactHeight ? 14 : 22,
               }}
               showsVerticalScrollIndicator
             >
@@ -345,14 +351,14 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
                   <View
                     key={key}
                     style={{
-                      flexDirection: "row",
-                      gap: 12,
+                      flexDirection: isCompactHeight ? "column" : "row",
+                      gap: isCompactHeight ? 4 : 12,
                       alignItems: "flex-start",
                     }}
                   >
                     <Text
                       style={{
-                        width: 72,
+                        width: isCompactHeight ? undefined : 72,
                         color: resultTokens.titleColor,
                         fontWeight: "700",
                       }}
@@ -371,6 +377,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
               style={{
                 padding: 16,
                 paddingVertical: isCompactHeight ? 12 : 16,
+                paddingBottom: Math.max(insets.bottom + 10, isCompactHeight ? 12 : 16),
                 borderTopWidth: 1,
                 borderTopColor: "rgba(180, 83, 9, 0.18)",
                 gap: isCompactHeight ? 8 : 10,
@@ -378,6 +385,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
             >
               <Button
                 label={t("common.share")}
+                icon="↗"
                 onPress={handleShare}
                 variant="utilityWarm"
                 style={actionButtonStyle}
@@ -386,6 +394,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
                 <View style={{ flex: 1 }}>
                   <Button
                     label={t("fortune.tie")}
+                    icon="⌁"
                     onPress={handleTie}
                     variant="secondaryQuiet"
                     style={actionButtonStyle}
@@ -394,6 +403,7 @@ export function PaperResultCard({ fortune, onReset, reducedMotion = false }: Pap
                 <View style={{ flex: 1 }}>
                   <Button
                     label={t("fortune.keep")}
+                    icon="✓"
                     onPress={handleKeep}
                     variant="primaryRitual"
                     style={actionButtonStyle}

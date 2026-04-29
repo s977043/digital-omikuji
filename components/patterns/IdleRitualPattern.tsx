@@ -10,15 +10,24 @@ interface IdleRitualPatternProps {
 }
 
 export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleRitualPatternProps) {
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const isCompactHeight = height < 720;
-  const circleSize = isCompactHeight ? 168 : 220;
-  const imageSize = isCompactHeight ? 148 : 196;
-  const titleFontSize = hasDrawnToday ? (isCompactHeight ? 22 : 26) : isCompactHeight ? 26 : 30;
+  const isNarrowPhone = width < 390;
+  const circleSize = isCompactHeight ? (isNarrowPhone ? 148 : 168) : 220;
+  const imageSize = isCompactHeight ? (isNarrowPhone ? 130 : 148) : 196;
+  const titleFontSize = hasDrawnToday
+    ? isCompactHeight
+      ? 21
+      : 26
+    : isCompactHeight
+      ? isNarrowPhone
+        ? 24
+        : 26
+      : 30;
   const titleLineHeight = hasDrawnToday ? (isCompactHeight ? 32 : 38) : isCompactHeight ? 34 : 42;
 
   return (
-    <View style={{ alignItems: "center", paddingHorizontal: isCompactHeight ? 16 : 24 }}>
+    <View style={{ alignItems: "center", paddingHorizontal: isCompactHeight ? 12 : 24 }}>
       <View
         style={{
           width: circleSize,
@@ -29,7 +38,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
           borderColor: "rgba(255,255,255,0.20)",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: isCompactHeight ? 16 : 24,
+          marginBottom: isCompactHeight ? 14 : 24,
         }}
       >
         <Image
@@ -63,7 +72,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
           fontSize: isCompactHeight ? 14 : 15,
           lineHeight: isCompactHeight ? 22 : 24,
           textAlign: "center",
-          marginBottom: isCompactHeight ? 16 : 24,
+          marginBottom: isCompactHeight ? 14 : 24,
           fontFamily: getStringToken("primitive.typography.family.ritualBody"),
         }}
       >
@@ -84,6 +93,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
         <>
           <Button
             label="おみくじを引く"
+            icon="🎍"
             onPress={onDraw}
             variant="primaryRitual"
             accessibilityLabel="おみくじを引く"
@@ -92,7 +102,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
           />
           <View
             style={{
-              marginTop: isCompactHeight ? 12 : 18,
+              marginTop: isCompactHeight ? 10 : 18,
               borderWidth: 1,
               borderColor: "rgba(255,255,255,0.18)",
               borderRadius: 999,
@@ -105,13 +115,27 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
               style={{
                 color: "rgba(255,255,255,0.82)",
                 fontSize: isCompactHeight ? 11 : 12,
-                letterSpacing: isCompactHeight ? 1.4 : 2,
+                letterSpacing: 0,
                 fontWeight: "700",
+                textAlign: "center",
+              }}
+            >
+              振っても、タップしても引けます
+            </Text>
+          </View>
+          {!isCompactHeight ? (
+            <Text
+              style={{
+                color: "rgba(255,255,255,0.56)",
+                fontSize: 12,
+                lineHeight: 18,
+                textAlign: "center",
+                marginTop: 10,
               }}
             >
               令和八年 丙午 デジタルおみくじ
             </Text>
-          </View>
+          ) : null}
         </>
       )}
     </View>
