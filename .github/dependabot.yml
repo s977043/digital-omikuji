@@ -45,6 +45,14 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      # expo-router のメジャー更新は Expo SDK 本体と密結合しており、
+      # SDK 54 固定のまま単体で上げると Web ビルド(expo-router/node/render.js)が
+      # 破損する。#381 / #410 で毎回クローズする恒久 toil となっていたため
+      # メジャーは無視し、Expo SDK アップグレード時に併せて対応する。
+      - dependency-name: "expo-router"
+        update-types:
+          - "version-update:semver-major"
     labels:
       - "dependencies"
       - "npm"
