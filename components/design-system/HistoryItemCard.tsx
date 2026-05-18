@@ -1,4 +1,3 @@
-import React from "react";
 import { Pressable, Text, View } from "react-native";
 import { HistoryEntry } from "../../utils/HistoryStorage";
 import { getComponentTokens, getStringToken } from "../../design-system";
@@ -45,13 +44,8 @@ export function HistoryItemCard({
   // スクリーンリーダーでは「大吉。2026年4月11日 09:30。最高の運気です。」のように読み上げる
   const combinedA11yLabel = `${fortuneTitle}。${formattedDate}。${fortuneMessage}`;
 
-  const card = (
-    <SurfaceCard
-      variant="glassCard"
-      accessible
-      accessibilityLabel={combinedA11yLabel}
-      accessibilityRole="summary"
-    >
+  const cardContent = (
+    <>
       <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 16 }}>
         <Text
           style={{
@@ -77,14 +71,30 @@ export function HistoryItemCard({
       >
         {fortuneMessage}
       </Text>
-    </SurfaceCard>
+    </>
   );
 
-  if (!onPress) return card;
+  if (!onPress) {
+    return (
+      <SurfaceCard
+        variant="glassCard"
+        accessible
+        accessibilityLabel={combinedA11yLabel}
+        accessibilityRole="summary"
+      >
+        {cardContent}
+      </SurfaceCard>
+    );
+  }
 
   return (
-    <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
-      {card}
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={combinedA11yLabel}
+      style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+    >
+      <SurfaceCard variant="glassCard">{cardContent}</SurfaceCard>
     </Pressable>
   );
 }

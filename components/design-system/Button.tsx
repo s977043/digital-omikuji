@@ -3,6 +3,7 @@ import { Pressable, StyleProp, Text, TextStyle, ViewStyle } from "react-native";
 import * as Haptics from "expo-haptics";
 import { getComponentTokens, getStringToken } from "../../design-system";
 import { triggerHaptic } from "../../utils/haptics";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 type ButtonVariant = "primaryRitual" | "secondaryQuiet" | "utilityWarm" | "textLink";
 
@@ -42,15 +43,21 @@ export function Button({
     textSize: number;
   }>(`button.${variant}`);
 
+  const reducedMotion = useReducedMotion();
+
   const fontFamily =
     variant === "primaryRitual" ? getStringToken("primitive.typography.family.ritual") : undefined;
 
   const handlePress = useCallback(() => {
     if (variant !== "textLink") {
-      triggerHaptic({ type: "impact", style: Haptics.ImpactFeedbackStyle.Light });
+      triggerHaptic(
+        { type: "impact", style: Haptics.ImpactFeedbackStyle.Light },
+        false,
+        reducedMotion
+      );
     }
     onPress();
-  }, [variant, onPress]);
+  }, [variant, onPress, reducedMotion]);
 
   return (
     <Pressable

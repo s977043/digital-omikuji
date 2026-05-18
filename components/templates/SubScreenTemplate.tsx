@@ -24,6 +24,3 @@ export function SubScreenTemplate({ header, content, footer }: SubScreenTemplate
     </View>
   );
 }
-
-/** @deprecated Use SubScreenTemplate instead */
-export const HistoryScreenTemplate = SubScreenTemplate;
