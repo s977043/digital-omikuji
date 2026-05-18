@@ -92,7 +92,7 @@
       "picomatch": ">=3.0.2",
       "node-forge": ">=1.4.0",
       "tar": ">=7.5.11",
-      "@xmldom/xmldom": ">=0.8.12",
+      "@xmldom/xmldom": ">=0.9.10",
       "minimatch": ">=5.1.8",
       "diff": ">=8.0.3",
       "yaml": ">=2.8.3",
