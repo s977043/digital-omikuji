@@ -87,7 +87,7 @@ export function ShakingPattern({ reducedMotion = false }: ShakingPatternProps) {
         transition={{ type: "timing", duration: 500, loop: true, repeatReverse: true }}
         style={{
           marginTop: 28,
-          backgroundColor: "rgba(0,0,0,0.45)",
+          backgroundColor: getStringToken("semantic.surface.experience.overlay"),
           borderWidth: 1,
           borderColor: `${accentColor}75`,
           borderRadius: 999,
