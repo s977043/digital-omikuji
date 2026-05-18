@@ -141,7 +141,11 @@ dependabot PR が複数滞留している場合、**1件ずつ手動マージし
 このリポジトリは push 権限が特定アカウント（例: `s977043`）に限定される。複数アカウントを`gh auth`に登録している場合の注意:
 
 - `gh auth token`は**非アクティブ垢のトークンを返すことがある**。push用は必ず`gh auth token --user <push権限垢>`で取得する。
-- `/tmp`配下のworktreeはgit credential helperを継承せず`could not read Password`で失敗する。`git push "https://x-access-token:$(gh auth token --user <垢>)@github.com/<owner>/<repo>.git" <branch>`でトークンURLを直書きする。
+- `/tmp`配下のworktreeはgit credential helperを継承せず`could not read Password`で失敗する。
+  - **推奨**: `gh auth switch --user <push権限垢> && gh auth setup-git` 後に通常の`git push`。gh のcredential helper経由でトークンが解決され、シェル履歴・プロセス一覧にトークンが残らない。
+  - 一時的に解決したい場合は credential helper をその場で渡す:
+    `git -c credential.helper='!f(){ echo username=x-access-token; echo "password=$(gh auth token --user <垢>)"; };f' push origin <branch>`
+  - **非推奨**: `https://x-access-token:<token>@github.com/...` のトークンURL直書き。シェル履歴・`ps`・reflog 等にトークンが露出するため使わない。
 - `.claude/worktrees/`配下のworktreeは親リポジトリの認証を継承するため通常pushでよい。
 
 ## 8. 並行タスク（Git Worktree）
