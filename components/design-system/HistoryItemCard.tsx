@@ -24,7 +24,12 @@ interface HistoryItemCardProps {
   onPress?: () => void;
 }
 
-export function HistoryItemCard({ item, fortuneTitle, fortuneMessage, onPress }: HistoryItemCardProps) {
+export function HistoryItemCard({
+  item,
+  fortuneTitle,
+  fortuneMessage,
+  onPress,
+}: HistoryItemCardProps) {
   const tokens = getComponentTokens<{
     metaColor: string;
     bodyColor: string;
