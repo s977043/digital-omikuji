@@ -46,7 +46,7 @@
     "i18next": "^26.0.4",
     "moti": "^0.30.0",
     "nativewind": "^4.2.3",
-    "react": "19.2.4",
+    "react": "19.2.6",
     "react-dom": "19.2.4",
     "react-i18next": "^17.0.2",
     "react-native": "0.84.1",
