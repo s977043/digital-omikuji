@@ -36,8 +36,20 @@ function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
+    <Stack screenOptions={{ headerShown: false, animation: "fade" }}>
       <Stack.Screen name="index" />
+      <Stack.Screen
+        name="history"
+        options={{ animation: "slide_from_bottom" }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{ animation: "slide_from_bottom" }}
+      />
+      <Stack.Screen
+        name="privacy-policy"
+        options={{ animation: "slide_from_right" }}
+      />
     </Stack>
   );
 }

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { HistoryEntry, clearHistory, getHistory } from "../utils/HistoryStorage";
 import { navigateBackOrReplace } from "../utils/navigation";
 import { VersionDisplay } from "../components/VersionDisplay";
-import { HistoryScreenTemplate } from "../components/templates/HistoryScreenTemplate";
+import { SubScreenTemplate } from "../components/templates/SubScreenTemplate";
 import { PageHeader } from "../components/design-system/PageHeader";
 import { Button } from "../components/design-system/Button";
 import { HistoryListPattern } from "../components/patterns/HistoryListPattern";
@@ -75,7 +75,7 @@ export default function HistoryScreen() {
   );
 
   return (
-    <HistoryScreenTemplate
+    <SubScreenTemplate
       header={header}
       content={
         isLoading ? (

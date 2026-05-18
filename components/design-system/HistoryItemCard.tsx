@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { HistoryEntry } from "../../utils/HistoryStorage";
 import { getComponentTokens, getStringToken } from "../../design-system";
 import { getFortuneLevelColor } from "../../design-system/fortuneTokens";
@@ -21,9 +21,10 @@ interface HistoryItemCardProps {
   item: HistoryEntry;
   fortuneTitle: string;
   fortuneMessage: string;
+  onPress?: () => void;
 }
 
-export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryItemCardProps) {
+export function HistoryItemCard({ item, fortuneTitle, fortuneMessage, onPress }: HistoryItemCardProps) {
   const tokens = getComponentTokens<{
     metaColor: string;
     bodyColor: string;
@@ -39,7 +40,7 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
   // スクリーンリーダーでは「大吉。2026年4月11日 09:30。最高の運気です。」のように読み上げる
   const combinedA11yLabel = `${fortuneTitle}。${formattedDate}。${fortuneMessage}`;
 
-  return (
+  const card = (
     <SurfaceCard
       variant="glassCard"
       accessible
@@ -72,5 +73,13 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
         {fortuneMessage}
       </Text>
     </SurfaceCard>
+  );
+
+  if (!onPress) return card;
+
+  return (
+    <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}>
+      {card}
+    </Pressable>
   );
 }

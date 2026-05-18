@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Pressable, StyleProp, Text, TextStyle, ViewStyle } from "react-native";
+import * as Haptics from "expo-haptics";
 import { getComponentTokens, getStringToken } from "../../design-system";
+import { triggerHaptic } from "../../utils/haptics";
 
 type ButtonVariant = "primaryRitual" | "secondaryQuiet" | "utilityWarm" | "textLink";
 
@@ -43,9 +45,16 @@ export function Button({
   const fontFamily =
     variant === "primaryRitual" ? getStringToken("primitive.typography.family.ritual") : undefined;
 
+  const handlePress = useCallback(() => {
+    if (variant !== "textLink") {
+      triggerHaptic({ type: "impact", style: Haptics.ImpactFeedbackStyle.Light });
+    }
+    onPress();
+  }, [variant, onPress]);
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={accessibilityHint}
