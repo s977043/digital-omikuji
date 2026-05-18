@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { Pressable, StyleProp, Text, TextStyle, ViewStyle } from "react-native";
+import React, { ReactNode, useCallback } from "react";
+import { Pressable, StyleProp, Text, TextStyle, View, ViewStyle } from "react-native";
 import * as Haptics from "expo-haptics";
 import { getComponentTokens, getStringToken } from "../../design-system";
 import { triggerHaptic } from "../../utils/haptics";
@@ -12,6 +12,7 @@ interface ButtonProps {
   onPress: () => void;
   variant?: ButtonVariant;
   icon?: string;
+  iconElement?: ReactNode;
   accessibilityLabel?: string;
   accessibilityHint?: string;
   style?: StyleProp<ViewStyle>;
@@ -24,6 +25,7 @@ export function Button({
   onPress,
   variant = "secondaryQuiet",
   icon,
+  iconElement,
   accessibilityLabel,
   accessibilityHint,
   style,
@@ -83,7 +85,9 @@ export function Button({
         style,
       ]}
     >
-      {icon ? (
+      {iconElement ? (
+        <View style={{ marginRight: 8 }}>{iconElement}</View>
+      ) : icon ? (
         <Text style={{ color: tokens.textColor, marginRight: 8, fontSize: tokens.textSize - 1 }}>
           {icon}
         </Text>
