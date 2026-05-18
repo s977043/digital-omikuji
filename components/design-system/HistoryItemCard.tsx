@@ -1,5 +1,4 @@
-import React from "react";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { HistoryEntry } from "../../utils/HistoryStorage";
 import { getComponentTokens, getStringToken } from "../../design-system";
 import { getFortuneLevelColor } from "../../design-system/fortuneTokens";
@@ -21,9 +20,15 @@ interface HistoryItemCardProps {
   item: HistoryEntry;
   fortuneTitle: string;
   fortuneMessage: string;
+  onPress?: () => void;
 }
 
-export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryItemCardProps) {
+export function HistoryItemCard({
+  item,
+  fortuneTitle,
+  fortuneMessage,
+  onPress,
+}: HistoryItemCardProps) {
   const tokens = getComponentTokens<{
     metaColor: string;
     bodyColor: string;
@@ -39,13 +44,8 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
   // スクリーンリーダーでは「大吉。2026年4月11日 09:30。最高の運気です。」のように読み上げる
   const combinedA11yLabel = `${fortuneTitle}。${formattedDate}。${fortuneMessage}`;
 
-  return (
-    <SurfaceCard
-      variant="glassCard"
-      accessible
-      accessibilityLabel={combinedA11yLabel}
-      accessibilityRole="summary"
-    >
+  const cardContent = (
+    <>
       <View style={{ flexDirection: "row", justifyContent: "space-between", gap: 16 }}>
         <Text
           style={{
@@ -71,6 +71,30 @@ export function HistoryItemCard({ item, fortuneTitle, fortuneMessage }: HistoryI
       >
         {fortuneMessage}
       </Text>
-    </SurfaceCard>
+    </>
+  );
+
+  if (!onPress) {
+    return (
+      <SurfaceCard
+        variant="glassCard"
+        accessible
+        accessibilityLabel={combinedA11yLabel}
+        accessibilityRole="summary"
+      >
+        {cardContent}
+      </SurfaceCard>
+    );
+  }
+
+  return (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={combinedA11yLabel}
+      style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+    >
+      <SurfaceCard variant="glassCard">{cardContent}</SurfaceCard>
+    </Pressable>
   );
 }

@@ -63,7 +63,7 @@ export default function OmikujiApp() {
   );
 
   const historyAction = (
-    <View style={{ flexDirection: "row", gap: 8 }}>
+    <View className="flex-row gap-2">
       <Button
         label="履歴"
         onPress={() => router.push("/history")}

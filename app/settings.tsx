@@ -4,9 +4,11 @@ import { router } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { useAppSettings } from "../hooks/useAppSettings";
 import { navigateBackOrReplace } from "../utils/navigation";
+import { getStringToken } from "../design-system";
 import { VersionDisplay } from "../components/VersionDisplay";
-import { HistoryScreenTemplate } from "../components/templates/HistoryScreenTemplate";
+import { SubScreenTemplate } from "../components/templates/SubScreenTemplate";
 import { PageHeader } from "../components/design-system/PageHeader";
+import { SurfaceCard } from "../components/design-system/SurfaceCard";
 import { Button } from "../components/design-system/Button";
 
 export default function SettingsScreen() {
@@ -50,7 +52,7 @@ export default function SettingsScreen() {
     </ScrollView>
   );
 
-  return <HistoryScreenTemplate header={header} content={content} footer={<VersionDisplay />} />;
+  return <SubScreenTemplate header={header} content={content} footer={<VersionDisplay />} />;
 }
 
 interface SettingRowProps {
@@ -63,15 +65,7 @@ interface SettingRowProps {
 
 function SettingRow({ label, description, value, disabled, onChange }: SettingRowProps) {
   return (
-    <View
-      style={{
-        backgroundColor: "rgba(255,255,255,0.06)",
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.12)",
-        padding: 16,
-      }}
-    >
+    <SurfaceCard variant="glassCard" style={{ padding: 16 }}>
       <View
         style={{
           flexDirection: "row",
@@ -82,7 +76,7 @@ function SettingRow({ label, description, value, disabled, onChange }: SettingRo
       >
         <Text
           style={{
-            color: "white",
+            color: getStringToken("semantic.text.primary"),
             fontSize: 16,
             fontWeight: "600",
             flexShrink: 1,
@@ -99,7 +93,7 @@ function SettingRow({ label, description, value, disabled, onChange }: SettingRo
       </View>
       <Text
         style={{
-          color: "rgba(255,255,255,0.74)",
+          color: getStringToken("semantic.text.muted"),
           fontSize: 13,
           lineHeight: 20,
           marginTop: 8,
@@ -107,6 +101,6 @@ function SettingRow({ label, description, value, disabled, onChange }: SettingRo
       >
         {description}
       </Text>
-    </View>
+    </SurfaceCard>
   );
 }
