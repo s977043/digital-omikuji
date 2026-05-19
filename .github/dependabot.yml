@@ -36,6 +36,23 @@ updates:
           - "eslint*"
           - "prettier*"
           - "markdownlint*"
+      # 上記の専用グループに該当しない依存の minor / patch を 1 本に集約する。
+      # 単体PRが乱立すると、1件マージするたび他PRの pnpm-lock.yaml が
+      # 競合(DIRTY)化し recreate の往復が発生するため、構造的に抑制する。
+      minor-and-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # expo-router のメジャー更新は Expo SDK 本体と密結合しており、
+      # SDK 54 固定のまま単体で上げると Web ビルド(expo-router/node/render.js)が
+      # 破損する。#381 / #410 で毎回クローズする恒久 toil となっていたため
+      # メジャーは無視し、Expo SDK アップグレード時に併せて対応する。
+      - dependency-name: "expo-router"
+        update-types:
+          - "version-update:semver-major"
     labels:
       - "dependencies"
       - "npm"

@@ -1,0 +1,30 @@
+name: Dependabot auto-merge
+
+# dependabot の minor / patch 更新は CI 通過後に自動マージする。
+# 単体PRが滞留すると pnpm-lock.yaml の連鎖競合(DIRTY)が発生し、
+# recreate の往復で運用コストが膨らむため、人手を介さず消化する。
+# major 更新は破壊的変更の可能性があるため自動マージ対象外（手動レビュー）。
+
+on: pull_request_target
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enable auto-merge for non-major updates
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --squash --delete-branch "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

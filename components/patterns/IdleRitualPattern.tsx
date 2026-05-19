@@ -25,9 +25,9 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
           width: circleSize,
           height: circleSize,
           borderRadius: circleSize / 2,
-          backgroundColor: "rgba(255, 255, 255, 0.10)",
+          backgroundColor: getStringToken("semantic.surface.experience.glass"),
           borderWidth: 1,
-          borderColor: "rgba(255,255,255,0.20)",
+          borderColor: getStringToken("semantic.border.glass"),
           alignItems: "center",
           justifyContent: "center",
           marginBottom: isCompactHeight ? 16 : 24,
@@ -46,7 +46,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
 
       <Text
         style={{
-          color: "white",
+          color: getStringToken("semantic.text.primary"),
           fontSize: titleFontSize,
           lineHeight: titleLineHeight,
           textAlign: "center",
@@ -60,7 +60,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
       </Text>
       <Text
         style={{
-          color: "rgba(255,255,255,0.74)",
+          color: getStringToken("semantic.text.muted"),
           fontSize: isCompactHeight ? 14 : 15,
           lineHeight: isCompactHeight ? 22 : 24,
           textAlign: "center",
@@ -95,16 +95,16 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
             style={{
               marginTop: isCompactHeight ? 12 : 18,
               borderWidth: 1,
-              borderColor: "rgba(255,255,255,0.18)",
+              borderColor: getStringToken("semantic.border.soft"),
               borderRadius: 999,
               paddingHorizontal: isCompactHeight ? 14 : 16,
               paddingVertical: isCompactHeight ? 6 : 8,
-              backgroundColor: "rgba(255,255,255,0.08)",
+              backgroundColor: getStringToken("semantic.surface.experience.historyPlaceholder"),
             }}
           >
             <Text
               style={{
-                color: "rgba(255,255,255,0.82)",
+                color: getStringToken("semantic.text.muted"),
                 fontSize: isCompactHeight ? 11 : 12,
                 letterSpacing: isCompactHeight ? 1.4 : 2,
                 fontWeight: "700",
