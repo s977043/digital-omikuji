@@ -1,8 +1,9 @@
 module.exports = {
   preset: "jest-expo",
-  // react-native 0.84 bundles a jest-environment built for jest 29.
-  // Override with jest 30's built-in node environment to avoid
-  // "clearMocksOnScope is not a function" errors.
+  // jest-expo's preset uses react-native's built-in jest-environment which
+  // targets jest 29. To avoid "clearMocksOnScope is not a function" errors,
+  // we pin jest to ^29 (see package.json) and override with the standard
+  // node environment so jest-expo's setup files work correctly.
   testEnvironment: "node",
   transformIgnorePatterns: [
     "node_modules/(?!(.pnpm|react-native|@react-native|expo|@expo|moti|react-native-reanimated|react-native-css-interop|react-native-worklets|react-native-worklets-core|@react-native-community|@testing-library))",
