@@ -1,8 +1,9 @@
 import "@testing-library/jest-native/extend-expect";
 
-// Jest 30 blocks require() inside lazy getters set up by expo/src/winter.
-// Pre-define all globals that expo/src/winter would lazily install, so the
-// getters never fire. Node 20+ already provides most of these natively.
+// expo/src/winter lazily installs globals via getters that call require().
+// In the jest-expo + testEnvironment:"node" setup, these lazy getters can
+// fail. Pre-define all globals so the getters never fire.
+// Node 20+ already provides most of these natively.
 for (const name of [
   "TextDecoder",
   "TextDecoderStream",
