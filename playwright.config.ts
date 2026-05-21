@@ -32,6 +32,6 @@ export default defineConfig({
     command: `pnpm build && pnpm exec serve -s dist -p ${process.env.PLAYWRIGHT_WEB_PORT ?? 3000}`,
     url: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
-    timeout: 240 * 1000,
+    timeout: 480 * 1000,
   },
 });
