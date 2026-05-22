@@ -80,6 +80,8 @@ status: "active"
 | 全品質チェック（CI相当） | `pnpm ci:check`        |
 | スキル検証               | `pnpm validate:skills` |
 
+> E2E（Web）の初回実行時は `pnpm exec playwright install` でブラウザを取得しておく。`pnpm test:e2e:web` は内部で `pnpm build` → `pnpm exec serve` を起動するため、コールドビルドでは数分かかる（詳細は `playwright.config.ts` の `webServer.timeout` 設定を参照）。
+
 ## 5. ワークフロー（AI-SDD / AI-TDD）
 
 - **計画先行**: 着手前にタスク計画をまとめ、小さな変更単位で進める。
