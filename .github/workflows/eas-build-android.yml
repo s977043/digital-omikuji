@@ -14,6 +14,10 @@ on:
           - preview
         default: production
 
+# GITHUB_TOKEN は読み取りのみに制限（EAS ビルドは EXPO_TOKEN で認証するため書き込み不要）。
+permissions:
+  contents: read
+
 concurrency:
   group: eas-build-android-${{ github.ref }}
   cancel-in-progress: false
