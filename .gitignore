@@ -28,9 +28,11 @@ worktree-*/
 coverage/
 .env.docker
 
-# Temporary artifacts
-pr_body.md
-pr*.json
+# Temporary artifacts（PR本文の一時ファイル。root限定にしないと
+# primitive.json 等の正規ファイルにも誤マッチし、EAS Build の
+# アップロードから除外されてバンドルが壊れる）
+/pr_body.md
+/pr*.json
 
 # Test / automation artifacts
 .playwright-mcp/
