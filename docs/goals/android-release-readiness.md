@@ -62,12 +62,12 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 
 `app.config.ts` が存在するため Expo はこれを優先し、`app.json` を上書きしていた。結果、実効設定が `app.json`（新しい・本来の意図）と乖離していた。
 
-| 項目 | app.json（本来の意図・新しい） | app.config.ts（現状の実効値・古い） |
-| ------ | ------ | ------ |
-| Android package(本番) | `com.s977043.digitalomikuji` | `jp.co.digitalomikuji` ← 要修正 |
-| プラグイン | expo-router, Sentry, expo-splash-screen | Sentry・splash-screen が脱落 |
-| iOS写真権限 infoPlist | あり | 脱落 |
-| アプリ名(本番) | デジタルおみくじ | 2026 おみくじ |
+| 項目                  | app.json（本来の意図・新しい）          | app.config.ts（現状の実効値・古い） |
+| --------------------- | --------------------------------------- | ----------------------------------- |
+| Android package(本番) | `com.s977043.digitalomikuji`            | `jp.co.digitalomikuji` ← 要修正     |
+| プラグイン            | expo-router, Sentry, expo-splash-screen | Sentry・splash-screen が脱落        |
+| iOS写真権限 infoPlist | あり                                    | 脱落                                |
+| アプリ名(本番)        | デジタルおみくじ                        | 2026 おみくじ                       |
 
 **方針: `app.config.ts` を Expo設定のSSOTに**
 
@@ -106,13 +106,13 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 
 SDK54 想定に対し 20 パッケージが先行（一部抜粋）。
 
-| package | SDK54想定 | 実際 |
-| ------ | ------ | ------ |
-| `jest-expo` | ~54.0.17 | 55.0.17 |
-| `eslint-config-expo` | ~10.0.0 | 55.0.1 |
-| `react-native` | 0.81.5 | 0.85.3 |
-| `react` / `react-dom` | 19.1.0 | 19.2.6 |
-| `react-native-reanimated` | ~4.1.1 | 4.4.0 |
+| package                   | SDK54想定 | 実際    |
+| ------------------------- | --------- | ------- |
+| `jest-expo`               | ~54.0.17  | 55.0.17 |
+| `eslint-config-expo`      | ~10.0.0   | 55.0.1  |
+| `react-native`            | 0.81.5    | 0.85.3  |
+| `react` / `react-dom`     | 19.1.0    | 19.2.6  |
+| `react-native-reanimated` | ~4.1.1    | 4.4.0   |
 
 選択肢（要決定）:
 
@@ -126,8 +126,12 @@ SDK54 想定に対し 20 パッケージが先行（一部抜粋）。
 
 ### ブロッカー3: production ビルド未検証（要EAS認証）
 
-- `npx eas build --profile production --platform android` は EAS 認証（`npx eas login`）が必要。本リポジトリでは `eas-cli` をプロジェクト依存から外したため、グローバル `eas-cli` か `npx eas-cli`（要ログイン）、または CI/EAS 上で実行する。ローカルエージェント環境からは認証不可のため実行できない。
-- これが Goal 最終ゲート（production AAB 生成）。ユーザーログイン後に実行し、成功を確認すること。
+Goal 最終ゲート（production AAB 生成）。EAS 認証が必須で、ローカルエージェント環境からは認証不可のため実行できない。次のいずれかで実行する。
+
+- **A. ローカル端末**: `npx eas-cli login` → `npx eas-cli build --profile production --platform android`（`eas-cli` はプロジェクト依存から外したため `npx eas-cli` かグローバル導入を使う）。
+- **B. CI（推奨・押すだけ運用）**: GitHub の Secrets に `EXPO_TOKEN`（expo.dev のアクセストークン）を登録し、ワークフロー `.github/workflows/eas-build-android.yml` を `workflow_dispatch` で実行（profile=production）。
+  - 実行: GitHub → Actions → "EAS Build (Android)" → Run workflow → profile=production。
+  - 成功すれば本ゲートが充足する。
 
 ## チェックリスト: Google Play 公開準備
 
