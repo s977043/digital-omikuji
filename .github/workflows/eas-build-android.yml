@@ -45,3 +45,11 @@ jobs:
 
       - name: Build Android (${{ inputs.profile }})
         run: eas build --profile ${{ inputs.profile }} --platform android --non-interactive
+
+      # ビルド失敗時に EAS サーバー側のエラー詳細を Actions ログへ出力する（診断用）。
+      - name: Show EAS build error (on failure)
+        if: failure()
+        run: |
+          echo "=== Latest EAS Android build error ==="
+          eas build:list --platform android --limit 1 --non-interactive --json \
+            | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{const b=JSON.parse(s)[0]||{};console.log('id:',b.id);console.log('status:',b.status);console.log('error:',JSON.stringify(b.error,null,2));}catch(e){console.log('parse failed:',e.message)}})"
