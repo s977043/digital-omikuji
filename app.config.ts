@@ -28,6 +28,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ios: {
       ...config.ios,
       bundleIdentifier: packageName,
+      // iOS のホーム画面表示名は CFBundleDisplayName が優先される。
+      // app.json では本番名で固定されているため、variant 別の name で上書きする。
+      infoPlist: {
+        ...config.ios?.infoPlist,
+        CFBundleDisplayName: name,
+      },
     },
     android: {
       ...config.android,
