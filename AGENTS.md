@@ -17,6 +17,16 @@ status: "active"
 
 ---
 
+## 現在のマイルストーン: Android Google Play 公開準備
+
+- **Goal**: Android版デジタルおみくじを Google Play に申請可能な状態にする。詳細・DoD・Out of Scope・チェックリストは [docs/goals/android-release-readiness.md](docs/goals/android-release-readiness.md) を SSOT とする。
+- **本番 package名**: `com.s977043.digitalomikuji`（確定。公開後変更不可）。
+- **Expo設定SSOT**: `app.config.ts`。variant（dev/preview/production）の name / package を一元管理し、`app.json` との不整合を解消する。
+- **運用体制**: Claude Code=メイン実装 / Codex=サブレビュー（計画レビュー・差分レビュー）。
+- **完了確認**: `pnpm exec tsc --noEmit` / `pnpm lint` / `pnpm test` / `npx expo-doctor` / `npx eas build --profile production --platform android`。
+
+---
+
 ## 1. WHAT（地図）
 
 - Stack:
