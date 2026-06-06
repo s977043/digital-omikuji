@@ -37,7 +37,9 @@
     },
     "plugins": [
       "expo-router",
+      "expo-localization",
       "expo-splash-screen",
+      "./plugins/withWorklets",
       [
         "@sentry/react-native/expo",
         {

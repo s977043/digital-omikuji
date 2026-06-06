@@ -102,8 +102,34 @@ npx eas login
 # Android 開発用ビルド
 npx eas build --profile development --platform android
 
-# iOS 本番用ビルド
-npx eas build --profile production --platform ios
+# Android プレビュー(APK)ビルド
+npx eas build --profile preview --platform android
+
+# Android 本番(AAB)ビルド
+npx eas build --profile production --platform android
+```
+
+variant ごとの Android package 名（`app.config.ts` が `APP_VARIANT` で切替）:
+
+| variant     | package                              |
+| ----------- | ------------------------------------ |
+| development | `com.s977043.digitalomikuji.dev`     |
+| preview     | `com.s977043.digitalomikuji.preview` |
+| production  | `com.s977043.digitalomikuji`         |
+
+## 🚀 Android 公開準備（Google Play）
+
+現在のマイルストーンは **Android版の Google Play 申請可能化**。Goal・Definition of Done・チェックリスト・残ブロッカーは
+[docs/goals/android-release-readiness.md](./docs/goals/android-release-readiness.md) を SSOT とする。
+
+公開前の確認コマンド:
+
+```bash
+pnpm exec tsc --noEmit
+pnpm lint
+pnpm test
+npx expo-doctor
+npx eas build --profile production --platform android
 ```
 
 ## 📂 ディレクトリ構成

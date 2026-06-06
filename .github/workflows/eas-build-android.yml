@@ -1,0 +1,47 @@
+name: EAS Build (Android)
+
+# Android の EAS ビルドを手動実行する。
+# 事前に GitHub リポジトリの Secrets に EXPO_TOKEN（expo.dev のアクセストークン）を登録すること。
+# production を選ぶと Google Play 提出用の AAB（app-bundle）が生成される。
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "EAS build profile"
+        type: choice
+        options:
+          - production
+          - preview
+        default: production
+
+# GITHUB_TOKEN は読み取りのみに制限（EAS ビルドは EXPO_TOKEN で認証するため書き込み不要）。
+permissions:
+  contents: read
+
+concurrency:
+  group: eas-build-android-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: EAS Android Build (${{ inputs.profile }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Verify EAS authentication
+        run: eas whoami
+
+      - name: Build Android (${{ inputs.profile }})
+        run: eas build --profile ${{ inputs.profile }} --platform android --non-interactive
