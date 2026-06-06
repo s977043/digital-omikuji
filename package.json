@@ -122,7 +122,9 @@
       "minimatch": ">=5.1.8",
       "diff": ">=8.0.3",
       "yaml": ">=2.8.3",
-      "@tootallnate/once": ">=3.0.1"
+      "@tootallnate/once": ">=3.0.1",
+      "@react-native/babel-preset": "0.85.3",
+      "@react-native/babel-plugin-codegen": "0.85.3"
     }
   }
 }
