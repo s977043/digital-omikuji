@@ -27,19 +27,22 @@
 
 ### Data safety フォーム回答（推奨）
 
-「アプリはユーザーデータを収集または共有しますか？」→ **はい**。収集するデータタイプは以下の2つ。
+「アプリはユーザーデータを収集または共有しますか？」→ **はい**。収集するデータタイプは以下の3つ。
 
 - **App activity > Crash logs**
   - 収集: はい / 共有: いいえ（後述）/ 目的: アプリの機能・分析（品質改善）
 - **App info and performance > Diagnostics**
   - 収集: はい / 共有: いいえ（後述）/ 目的: アプリの機能・分析
+- **Device or other IDs**
+  - 収集: はい / 共有: いいえ（後述）/ 目的: アプリの機能・分析
+  - Sentry SDK はクラッシュ影響ユーザー数を識別するためインストールID（デバイスID）を自動生成・送信するため、Google Play 基準では本カテゴリの収集に該当する。差し戻しリスク低減のため**最初から収集ありで申告**する。
 
 補足事項:
 
 - **「共有(sharing)」の扱い**: Google Play の定義では、サービスプロバイダ（処理委託先=processor）への転送は「共有」に該当しない。Sentry は処理委託先のため「収集: はい / 共有: いいえ」で申告する（自社管理下でのエラー解析に限定、第三者への販売・独立利用なし）。
 - **転送時の暗号化**: はい（HTTPS）。
 - **データ削除のリクエスト手段**: Privacy Policy に問い合わせ窓口を記載し、Sentry 側のデータ保持期間（既定 約90日で自動失効）を明記する。
-- **Device or other IDs**: Sentry SDK がインストール識別子を生成し得る。`sendDefaultPii: false` で PII は送らないが、安全側で「収集する可能性」を確認しておくこと。→ TODO: 本番 DSN 設定後に Sentry ダッシュボードの実送信データで1回確認。
+- **Device or other IDs の確定**: 上記のとおり Sentry はインストールID を送信するため収集ありで申告する。`sendDefaultPii: false` で IP/UA 等の PII は送らない。本番 DSN 設定後に Sentry ダッシュボードの実送信データで最終確認すること。
 
 ### ストア文との整合（要対応）
 
@@ -81,7 +84,7 @@ IARC 質問票への回答方針:
 
 - `app.json`: `icon: ./assets/icon.png` / `splash`（背景 `#dc2626`）/ `android.adaptiveIcon`（foreground `./assets/adaptive-icon.png`、背景 `#dc2626`）。
 - アセット存在: `icon.png` / `adaptive-icon.png` / `splash.png` / `favicon.png`。
-- 確認項目: **アダプティブアイコンのセーフゾーン**（foreground の重要要素が中央 66% に収まるか）。`icon.png` と `adaptive-icon.png` が同一バイトサイズのため、アダプティブ用に余白を考慮した別書き出しが望ましいか確認。
+- **要対応（アダプティブアイコン）**: `adaptive-icon.png` は **背景を完全に透過（アルファチャンネルあり）** にし、ロゴ等の主要要素のみを中央 66% のセーフゾーンに収めた画像として `icon.png` とは**別に書き出す**こと。foreground に背景色が含まれると、ランチャー形状（丸/角丸）のマスク処理で背景が二重表示・端が不自然にカットされる。現状は両者が同一バイトサイズのため要差し替え。
 
 ## 5. 署名 / target API level
 
@@ -91,10 +94,10 @@ IARC 質問票への回答方針:
 
 ## 6. Closed testing の進め方
 
-> Google Play の新規デベロッパー（個人）アカウントは、**Production 申請前に Closed testing が必須**（テスター12人以上 × 14日間継続）。
+> Google Play の新規デベロッパー（個人）アカウント（2023-11-13 以降に作成）は、**Production 申請前に Closed testing が必須**（テスター **20人以上** が **14日間連続**でオプトイン）。20人未満では Production access に進めない。
 
 1. **Internal testing**: AAB を internal track にアップロード（`eas.json` の submit.production.android.track = `internal`）。自分・少人数で動作確認。
-2. **Closed testing**: テスター（12人以上）を招待し、**14日間継続**で利用してもらう。フィードバック収集。
+2. **Closed testing**: テスター（**20人以上**）を招待し、**14日間連続**でオプトイン・利用してもらう。フィードバック収集。
 3. **Production access 申請**: 上記を満たすと production 申請が可能になる。
 4. 申請内容: Data safety / Content rating / ストア掲載 / 対象国・年齢 を入力し審査提出。
 
@@ -114,5 +117,5 @@ EAS 認証が必要なため、以下のいずれかで実行（詳細は goal d
 - [ ] スクリーンショット2枚以上 + Feature Graphic を作成・アップロード
 - [ ] アプリアイコン 512×512 をアップロード
 - [ ] Privacy Policy URL を設定
-- [ ] internal → closed testing（12人×14日）→ production access
+- [ ] internal → closed testing（20人×14日）→ production access
 - [ ] ストア文に Sentry 診断データの注記を反映（本書 §1）
