@@ -4,6 +4,13 @@
 // 「A dynamic import callback was invoked without --experimental-vm-modules」
 // が発生するため、ルート __mocks__ 配下の manual mock で常時差し替える。
 
-export const toPng = jest.fn();
+// デフォルトでダミーの data URL を解決する。これにより、internal.captureWebImage を
+// スパイせず tryWebShare を直接通す統合テストでも、後続の fetch(dataUrl) が
+// fetch(undefined) にならず安定する（1x1 透明 PNG）。
+export const toPng = jest
+  .fn()
+  .mockResolvedValue(
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+  );
 
 export default { toPng };
