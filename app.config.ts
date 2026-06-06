@@ -1,58 +1,38 @@
 import { ExpoConfig, ConfigContext } from "expo/config";
 
-// Constants
+// 静的な Expo 設定の SSOT は app.json。
+// app.config.ts は APP_VARIANT(dev/preview/production) に応じた
+// 表示名と package/bundleIdentifier の上書きのみを担い、app.json の
+// プラグイン・権限・splash 等はそのまま継承する（spread で保持）。
+const BASE_PACKAGE = "com.s977043.digitalomikuji";
 const PRIVACY_POLICY_URL = "https://digital-omikuji.vercel.app/privacy-policy";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const appVariant = process.env.APP_VARIANT || "development";
+  const appVariant = process.env.APP_VARIANT ?? "development";
 
   let name = "おみくじ (Dev)";
-  let bundleIdentifier = "jp.co.digitalomikuji.dev";
+  let packageName = `${BASE_PACKAGE}.dev`;
 
   if (appVariant === "production") {
-    name = "2026 おみくじ";
-    bundleIdentifier = "jp.co.digitalomikuji";
+    name = config.name ?? "デジタルおみくじ";
+    packageName = BASE_PACKAGE;
   } else if (appVariant === "preview") {
     name = "おみくじ (Preview)";
-    bundleIdentifier = "jp.co.digitalomikuji.preview";
+    packageName = `${BASE_PACKAGE}.preview`;
   }
 
   return {
     ...config,
     name,
-    slug: "digital-omikuji",
-    version: config.version,
-    orientation: "portrait",
-    icon: "./assets/icon.png",
-    userInterfaceStyle: "light",
-    splash: {
-      image: "./assets/shrine_background.png",
-      resizeMode: "cover",
-      backgroundColor: "#1e293b",
-    },
+    slug: config.slug ?? "digital-omikuji",
     ios: {
       ...config.ios,
-      bundleIdentifier,
-      supportsTablet: true,
-      infoPlist: {
-        CFBundleDisplayName: name,
-        ITSAppUsesNonExemptEncryption: false,
-      },
+      bundleIdentifier: packageName,
     },
     android: {
       ...config.android,
-      package: bundleIdentifier,
-      adaptiveIcon: {
-        foregroundImage: "./assets/icon.png",
-        backgroundColor: "#ffffff",
-      },
+      package: packageName,
     },
-    web: {
-      bundler: "metro",
-      output: "static",
-      favicon: "./assets/icon.png",
-    },
-    plugins: ["expo-router", "expo-localization", "./plugins/withWorklets"],
     extra: {
       ...config.extra,
       appVariant,
