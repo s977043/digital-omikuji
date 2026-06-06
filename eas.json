@@ -1,57 +1,60 @@
 {
-    "cli": {
-        "version": ">= 6.1.0",
-        "appVersionSource": "remote"
+  "cli": {
+    "version": ">= 6.1.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "node": "22.11.0",
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "APP_VARIANT": "development"
+      }
     },
-    "build": {
-        "development": {
-            "developmentClient": true,
-            "distribution": "internal",
-            "ios": {
-                "simulator": true
-            },
-            "env": {
-                "APP_VARIANT": "development"
-            }
-        },
-        "preview": {
-            "distribution": "internal",
-            "ios": {
-                "simulator": false
-            },
-            "android": {
-                "buildType": "apk"
-            },
-            "env": {
-                "APP_VARIANT": "preview"
-            }
-        },
-        "production": {
-            "autoIncrement": true,
-            "ios": {
-                "simulator": false,
-                "resourceClass": "medium"
-            },
-            "android": {
-                "buildType": "app-bundle",
-                "resourceClass": "medium"
-            },
-            "env": {
-                "APP_VARIANT": "production"
-            }
-        }
+    "preview": {
+      "distribution": "internal",
+      "node": "22.11.0",
+      "ios": {
+        "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "APP_VARIANT": "preview"
+      }
     },
-    "submit": {
-        "production": {
-            "ios": {
-                "appleId": "${APPLE_ID}",
-                "ascAppId": "${ASC_APP_ID}",
-                "appleTeamId": "${APPLE_TEAM_ID}"
-            },
-            "android": {
-                "serviceAccountKeyPath": "${GOOGLE_SERVICE_ACCOUNT_KEY_PATH}",
-                "track": "internal"
-            }
-        }
+    "production": {
+      "autoIncrement": true,
+      "node": "22.11.0",
+      "ios": {
+        "simulator": false,
+        "resourceClass": "medium"
+      },
+      "android": {
+        "buildType": "app-bundle",
+        "resourceClass": "medium"
+      },
+      "env": {
+        "APP_VARIANT": "production"
+      }
     }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "${APPLE_ID}",
+        "ascAppId": "${ASC_APP_ID}",
+        "appleTeamId": "${APPLE_TEAM_ID}"
+      },
+      "android": {
+        "serviceAccountKeyPath": "${GOOGLE_SERVICE_ACCOUNT_KEY_PATH}",
+        "track": "internal"
+      }
+    }
+  }
 }
