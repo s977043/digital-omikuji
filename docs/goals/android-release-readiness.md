@@ -20,14 +20,14 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 - [x] Expo設定が整理されている（app.config.ts / app.json の不整合解消、2026-06-06）
 - [x] Android package名が確定（`com.s977043.digitalomikuji`）し、全設定で一致（2026-06-06）
 - [ ] production AAB が生成できる
-- [ ] EAS Build / Submit 設定が確認されている（`eas.json`）
+- [x] EAS Build / Submit 設定が確認されている（`eas.json`：production=AAB/autoIncrement、submit track=internal、2026-06-07）
 
 ### Google Play 申請情報
 
-- [ ] Google Play Console 申請に必要な情報が docs 化されている
-- [ ] Privacy Policy / Data safety / Content rating の方針が整理されている
-- [ ] ストア掲載文・スクリーンショット・Feature Graphic の準備項目が整理されている
-- [ ] Closed testing の進め方が整理されている
+- [x] Google Play Console 申請に必要な情報が docs 化されている（[../project/google-play-submission.md](../project/google-play-submission.md)、2026-06-07）
+- [x] Privacy Policy / Data safety / Content rating の方針が整理されている（Sentry 有効前提の Data safety 申告、全年齢レーティング方針、2026-06-07）
+- [x] ストア掲載文・スクリーンショット・Feature Graphic の準備項目が整理されている（画像アセットは未作成だが要件・推奨カットを docs 化、2026-06-07）
+- [x] Closed testing の進め方が整理されている（internal→closed(12人×14日)→production、2026-06-07）
 - [x] README に Android 公開準備手順が反映されている（2026-06-06）
 
 ### 品質ゲート（すべて成功）
