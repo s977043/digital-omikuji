@@ -45,14 +45,14 @@ type TransitionDict = {
   repeatReverse?: boolean;
 };
 
-type MotionViewProps = ViewProps & {
+interface MotionViewProps extends ViewProps {
   animate?: AnimDict;
   from?: AnimDict;
   transition?: TransitionDict;
   // exit / state は未サポート（Web 版と同様）
   exit?: unknown;
   state?: unknown;
-};
+}
 
 const ANIM_KEYS = ["opacity", "translateX", "translateY", "scale", "rotate"] as const;
 type AnimKey = (typeof ANIM_KEYS)[number];
@@ -93,7 +93,8 @@ export const MotionView = forwardRef<View, MotionViewProps>(function MotionView(
   { animate, from, transition, exit: _exit, state: _state, style, children, ...rest },
   ref
 ) {
-  const duration = transition?.duration ?? 0;
+  // duration 未指定時は Reanimated の既定値（300ms）に委ねるため undefined のままにする。
+  const duration = transition?.duration;
   const delay = transition?.delay ?? 0;
   const loop = transition?.loop === true;
   const repeatReverse = transition?.repeatReverse === true;
@@ -121,7 +122,10 @@ export const MotionView = forwardRef<View, MotionViewProps>(function MotionView(
       const sv = shared[key];
       if (target === undefined) continue;
 
-      const ease = { duration, easing: Easing.bezier(0.22, 1, 0.36, 1) };
+      const ease = {
+        ...(duration !== undefined ? { duration } : {}),
+        easing: Easing.bezier(0.22, 1, 0.36, 1),
+      };
 
       let animation = Array.isArray(target)
         ? withSequence(...target.map((t) => withTiming(toNum(t), ease)))

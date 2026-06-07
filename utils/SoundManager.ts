@@ -38,6 +38,15 @@ class SoundManager {
       return null;
     }
     try {
+      // 同じ key の既存 player があれば破棄してネイティブのオーディオリソースのリークを防ぐ。
+      const existing = this.sounds.get(key);
+      if (existing) {
+        try {
+          existing.remove();
+        } catch {
+          /* noop */
+        }
+      }
       // createAudioPlayer は同期。expo-av の createAsync のような {sound,status} は返さず、
       // ロードはバックグラウンドで進むため「生成成功＝登録」とする（isLoaded ゲートは設けない）。
       const player = createAudioPlayer(source);
