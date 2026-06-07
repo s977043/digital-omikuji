@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#dc2626"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.s977043.digitalomikuji",
@@ -38,7 +33,14 @@
     "plugins": [
       "expo-router",
       "expo-localization",
-      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#dc2626"
+        }
+      ],
       "./plugins/withWorklets",
       [
         "@sentry/react-native/expo",

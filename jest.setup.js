@@ -37,8 +37,11 @@ jest.mock("react-native-worklets", () => ({
     createRunInContext: jest.fn(),
     createContext: jest.fn(),
   },
-  // createSerializable: pass-through for serialization in tests
+  // createSerializable / makeShareable: pass-through for serialization in tests
+  // (Reanimated 4.3 / SDK56 が useAnimatedStyle で makeShareable を要求する)
   createSerializable: (val) => val,
+  makeShareable: (val) => val,
+  makeShareableCloneRecursive: (val) => val,
   // isWorklet/isWorkletCallable: return false since we're not in a real worklet context
   isWorklet: () => false,
   isWorkletCallable: () => false,
@@ -78,38 +81,22 @@ jest.mock("expo-sensors", () => ({
   },
 }));
 
-// Mock expo-av
-jest.mock(
-  "expo-av",
-  () => ({
-    Audio: {
-      Sound: {
-        createAsync: jest.fn(() =>
-          Promise.resolve({
-            sound: {
-              playAsync: jest.fn(),
-              replayAsync: jest.fn(),
-              unloadAsync: jest.fn(),
-              setVolumeAsync: jest.fn(),
-              setIsMutedAsync: jest.fn(),
-              getStatusAsync: jest.fn().mockResolvedValue({
-                isLoaded: true,
-                isPlaying: false,
-                positionMillis: 0,
-              }),
-            },
-            status: { isLoaded: true, isPlaying: false, positionMillis: 0 },
-          })
-        ),
-      },
-      setAudioModeAsync: jest.fn(),
-    },
-  }),
-  { virtual: true }
-);
+// Mock expo-audio（SDK56 で expo-av から移行）
+jest.mock("expo-audio", () => ({
+  setAudioModeAsync: jest.fn(),
+  createAudioPlayer: jest.fn(() => ({
+    play: jest.fn(),
+    pause: jest.fn(),
+    seekTo: jest.fn().mockResolvedValue(undefined),
+    remove: jest.fn(),
+    volume: 1,
+    muted: false,
+    isLoaded: true,
+  })),
+}));
 // Mock AsyncStorage (v3 changed export path)
 jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest")
+  require("@react-native-async-storage/async-storage/jest/async-storage-mock")
 );
 
 // Mock expo-crypto
@@ -117,10 +104,12 @@ jest.mock("expo-crypto", () => ({
   randomUUID: jest.fn(() => global.crypto.randomUUID()),
 }));
 
-// Mock moti (Reanimated animation wrapper)
-jest.mock("moti", () => {
+// MotionView を Reanimated から切り離し素の View としてモック（test 専用、旧 moti mock の代替）。
+// reanimated 4 + React19 の act() 環境では無限ループ(withRepeat(-1))が AggregateError を
+// 誘発するため、ユニットテストではアニメーション詳細を検証せず View として扱う。
+jest.mock("./components/design-system/MotionView", () => {
   const { View } = require("react-native");
-  return { MotiView: View };
+  return { MotionView: View };
 });
 
 // Mock react-i18next (default: return key as value; tests can override)

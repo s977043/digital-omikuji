@@ -1,19 +1,26 @@
-import { Audio, AVPlaybackSource } from "expo-av";
+import {
+  setAudioModeAsync,
+  createAudioPlayer,
+  type AudioPlayer,
+  type AudioSource,
+} from "expo-audio";
 import { reportSilentError } from "./errorReporter";
 
 class SoundManager {
-  private sounds: Map<string, Audio.Sound> = new Map();
-  private sources: Map<string, AVPlaybackSource> = new Map();
+  private sounds: Map<string, AudioPlayer> = new Map();
+  private sources: Map<string, AudioSource> = new Map();
   private isReady: boolean = false;
   private volume: number = 1.0;
   private isMuted: boolean = false;
 
   async initialize() {
     try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: true,
+      // expo-av の playsInSilentModeIOS / staysActiveInBackground / shouldDuckAndroid は
+      // expo-audio で playsInSilentMode / shouldPlayInBackground / interruptionMode に統合された。
+      await setAudioModeAsync({
+        playsInSilentMode: true,
+        shouldPlayInBackground: false,
+        interruptionMode: "duckOthers",
       });
       this.isReady = true;
     } catch (error) {
@@ -26,25 +33,19 @@ class SoundManager {
     }
   }
 
-  async loadSound(key: string, source: AVPlaybackSource): Promise<Audio.Sound | null> {
+  async loadSound(key: string, source: AudioSource): Promise<AudioPlayer | null> {
     if (!this.isReady) {
       return null;
     }
     try {
-      const { sound, status } = await Audio.Sound.createAsync(source, {
-        shouldPlay: false,
-        isMuted: this.isMuted,
-        volume: this.volume,
-      });
-
-      if (status.isLoaded) {
-        this.sounds.set(key, sound);
-        this.sources.set(key, source);
-        return sound;
-      } else {
-        // Sound object created but not loaded; do not add to map
-        return null;
-      }
+      // createAudioPlayer は同期。expo-av の createAsync のような {sound,status} は返さず、
+      // ロードはバックグラウンドで進むため「生成成功＝登録」とする（isLoaded ゲートは設けない）。
+      const player = createAudioPlayer(source);
+      player.volume = this.volume;
+      player.muted = this.isMuted;
+      this.sounds.set(key, player);
+      this.sources.set(key, source);
+      return player;
     } catch (error) {
       reportSilentError(`Failed to load sound ${key}:`, error, {
         source: "SoundManager",
@@ -63,17 +64,19 @@ class SoundManager {
     }
     if (this.isMuted) return;
 
-    const sound = this.sounds.get(key);
-    if (!sound) {
+    const player = this.sounds.get(key);
+    if (!player) {
       console.warn(`Sound ${key} is not loaded (not in map).`);
       return;
     }
 
     try {
-      await sound.replayAsync();
+      // replayAsync 相当: 先頭へシークしてから再生する。
+      await player.seekTo(0);
+      player.play();
     } catch (error) {
-      // 再生失敗時は一度だけ再ロード → replay を試みる。
-      // iOS のバックグラウンド復帰後など Sound オブジェクトが無効化されるケースを救済する。
+      // 再生失敗時は一度だけ再ロード → 再生を試みる。
+      // バックグラウンド復帰後など player が無効化されるケースを救済する。
       const source = this.sources.get(key);
       if (!source) {
         reportSilentError(`Failed to play sound ${key}:`, error, {
@@ -85,17 +88,18 @@ class SoundManager {
         return;
       }
       try {
-        // 古い Sound オブジェクトを明示的にアンロードしてから再ロードする（リソースリーク防止）。
-        // unloadAsync 自体の失敗は致命的でないため握りつぶす。
+        // 古い player を破棄してから作り直す（remove 後の player は再利用不可）。
+        // remove 自体の失敗は致命的でないため握りつぶす。
         try {
-          await sound.unloadAsync();
+          player.remove();
         } catch {
           /* noop */
         }
         this.sounds.delete(key);
         const reloaded = await this.loadSound(key, source);
         if (reloaded) {
-          await reloaded.replayAsync();
+          await reloaded.seekTo(0);
+          reloaded.play();
         } else {
           reportSilentError(`Failed to play sound ${key}:`, error, {
             source: "SoundManager",
@@ -117,9 +121,10 @@ class SoundManager {
 
   async setVolume(vol: number) {
     this.volume = Math.max(0, Math.min(1, vol));
-    for (const sound of this.sounds.values()) {
+    for (const player of this.sounds.values()) {
       try {
-        await sound.setVolumeAsync(this.volume);
+        // expo-audio の volume は同期セッター。
+        player.volume = this.volume;
       } catch (e) {
         reportSilentError("Failed to set volume for a sound:", e, {
           source: "SoundManager",
@@ -132,12 +137,10 @@ class SoundManager {
 
   async setMute(mute: boolean) {
     this.isMuted = mute;
-    for (const sound of this.sounds.values()) {
+    for (const player of this.sounds.values()) {
       try {
-        const status = await sound.getStatusAsync();
-        if (status.isLoaded) {
-          await sound.setIsMutedAsync(mute);
-        }
+        // expo-audio の muted は同期セッター。
+        player.muted = mute;
       } catch (e) {
         reportSilentError("Failed to set mute for a sound:", e, {
           source: "SoundManager",
@@ -149,9 +152,9 @@ class SoundManager {
   }
 
   async unloadAll() {
-    for (const [key, sound] of this.sounds.entries()) {
+    for (const [key, player] of this.sounds.entries()) {
       try {
-        await sound.unloadAsync();
+        player.remove();
       } catch (error) {
         reportSilentError(`Failed to unload sound ${key}:`, error, {
           source: "SoundManager",
