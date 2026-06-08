@@ -206,6 +206,8 @@ dependabot PR が複数滞留している場合、**1件ずつ手動マージし
 | 既存ブランチ割当 | `git worktree add .worktrees/<task-slug> <branch>`                                            |
 | 使い捨て検証     | ブランチ無しのdetached Worktreeも可                                                           |
 
+> **並行セッション注意**: 別の Claude セッションが動く可能性がある時は独立 worktree（`/tmp` 等）を使い、同一 worktree を共有しない。共有すると未コミット変更消失・ブランチ切替の競合が起きる。ファイル操作のみなら GitHub API（push_files）で worktree 非依存に行う。
+
 ### クリーンアップ
 
 - タスク完了後はWorktreeを削除する
@@ -366,3 +368,13 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
 - `docs/design-system/`: token/component契約のSSOT
 - `docs/design/design_guidelines.md`: ムード・配色・余白などの実装補助ガイド（実装ベースのデザイン判断SSOT）
 - スクリーンショットやビルド成果物は必要に応じてPRに添付する。
+
+## 15. ハマりどころ（再発防止メモ）
+
+SDK56 移行（#443）と Sentry 再有効化（#450）で踏んだ落とし穴。機械検出できるものは CI の `Repo Guards` job（`.github/workflows/ci.yml`）でガード済み。
+
+- **Expo SDK と react-native のバージョン対応**: RN は Expo SDK に紐づく（SDK54=RN0.81 / SDK55=0.83 / SDK56=0.85）。dependabot が RN を SDK 範囲外へ上げると「宙ぶらりん」状態になり EAS の codegen（VirtualView 等）が失敗する。`npx expo-doctor`（CI で実行）で整合を確認。
+- **`.gitignore` の glob が tracked file を巻き込む**: `pr*.json` が `primitive.json` を誤マッチし、git tracked でも EAS（git-archive は `.gitignore` を尊重）がアップロードから除外して Bundle 失敗。`git check-ignore -v <file>`（CI で検出）で確認。**ビルド依存データは `docs/` でなくアプリソース内に置く**（token JSON は `design-system/tokens/*.json`）。
+- **並行セッションとの worktree 競合**: 別セッションが同一 worktree を使うと未コミット変更が消失・ブランチが切り替わる。並行時は独立 worktree（`/tmp` 等）。ファイル操作のみなら GitHub API（push_files）で worktree 非依存に。
+- **Sentry の org/project slug**: Sentry の org slug は **Expo アカウント名とは別物**（例: Expo `mine-take` ↔ Sentry org `3396cc`）。`app.json` の `@sentry/react-native/expo` plugin には Sentry Settings の実 slug を設定する。誤ると EAS の sourcemap upload が「Project not found」で失敗。URL `https://<org-slug>.sentry.io/` で確認可能。`@sentry/react-native` は SDK56 では `~7.11.0` で `getSentryExpoConfig` / expo plugin が動く（v8 不要）。
+- **EAS ビルド失敗は入れ子になりうる**: 1つ解くと次のフェーズで別の失敗が露呈する。`expo export`（CI で実行）で JS バンドル段階を前倒し検証し、native/Sentry 段階は expo.dev のフェーズ別ログで切り分ける。
