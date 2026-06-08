@@ -9,7 +9,7 @@ import { reportSilentError } from "./errorReporter";
 class SoundManager {
   private sounds: Map<string, AudioPlayer> = new Map();
   private sources: Map<string, AudioSource> = new Map();
-  private loading: Set<string> = new Set();
+  private loading: Map<string, Promise<AudioPlayer | null>> = new Map();
   private isReady: boolean = false;
   private volume: number = 1.0;
   private isMuted: boolean = false;
@@ -38,12 +38,23 @@ class SoundManager {
     if (!this.isReady) {
       return null;
     }
-    // 同一 key の並行ロードを直列化する。playSound のリトライ経路から再入した際に
-    // player が二重生成されて Map から漏れる（ネイティブリソースのリーク）のを防ぐ。
-    if (this.loading.has(key)) {
-      return this.sounds.get(key) ?? null;
+    // 同一 key の並行ロードは先行の Promise を共有して直列化する。Set による簡易ロックだと
+    // 先行ロードが this.sounds へ登録される前に後続が呼ばれた場合に null を返してしまい、
+    // 後続の再生が無音になる。Promise 共有なら後続も同じ player を受け取れる。
+    const inflight = this.loading.get(key);
+    if (inflight) {
+      return inflight;
     }
-    this.loading.add(key);
+    const promise = this.createAndRegister(key, source);
+    this.loading.set(key, promise);
+    try {
+      return await promise;
+    } finally {
+      this.loading.delete(key);
+    }
+  }
+
+  private async createAndRegister(key: string, source: AudioSource): Promise<AudioPlayer | null> {
     try {
       // 同じ key の既存 player があれば破棄してネイティブのオーディオリソースのリークを防ぐ。
       const existing = this.sounds.get(key);
@@ -55,7 +66,7 @@ class SoundManager {
         }
       }
       // createAudioPlayer は同期。expo-av の createAsync のような {sound,status} は返さず、
-      // ロードはバックグラウンドで進むため「生成成功＝登録」とする（isLoaded ゲートは設けない）。
+      // ロードはバックグラウンドで進む。playSound 側で isLoaded を待ってから再生する。
       const player = createAudioPlayer(source);
       player.volume = this.volume;
       player.muted = this.isMuted;
@@ -70,8 +81,6 @@ class SoundManager {
         metadata: { key },
       });
       return null;
-    } finally {
-      this.loading.delete(key);
     }
   }
 
@@ -144,9 +153,18 @@ class SoundManager {
   // player.isLoaded を最大 timeoutMs まで待つ。createAudioPlayer のロードは
   // バックグラウンド進行のため、未ロードのまま play すると無音になるのを防ぐ。
   private async waitUntilLoaded(player: AudioPlayer, timeoutMs: number): Promise<void> {
-    if (player.isLoaded) return;
+    // unloadAll 等で player が破棄(remove)されると isLoaded アクセスが例外を投げうる。
+    // 例外時は「これ以上待つ意味がない」とみなして即座に抜ける。
+    const loaded = () => {
+      try {
+        return player.isLoaded;
+      } catch {
+        return true;
+      }
+    };
+    if (loaded()) return;
     const start = Date.now();
-    while (!player.isLoaded && Date.now() - start < timeoutMs) {
+    while (!loaded() && Date.now() - start < timeoutMs) {
       await new Promise((resolve) => setTimeout(resolve, 25));
     }
   }
