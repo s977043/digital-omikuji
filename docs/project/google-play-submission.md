@@ -89,15 +89,19 @@ IARC 質問票への回答方針:
 ## 5. 署名 / target API level
 
 - **署名**: Google Play App Signing を利用（推奨）。EAS が upload key を管理し、`eas build` が署名済み AAB を生成。Play Console 側で App Signing を有効化。
-- **target API level**: Google Play は新規アプリに targetSdkVersion 35（Android 15）以上を要求（2025年要件）。Expo SDK54 は targetSdk 35 相当 → 充足見込み。AAB アップロード時に警告が無いことを確認。
+- **target API level**: Google Play は新規アプリに targetSdkVersion 35（Android 15）以上を要求（2025年要件）。Expo SDK56（RN 0.85）は targetSdk 35 以上 → 充足。AAB アップロード時に警告が無いことを確認。
 - **versionCode / versionName**: `eas.json` の production は `autoIncrement: true`（versionCode 自動採番）、`appVersionSource: "remote"`（EAS 側で管理）。versionName は `app.json` の `version`。
 
 ## 6. Closed testing の進め方
 
-> Google Play の新規デベロッパー（個人）アカウント（2023-11-13 以降に作成）は、**Production 申請前に Closed testing が必須**（テスター **20人以上** が **14日間連続**でオプトイン）。20人未満では Production access に進めない。
+> Google Play の Closed testing 要件はアカウント種別で異なる（2026 時点）。
+>
+> - **個人アカウント**（2023-11-13 以降作成）: **Production 申請前に Closed testing が必須**。テスター **12人以上**（2024-12-11 に 20→12 へ緩和）が **14日間連続**でオプトイン・**定期利用**する必要がある。条件未達では Production access に進めない。
+> - **組織アカウント**（法人登記 + DUNS 番号で認証）: 本要件は**免除**（テスト不要で Production 申請可）。
+> - **2026 の厳格化**: 単なるオプトインでは不十分で、各テスターが 14 日間「定期的にアプリを開く」必要がある（User Engagement Time を測定し、不活性テスターは除外）。
 
 1. **Internal testing**: AAB を internal track にアップロード（`eas.json` の submit.production.android.track = `internal`）。自分・少人数で動作確認。
-2. **Closed testing**: テスター（**20人以上**）を招待し、**14日間連続**でオプトイン・利用してもらう。フィードバック収集。
+2. **Closed testing**（個人アカウントのみ必須／組織は免除）: テスター（**12人以上**）を招待し、**14日間連続**でオプトイン・**定期利用**してもらう。フィードバック収集。
 3. **Production access 申請**: 上記を満たすと production 申請が可能になる。
 4. 申請内容: Data safety / Content rating / ストア掲載 / 対象国・年齢 を入力し審査提出。
 
@@ -117,5 +121,5 @@ EAS 認証が必要なため、以下のいずれかで実行（詳細は goal d
 - [ ] スクリーンショット2枚以上 + Feature Graphic を作成・アップロード
 - [ ] アプリアイコン 512×512 をアップロード
 - [ ] Privacy Policy URL を設定
-- [ ] internal → closed testing（20人×14日）→ production access
+- [ ] internal → closed testing（個人=12人×14日連続・定期利用 / 組織=免除）→ production access
 - [ ] ストア文に Sentry 診断データの注記を反映（本書 §1）
