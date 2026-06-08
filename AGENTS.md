@@ -369,7 +369,7 @@ git add river-reviewer && git commit -m "chore: update river-reviewer"
 - `docs/design/design_guidelines.md`: ムード・配色・余白などの実装補助ガイド（実装ベースのデザイン判断SSOT）
 - スクリーンショットやビルド成果物は必要に応じてPRに添付する。
 
-## 13. ハマりどころ（再発防止メモ）
+## 15. ハマりどころ（再発防止メモ）
 
 SDK56 移行（#443）と Sentry 再有効化（#450）で踏んだ落とし穴。機械検出できるものは CI の `Repo Guards` job（`.github/workflows/ci.yml`）でガード済み。
 
