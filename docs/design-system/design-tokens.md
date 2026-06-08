@@ -1,6 +1,6 @@
 # Design Tokens Specification
 
-`docs/design-system/tokens/*.json` を Digital Omikuji UI の唯一の設計 SSOT とし、React Native / NativeWind 実装はその投影先として扱います。
+`design-system/tokens/*.json` を Digital Omikuji UI の唯一の設計 SSOT とし、React Native / NativeWind 実装はその投影先として扱います。
 
 ## レイヤ構造
 
@@ -26,7 +26,7 @@
 
 ## 更新手順
 
-1. `docs/design-system/tokens/*.json` を更新する
+1. `design-system/tokens/*.json` を更新する
 2. `docs/design-system/component-map.json` と関連 docs を追従させる
 3. 実装側の DS アダプタと UI を追従させる
 4. `pnpm exec tsc --noEmit`

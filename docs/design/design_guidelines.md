@@ -16,7 +16,7 @@
 
 ## 2. カラーパレット (Color Palette)
 
-以下は現行 UI から読み取れる代表的な参考クラスです。正本の token 定義は `docs/design-system/tokens/*.json` を参照してください。
+以下は現行 UI から読み取れる代表的な参考クラスです。正本の token 定義は `design-system/tokens/*.json` を参照してください。
 
 | 用途 | クラス | 色味 | 備考 |
 | --- | --- | --- | --- |

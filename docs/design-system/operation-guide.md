@@ -1,12 +1,12 @@
 # Design System Operation Guide
 
-Digital Omikuji の UI を破壊的変更込みで進化させるための runbook です。一次情報は `docs/design-system/tokens/*.json` と `docs/design-system/component-map.json` です。
+Digital Omikuji の UI を破壊的変更込みで進化させるための runbook です。一次情報は `design-system/tokens/*.json` と `docs/design-system/component-map.json` です。
 
 ## 変更単位ごとの手順
 
 ### Token を追加・変更する
 
-1. `docs/design-system/tokens/primitive.json` / `semantic.json` / `component.json` を更新する
+1. `design-system/tokens/primitive.json` / `semantic.json` / `component.json` を更新する
 2. 実装側の DS アダプタと利用コンポーネントを更新する
 3. `docs/design-system/design-tokens.md` と必要なら `component-map.json` を追従する
 4. `pnpm exec tsc --noEmit`

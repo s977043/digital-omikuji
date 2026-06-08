@@ -27,7 +27,7 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 - [x] Google Play Console 申請に必要な情報が docs 化されている（[../project/google-play-submission.md](../project/google-play-submission.md)、2026-06-07）
 - [x] Privacy Policy / Data safety / Content rating の方針が整理されている（Sentry 有効前提の Data safety 申告、全年齢レーティング方針、2026-06-07）
 - [x] ストア掲載文・スクリーンショット・Feature Graphic の準備項目が整理されている（画像アセットは未作成だが要件・推奨カットを docs 化、2026-06-07）
-- [x] Closed testing の進め方が整理されている（internal→closed(20人×14日)→production、2026-06-07）
+- [x] Closed testing の進め方が整理されている（internal→closed(個人=12人×14日 / 組織=免除)→production、2026-06-07）
 - [x] README に Android 公開準備手順が反映されている（2026-06-06）
 
 ### 品質ゲート（すべて成功）
@@ -95,12 +95,11 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 - `expo-linking`（`expo-router` の必須 peer）が未インストールだった。Expo Go 外（=本番Androidビルド）でクラッシュし得るため、`npx expo install expo-linking`（`~8.0.12`）で追加。
 - 検証: `tsc` ✅ / `lint` ✅ / `test` 312件 ✅。
 
-#### #4 Expo SDK 54 想定とのバージョン不一致 ✅ 対応済み（(b)採用、2026-06-06）
+#### #4 Expo SDK 54 想定とのバージョン不一致 ✅ 解決済み（最終的に (c) SDK56 へ移行、#443・2026-06-08）
 
-**方針 (b) を採用**: 現状の先行構成を維持し、`package.json` の `expo.install.exclude` に該当20パッケージを登録して expo-doctor を **18/18（No issues）** に。
-これは「RN 0.85 等コア依存を SDK54 上で意図的に運用する」ことの明示宣言であり、**EAS本番ビルドでの最終的な native 互換性検証は production AAB ビルド（ブロッカー3）で行う**。
+**最終対応**: 当初は方針 (b)（SDK54 上で RN0.85 を `package.json` の `expo.install.exclude` で運用）を採用したが、EAS 本番ビルドで RN0.85 の codegen 非互換が顕在化したため、**最終的に Expo SDK56（RN 0.85 を正式サポート）へアップグレード**（#443）して根本解決した。`expo.install.exclude`（20パッケージ）は不要になり削除済み、expo-doctor も整合し production AAB の生成に成功している。
 
-> 参考: patch 落ち（installed が想定よりわずかに古い `expo` / `expo-router` 等）は、将来 `npx expo install --check` で SDK54 pin へ揃える選択肢もある。
+> 当初方針 (b) の記録は以下の `<details>` に経緯参照用として残す。
 
 <details><summary>当初の不一致（参考）</summary>
 
