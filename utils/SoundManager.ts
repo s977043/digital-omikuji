@@ -9,6 +9,7 @@ import { reportSilentError } from "./errorReporter";
 class SoundManager {
   private sounds: Map<string, AudioPlayer> = new Map();
   private sources: Map<string, AudioSource> = new Map();
+  private loading: Set<string> = new Set();
   private isReady: boolean = false;
   private volume: number = 1.0;
   private isMuted: boolean = false;
@@ -37,6 +38,12 @@ class SoundManager {
     if (!this.isReady) {
       return null;
     }
+    // 同一 key の並行ロードを直列化する。playSound のリトライ経路から再入した際に
+    // player が二重生成されて Map から漏れる（ネイティブリソースのリーク）のを防ぐ。
+    if (this.loading.has(key)) {
+      return this.sounds.get(key) ?? null;
+    }
+    this.loading.add(key);
     try {
       // 同じ key の既存 player があれば破棄してネイティブのオーディオリソースのリークを防ぐ。
       const existing = this.sounds.get(key);
@@ -63,6 +70,8 @@ class SoundManager {
         metadata: { key },
       });
       return null;
+    } finally {
+      this.loading.delete(key);
     }
   }
 
@@ -80,6 +89,9 @@ class SoundManager {
     }
 
     try {
+      // createAudioPlayer はロード非同期のため、初回再生が無音になりうる。isLoaded を
+      // 短時間だけ待ってから再生する（タイムアウト時もベストエフォートで再生）。
+      await this.waitUntilLoaded(player, 400);
       // replayAsync 相当: 先頭へシークしてから再生する。
       await player.seekTo(0);
       player.play();
@@ -107,6 +119,7 @@ class SoundManager {
         this.sounds.delete(key);
         const reloaded = await this.loadSound(key, source);
         if (reloaded) {
+          await this.waitUntilLoaded(reloaded, 400);
           await reloaded.seekTo(0);
           reloaded.play();
         } else {
@@ -125,6 +138,16 @@ class SoundManager {
           metadata: { key, stage: "retry_failed" },
         });
       }
+    }
+  }
+
+  // player.isLoaded を最大 timeoutMs まで待つ。createAudioPlayer のロードは
+  // バックグラウンド進行のため、未ロードのまま play すると無音になるのを防ぐ。
+  private async waitUntilLoaded(player: AudioPlayer, timeoutMs: number): Promise<void> {
+    if (player.isLoaded) return;
+    const start = Date.now();
+    while (!player.isLoaded && Date.now() - start < timeoutMs) {
+      await new Promise((resolve) => setTimeout(resolve, 25));
     }
   }
 
