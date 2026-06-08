@@ -41,7 +41,15 @@
           "backgroundColor": "#dc2626"
         }
       ],
-      "./plugins/withWorklets"
+      "./plugins/withWorklets",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "3396cc",
+          "project": "digital-omikuji",
+          "url": "https://sentry.io/"
+        }
+      ]
     ],
     "extra": {
       "eas": {
