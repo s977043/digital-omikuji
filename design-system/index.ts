@@ -15,9 +15,9 @@ type TokenTree = {
   [key: string]: TokenTree | TokenLeaf;
 };
 
-const primitiveTokens = require("../docs/design-system/tokens/primitive.json") as TokenTree;
-const semanticTokens = require("../docs/design-system/tokens/semantic.json") as TokenTree;
-const componentTokens = require("../docs/design-system/tokens/component.json") as TokenTree;
+const primitiveTokens = require("./tokens/primitive.json") as TokenTree;
+const semanticTokens = require("./tokens/semantic.json") as TokenTree;
+const componentTokens = require("./tokens/component.json") as TokenTree;
 
 type TokenLayer = "primitive" | "semantic" | "component";
 

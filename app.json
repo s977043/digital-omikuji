@@ -6,11 +6,6 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#dc2626"
-    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.s977043.digitalomikuji",
@@ -38,16 +33,15 @@
     "plugins": [
       "expo-router",
       "expo-localization",
-      "expo-splash-screen",
-      "./plugins/withWorklets",
       [
-        "@sentry/react-native/expo",
+        "expo-splash-screen",
         {
-          "organization": "mine-take",
-          "project": "digital-omikuji",
-          "url": "https://sentry.io/"
+          "image": "./assets/splash.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#dc2626"
         }
-      ]
+      ],
+      "./plugins/withWorklets"
     ],
     "extra": {
       "eas": {

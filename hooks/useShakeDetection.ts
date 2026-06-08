@@ -17,7 +17,10 @@ interface UseShakeDetectionOptions {
 
 export function useShakeDetection({ enabled, threshold, onShake }: UseShakeDetectionOptions) {
   const onShakeRef = useRef(onShake);
-  onShakeRef.current = onShake;
+
+  useEffect(() => {
+    onShakeRef.current = onShake;
+  }, [onShake]);
 
   useEffect(() => {
     if (Platform.OS === "web" || !enabled) return;

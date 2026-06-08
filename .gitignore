@@ -30,7 +30,10 @@ coverage/
 
 # Temporary artifacts
 pr_body.md
-pr*.json
+# ルート直下の PR 作業用一時 json のみ除外する。
+# 旧 `pr*.json` は design-system/tokens/primitive.json 等を誤マッチし、
+# git tracked でも EAS ビルドのアップロードから除外され Bundle 失敗を招いていた。
+/pr*.json
 
 # Test / automation artifacts
 .playwright-mcp/

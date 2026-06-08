@@ -1,9 +1,9 @@
-const { getSentryExpoConfig } = require("@sentry/react-native/metro");
+const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
 const path = require("path");
 
-// Use Sentry's Expo config as base for proper source maps
-const config = getSentryExpoConfig(__dirname);
+// Sentry は一旦外しているため標準の Expo Metro config を使う。
+const config = getDefaultConfig(__dirname);
 
 // Web bundle から不要な native-only runtime を除外する。
 // - react-native-reanimated: MotionView.web.tsx が CSS アニメーションを使う

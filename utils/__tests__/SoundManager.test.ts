@@ -1,55 +1,92 @@
 import { soundManager } from "../SoundManager";
-import { Audio } from "expo-av";
+import { setAudioModeAsync, createAudioPlayer } from "expo-audio";
 
-// Mock Expo AV
-const mockSound = {
-  playAsync: jest.fn(),
-  replayAsync: jest.fn(),
-  unloadAsync: jest.fn(),
-  setPositionAsync: jest.fn(),
-  setVolumeAsync: jest.fn(),
-  setIsMutedAsync: jest.fn(),
-  getStatusAsync: jest.fn().mockResolvedValue({ isLoaded: true }),
-};
-
-jest.mock("expo-av", () => {
-  return {
-    Audio: {
-      Sound: {
-        createAsync: jest.fn(() =>
-          Promise.resolve({ sound: mockSound, status: { isLoaded: true } })
-        ),
-      },
-      setAudioModeAsync: jest.fn(),
+// expo-audio の AudioPlayer を模したモック。volume/muted は同期セッターのため
+// スパイ(jest.fn)で代入値を検証する。createAudioPlayer は同期で同一 player を返す。
+jest.mock("expo-audio", () => {
+  const seekTo = jest.fn().mockResolvedValue(undefined);
+  const play = jest.fn();
+  const remove = jest.fn();
+  const volumeSetter = jest.fn();
+  const mutedSetter = jest.fn();
+  const player = {
+    play,
+    seekTo,
+    remove,
+    get volume() {
+      return 1;
     },
+    set volume(v: number) {
+      volumeSetter(v);
+    },
+    get muted() {
+      return false;
+    },
+    set muted(m: boolean) {
+      mutedSetter(m);
+    },
+    isLoaded: true,
+  };
+  return {
+    setAudioModeAsync: jest.fn(),
+    createAudioPlayer: jest.fn(() => player),
+    __spies: { seekTo, play, remove, volumeSetter, mutedSetter },
   };
 });
+
+const mocked = jest.requireMock("expo-audio") as unknown as {
+  __spies: {
+    seekTo: jest.Mock;
+    play: jest.Mock;
+    remove: jest.Mock;
+    volumeSetter: jest.Mock;
+    mutedSetter: jest.Mock;
+  };
+};
+const spies = mocked.__spies;
 
 describe("SoundManager", () => {
   beforeEach(async () => {
     jest.clearAllMocks();
+    // clearAllMocks 後も同期/非同期の既定挙動を再設定する。
+    spies.seekTo.mockResolvedValue(undefined);
+    (createAudioPlayer as jest.Mock).mockImplementation(() => {
+      const m = jest.requireMock("expo-audio") as unknown as { __spies: typeof spies };
+      return {
+        play: m.__spies.play,
+        seekTo: m.__spies.seekTo,
+        remove: m.__spies.remove,
+        get volume() {
+          return 1;
+        },
+        set volume(v: number) {
+          m.__spies.volumeSetter(v);
+        },
+        get muted() {
+          return false;
+        },
+        set muted(mm: boolean) {
+          m.__spies.mutedSetter(mm);
+        },
+        isLoaded: true,
+      };
+    });
 
     // Reset internal state of the singleton
     await soundManager.unloadAll();
     await soundManager.setMute(false);
     await soundManager.setVolume(1.0);
-
-    // Reset mocks default behavior
-    (Audio.Sound.createAsync as jest.Mock).mockResolvedValue({
-      sound: mockSound,
-      status: { isLoaded: true },
-    });
-    mockSound.getStatusAsync.mockResolvedValue({ isLoaded: true });
-    mockSound.replayAsync.mockResolvedValue(undefined); // Default success
+    jest.clearAllMocks();
+    spies.seekTo.mockResolvedValue(undefined);
   });
 
   it("initializes audio mode", async () => {
     await soundManager.initialize();
-    expect(Audio.setAudioModeAsync).toHaveBeenCalled();
+    expect(setAudioModeAsync).toHaveBeenCalled();
   });
 
   it("handles initialization failure", async () => {
-    (Audio.setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
+    (setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     await soundManager.initialize();
     expect(consoleSpy).toHaveBeenCalledWith("Audio initialization failed:", expect.any(Error));
@@ -57,8 +94,7 @@ describe("SoundManager", () => {
   });
 
   it("returns null when loading sound if not ready", async () => {
-    // Simulate failed initialization so the manager is not ready.
-    (Audio.setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
+    (setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     await soundManager.initialize();
 
@@ -70,13 +106,15 @@ describe("SoundManager", () => {
   it("loads a sound", async () => {
     await soundManager.initialize();
     const result = await soundManager.loadSound("test", { uri: "test" });
-    expect(Audio.Sound.createAsync).toHaveBeenCalled();
+    expect(createAudioPlayer).toHaveBeenCalled();
     expect(result).toBeDefined();
   });
 
   it("handles load sound failure", async () => {
     await soundManager.initialize();
-    (Audio.Sound.createAsync as jest.Mock).mockRejectedValueOnce(new Error("Load failed"));
+    (createAudioPlayer as jest.Mock).mockImplementationOnce(() => {
+      throw new Error("Load failed");
+    });
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
     const result = await soundManager.loadSound("fail", { uri: "fail" });
@@ -86,23 +124,11 @@ describe("SoundManager", () => {
     consoleSpy.mockRestore();
   });
 
-  it("handles load sound when status is not loaded", async () => {
-    await soundManager.initialize();
-    (Audio.Sound.createAsync as jest.Mock).mockResolvedValueOnce({
-      sound: mockSound,
-      status: { isLoaded: false },
-    });
-
-    const result = await soundManager.loadSound("notloaded", { uri: "test" });
-    expect(result).toBeNull();
-  });
-
   it("does not play sound if not initialized", async () => {
-    // Force not ready
-    (Audio.setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
+    (setAudioModeAsync as jest.Mock).mockRejectedValueOnce(new Error("Init failed"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     await soundManager.initialize(); // isReady = false
-    consoleSpy.mockRestore(); // restore error spy
+    consoleSpy.mockRestore();
 
     const consoleWarnSpy = jest.spyOn(console, "warn").mockImplementation();
     await soundManager.playSound("test");
@@ -114,7 +140,8 @@ describe("SoundManager", () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
     await soundManager.playSound("test");
-    expect(mockSound.replayAsync).toHaveBeenCalled();
+    expect(spies.seekTo).toHaveBeenCalledWith(0);
+    expect(spies.play).toHaveBeenCalled();
   });
 
   it("does not play sound if muted", async () => {
@@ -122,7 +149,7 @@ describe("SoundManager", () => {
     await soundManager.loadSound("test", { uri: "test" });
     await soundManager.setMute(true);
     await soundManager.playSound("test");
-    expect(mockSound.replayAsync).not.toHaveBeenCalled();
+    expect(spies.play).not.toHaveBeenCalled();
   });
 
   it("warns if playing non-existent sound", async () => {
@@ -139,21 +166,21 @@ describe("SoundManager", () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
 
-    // 1 回目の replay は失敗、フォールバックで createAsync + replay が成功するパス
-    mockSound.replayAsync.mockRejectedValueOnce(new Error("Play error"));
+    // 1 回目の seekTo は失敗、フォールバックで createAudioPlayer + 再生が成功するパス
+    spies.seekTo.mockRejectedValueOnce(new Error("Play error"));
 
     await soundManager.playSound("test");
 
-    // 再ロード（createAsync）→ replay の順で呼ばれる
-    expect(Audio.Sound.createAsync).toHaveBeenCalledTimes(2);
-    expect(mockSound.replayAsync).toHaveBeenCalledTimes(2);
+    // 再生成(createAudioPlayer)→ seekTo の順で 2 回ずつ呼ばれる
+    expect(createAudioPlayer).toHaveBeenCalledTimes(2);
+    expect(spies.seekTo).toHaveBeenCalledTimes(2);
   });
 
   it("logs error when both initial play and retry fail", async () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
 
-    mockSound.replayAsync
+    spies.seekTo
       .mockRejectedValueOnce(new Error("Play error"))
       .mockRejectedValueOnce(new Error("Retry error"));
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
@@ -171,13 +198,15 @@ describe("SoundManager", () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
     await soundManager.setVolume(0.5);
-    expect(mockSound.setVolumeAsync).toHaveBeenCalledWith(0.5);
+    expect(spies.volumeSetter).toHaveBeenCalledWith(0.5);
   });
 
   it("handles set volume error", async () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
-    mockSound.setVolumeAsync.mockRejectedValueOnce(new Error("Volume error"));
+    spies.volumeSetter.mockImplementationOnce(() => {
+      throw new Error("Volume error");
+    });
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
     await soundManager.setVolume(0.5);
@@ -190,13 +219,15 @@ describe("SoundManager", () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
     await soundManager.setMute(true);
-    expect(mockSound.setIsMutedAsync).toHaveBeenCalledWith(true);
+    expect(spies.mutedSetter).toHaveBeenCalledWith(true);
   });
 
   it("handles set mute error", async () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
-    mockSound.setIsMutedAsync.mockRejectedValueOnce(new Error("Mute error"));
+    spies.mutedSetter.mockImplementationOnce(() => {
+      throw new Error("Mute error");
+    });
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
     await soundManager.setMute(true);
@@ -209,13 +240,15 @@ describe("SoundManager", () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
     await soundManager.unloadAll();
-    expect(mockSound.unloadAsync).toHaveBeenCalled();
+    expect(spies.remove).toHaveBeenCalled();
   });
 
   it("handles unload error", async () => {
     await soundManager.initialize();
     await soundManager.loadSound("test", { uri: "test" });
-    mockSound.unloadAsync.mockRejectedValueOnce(new Error("Unload error"));
+    spies.remove.mockImplementationOnce(() => {
+      throw new Error("Unload error");
+    });
     const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
     await soundManager.unloadAll();
