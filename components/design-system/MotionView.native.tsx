@@ -71,6 +71,21 @@ function toNum(v: number | string): number {
   return Number.isNaN(n) ? 0 : n;
 }
 
+// オブジェクトのキー順序に依存しない JSON 文字列化。animate/from が動的生成されても
+// 同一内容なら同一キーになり、過剰な再アニメーションを防ぐ。
+function stableStringify(obj: unknown): string {
+  return JSON.stringify(obj, (_key, value) =>
+    value && typeof value === "object" && !Array.isArray(value)
+      ? Object.keys(value as Record<string, unknown>)
+          .sort()
+          .reduce<Record<string, unknown>>((acc, k) => {
+            acc[k] = (value as Record<string, unknown>)[k];
+            return acc;
+          }, {})
+      : value
+  );
+}
+
 function getRaw(d: AnimDict | undefined, key: AnimKey): AnimValue | undefined {
   if (!d) return undefined;
   if (key === "rotate") return d.rotateZ ?? d.rotate;
@@ -114,7 +129,8 @@ export const MotionView = forwardRef<View, MotionViewProps>(function MotionView(
   };
 
   // animate / transition の差分でのみ再アニメーション。
-  const animKey = JSON.stringify({ animate, from, duration, delay, loop, repeatReverse });
+  // animate/from が動的生成されてもキー順序に依存しないよう安定化する。
+  const animKey = stableStringify({ animate, from, duration, delay, loop, repeatReverse });
 
   useEffect(() => {
     for (const key of ANIM_KEYS) {
