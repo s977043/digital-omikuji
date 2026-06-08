@@ -22,6 +22,11 @@ on:
       - "metro.config.js"
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
+      - ".gitignore"
+      - "app.json"
+      - "app.config.ts"
+      - "eas.json"
+      - "design-system/**"
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main, develop]
@@ -44,6 +49,11 @@ on:
       - "metro.config.js"
       - "tailwind.config.js"
       - ".github/workflows/ci.yml"
+      - ".gitignore"
+      - "app.json"
+      - "app.config.ts"
+      - "eas.json"
+      - "design-system/**"
   workflow_dispatch:
 
 concurrency:
@@ -51,6 +61,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  guards:
+    name: Repo Guards
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      # tracked なのに .gitignore にマッチするファイルは、git-archive を使う
+      # 消費者（EAS Build 等）がアップロードから除外し、実行時/ビルド時に
+      # 「module not found」で落ちる。pr*.json が primitive.json を glob 誤マッチ
+      # した #443 の再発防止。
+      - name: .gitignore does not drop tracked files
+        run: |
+          matched=$(git ls-files | git check-ignore --stdin --verbose || true)
+          if [ -n "$matched" ]; then
+            echo "::error::These tracked files are matched by .gitignore (git-archive / EAS consumers will drop them):"
+            echo "$matched"
+            exit 1
+          fi
+          echo "OK: no tracked file is ignored by .gitignore"
+
+      - name: Setup environment
+        uses: ./.github/actions/setup-environment
+
+      # SDK と react-native 等の不整合（dependabot が SDK 範囲外へ上げる等）を検出
+      - name: expo-doctor (SDK integrity)
+        run: npx expo-doctor
+
+      # codegen / require 解決の失敗を EAS ビルド前にローカル相当で検出
+      - name: Production JS bundle (codegen / require check)
+        run: APP_VARIANT=production npx expo export --platform android --no-bytecode --output-dir /tmp/ci-export
+
   ci:
     name: ${{ matrix.name }}
     runs-on: ubuntu-latest
