@@ -41,15 +41,7 @@
           "backgroundColor": "#dc2626"
         }
       ],
-      "./plugins/withWorklets",
-      [
-        "@sentry/react-native/expo",
-        {
-          "organization": "mine-take",
-          "project": "digital-omikuji",
-          "url": "https://sentry.io/"
-        }
-      ]
+      "./plugins/withWorklets"
     ],
     "extra": {
       "eas": {
