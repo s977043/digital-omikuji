@@ -1,16 +1,28 @@
 import React from "react";
-import { Image, Text, useWindowDimensions, View } from "react-native";
+import { Image, Platform, Text, useWindowDimensions, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Button } from "../design-system/Button";
 import { getStringToken } from "../../design-system";
 import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 interface IdleRitualPatternProps {
   hasDrawnToday: boolean;
+  shakeEnabled?: boolean;
   onDraw: () => void;
   onShowResult: () => void;
 }
 
-export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleRitualPatternProps) {
+export function IdleRitualPattern({
+  hasDrawnToday,
+  shakeEnabled = true,
+  onDraw,
+  onShowResult,
+}: IdleRitualPatternProps) {
+  const { t } = useTranslation();
+  const drawInstruction = t(
+    Platform.OS !== "web" && shakeEnabled ? "home.shakeInstruction" : "home.tapInstruction"
+  );
+  const firstDrawGuide = `${t("home.dailyDrawNote")}\n${drawInstruction}`;
   const { height } = useWindowDimensions();
   const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
   const circleSize = isCompactHeight ? 168 : 220;
@@ -70,7 +82,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
       >
         {hasDrawnToday
           ? "もう一度結果を読み返して、今日の過ごし方を確かめられます"
-          : "シェイクでもタップでも始められます。気持ちが整ったら、そっと始めてください"}
+          : firstDrawGuide}
       </Text>
 
       {hasDrawnToday ? (
@@ -88,7 +100,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
             onPress={onDraw}
             variant="primaryRitual"
             accessibilityLabel="おみくじを引く"
-            accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
+            accessibilityHint={firstDrawGuide}
             style={{ minWidth: isCompactHeight ? 220 : 240 }}
           />
           <View

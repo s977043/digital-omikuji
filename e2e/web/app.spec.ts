@@ -6,6 +6,35 @@ async function gotoRoute(page: Page, path: string) {
 }
 
 test.describe("Digital Omikuji Web", () => {
+  test("explains the daily draw before starting and preserves today's result on return", async ({
+    page,
+  }) => {
+    await gotoRoute(page, "/");
+
+    await expect(
+      page.getByText("1日1回。今日の結果は何度でも読み返せます。", { exact: false })
+    ).toBeVisible();
+    await expect(page.getByText("ボタンをタップして始めます。", { exact: false })).toBeVisible();
+    await expect(page.getByText(/シェイクでもタップでも/)).toHaveCount(0);
+    await page.getByRole("button", { name: "おみくじを引く", exact: true }).click();
+
+    const result = page.getByRole("dialog", { name: "おみくじ結果", exact: true });
+    await expect(result).toBeVisible({ timeout: 20000 });
+    const resultText = await result.innerText();
+    const savedHistory = await page.evaluate(() => localStorage.getItem("omikuji_history_v2"));
+    expect(savedHistory).not.toBeNull();
+    expect(JSON.parse(savedHistory!).length).toBe(1);
+    await result.getByRole("button", { name: "持ち帰る", exact: true }).click();
+    await expect(page.getByRole("button", { name: "結果をもう一度見る" })).toBeVisible();
+    await page.reload();
+    await page.getByRole("button", { name: "結果をもう一度見る" }).click();
+    await expect(result).toHaveText(resultText, { useInnerText: true });
+    expect(await page.evaluate(() => localStorage.getItem("omikuji_history_v2"))).toBe(
+      savedHistory
+    );
+    await expect(page.getByRole("button", { name: "おみくじを引く", exact: true })).toHaveCount(0);
+  });
+
   test("should display title and draw button", async ({ page }) => {
     await gotoRoute(page, "/");
 

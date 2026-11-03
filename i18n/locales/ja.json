@@ -8,6 +8,9 @@
     "loading": "読み込み中..."
   },
   "home": {
+    "dailyDrawNote": "1日1回。今日の結果は何度でも読み返せます。",
+    "tapInstruction": "ボタンをタップして始めます。",
+    "shakeInstruction": "タップでも、スマホを振っても始められます。",
     "title": "2026年 謹賀新年",
     "shakeToPlay": "スマホを振って\nおみくじを引く",
     "drawing": "運命を抽選中...",
