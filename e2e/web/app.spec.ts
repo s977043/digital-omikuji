@@ -122,3 +122,34 @@ test("empty history offers an explicit return to the fortune screen", async ({ p
   await expect(page.getByRole("button", { name: "おみくじを引く", exact: true })).toBeVisible();
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
+
+test("reduced motion preference survives reload and can be turned off", async ({ page }) => {
+  await page.goto("/settings");
+  const toggle = page.getByRole("switch", { name: "アニメーションを抑える", exact: true });
+  await expect(toggle).toBeEnabled();
+  await expect(toggle).not.toBeChecked();
+  await toggle.check();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => JSON.parse(localStorage.getItem("app_settings_v1") ?? "{}").forceReducedMotion
+      )
+    )
+    .toBe(true);
+  await page.reload();
+  await expect(toggle).toBeEnabled();
+  await expect(toggle).toBeChecked();
+  await toggle.uncheck();
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => JSON.parse(localStorage.getItem("app_settings_v1") ?? "{}").forceReducedMotion
+      )
+    )
+    .toBe(false);
+  await page.reload();
+  await expect(toggle).toBeEnabled();
+  await expect(toggle).not.toBeChecked();
+  await page.getByRole("button", { name: "← 戻る", exact: true }).click();
+  await expect(page.getByRole("button", { name: "おみくじを引く", exact: true })).toBeVisible();
+});
