@@ -3,7 +3,7 @@ import { Image, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { getStringToken } from "../../design-system";
 
-export function HistoryEmptyState() {
+export function HistoryEmptyState({ action }: { action?: React.ReactNode }) {
   const { t } = useTranslation();
 
   return (
@@ -43,6 +43,7 @@ export function HistoryEmptyState() {
       >
         {t("history.empty")}
       </Text>
+      {action ? <View style={{ marginTop: 16, marginBottom: 16 }}>{action}</View> : null}
     </View>
   );
 }

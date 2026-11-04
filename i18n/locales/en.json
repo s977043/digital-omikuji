@@ -8,6 +8,9 @@
     "loading": "Loading..."
   },
   "home": {
+    "dailyDrawNote": "One draw a day. Revisit today's result anytime.",
+    "tapInstruction": "Tap the button to begin.",
+    "shakeInstruction": "Tap the button or shake your phone to begin.",
     "title": "Happy New Year 2026",
     "shakeToPlay": "Shake your phone\nto draw your fortune",
     "drawing": "Drawing your fortune...",
@@ -171,7 +174,8 @@
     "deleteAll": "Delete All",
     "deleteConfirmTitle": "Delete History",
     "deleteConfirmMessage": "Are you sure you want to delete all history?",
-    "empty": "No history yet.\nTry drawing an Omikuji!"
+    "empty": "No history yet.\nTry drawing an Omikuji!",
+    "returnToFortune": "Go to the fortune screen"
   },
   "settings": {
     "title": "Settings",
