@@ -17,6 +17,16 @@ for (const viewport of [
     const draw = page.getByRole("button", { name: "おみくじを引く", exact: true });
     await expect(draw).toBeVisible();
     await expect(draw).toBeInViewport({ ratio: 1 });
+    await page.evaluate(() => document.fonts.ready);
+    const heading = page.getByText(/静かに息を整えて/);
+    await expect(heading).toBeVisible();
+    expect(
+      await heading.evaluate(
+        (element) =>
+          element.getBoundingClientRect().height / parseFloat(getComputedStyle(element).lineHeight)
+      )
+    ).toBeLessThanOrEqual(2.01);
+    await expect(heading).toHaveText("静かに息を整えて\n今日のおみくじを");
     await noHorizontalOverflow();
     await testInfo.attach("initial-screen", {
       body: await page.screenshot(),

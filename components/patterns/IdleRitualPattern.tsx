@@ -68,9 +68,7 @@ export function IdleRitualPattern({
       >
         {hasDrawnToday
           ? "本日の運勢はすでに授かっています"
-          : isCompactHeight
-            ? "静かに息を整えて\n今日のおみくじを"
-            : "静かに息を整えて\nおみくじを引きましょう"}
+          : "静かに息を整えて\n今日のおみくじを"}
       </Text>
       <Text
         style={{
