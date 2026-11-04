@@ -20,7 +20,7 @@
   },
   "fortune": {
     "shareTitle": "Share your Omikuji",
-    "shareMessage": "🎍 New Year Omikuji 2026 🎍\n\nMy fortune is… ✨ {{title}} ✨\n“{{description}}”\n\n#Omikuji2026 #NewYear",
+    "shareMessage": "My fortune is… ✨ {{title}} ✨\n“{{description}}”\n\n#DigitalOmikuji #Omikuji\n\nDraw your fortune too👇\n{{url}}",
     "tie": "Tie",
     "keep": "Keep",
     "toastTie": "Fortune tied to the shrine",

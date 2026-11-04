@@ -30,8 +30,8 @@ export function ResultPattern({ fortune, onReset, reducedMotion = false }: Resul
   );
 
   const shareText = useMemo(
-    () => buildShareText({ title: fortuneTitle, description: fortuneMessage }),
-    [fortuneTitle, fortuneMessage]
+    () => buildShareText(t, { title: fortuneTitle, description: fortuneMessage }),
+    [t, fortuneTitle, fortuneMessage]
   );
 
   return (
