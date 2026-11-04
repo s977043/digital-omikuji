@@ -187,3 +187,20 @@ test("cancelling history deletion preserves the saved fortune after reload", asy
   ).toEqual(saved);
   await expect(page.getByText("まだ履歴がありません。", { exact: false })).toHaveCount(0);
 });
+
+test("rapid double activation saves one fortune and revisits the same result", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "おみくじを引く", exact: true }).dblclick();
+  const result = page.getByRole("dialog", { name: "おみくじ結果", exact: true });
+  await expect(result).toBeVisible({ timeout: 20000 });
+  const resultText = await result.innerText();
+  const saved = await page.evaluate(() => localStorage.getItem("omikuji_history_v2"));
+  expect(saved).not.toBeNull();
+  expect(JSON.parse(saved!)).toHaveLength(1);
+  await result.getByRole("button", { name: "持ち帰る", exact: true }).click();
+  await expect(page.getByRole("button", { name: "おみくじを引く", exact: true })).toHaveCount(0);
+  await page.reload();
+  await page.getByRole("button", { name: "結果をもう一度見る", exact: true }).click();
+  await expect(result).toHaveText(resultText, { useInnerText: true });
+  expect(await page.evaluate(() => localStorage.getItem("omikuji_history_v2"))).toBe(saved);
+});
