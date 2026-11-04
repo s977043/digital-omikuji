@@ -16,6 +16,17 @@ for (const viewport of [
     };
     const draw = page.getByRole("button", { name: "おみくじを引く", exact: true });
     await expect(draw).toBeVisible();
+    await expect(draw).toBeInViewport({ ratio: 1 });
+    await page.evaluate(() => document.fonts.ready);
+    const heading = page.getByText(/静かに息を整えて/);
+    await expect(heading).toBeVisible();
+    expect(
+      await heading.evaluate(
+        (element) =>
+          element.getBoundingClientRect().height / parseFloat(getComputedStyle(element).lineHeight)
+      )
+    ).toBeLessThanOrEqual(2.01);
+    await expect(heading).toHaveText("静かに息を整えて\n今日のおみくじを");
     await noHorizontalOverflow();
     await testInfo.attach("initial-screen", {
       body: await page.screenshot(),
@@ -34,6 +45,12 @@ for (const viewport of [
     const saved = await page.evaluate(() => localStorage.getItem("omikuji_history_v2"));
     expect(saved).not.toBeNull();
     const take = result.getByRole("button", { name: "持ち帰る", exact: true });
+    const share = result.getByRole("button", { name: "シェア", exact: true });
+    await take.focus();
+    await page.keyboard.press("Tab");
+    await expect(share).toBeFocused();
+    await page.keyboard.press("Shift+Tab");
+    await expect(take).toBeFocused();
     await take.scrollIntoViewIfNeeded();
     await take.click();
     await page.reload();
