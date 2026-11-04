@@ -20,7 +20,7 @@
   },
   "fortune": {
     "shareTitle": "おみくじをシェア",
-    "shareMessage": "🎍 2026年 新春おみくじ 🎍\n\n私の運勢は… ✨ {{title}} ✨\n「{{description}}」\n\n#おみくじ2026 #新春",
+    "shareMessage": "私の運勢は… ✨ {{title}} ✨\n「{{description}}」\n\n#デジタルおみくじ #おみくじ\n\nあなたも占ってみよう👇\n{{url}}",
     "tie": "結ぶ",
     "keep": "持ち帰る",
     "toastTie": "運勢を結びました",

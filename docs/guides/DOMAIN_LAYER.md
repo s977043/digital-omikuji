@@ -52,7 +52,7 @@ app / hooks / components
 |`canDrawToday(lastDrawDate, today?)`|1 日 1 回制限の判定。`today` を注入すると純粋関数になる|`domain/fortuneRules.ts`|
 |`migrateLegacyEntry(raw)`|旧形式の履歴エントリを型ガード検証しつつ現行形式へ変換（失敗時 `null`）|`domain/historyMigration.ts`|
 |`getFortuneText(t, level, messageIndex)`|i18n 経由の運勢タイトル・メッセージを取得。`TFunction` を引数で注入|`domain/getFortuneText.ts`|
-|`buildShareText({title, description})`|X 共有用テキストを組み立てる|`domain/buildShareText.ts`|
+|`buildShareText(t, {title, description})`|表示言語に合わせた共有用テキストを組み立てる|`domain/buildShareText.ts`|
 
 ## 注入の原則
 

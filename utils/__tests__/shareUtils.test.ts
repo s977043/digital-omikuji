@@ -1,3 +1,7 @@
+import { createInstance } from "i18next";
+import ja from "../../i18n/locales/ja.json";
+import en from "../../i18n/locales/en.json";
+import { buildShareText } from "../../domain/buildShareText";
 import { Platform, Share } from "react-native";
 import { captureRef } from "react-native-view-shot";
 import { executeShare, internal } from "../shareUtils";
@@ -19,6 +23,24 @@ describe("executeShare", () => {
   });
 
   describe("native (iOS/Android)", () => {
+    it.each(["ja", "en"])("Android forwards localized %s text without a card", async (lng) => {
+      (Platform as { OS: string }).OS = "android";
+      const i18n = createInstance();
+      await i18n.init({
+        lng,
+        resources: { ja: { translation: ja }, en: { translation: en } },
+        interpolation: { escapeValue: false },
+      });
+      const shareText = buildShareText(i18n.t, {
+        title: "凶",
+        description: "Keep calm & carry on",
+      });
+      await executeShare({ shareText });
+      expect(captureRef).not.toHaveBeenCalled();
+      expect(shareSpy).toHaveBeenCalledWith({ message: shareText }, {});
+      expect(shareText).not.toMatch(/エンジニア|engineer|2026|令和八年/i);
+    });
+
     it("iOS: calls captureRef and Share.share with url when capture succeeds", async () => {
       (captureRef as jest.Mock).mockResolvedValueOnce("file:///tmp/omikuji.png");
       const cardRef = { current: {} as never };
