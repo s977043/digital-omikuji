@@ -104,3 +104,21 @@ test.describe("Digital Omikuji Web", () => {
     });
   });
 });
+
+test("empty history offers an explicit return to the fortune screen", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto("/history");
+  await expect(page.getByText("まだ履歴がありません。", { exact: false })).toBeVisible();
+  const action = page.getByRole("button", { name: "おみくじの画面へ", exact: true });
+  await expect(action).toBeInViewport({ ratio: 1 });
+  await page.evaluate(() => document.fonts.ready);
+  const actionBox = await action.boundingBox();
+  const versionBox = await page.getByText(/^v\d+\.\d+\.\d+$/).boundingBox();
+  expect(actionBox).not.toBeNull();
+  expect(versionBox).not.toBeNull();
+  expect(actionBox!.y + actionBox!.height).toBeLessThanOrEqual(versionBox!.y);
+  await action.click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("button", { name: "おみくじを引く", exact: true })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+});

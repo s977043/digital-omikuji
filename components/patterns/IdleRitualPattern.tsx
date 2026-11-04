@@ -66,9 +66,7 @@ export function IdleRitualPattern({
           fontFamily: getStringToken("primitive.typography.family.ritual"),
         }}
       >
-        {hasDrawnToday
-          ? "本日の運勢はすでに授かっています"
-          : "静かに息を整えて\n今日のおみくじを"}
+        {hasDrawnToday ? "本日の運勢はすでに授かっています" : "静かに息を整えて\n今日のおみくじを"}
       </Text>
       <Text
         style={{

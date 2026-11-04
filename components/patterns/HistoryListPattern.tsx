@@ -8,13 +8,14 @@ import { HistoryItemCard } from "../design-system/HistoryItemCard";
 
 interface HistoryListPatternProps {
   history: HistoryEntry[];
+  emptyAction?: React.ReactNode;
 }
 
-export function HistoryListPattern({ history }: HistoryListPatternProps) {
+export function HistoryListPattern({ history, emptyAction }: HistoryListPatternProps) {
   const { t } = useTranslation();
 
   if (history.length === 0) {
-    return <HistoryEmptyState />;
+    return <HistoryEmptyState action={emptyAction} />;
   }
 
   return (
