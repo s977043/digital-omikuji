@@ -62,3 +62,7 @@ AATのE2E証拠・レビュー手順を参照し、アプリ固有の既存Playw
 再利用する知見の候補は「toBeVisibleだけではCTA全体の到達性を保証しない」「横幅と内部縦スクロールを分ける」「SDK整合・native実機・公開承認を別の証拠にする」。
 記事候補は、3役の仮説評価→失敗するE2E→最小修正→独立検証の記録。OSSへの外部投稿はしていない。
 PlanGate/River Review Pluginは利用できずCLI代用なし。既存River CIはLLM skipのため独立レビューの代替にしない。
+
+## CI環境の再修正
+
+HEAD237dd3aのWeb E2Eはbrowser導入時に `Playwright does not support chromium on ubuntu26.04-x64` で停止。テスト本体未実行。ローカル固定Playwright1.60.0の配布対応表はUbuntu24.04を含むため、E2Eジョブをubuntu-24.04へ固定しcache keyにも版を含める。テスト削除やassertion緩和は行わず、CIで再確認する。最新Playwrightの対応OSと、lockされた版の対応OSを区別する。
