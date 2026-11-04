@@ -1,6 +1,7 @@
 import React from "react";
 import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
 import IndexScreen from "../index";
+import * as appSettingsHook from "../../hooks/useAppSettings";
 
 const mockDrawFortune = jest.fn();
 const mockResetFortune = jest.fn();
@@ -36,6 +37,9 @@ jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, options?: { returnObjects?: boolean }) => {
       const translations: Record<string, string | string[]> = {
+        "home.dailyDrawNote": "1日1回。今日の結果は何度でも読み返せます。",
+        "home.tapInstruction": "ボタンをタップして始めます。",
+        "home.shakeInstruction": "タップでも、スマホを振っても始められます。",
         "common.share": "シェア",
         "common.close": "閉じる",
         "fortune.shareTitle": "おみくじをシェア",
@@ -89,6 +93,19 @@ describe("IndexScreen", () => {
 
   afterEach(() => {
     jest.useRealTimers();
+    jest.restoreAllMocks();
+  });
+
+  it("シェイク無効設定を初回案内と読み上げヒントに反映する", async () => {
+    jest.spyOn(appSettingsHook, "useAppSettings").mockReturnValue({
+      settings: { shakeEnabled: false, forceReducedMotion: false },
+      hydrated: true,
+      update: jest.fn(),
+    });
+    const { getByText, getByRole } = render(<IndexScreen />);
+    const guide = "1日1回。今日の結果は何度でも読み返せます。\nボタンをタップして始めます。";
+    await waitFor(() => expect(getByText(guide)).toBeTruthy());
+    expect(getByRole("button", { name: "おみくじを引く" }).props.accessibilityHint).toBe(guide);
   });
 
   it("初期表示で主導線と補助導線が見える", async () => {

@@ -142,6 +142,7 @@ export function ExperienceScreenTemplate({
       <ImageBackground
         source={require("../../assets/shrine_background.webp")}
         style={{ flex: 1 }}
+        imageStyle={Platform.OS === "web" ? { width: "100%", height: "100%" } : undefined}
         resizeMode="cover"
       >
         <View

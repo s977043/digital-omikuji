@@ -44,7 +44,8 @@ concurrency:
 jobs:
   test:
     name: Playwright Tests
-    runs-on: ubuntu-latest
+    # Locked Playwright browsers support Ubuntu 24.04; ubuntu-latest may move ahead.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     steps:
@@ -63,7 +64,7 @@ jobs:
         id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+          key: playwright-${{ runner.os }}-ubuntu-24.04-${{ steps.playwright-version.outputs.version }}
 
       - name: Install Playwright Browsers
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -79,7 +80,7 @@ jobs:
           CI: true
 
       - uses: actions/upload-artifact@v7
-        if: failure()
+        if: always()
         with:
           name: playwright-report
           path: playwright-report/
