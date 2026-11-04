@@ -85,7 +85,16 @@ export default function HistoryScreen() {
             </Text>
           </View>
         ) : (
-          <HistoryListPattern history={history} />
+          <HistoryListPattern
+            history={history}
+            emptyAction={
+              <Button
+                label={t("history.returnToFortune")}
+                onPress={() => router.replace("/")}
+                variant="secondaryQuiet"
+              />
+            }
+          />
         )
       }
       footer={<VersionDisplay />}
