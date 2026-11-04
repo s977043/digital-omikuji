@@ -133,6 +133,7 @@ export default function OmikujiApp() {
       {appState === "IDLE" ? (
         <IdleRitualPattern
           hasDrawnToday={hasDrawnToday}
+          shakeEnabled={appSettings.shakeEnabled}
           onDraw={handleShakeStart}
           onShowResult={handleResultView}
         />

@@ -1,20 +1,32 @@
 import React from "react";
-import { Image, Text, useWindowDimensions, View } from "react-native";
+import { Image, Platform, Text, useWindowDimensions, View } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Button } from "../design-system/Button";
 import { getStringToken } from "../../design-system";
 import { COMPACT_HEIGHT_BREAKPOINT } from "../../constants/layout";
 
 interface IdleRitualPatternProps {
   hasDrawnToday: boolean;
+  shakeEnabled?: boolean;
   onDraw: () => void;
   onShowResult: () => void;
 }
 
-export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleRitualPatternProps) {
+export function IdleRitualPattern({
+  hasDrawnToday,
+  shakeEnabled = true,
+  onDraw,
+  onShowResult,
+}: IdleRitualPatternProps) {
+  const { t } = useTranslation();
+  const drawInstruction = t(
+    Platform.OS !== "web" && shakeEnabled ? "home.shakeInstruction" : "home.tapInstruction"
+  );
+  const firstDrawGuide = `${t("home.dailyDrawNote")}\n${drawInstruction}`;
   const { height } = useWindowDimensions();
   const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
-  const circleSize = isCompactHeight ? 168 : 220;
-  const imageSize = isCompactHeight ? 148 : 196;
+  const circleSize = isCompactHeight ? 144 : 220;
+  const imageSize = isCompactHeight ? 124 : 196;
   const titleFontSize = hasDrawnToday ? (isCompactHeight ? 22 : 26) : isCompactHeight ? 26 : 30;
   const titleLineHeight = hasDrawnToday ? (isCompactHeight ? 32 : 38) : isCompactHeight ? 34 : 42;
 
@@ -54,9 +66,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
           fontFamily: getStringToken("primitive.typography.family.ritual"),
         }}
       >
-        {hasDrawnToday
-          ? "本日の運勢はすでに授かっています"
-          : "静かに息を整えて\nおみくじを引きましょう"}
+        {hasDrawnToday ? "本日の運勢はすでに授かっています" : "静かに息を整えて\n今日のおみくじを"}
       </Text>
       <Text
         style={{
@@ -70,7 +80,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
       >
         {hasDrawnToday
           ? "もう一度結果を読み返して、今日の過ごし方を確かめられます"
-          : "シェイクでもタップでも始められます。気持ちが整ったら、そっと始めてください"}
+          : firstDrawGuide}
       </Text>
 
       {hasDrawnToday ? (
@@ -88,7 +98,7 @@ export function IdleRitualPattern({ hasDrawnToday, onDraw, onShowResult }: IdleR
             onPress={onDraw}
             variant="primaryRitual"
             accessibilityLabel="おみくじを引く"
-            accessibilityHint="スマートフォンを振るか、このボタンをタップしておみくじを引きます"
+            accessibilityHint={firstDrawGuide}
             style={{ minWidth: isCompactHeight ? 220 : 240 }}
           />
           <View
