@@ -153,3 +153,37 @@ test("reduced motion preference survives reload and can be turned off", async ({
   await page.getByRole("button", { name: "← 戻る", exact: true }).click();
   await expect(page.getByRole("button", { name: "おみくじを引く", exact: true })).toBeVisible();
 });
+
+test("cancelling history deletion preserves the saved fortune after reload", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("button", { name: "おみくじを引く", exact: true }).click();
+  const result = page.getByRole("dialog", { name: "おみくじ結果", exact: true });
+  await expect(result).toBeVisible({ timeout: 20000 });
+  await result.getByRole("button", { name: "持ち帰る", exact: true }).click();
+  await page.goto("/history");
+  const remove = page.getByRole("button", { name: "全削除", exact: true });
+  await expect(remove).toBeVisible();
+  const saved = await page.evaluate(() => ({
+    history: localStorage.getItem("omikuji_history_v2"),
+    lastDraw: localStorage.getItem("omikuji_last_draw_date"),
+  }));
+  expect(saved.history).not.toBeNull();
+  expect(saved.lastDraw).not.toBeNull();
+  expect(JSON.parse(saved.history!)).toHaveLength(1);
+  const confirmation = page.waitForEvent("dialog");
+  const click = remove.click();
+  const dialog = await confirmation;
+  expect(dialog.type()).toBe("confirm");
+  expect(dialog.message()).toBe("本当にすべての履歴を削除しますか？");
+  await dialog.dismiss();
+  await click;
+  await page.reload();
+  await expect(remove).toBeVisible();
+  expect(
+    await page.evaluate(() => ({
+      history: localStorage.getItem("omikuji_history_v2"),
+      lastDraw: localStorage.getItem("omikuji_last_draw_date"),
+    }))
+  ).toEqual(saved);
+  await expect(page.getByText("まだ履歴がありません。", { exact: false })).toHaveCount(0);
+});
