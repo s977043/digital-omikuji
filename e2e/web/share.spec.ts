@@ -35,9 +35,9 @@ for (const [locale, copy] of [
       expect(shared!.text).toContain(locale === "ja-JP" ? "私の運勢は" : "My fortune is");
       expect(shared!.text).not.toMatch(/エンジニア|engineer|2026|令和八年/i);
       const visible = await card.innerText();
-      const levels = Object.values(copy.fortune.levels).filter((value) => visible.includes(value));
-      expect(levels.length).toBeGreaterThan(0);
-      for (const level of levels) expect(shared!.text).toContain(level);
+      const displayedLevel = await card.getByLabel(/^運勢は/).innerText();
+      expect(Object.values(copy.fortune.levels)).toContain(displayedLevel);
+      expect(shared!.text).toContain(`✨ ${displayedLevel} ✨`);
       const messages = Object.values(copy.fortune.messages)
         .flat()
         .filter((value) => visible.includes(value));
