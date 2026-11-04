@@ -25,8 +25,8 @@ export function IdleRitualPattern({
   const firstDrawGuide = `${t("home.dailyDrawNote")}\n${drawInstruction}`;
   const { height } = useWindowDimensions();
   const isCompactHeight = height < COMPACT_HEIGHT_BREAKPOINT;
-  const circleSize = isCompactHeight ? 168 : 220;
-  const imageSize = isCompactHeight ? 148 : 196;
+  const circleSize = isCompactHeight ? 144 : 220;
+  const imageSize = isCompactHeight ? 124 : 196;
   const titleFontSize = hasDrawnToday ? (isCompactHeight ? 22 : 26) : isCompactHeight ? 26 : 30;
   const titleLineHeight = hasDrawnToday ? (isCompactHeight ? 32 : 38) : isCompactHeight ? 34 : 42;
 
@@ -68,7 +68,9 @@ export function IdleRitualPattern({
       >
         {hasDrawnToday
           ? "本日の運勢はすでに授かっています"
-          : "静かに息を整えて\nおみくじを引きましょう"}
+          : isCompactHeight
+            ? "静かに息を整えて\n今日のおみくじを"
+            : "静かに息を整えて\nおみくじを引きましょう"}
       </Text>
       <Text
         style={{
