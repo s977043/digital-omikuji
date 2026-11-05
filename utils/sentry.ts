@@ -3,8 +3,13 @@ import Constants from "expo-constants";
 
 const SENTRY_DSN = process.env.EXPO_PUBLIC_SENTRY_DSN || "";
 
+// This removes only these direct fields, not all potentially sensitive SDK data.
+function stripDirectPersonalFields<T extends { user?: unknown; request?: unknown }>(event: T): T {
+  return { ...event, user: undefined, request: undefined };
+}
+
 /**
- * Initialize Sentry for error tracking and performance monitoring.
+ * Initialize Sentry for error diagnostics.
  * Call this function early in the app lifecycle (e.g., in _layout.tsx).
  */
 export function initializeSentry(): void {
@@ -24,11 +29,17 @@ export function initializeSentry(): void {
     debug: __DEV__,
     environment: appVariant,
     release: `digital-omikuji@${appVersion}`,
-    tracesSampleRate: __DEV__ ? 1.0 : 0.2,
+    // Initial rollout is error-only; expanding telemetry requires a disclosure review.
+    tracesSampleRate: 0,
+    enableAutoPerformanceTracing: false,
+    enableAutoSessionTracking: false,
     // Ignore common network errors
     ignoreErrors: ["Network request failed", "TypeError: Network request failed"],
-    // プライバシー保護: デフォルト PII (IP / User-Agent / URL 等) を送らない
+    // Default PIIを無効化。全payloadやサーバー側での非収集を保証する設定ではない。
     sendDefaultPii: false,
+    attachScreenshot: false,
+    attachViewHierarchy: false,
+    enableLogs: false,
     // console.error / console.warn のメッセージ本文には履歴 ID や運勢値が
     // 紛れ得るため、breadcrumb としての送信を抑制する。Sentry 本体の
     // captureException 経由は影響しない。
@@ -36,17 +47,8 @@ export function initializeSentry(): void {
       if (breadcrumb.category === "console") return null;
       return breadcrumb;
     },
-    // サーバーや user 情報は本アプリでは収集していないため、万一 SDK が
-    // 勝手に埋めた場合も確実にクリアする防御コード。
-    beforeSend: (event) => {
-      if (event.user) {
-        event.user = undefined;
-      }
-      if (event.request) {
-        event.request = undefined;
-      }
-      return event;
-    },
+    beforeSend: stripDirectPersonalFields,
+    beforeSendTransaction: stripDirectPersonalFields,
   });
 }
 

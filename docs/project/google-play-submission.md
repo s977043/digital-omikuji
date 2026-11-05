@@ -16,18 +16,18 @@
 
 ## 1. Data safety（データセーフティ）
 
-**未確定・申告送信不可**。本番Sentry方針と実ビルド設定は未確認。以前の「有効化する」「収集あり/共有なし」の断定は採用しない。
+**導入方針は承認済み・申告送信は未実施**。2026-11-05にユーザーがSentry導入を希望。初期実装はエラー診断に限定し、実ビルド設定・送信項目・フォーム回答は確認待ち。導入希望を実接続や申告済みとは扱わない。
 
 ### コードで確認できたこと
 
-- `utils/sentry.ts` は `EXPO_PUBLIC_SENTRY_DSN` が空なら初期化を終了し、設定されていれば診断・tracing（productionのsample rate 0.2）を初期化する。
-- `sendDefaultPii: false`、error eventのuser/request削除、console breadcrumb除外がある。ただし、全payload・transaction・サーバー側処理で個人情報が無いことの証明ではない。
+- `utils/sentry.ts` は `EXPO_PUBLIC_SENTRY_DSN` が空なら初期化を終了し、設定されていればエラー診断を初期化する。初期導入ではtracesSampleRate=0、auto performance tracing/session tracking、画面添付・view hierarchy・logsを無効にする。
+- `sendDefaultPii: false`、JS error/transaction eventの直接のuser/request削除、console breadcrumb除外がある。ただし、全payload・transaction・サーバー側処理で個人情報が無いことの証明ではない。
 - 履歴・設定の保存先はAsyncStorage。SDKを含むアプリ全体の外部送信有無は、保存先だけでは判断しない。
-- `app/privacy-policy.tsx` / `privacy-policy.md` の分析情報非収集・外部送信の説明と、条件付き送信の実装に不一致がある。
+- `app/privacy-policy.tsx` / `privacy-policy.md` / 日英ストア文をエラー診断の説明に更新。実ビルド・保持期間・削除窓口と最終申告の整合は確認待ち。詳細は [Sentry確認票](sentry-release-checklist.md)。
 
 ### 提出前に確定すること
 
-1. 運営者が本番でSentryを使うか決め、実ビルド設定と一致させる（秘密値を文書やPRへ記録しない）。
+1. 承認済みのエラー診断導入方針を実ビルド設定と一致させる（秘密値を文書やPRへ記録しない）。
 2. 有効ならSDKの実送信項目・識別子・目的・保持期間・削除窓口・委託条件を確認。無効でも他のSDK/経路を含む送信状況を確認する。
 3. [GoogleのData safety定義](https://support.google.com/googleplay/android-developer/answer/10787469?hl=en)に沿って収集/共有を判断し、運営者がフォーム回答を確定する。匿名性や保持90日、共有免除を推測しない。
 4. アプリ内/公開Privacy Policy・ストア文・Data safetyを同じ確認済みデータ台帳に揃える。現行の「個人情報は収集しません」はそのまま提出しない。
@@ -87,11 +87,11 @@ IARC 質問票への回答方針:
 EAS 認証が必要なため、以下のいずれかで実行（詳細は goal doc 参照）。
 
 - **推奨**: GitHub Secrets に `EXPO_TOKEN` を登録 → Actions の「EAS Build (Android)」を `workflow_dispatch`（profile=production）で実行。
-- Sentry方針を先に確定し、ビルド設定とプライバシー説明を一致させる。有効化を既定にしてDSNを設定しない。
+- 既存Sentryプロジェクトと対象環境を確認し、ビルド設定とプライバシー説明を一致させる。DSN/認証トークンの値をPRやチャットに貼らない。
 
 ## 8. 申請前 最終チェックリスト
 
-- [ ] Sentry方針・実ビルド設定・実送信の確認を完了
+- [ ] Sentryの対象プロジェクト・実ビルド設定・実送信の確認を完了
 - [ ] production AAB を生成（EAS）
 - [ ] Data safety フォーム入力（本書 §1 に従う）
 - [ ] Content rating 質問票（本書 §2 に従う）
@@ -110,7 +110,7 @@ EAS 認証が必要なため、以下のいずれかで実行（詳細は goal d
 | 掲載文 | 英語短い説明の旧92文字を80文字以内へ修正。掲載は未実行。[文字数の公式上限](https://support.google.com/googleplay/android-developer/answer/9859152?hl=en)を参照。 |
 | 実AAB | 未取得。承認されたビルドのSHA・署名済みartifact・package・target API・versionName/versionCodeを確認。JS export成功は署名済みnative build成功ではない。 |
 | native互換性 | Gradle/実機未検証。起動・抽選・保存/再訪・日英共有・センサー・音/触覚・TalkBackを対象端末で確認。[16KB page size対応](https://developer.android.com/guide/practices/page-sizes)も実artifactと対応環境で検証する。 |
-| 申告 | Sentry方針、実送信、公開policy整合、Consoleアカウント条件、レーティング・対象年齢/国・削除窓口等を運営者と確認。文書案を申告済みと扱わない。 |
+| 申告 | Sentry導入方針（承認済み）の実設定、実送信、公開policy整合、Consoleアカウント条件、レーティング・対象年齢/国・削除窓口等を運営者と確認。文書案を申告済みと扱わない。 |
 | 署名/番号/費用 | Playの使用済みversionCode・EAS remote値・既存署名の管理状態・ビルド費用枠は未確認。番号変更・鍵生成/変更・新規課金は未実行。 |
 | Web本番 | `deploy-vercel.yml` はmainへのpushでproduction、developはpreview。mainへの統合はSDK/設定等も含む差分全体の本番配信を起動するため、共有文だけの公開ではない。保護条件・本番設定・影響範囲を確認するまでmainへ統合しない。 |
 | リリース手順 | `.agent/workflows/release.md` はdevelopからrelease branch→main PR、承認後Merge Commitを指定。例示バージョンを採用せず、実際の番号と保護ルールを確認して具体化する。タグ/Release/Play送信/配信は未実行。 |
