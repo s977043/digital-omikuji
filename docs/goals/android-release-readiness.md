@@ -25,9 +25,9 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 ### Google Play 申請情報
 
 - [x] Google Play Console 申請に必要な情報が docs 化されている（[../project/google-play-submission.md](../project/google-play-submission.md)、2026-06-07）
-- [x] Privacy Policy / Data safety / Content rating の方針が整理されている（Sentry 有効前提の Data safety 申告、全年齢レーティング方針、2026-06-07）
+- [ ] Privacy Policy / Data safety / Content rating を実態とConsole回答に合わせて確定する（2026-11-05: Sentry方針・実送信・実ビルド設定は未確認。旧Sentry有効前提の完了判定を取り消し）
 - [x] ストア掲載文・スクリーンショット・Feature Graphic の準備項目が整理されている（画像アセットは未作成だが要件・推奨カットを docs 化、2026-06-07）
-- [x] Closed testing の進め方が整理されている（internal→closed(個人=12人×14日 / 組織=免除)→production、2026-06-07）
+- [ ] アカウント種別・作成日・Console要件を確認し、必要なclosed testingとproduction accessの計画を確定する（[申請情報 §6](../project/google-play-submission.md)）
 - [x] README に Android 公開準備手順が反映されている（2026-06-06）
 
 ### 品質ゲート（すべて成功）
@@ -145,7 +145,7 @@ Goal 最終ゲート（production AAB 生成）。EAS 認証が必須で、ロ�
 - [ ] タイトル / 短い説明 / 詳細説明
 - [ ] スクリーンショット / Feature Graphic
 - [ ] Privacy Policy URL（`https://digital-omikuji.vercel.app/privacy-policy`）
-- [ ] Data safety（個人情報非収集の申告）
+- [ ] Data safety（SDKを含む実送信調査に基づき申告を確定）
 - [ ] Content rating / 対象ユーザー・年齢層
 
 ### テスト・公開段階
