@@ -97,6 +97,16 @@ test.describe("Digital Omikuji Web", () => {
     await expect(page.getByText("プライバシーポリシー", { exact: true })).toBeVisible({
       timeout: 10000,
     });
+    await expect(page.getByText("エラーの診断情報", { exact: true })).toBeVisible();
+    await expect(
+      page.getByText("診断機能が有効な配布版ではSentryを利用します。", { exact: false })
+    ).toBeVisible();
+    await expect(
+      page.getByText("すでに送信された診断情報は削除されません。", { exact: false })
+    ).toBeVisible();
+    await expect(
+      page.getByText("基本的に外部サーバーへのデータ送信を行いません", { exact: false })
+    ).toHaveCount(0);
     await page.getByRole("button", { name: "← 戻る" }).click();
     await expect(page).toHaveURL(/\/$/);
     await expect(page.getByText("新春デジタルおみくじ", { exact: true })).toBeVisible({

@@ -1,6 +1,6 @@
 # Store Listing Metadata (Draft)
 
-> 未提出の候補。Sentry方針・実送信とプライバシー説明が未確定のため、掲載前に [申請情報 §1](google-play-submission.md) の確認が必要。
+> 未提出の候補。Sentryの導入方針は承認済みだが、実送信・保持期間・プライバシー説明の最終確認が未完了のため、掲載前に [申請情報 §1](google-play-submission.md) の確認が必要。
 
 ## App Name
 
@@ -26,6 +26,7 @@
 - **多言語対応**: 日本語と英語に対応。海外の方への紹介にも最適です。
 
 毎日のちょっとした運試しや気分転換に。「デジタルおみくじ」で楽しいおみくじ体験をどうぞ。
+診断機能が有効な配布版では、不具合調査のためSentryにエラー・端末等の診断情報を送信することがあります。詳しくはプライバシーポリシーをご確認ください。
 ※本アプリは娯楽目的です。実際の占い・鑑定ではありません。
 
 ---
@@ -42,6 +43,7 @@ With a design inspired by Japanese shrine atmosphere and pleasant haptic feedbac
 - **Multi-language**: Supports Japanese and English. Great for introducing Japanese culture.
 
 A fun daily ritual or a change of pace. Enjoy the "Digital Omikuji" experience!
+Builds with diagnostics enabled may send error and device diagnostic information to Sentry for troubleshooting. See the privacy policy for details.
 \*This app is for entertainment purposes only. Not actual fortune-telling.
 
 ## Keywords

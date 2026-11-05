@@ -25,7 +25,7 @@ Android版デジタルおみくじを **Google Play に申請可能な状態** �
 ### Google Play 申請情報
 
 - [x] Google Play Console 申請に必要な情報が docs 化されている（[../project/google-play-submission.md](../project/google-play-submission.md)、2026-06-07）
-- [ ] Privacy Policy / Data safety / Content rating を実態とConsole回答に合わせて確定する（2026-11-05: Sentry方針・実送信・実ビルド設定は未確認。旧Sentry有効前提の完了判定を取り消し）
+- [ ] Privacy Policy / Data safety / Content rating を実態とConsole回答に合わせて確定する（2026-11-05: Sentry導入方針は承認済み、実送信・実ビルド設定・申告は未確認。旧Sentry有効前提の完了判定を取り消し）
 - [x] ストア掲載文・スクリーンショット・Feature Graphic の準備項目が整理されている（画像アセットは未作成だが要件・推奨カットを docs 化、2026-06-07）
 - [ ] アカウント種別・作成日・Console要件を確認し、必要なclosed testingとproduction accessの計画を確定する（[申請情報 §6](../project/google-play-submission.md)）
 - [x] README に Android 公開準備手順が反映されている（2026-06-06）

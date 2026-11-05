@@ -71,6 +71,37 @@ describe("sentry", () => {
     );
   });
 
+  it("limits optional capture and scrubs direct user/request fields for errors and traces", () => {
+    process.env.EXPO_PUBLIC_SENTRY_DSN = "https://test@sentry.io/123";
+    const { initializeSentry } = require("../sentry");
+    initializeSentry();
+    const config = mockInit.mock.calls[0][0];
+    expect(config).toEqual(
+      expect.objectContaining({
+        sendDefaultPii: false,
+        tracesSampleRate: 0,
+        enableAutoPerformanceTracing: false,
+        enableAutoSessionTracking: false,
+        attachScreenshot: false,
+        attachViewHierarchy: false,
+        enableLogs: false,
+      })
+    );
+    const event = {
+      user: { email: "test@example.invalid" },
+      request: { url: "https://example.invalid/?token=test" },
+      tags: { operation: "draw" },
+    };
+    for (const scrub of [config.beforeSend, config.beforeSendTransaction]) {
+      expect(scrub(event)).toEqual({ ...event, user: undefined, request: undefined });
+    }
+    expect(event.user.email).toBe("test@example.invalid");
+    expect(
+      config.beforeBreadcrumb({ category: "console", message: "private test data" })
+    ).toBeNull();
+    expect(config.beforeBreadcrumb({ category: "navigation" })).toEqual({ category: "navigation" });
+  });
+
   it("captureException sends error to Sentry through a scoped callback", () => {
     process.env.EXPO_PUBLIC_SENTRY_DSN = "";
     const { captureException } = require("../sentry");

@@ -54,17 +54,21 @@ export default function PrivacyPolicyScreen() {
         </DocumentSection>
       </DocumentSection>
 
-      <DocumentSection title="収集しない情報">
-        本アプリは以下の情報を収集しません。個人を特定できる情報、位置情報、カメラやマイクからのデータ、連絡先情報、使用状況の分析データ、広告識別子。
+      <DocumentSection title="エラーの診断情報">
+        アプリの不具合調査と品質改善のため、診断機能が有効な配布版ではSentryを利用します。エラー内容・スタックトレース、OS・アプリのバージョン、端末情報などの診断情報が外部サービスに送信されることがあります。SDKが扱う識別子や通信情報を含め、これらをすべて匿名情報とは扱いません。
+      </DocumentSection>
+
+      <DocumentSection title="診断情報の取扱い">
+        氏名やメールアドレスを入力する機能はありません。性能トレース・セッション追跡・診断用の画面画像・画面構造・ログ送信は無効にし、一部の診断イベントからユーザー・リクエスト情報を除く処理を設けています。ただし、すべての情報を除去できることを保証するものではありません。履歴の全削除やアンインストールでは、すでに送信された診断情報は削除されません。
       </DocumentSection>
 
       <DocumentSection title="外部サービスへのデータ送信">
-        本アプリは、基本的に外部サーバーへのデータ送信を行いません。シェア機能使用時は OS
+        上記の診断情報はSentryへ送信されることがあります。シェア機能使用時は OS
         の標準シェア機能を使用し、シェア先のプライバシーポリシーが適用されます。
       </DocumentSection>
 
       <DocumentSection title="第三者へのデータ提供">
-        本アプリは、収集したデータを第三者に販売、貸与、または提供することはありません。
+        診断情報の処理に外部サービスSentryを利用します。シェア先へ送る情報は、利用者が選んだサービス側でも取り扱われます。
       </DocumentSection>
 
       <DocumentSection title="免責事項">
@@ -72,7 +76,8 @@ export default function PrivacyPolicyScreen() {
       </DocumentSection>
 
       <DocumentSection title="お問い合わせ">
-        本プライバシーポリシーに関するご質問は、GitHub リポジトリの Issue を通じてご連絡ください。
+        本プライバシーポリシーに関するご質問は、GitHub リポジトリの Issue
+        を通じてご連絡ください。公開Issueには個人情報や診断データを記載しないでください。
       </DocumentSection>
     </DocumentScreenTemplate>
   );
